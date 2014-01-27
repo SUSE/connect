@@ -1,5 +1,6 @@
 # SUSEConnect
 
+```
 -n --ncc            Taking registration from NCC
 -h --host [HOST]    The connection hostname
 -p --port [PORT]    The connection port
@@ -10,3 +11,4 @@
 -s --show-response  Return an API response in JSON format
 
 Either -t or -n are mandatory
+```
