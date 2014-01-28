@@ -1,4 +1,5 @@
 .idea/
 *~
 .bundle/
+Gemfile.lock
 
