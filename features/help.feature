@@ -23,18 +23,6 @@ Feature: Help output
       -t, --token [TOKEN]              Registration token.
       """
 
-  Scenario: help should contain all products switch
-    Then the output should contain:
-      """
-      -a, --allproducts                Activate all products of the subscription
-      """
-
-  Scenario: help should contain NCC switch
-    Then the output should contain:
-      """
-      -n, --ncc                        Take registration from NCC.
-      """
-
   # Common Options
 
   Scenario: help should contain help option

@@ -15,10 +15,6 @@ class SUSE::Connect::Cli
       OptionParser.new do |opts|
         opts.banner = 'Usage: SUSEConnect [options]'
 
-        opts.on('-a', '--allproducts', 'Activate all products of the subscription') do |opt|
-          @options[:allproducts] = opt
-        end
-
         opts.on('-h', '--host [HOST]', 'Connection host.') do |opt|
           @options[:host] = opt
         end
@@ -29,10 +25,6 @@ class SUSE::Connect::Cli
 
         opts.on('-t', '--token [TOKEN]', 'Registration token.') do |opt|
           @options[:port] = opt
-        end
-
-        opts.on('-n', '--ncc', 'Take registration from NCC.') do |opt|
-          @options[:ncc] = opt
         end
 
         opts.separator ''
