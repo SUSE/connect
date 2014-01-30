@@ -5,6 +5,7 @@ Usage: SUSEConnect [options]
     -h, --host [HOST]                Connection host.
     -p, --port [PORT]                Connection port.
     -t, --token [TOKEN]              Registration token.
+    -k, --insecure                   Skip ssl verification (insecure).
 
 Common options:
     -d, --dry-mode                   Dry mode. Does not make any changes to the system.

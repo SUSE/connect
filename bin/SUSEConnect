@@ -3,4 +3,4 @@
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 require 'suse/connect'
 
-SUSE::Connect::Cli.new ARGV
+SUSE::Connect::Cli.new(ARGV.dup)
