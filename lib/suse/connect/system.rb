@@ -38,7 +38,7 @@ module SUSE
           info
         end
 
-        def read_credentials_file
+        def credentials
           if File.exist?(NCC_CREDENTIALS_FILE)
 
             file = File.new(NCC_CREDENTIALS_FILE, 'r')
@@ -55,6 +55,10 @@ module SUSE
           end
         end
 
+        def registered?
+          username = self.credentials.first
+          username && username.include?( 'SCC_' )
+        end
 
         private
 

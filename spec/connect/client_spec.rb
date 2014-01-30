@@ -17,7 +17,7 @@ describe SUSE::Connect::Client do
       end
 
       it 'should build url with default host and port' do
-        subject.url.should eq "http://#{subject.class::DEFAULT_HOST}"
+        subject.url.should eq "https://#{subject.class::DEFAULT_HOST}"
       end
 
     end

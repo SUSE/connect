@@ -69,7 +69,7 @@ describe SUSE::Connect::System do
 
   end
 
-  describe '.read_credentials_file' do
+  describe '.credentials' do
 
     context :credentials_exist do
 
@@ -79,13 +79,13 @@ describe SUSE::Connect::System do
 
       it 'should raise MalformedNccCredentialsFile if cannot parse lines' do
         File.any_instance.should_receive(:readlines).and_return(['me', 'fe'])
-        expect { subject.read_credentials_file }
+        expect { subject.credentials }
           .to raise_error SUSE::Connect::MalformedNccCredentialsFile, 'Cannot parse credentials file'
       end
 
       it 'should return username and password' do
         File.any_instance.should_receive(:readlines).and_return(['username=bill', 'password=nevermore'])
-        subject.read_credentials_file.should eq %w{ bill nevermore }
+        subject.credentials.should eq %w{ bill nevermore }
       end
 
     end
@@ -98,7 +98,7 @@ describe SUSE::Connect::System do
 
       it 'should produce log message' do
         SUSE::Connect::Logger.should_receive(:error)
-        subject.read_credentials_file
+        subject.credentials
       end
 
     end

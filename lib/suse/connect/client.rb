@@ -2,8 +2,9 @@ module SUSE
   module Connect
     class Client
 
-      DEFAULT_PORT = 3000
-      DEFAULT_HOST = 'localhost'
+      DEFAULT_PORT = '443'
+      DEFAULT_HOST = 'scc.suse.com'
+
 
       attr_reader :options, :url
 

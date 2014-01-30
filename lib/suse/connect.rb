@@ -6,6 +6,7 @@ module SUSE
     require 'suse/connect/cli'
     require 'suse/connect/client'
     require 'suse/connect/system'
+    require 'suse/connect/zypper'
   end
 end
 

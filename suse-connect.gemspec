@@ -14,7 +14,7 @@ Gem::Specification.new do |gem|
   gem.files       = Dir['{bin,lib,test}/**/*', 'README*', 'LICENSE*'] & `git ls-files -z`.split('\0')
 
   gem.add_development_dependency 'rspec', '~> 2.14'
-  gem.add_development_dependency 'vcr'
+  gem.add_development_dependency 'debugger'
   gem.add_development_dependency 'webmock', '~> 1.15'
   gem.add_development_dependency 'aruba'
 

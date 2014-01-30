@@ -1,5 +1,3 @@
-require 'singleton'
-
 module SUSE
   module Connect
     class Logger
@@ -7,7 +5,7 @@ module SUSE
       class << self
 
         def info(msg)
-          STDOUT.puts "#{msg}"
+          STDOUT.puts msg
         end
 
         def error(msg)
