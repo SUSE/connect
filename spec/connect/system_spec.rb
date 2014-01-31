@@ -122,10 +122,29 @@ describe SUSE::Connect::System do
   end
 
   describe '.divide_credential_tuple' do
-    it 'should take part of a string after equal sign' do
+    it 'takes part of a string after equal sign' do
       subject.send(:divide_credential_tuple, 'username=1234').should eq '1234'
       subject.send(:divide_credential_tuple, 'user=name=1234').should eq '1234'
     end
+  end
+
+  describe '.add_service' do
+
+    it 'removes old service' do
+      SUSE::Connect::Zypper.should_receive(:remove_service).with('boogie')
+      subject.add_service 'boogie'
+    end
+
+    it 'adds new or same service' do
+      SUSE::Connect::Zypper.should_receive(:add_service).with('boogie', 'http://boogie/service')
+      subject.add_service 'boogie'
+    end
+
+    it 'enables all repos for this service'
+    it 'writes credentials file in corresponding file in credentials.d'
+    it 'refresh services'
+    it 'manually disables norefresh repositories'
+
   end
 
 end

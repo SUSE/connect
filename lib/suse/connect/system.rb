@@ -60,30 +60,36 @@ module SUSE
           username && username.include?( 'SCC_' )
         end
 
+        def add_service(service)
+          #TODO: introduce Service class
+          Zypper.remove_service(service)
+
+        end
+
         private
 
-        ##
-        # Assuming structure:
-        # username=<32 symbols line>
-        # password=<32 symbols line>
-        # will raise MalformedNccCredentialsFile if cannot parse
-        # provided lines
-        def extract_credentials(lines)
-          return nil unless lines.count == 2
+          ##
+          # Assuming structure:
+          # username=<32 symbols line>
+          # password=<32 symbols line>
+          # will raise MalformedNccCredentialsFile if cannot parse
+          # provided lines
+          def extract_credentials(lines)
+            return nil unless lines.count == 2
 
-          begin
-            username = divide_credential_tuple lines.select {|line| line =~ /^username=.*/}.first
-            password = divide_credential_tuple lines.select {|line| line =~ /^password=.*/}.first
-          rescue
-            raise MalformedNccCredentialsFile, 'Cannot parse credentials file'
+            begin
+              username = divide_credential_tuple lines.select {|line| line =~ /^username=.*/}.first
+              password = divide_credential_tuple lines.select {|line| line =~ /^password=.*/}.first
+            rescue
+              raise MalformedNccCredentialsFile, 'Cannot parse credentials file'
+            end
+
+            return username, password
           end
 
-          return username, password
-        end
-
-        def divide_credential_tuple(tuple)
-          tuple.split('=').last
-        end
+          def divide_credential_tuple(tuple)
+            tuple.split('=').last
+          end
 
       end
 

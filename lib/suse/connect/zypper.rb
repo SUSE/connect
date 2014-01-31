@@ -1,22 +1,22 @@
 require 'rexml/document'
 require 'debugger'
+require 'suse/connect/rexml_refinement'
 
 module SUSE
   module Connect
     class Zypper
 
+      using SUSE::Connect::RexmlRefinement
+
       class << self
 
+        ##
         # Returns an array of all installed products, in which every product is presented as a hash.
         def installed_products
           zypper_out = `zypper --no-refresh --quiet --xmlout --non-interactive products -i`
-          xml_doc = REXML::Document.new(zypper_out.gsub(/>\n(\s+)?/, '>'))
-          xml_doc.root.children.first.children.map do |product|
-            product.attributes.keys.inject({}) do |mem, key|
-              mem[key.to_sym] = product.attributes[key]
-              mem
-            end
-          end
+          xml_doc = REXML::Document.new(zypper_out, :compress_whitespace => [])
+          # Not unary because of https://bugs.ruby-lang.org/issues/9451
+          xml_doc.root.elements['product-list'].elements.map{|x| x.to_hash }
         end
 
         def add_service(service_name, service_url)
