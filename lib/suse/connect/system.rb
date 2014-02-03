@@ -61,8 +61,27 @@ module SUSE
         end
 
         def add_service(service)
-          #TODO: introduce Service class
-          Zypper.remove_service(service)
+
+          raise ArgumentError, 'only Service accepted' unless service.is_a? Service
+
+          service.sources.each do |source_name, source_url|
+
+            Zypper.remove_service(source_name)
+            Zypper.add_service(source_name, source_url)
+
+            service.enabled.each do |repo_name|
+              Zypper.enable_service_repository(source_name, repo_name)
+            end
+
+            Zypper.write_credentials_file(source_name)
+
+            service.norefresh.each do |repo_name|
+              Zypper.disable_repository_autorefresh(source_name, repo_name)
+            end
+
+          end
+
+          Zypper.refresh
 
         end
 

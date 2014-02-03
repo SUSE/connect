@@ -2,6 +2,10 @@ require 'spec_helper'
 
 describe SUSE::Connect::System do
 
+  before(:each) do
+    Object.stub(:system => true)
+  end
+
   subject { SUSE::Connect::System }
 
   describe '.uuid' do
@@ -73,18 +77,25 @@ describe SUSE::Connect::System do
 
     context :credentials_exist do
 
+      let :stub_ncc_cred_file do
+        stub_creds_file = double('me_file')
+        stub_creds_file.stub(:close)
+        stub_creds_file
+      end
+
       before do
         File.should_receive(:exist?).with(subject::NCC_CREDENTIALS_FILE).and_return(true)
+        File.should_receive(:new).with(subject::NCC_CREDENTIALS_FILE, 'r').and_return(stub_ncc_cred_file)
       end
 
       it 'should raise MalformedNccCredentialsFile if cannot parse lines' do
-        File.any_instance.should_receive(:readlines).and_return(['me', 'fe'])
+        stub_ncc_cred_file.should_receive(:readlines).and_return(['me', 'fe'])
         expect { subject.credentials }
           .to raise_error SUSE::Connect::MalformedNccCredentialsFile, 'Cannot parse credentials file'
       end
 
       it 'should return username and password' do
-        File.any_instance.should_receive(:readlines).and_return(['username=bill', 'password=nevermore'])
+        stub_ncc_cred_file.should_receive(:readlines).and_return(['username=bill', 'password=nevermore'])
         subject.credentials.should eq %w{ bill nevermore }
       end
 
@@ -92,7 +103,7 @@ describe SUSE::Connect::System do
 
     context :credentials_not_exist do
 
-      before do
+      before(:each) do
         File.should_receive(:exist?).with(subject::NCC_CREDENTIALS_FILE).and_return(false)
       end
 
@@ -130,20 +141,79 @@ describe SUSE::Connect::System do
 
   describe '.add_service' do
 
+    before(:each) do
+      SUSE::Connect::Zypper.stub(:write_credentials_file)
+    end
+
+    let :mock_service do
+      sources = { 'name' => 'url', 'lastname' => 'furl' }
+      SUSE::Connect::Service.new(
+          :sources   => sources,
+          :enabled   => %w{ fehu  uruz ansuz },
+          :norefresh => %w{ green coffee loki }
+      )
+    end
+
     it 'removes old service' do
-      SUSE::Connect::Zypper.should_receive(:remove_service).with('boogie')
-      subject.add_service 'boogie'
+      SUSE::Connect::Zypper.should_receive(:remove_service).with('name')
+      SUSE::Connect::Zypper.should_receive(:remove_service).with('lastname')
+      subject.add_service mock_service
     end
 
-    it 'adds new or same service' do
-      SUSE::Connect::Zypper.should_receive(:add_service).with('boogie', 'http://boogie/service')
-      subject.add_service 'boogie'
+    it 'add each service from set' do
+      SUSE::Connect::Zypper.should_receive(:add_service).with( 'name', 'url')
+      SUSE::Connect::Zypper.should_receive(:add_service).with( 'lastname', 'furl' )
+      subject.add_service mock_service
     end
 
-    it 'enables all repos for this service'
-    it 'writes credentials file in corresponding file in credentials.d'
-    it 'refresh services'
-    it 'manually disables norefresh repositories'
+    it 'enables all repos for this service' do
+      SUSE::Connect::Zypper.should_receive(:add_service).with( 'name', 'url')
+      SUSE::Connect::Zypper.should_receive(:add_service).with( 'lastname', 'furl' )
+      subject.add_service mock_service
+    end
+
+    it 'enables service repository for each of enabled' do
+
+      SUSE::Connect::Zypper.should_receive(:add_service).with( 'name', 'url')
+      SUSE::Connect::Zypper.should_receive(:add_service).with( 'lastname', 'furl')
+
+      subject.add_service mock_service
+    end
+
+    it 'writes credentials file in corresponding file in credentials.d' do
+
+      SUSE::Connect::Zypper.should_receive(:enable_service_repository).with('name', 'fehu')
+      SUSE::Connect::Zypper.should_receive(:enable_service_repository).with('name', 'uruz')
+      SUSE::Connect::Zypper.should_receive(:enable_service_repository).with('name', 'ansuz')
+
+      SUSE::Connect::Zypper.should_receive(:enable_service_repository).with('lastname', 'fehu')
+      SUSE::Connect::Zypper.should_receive(:enable_service_repository).with('lastname', 'uruz')
+      SUSE::Connect::Zypper.should_receive(:enable_service_repository).with('lastname', 'ansuz')
+
+      subject.add_service mock_service
+    end
+
+    it 'raise if non-Service object passed' do
+      expect { subject.add_service('setup') }.to raise_error ArgumentError, 'only Service accepted'
+    end
+
+    it 'refresh services' do
+      SUSE::Connect::Zypper.should_receive(:refresh).exactly(1).times
+      subject.add_service mock_service
+    end
+
+    it 'set provided repo names to norefresh for each service' do
+
+      SUSE::Connect::Zypper.should_receive(:disable_repository_autorefresh).with('name', 'green')
+      SUSE::Connect::Zypper.should_receive(:disable_repository_autorefresh).with('name', 'coffee')
+      SUSE::Connect::Zypper.should_receive(:disable_repository_autorefresh).with('name', 'loki')
+
+      SUSE::Connect::Zypper.should_receive(:disable_repository_autorefresh).with('lastname', 'green')
+      SUSE::Connect::Zypper.should_receive(:disable_repository_autorefresh).with('lastname', 'coffee')
+      SUSE::Connect::Zypper.should_receive(:disable_repository_autorefresh).with('lastname', 'loki')
+
+      subject.add_service mock_service
+    end
 
   end
 
