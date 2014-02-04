@@ -1,7 +1,5 @@
 Given(/^I use suseconnect client with valid token$/) do
-  #VCR.use_cassette('scc_api_mock') do
-  step "I run `SUSEConnect --token 34fd2b04-4e40-425c-a137-7721e0303382`"
-  #end
+  step 'I run `SUSEConnect --token 34fd2b04-4e40-425c-a137-7721e0303382`'
 end
 
 Then(/^output should inform us about requirement to run as root$/) do
