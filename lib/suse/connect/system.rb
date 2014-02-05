@@ -6,7 +6,8 @@ module SUSE
       UUIDGEN_LOCATION        = '/usr/bin/uuidgen'
       SETTINGS_DIRECTORY      = '/etc/suseConnect'
       ZYPPER_CREDENTIALS_DIR  = '/etc/zypp/credentials.d'
-      NCC_CREDENTIALS_FILE    = File.join(ZYPPER_CREDENTIALS_DIR, 'NCCcredentials')
+      CREDENTIALS_NAME        = 'NCCcredentials'
+      NCC_CREDENTIALS_FILE    = File.join(ZYPPER_CREDENTIALS_DIR, CREDENTIALS_NAME)
 
       class << self
 
@@ -38,6 +39,11 @@ module SUSE
           info
         end
 
+        # returns username and password from NCC_CREDENTIALS_FILE
+        #
+        # == Returns:
+        # tuple of username and password or nil for both values
+        #
         def credentials
           if File.exist?(NCC_CREDENTIALS_FILE)
 
@@ -51,12 +57,18 @@ module SUSE
             end
 
           else
-            Logger.error "NCC credentials file not found at: #{NCC_CREDENTIALS_FILE}"
+            # TODO: part of logging system
+            # Logger.info "NCC credentials file not found at: #{NCC_CREDENTIALS_FILE}"
+            nil
           end
         end
 
+        # detect if this system is registered against SCC
+        # == Returns:
+        #
         def registered?
-          username = self.credentials.first
+          return false unless credentials
+          username = credentials.first
           username && username.include?( 'SCC_' )
         end
 
@@ -73,7 +85,7 @@ module SUSE
               Zypper.enable_service_repository(source_name, repo_name)
             end
 
-            Zypper.write_credentials_file(source_name)
+            Zypper.write_source_credentials(source_name)
 
             service.norefresh.each do |repo_name|
               Zypper.disable_repository_autorefresh(source_name, repo_name)

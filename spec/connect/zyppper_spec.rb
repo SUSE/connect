@@ -86,27 +86,9 @@ describe SUSE::Connect::Zypper do
 
   end
 
-  describe '.write_credentials_file' do
+  describe '?write_credentials_file' do
 
-    let :source_cred_file do
-      opened_file = double('me_file')
-      opened_file.stub(:puts => true)
-      opened_file.stub(:close => true)
-      opened_file
-    end
-
-    before(:each) do
-      File.stub(:open => source_cred_file)
-      File.any_instance.stub(:puts => true)
-      Dir.stub(:mkdir => true)
-      SUSE::Connect::System.stub(:credentials => %w{ dummy tummy })
-    end
-
-
-    it 'extracts username and password from system credentials' do
-      SUSE::Connect::System.should_receive(:credentials)
-      subject.write_credentials_file('name')
-    end
+    mock_dry_file
 
     context :credentials_folder_exist do
 
@@ -116,7 +98,7 @@ describe SUSE::Connect::Zypper do
 
       it 'will not create credentials.d folder' do
         Dir.should_not_receive(:mkdir).with(SUSE::Connect::System::ZYPPER_CREDENTIALS_DIR)
-        subject.write_credentials_file('name')
+        subject.send(:write_credentials_file, params)
       end
 
     end
@@ -129,25 +111,25 @@ describe SUSE::Connect::Zypper do
 
       it 'creates credentials.d folder' do
         Dir.should_receive(:mkdir).with(SUSE::Connect::System::ZYPPER_CREDENTIALS_DIR)
-        subject.write_credentials_file('name')
+        subject.send(:write_credentials_file, params)
       end
 
     end
 
     it 'opens a file for writing with name of source suffixed by _credentials' do
-      File.should_receive(:open).with('/etc/zypp/credentials.d/name_credentials', 'w')
-      subject.write_credentials_file('name')
+      File.should_receive(:open).with('/etc/zypp/credentials.d/ha_credentials', 'w')
+      subject.send(:write_credentials_file, params)
     end
 
     it 'writes a file with corresponding product credentials' do
-      source_cred_file.should_receive(:puts).with('username=SCC_dummy')
-      source_cred_file.should_receive(:puts).with('password=tummy')
-      subject.write_credentials_file('name')
+      source_cred_file.should_receive(:puts).with('username=SCC_Kif')
+      source_cred_file.should_receive(:puts).with('password=Kroker')
+      subject.send(:write_credentials_file, params)
     end
 
     it 'closes a file for credentials' do
       source_cred_file.should_receive(:close)
-      subject.write_credentials_file('name')
+      subject.send(:write_credentials_file, params)
     end
 
   end
@@ -164,5 +146,32 @@ describe SUSE::Connect::Zypper do
 
   end
 
+  describe '.base_product' do
+
+    it 'should return first product from installed product which is base' do
+      parsed_products = [{:is_base => '1', :name => 'SLES'}, {:is_base => '2', :name => 'Cloud'}]
+      subject.stub(:installed_products => parsed_products)
+      subject.base_product.should eq ({:is_base => '1', :name => 'SLES'})
+    end
+
+  end
+
+  describe '.write_source_credentials' do
+
+    mock_dry_file
+
+    it 'extracts username and password from system credentials' do
+      SUSE::Connect::System.should_receive(:credentials)
+      subject.write_source_credentials('turbo')
+    end
+
+    it 'creates a file with source name' do
+      subject.should_receive(:write_credentials_file).with(:login => 'dummy', :password => 'tummy', :filename => 'turbo')
+      subject.write_source_credentials('turbo')
+    end
+
+  end
 
 end
+
+

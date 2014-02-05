@@ -108,8 +108,7 @@ describe SUSE::Connect::System do
       end
 
       it 'should produce log message' do
-        SUSE::Connect::Logger.should_receive(:error)
-        subject.credentials
+        subject.credentials.should be_nil
       end
 
     end
