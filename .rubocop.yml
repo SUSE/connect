@@ -1,0 +1,14 @@
+HashSyntax:
+  Enabled: false
+
+
+MethodLength:
+  Max: 15
+
+LineLength:
+  Max: 120
+
+SpaceAroundBlockBraces:
+  SpaceBeforeBlockParameters: false
+  Enabled: true
+  EnforcedStyle: space_inside_braces

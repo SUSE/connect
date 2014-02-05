@@ -30,7 +30,7 @@ module SUSE
               :cpu_type       => `uname -p`,
               :cpu_count      => `grep "processor" /proc/cpuinfo | wc -l`,
               :platform_type  => `uname -i`,
-              :hostname       => `hostname`,
+              :hostname       => `hostname`
           }
 
           info.values.each(&:chomp!)
