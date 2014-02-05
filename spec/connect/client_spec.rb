@@ -24,7 +24,7 @@ describe SUSE::Connect::Client do
 
     context :passed_opts do
 
-      subject { SUSE::Connect::Client.new({ :host => 'dummy', :port => '42' }) }
+      subject { SUSE::Connect::Client.new(:host => 'dummy', :port => '42') }
 
       it 'should set port to one from options if it was passed via constructor' do
         subject.options[:port].should eq '42'
@@ -36,7 +36,7 @@ describe SUSE::Connect::Client do
 
       context :secure_requested do
 
-        subject { SUSE::Connect::Client.new({ :host => 'dummy', :port => '443' }) }
+        subject { SUSE::Connect::Client.new(:host => 'dummy', :port => '443') }
 
         it 'should build url with https schema if passed 443 port' do
           subject.url.should eq 'https://dummy'
@@ -46,14 +46,13 @@ describe SUSE::Connect::Client do
 
     end
 
-
   end
 
   describe '#announce_system' do
 
     before do
       api_response = double('api_response')
-      api_response.stub(:body => {'login' => 'lg', 'password' => 'pw'})
+      api_response.stub(:body => { 'login' => 'lg', 'password' => 'pw' })
       SUSE::Connect::Api.any_instance.stub(:announce_system => api_response)
       subject.stub(:token_auth => true)
     end
@@ -76,16 +75,16 @@ describe SUSE::Connect::Client do
 
     before do
       api_response = double('api_response')
-      api_response.stub(:body => {:sources => {:foo => 'bar'}})
+      api_response.stub(:body => { :sources => { :foo => 'bar' } })
       SUSE::Connect::Api.any_instance.stub(:activate_subscription => api_response)
-      SUSE::Connect::System.stub(:credentials => ['meuser', 'mepassword'])
-      SUSE::Connect::Zypper.stub(:base_product => ({:name => 'SLE_BASE'}))
+      SUSE::Connect::System.stub(:credentials => %w{ meuser mepassword})
+      SUSE::Connect::Zypper.stub(:base_product => ({ :name => 'SLE_BASE' }))
       SUSE::Connect::System.stub(:add_service)
       subject.stub(:basic_auth => 'secretsecret')
     end
 
     it 'selects base product' do
-      SUSE::Connect::Zypper.should_receive(:base_product).and_return({:name => 'SLE_BASE'})
+      SUSE::Connect::Zypper.should_receive(:base_product).and_return(:name => 'SLE_BASE')
       subject.activate_subscription
     end
 
@@ -95,9 +94,8 @@ describe SUSE::Connect::Client do
     end
 
     it 'calls underlying api with proper parameters' do
-      SUSE::Connect::Api.any_instance.should_receive(:activate_subscription).
-          with('secretsecret', SUSE::Connect::Zypper.base_product)
-
+      SUSE::Connect::Api.any_instance.should_receive(:activate_subscription)
+        .with('secretsecret', SUSE::Connect::Zypper.base_product)
       subject.activate_subscription
     end
 
@@ -113,7 +111,7 @@ describe SUSE::Connect::Client do
     before do
       SUSE::Connect::Client.any_instance.stub(:announce_system)
       SUSE::Connect::Client.any_instance.stub(:activate_subscription)
-      SUSE::Connect::Zypper.stub(:base_product => {:name => 'SLE_BASE'})
+      SUSE::Connect::Zypper.stub(:base_product => { :name => 'SLE_BASE' })
       SUSE::Connect::Zypper.stub(:add_service => true)
       subject.class.any_instance.stub(:basic_auth => true)
       subject.class.any_instance.stub(:token_auth => true)
@@ -143,12 +141,12 @@ describe SUSE::Connect::Client do
   describe '?token_auth' do
 
     it 'returns string for auth header' do
-      SUSE::Connect::Client.new({:token => 'lambada'}).send(:token_auth).should eq 'Token token=lambada'
+      SUSE::Connect::Client.new(:token => 'lambada').send(:token_auth).should eq 'Token token=lambada'
     end
 
     it 'raise if no token passed, but method requested' do
-      expect { SUSE::Connect::Client.new({}).send(:token_auth) }.
-          to raise_error SUSE::Connect::CannotBuildTokenAuth, 'token auth requested, but no token provided'
+      expect { SUSE::Connect::Client.new({}).send(:token_auth) }
+        .to raise_error SUSE::Connect::CannotBuildTokenAuth, 'token auth requested, but no token provided'
     end
 
   end
@@ -156,14 +154,14 @@ describe SUSE::Connect::Client do
   describe '?basic_auth' do
 
     it 'returns string for auth header' do
-      SUSE::Connect::System.stub(:credentials => ['bob', 'dylan'])
-      base64_line = "Basic #{Base64::encode64('bob:dylan')}"
+      SUSE::Connect::System.stub(:credentials => %w{bob dylan})
+      base64_line = "Basic #{Base64.encode64('bob:dylan')}"
       SUSE::Connect::Client.new({}).send(:basic_auth).should eq base64_line
     end
 
     it 'raise if cannot get credentials' do
-      expect {SUSE::Connect::Client.new({}).send(:basic_auth) }.
-          to raise_error SUSE::Connect::CannotBuildBasicAuth, 'cannot get proper username and password'
+      expect { SUSE::Connect::Client.new({}).send(:basic_auth) }
+        .to raise_error SUSE::Connect::CannotBuildBasicAuth, 'cannot get proper username and password'
     end
 
   end
