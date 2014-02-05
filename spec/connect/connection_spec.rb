@@ -109,9 +109,9 @@ describe SUSE::Connect::Connection do
     end
 
     before do
-      stub_request(:post, 'https://example.com/api/v1/test').
-          with(:body => '', :headers => { 'Authorization' => 'Token token=zulu' }).
-          to_return(:status => 200, :body => '{}', :headers => {})
+      stub_request(:post, 'https://example.com/api/v1/test')
+      .with(:body => '', :headers => { 'Authorization' => 'Token token=zulu' })
+      .to_return(:status => 200, :body => '{}', :headers => {})
     end
 
     it 'hits requested endpoint with parametrized request' do
@@ -122,23 +122,27 @@ describe SUSE::Connect::Connection do
 
     it 'converts response into proper hash' do
 
-      stub_request(:post, 'https://example.com/api/v1/test').
-          with(:body => '', :headers => { 'Authorization' => 'Token token=zulu' }).
-          to_return(:status => 200, :body => "{\"keyyo\":\"vallue\"}", :headers => {})
+      stub_request(:post, 'https://example.com/api/v1/test')
+        .with(:body => '', :headers => { 'Authorization' => 'Token token=zulu' })
+        .to_return(:status => 200, :body => "{\"keyyo\":\"vallue\"}", :headers => {})
 
       result = connection.post('/api/v1/test', :auth => 'Token token=zulu')
-      result.body.should eq({'keyyo' => 'vallue'})
+      result.body.should eq('keyyo' => 'vallue')
       result.code.should eq 200
     end
 
     it 'send params alongside with request' do
 
-      stub_request(:post, 'https://example.com/api/v1/test').
-          with(:body => "{\"foo\":\"bar\",\"bar\":[1,3,4]}", :headers => { 'Authorization' => 'Token token=zulu' }).
-          to_return(:status => 200, :body => "{\"keyyo\":\"vallue\"}", :headers => {})
+      stub_request(:post, 'https://example.com/api/v1/test')
+        .with(:body => "{\"foo\":\"bar\",\"bar\":[1,3,4]}", :headers => { 'Authorization' => 'Token token=zulu' })
+        .to_return(:status => 200, :body => "{\"keyyo\":\"vallue\"}", :headers => {})
 
-      result = connection.post('/api/v1/test', :auth => 'Token token=zulu', :params => {:foo => "bar", :bar => [1,3,4]} )
-      result.body.should eq({'keyyo' => 'vallue'})
+      result = connection.post(
+          '/api/v1/test',
+          :auth => 'Token token=zulu',
+          :params => { :foo => 'bar', :bar => [1, 3, 4] }
+      )
+      result.body.should eq('keyyo' => 'vallue')
       result.code.should eq 200
     end
   end
