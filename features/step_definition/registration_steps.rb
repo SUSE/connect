@@ -21,4 +21,3 @@ end
 Then(/^outputs should not contain info about required port param$/) do
   assert_no_partial_output('Please provide port parameter', all_output.chomp)
 end
-
