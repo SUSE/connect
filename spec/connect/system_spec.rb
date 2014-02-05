@@ -45,13 +45,13 @@ describe SUSE::Connect::System do
 
       it 'should collect basic hwinfo' do
         Object.should_receive(:'`').with('dmidecode').and_return "ahoy\n"
-        subject.hwinfo.should eq({
-                                     :cpu_type       => 'PowerPC 440',
-                                     :cpu_count      => '250000',
-                                     :platform_type  => 'x86_64',
-                                     :hostname       => 'blue_gene',
-                                     :virtualized    => false
-                                 })
+        subject.hwinfo.should eq(
+                                   :cpu_type       => 'PowerPC 440',
+                                   :cpu_count      => '250000',
+                                   :platform_type  => 'x86_64',
+                                   :hostname       => 'blue_gene',
+                                   :virtualized    => false
+                                 )
 
       end
     end
@@ -60,13 +60,13 @@ describe SUSE::Connect::System do
 
       it 'should report that system is virtualized' do
         Object.should_receive(:'`').with('dmidecode').and_return "qemu\n"
-        subject.hwinfo.should eq({
-                                     :cpu_type       => 'PowerPC 440',
-                                     :cpu_count      => '250000',
-                                     :platform_type  => 'x86_64',
-                                     :hostname       => 'blue_gene',
-                                     :virtualized    => true
-                                 })
+        subject.hwinfo.should eq(
+                                   :cpu_type       => 'PowerPC 440',
+                                   :cpu_count      => '250000',
+                                   :platform_type  => 'x86_64',
+                                   :hostname       => 'blue_gene',
+                                   :virtualized    => true
+                                 )
       end
 
     end
@@ -89,13 +89,13 @@ describe SUSE::Connect::System do
       end
 
       it 'should raise MalformedNccCredentialsFile if cannot parse lines' do
-        stub_ncc_cred_file.should_receive(:readlines).and_return(['me', 'fe'])
+        stub_ncc_cred_file.should_receive(:readlines).and_return(%w{ me fe })
         expect { subject.credentials }
           .to raise_error SUSE::Connect::MalformedNccCredentialsFile, 'Cannot parse credentials file'
       end
 
       it 'should return username and password' do
-        stub_ncc_cred_file.should_receive(:readlines).and_return(['username=bill', 'password=nevermore'])
+        stub_ncc_cred_file.should_receive(:readlines).and_return(%w{ username=bill password=nevermore })
         subject.credentials.should eq %w{ bill nevermore }
       end
 
@@ -118,7 +118,7 @@ describe SUSE::Connect::System do
   describe '.extract_credentials' do
 
     it 'should return nils touple if there more than two elements' do
-      subject.send(:extract_credentials, [1,2,3]).should be_nil
+      subject.send(:extract_credentials, [1, 2, 3]).should be_nil
     end
 
     it 'should extract proper parts from credentials lines' do
@@ -161,7 +161,7 @@ describe SUSE::Connect::System do
 
     it 'add each service from set' do
       SUSE::Connect::Zypper.should_receive(:add_service).with('name', 'url')
-      SUSE::Connect::Zypper.should_receive(:add_service).with('lastname', 'furl' )
+      SUSE::Connect::Zypper.should_receive(:add_service).with('lastname', 'furl')
       subject.add_service mock_service
     end
 
