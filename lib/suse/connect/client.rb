@@ -2,11 +2,11 @@ require 'base64'
 
 module SUSE
   module Connect
+    # Client to interact with API
     class Client
 
       DEFAULT_PORT = '443'
       DEFAULT_HOST = 'scc.suse.com'
-
 
       attr_reader :options, :url, :api
 
@@ -33,7 +33,7 @@ module SUSE
 
       def activate_subscription
         base_product    = Zypper.base_product
-        #TODO: handle non 200ish return codes
+        # TODO: handle non 200ish return codes
         response = @api.activate_subscription(basic_auth, base_product).body
         service = Service.new(response)
         System.add_service(service)
@@ -41,36 +41,35 @@ module SUSE
 
       private
 
-        def setup_host_and_port(opts)
-          @options[:port] = opts[:port] || DEFAULT_PORT
-          @options[:host] = opts[:host] || DEFAULT_HOST
+      def setup_host_and_port(opts)
+        @options[:port] = opts[:port] || DEFAULT_PORT
+        @options[:host] = opts[:host] || DEFAULT_HOST
+      end
+
+      def construct_url
+        @url = requested_secure? ? "https://#{@options[:host]}" : "http://#{@options[:host]}"
+      end
+
+      def requested_secure?
+        @options[:port] == '443'
+      end
+
+      def token_auth
+        raise CannotBuildTokenAuth, 'token auth requested, but no token provided' unless options[:token]
+        "Token token=#{options[:token]}"
+      end
+
+      def basic_auth
+
+        username, password = System.credentials
+
+        if username && password
+          "Basic #{::Base64.encode64(username + ':' + password)}"
+        else
+          raise CannotBuildBasicAuth, 'cannot get proper username and password'
         end
 
-        def construct_url
-          @url = requested_secure? ? "https://#{@options[:host]}" : "http://#{@options[:host]}"
-        end
-
-        def requested_secure?
-          @options[:port] == '443'
-        end
-
-        def token_auth
-          raise CannotBuildTokenAuth, 'token auth requested, but no token provided' unless options[:token]
-          "Token token=#{options[:token]}"
-        end
-
-        def basic_auth
-
-          username, password = System.credentials
-
-          if username && password
-            "Basic #{::Base64::encode64(username + ':' + password)}"
-          else
-            raise CannotBuildBasicAuth, 'cannot get proper username and password'
-          end
-
-        end
+      end
     end
   end
 end
-

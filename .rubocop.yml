@@ -14,3 +14,6 @@ SpaceAroundBlockBraces:
 
 EmptyLinesAroundBody:
   Enabled: false
+
+SignalException:
+  Enabled: false

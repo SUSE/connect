@@ -1,5 +1,6 @@
 module SUSE
   module Connect
+    # System class allowing to interact with underlying system
     class System
 
       UUIDFILE                = '/sys/class/dmi/id/product_uuid'
@@ -35,7 +36,8 @@ module SUSE
 
           info.values.each(&:chomp!)
           dmidecode = `dmidecode`
-          info[:virtualized] = (['vmware', 'virtual machine', 'qemu', 'domu'].any? { |ident| dmidecode.downcase.include? ident }) if dmidecode
+          virt_zoo = ['vmware', 'virtual machine', 'qemu', 'domu']
+          info[:virtualized] = (virt_zoo).any? {|ident| dmidecode.downcase.include? ident } if dmidecode
           info
         end
 
@@ -69,7 +71,7 @@ module SUSE
         def registered?
           return false unless credentials
           username = credentials.first
-          username && username.include?( 'SCC_' )
+          username && username.include?('SCC_')
         end
 
         def add_service(service)
@@ -99,34 +101,30 @@ module SUSE
 
         private
 
-          ##
-          # Assuming structure:
-          # username=<32 symbols line>
-          # password=<32 symbols line>
-          # will raise MalformedNccCredentialsFile if cannot parse
-          # provided lines
-          def extract_credentials(lines)
-            return nil unless lines.count == 2
+        ##
+        # Assuming structure:
+        # username=<32 symbols line>
+        # password=<32 symbols line>
+        # will raise MalformedNccCredentialsFile if cannot parse
+        # provided lines
+        def extract_credentials(lines)
+          return nil unless lines.count == 2
 
-            begin
-              username = divide_credential_tuple lines.select {|line| line =~ /^username=.*/}.first
-              password = divide_credential_tuple lines.select {|line| line =~ /^password=.*/}.first
-            rescue
-              raise MalformedNccCredentialsFile, 'Cannot parse credentials file'
-            end
-
-            return username, password
+          begin
+            username = divide_credential_tuple lines.select {|line| line =~ /^username=.*/ }.first
+            password = divide_credential_tuple lines.select {|line| line =~ /^password=.*/ }.first
+          rescue
+            raise MalformedNccCredentialsFile, 'Cannot parse credentials file'
           end
 
-          def divide_credential_tuple(tuple)
-            tuple.split('=').last
-          end
+          [username, password]
+        end
+
+        def divide_credential_tuple(tuple)
+          tuple.split('=').last
+        end
 
       end
-
-
     end
-
   end
-
 end
