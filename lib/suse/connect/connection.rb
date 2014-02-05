@@ -4,6 +4,7 @@ require 'json'
 
 module SUSE
   module Connect
+    # Establishing a connection to SCC REST API and calling
     class Connection
 
       VERB_TO_CLASS = {
@@ -32,18 +33,17 @@ module SUSE
 
       private
 
-        def json_request(method, path, params={})
-          request                   = VERB_TO_CLASS[method].new(path)
-          request['Authorization']  = auth if auth
-          request['Content-Type']   = 'application/json'
-          request.body              = params.to_json unless params.empty?
-          response                  = @http.request(request)
-          body                      = JSON.parse(response.body)
+      def json_request(method, path, params = {})
+        request                   = VERB_TO_CLASS[method].new(path)
+        request['Authorization']  = auth if auth
+        request['Content-Type']   = 'application/json'
+        request.body              = params.to_json unless params.empty?
+        response                  = @http.request(request)
+        body                      = JSON.parse(response.body)
 
-          OpenStruct.new(:code => response.code.to_i, :body => body)
-        end
+        OpenStruct.new(:code => response.code.to_i, :body => body)
+      end
 
     end
   end
 end
-

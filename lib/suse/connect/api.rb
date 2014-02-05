@@ -2,6 +2,8 @@ require 'optparse'
 
 module SUSE
   module Connect
+    # Place for implementing calls to REST api of SCC
+    # Any additional call should live here
     class Api
 
       def initialize(client)
@@ -13,7 +15,7 @@ module SUSE
         @connection.post('/connect/subscriptions/systems', :auth => auth)
       end
 
-      #TODO: introduce Product class
+      # TODO: introduce Product class
       def activate_subscription(auth, product)
         raise TokenNotPresent unless @client.options[:token]
 

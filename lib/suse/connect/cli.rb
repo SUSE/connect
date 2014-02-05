@@ -1,7 +1,9 @@
 require 'optparse'
+require 'suse/connect'
 
 module SUSE
   module Connect
+    # Command line interface for interacting with SUSEConnect
     class Cli
 
       attr_reader :options
@@ -14,7 +16,7 @@ module SUSE
 
       private
 
-      def extract_options
+      def extract_options # rubocop:disable MethodLength
 
         OptionParser.new do |opts|
           opts.banner = 'Usage: SUSEConnect [options]'
