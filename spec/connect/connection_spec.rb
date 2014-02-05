@@ -34,11 +34,11 @@ describe SUSE::Connect::Connection do
     context :passed_options do
 
       let :secure_connection do
-        subject.new(:endpoint => 'https://example.com', :insecure => true, :use_ssl => false)
+        subject.new(:endpoint => 'https://example.com', :insecure => true, :skip_ssl => false)
       end
 
       it 'set ssl to true by default' do
-        secure_connection.http.use_ssl?.should be_false
+        secure_connection.http.use_ssl?.should be_true
       end
 
       it 'set insecure to false by default' do

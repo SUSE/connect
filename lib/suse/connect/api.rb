@@ -8,7 +8,11 @@ module SUSE
 
       def initialize(client)
         @client     = client
-        @connection = Connection.new(:endpoint => client.url)
+        @connection = Connection.new(
+            :endpoint => client.url,
+            :insecure => client.options[:insecure],
+            :skip_ssl  => client.options[:skip_ssl]
+        )
       end
 
       def announce_system(auth)
