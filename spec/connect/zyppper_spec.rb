@@ -154,6 +154,21 @@ describe SUSE::Connect::Zypper do
 
   end
 
+  describe '.write_base_credentials' do
+
+    mock_dry_file
+
+    it 'should call write_credentials_file' do
+      subject.should_receive(:write_credentials_file).with(
+          :login => 'dummy',
+          :password => 'tummy',
+          :filename => 'NCCcredentials'
+      )
+      subject.write_base_credentials('dummy', 'tummy')
+
+    end
+  end
+
   describe '.write_source_credentials' do
 
     mock_dry_file

@@ -17,6 +17,5 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'debugger'
   gem.add_development_dependency 'webmock', '~> 1.15'
   gem.add_development_dependency 'aruba'
-  gem.add_development_dependency 'rubocop', '~> 0.18.1'
 
 end

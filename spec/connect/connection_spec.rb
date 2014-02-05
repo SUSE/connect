@@ -10,10 +10,6 @@ describe SUSE::Connect::Connection do
       subject.new(:endpoint => 'https://example.com')
     end
 
-    let :insecure_connection do
-      subject.new(:endpoint => 'http://example.com', :insecure => true)
-    end
-
     it 'stores http object' do
       secure_connection.http.should be_kind_of Net::HTTP
     end
