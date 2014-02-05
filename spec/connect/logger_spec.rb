@@ -31,5 +31,4 @@ describe SUSE::Connect::Logger do
 
   end
 
-
 end
