@@ -148,7 +148,7 @@ describe SUSE::Connect::System do
       sources = { 'name' => 'url', 'lastname' => 'furl' }
       SUSE::Connect::Service.new(
           :sources   => sources,
-          :enabled   => %w{ fehu  uruz ansuz },
+          :enabled   => %w{ fehu uruz ansuz },
           :norefresh => %w{ green coffee loki }
       )
     end
@@ -160,27 +160,12 @@ describe SUSE::Connect::System do
     end
 
     it 'add each service from set' do
-      SUSE::Connect::Zypper.should_receive(:add_service).with( 'name', 'url')
-      SUSE::Connect::Zypper.should_receive(:add_service).with( 'lastname', 'furl' )
+      SUSE::Connect::Zypper.should_receive(:add_service).with('name', 'url')
+      SUSE::Connect::Zypper.should_receive(:add_service).with('lastname', 'furl' )
       subject.add_service mock_service
     end
 
     it 'enables all repos for this service' do
-      SUSE::Connect::Zypper.should_receive(:add_service).with( 'name', 'url')
-      SUSE::Connect::Zypper.should_receive(:add_service).with( 'lastname', 'furl' )
-      subject.add_service mock_service
-    end
-
-    it 'enables service repository for each of enabled' do
-
-      SUSE::Connect::Zypper.should_receive(:add_service).with( 'name', 'url')
-      SUSE::Connect::Zypper.should_receive(:add_service).with( 'lastname', 'furl')
-
-      subject.add_service mock_service
-    end
-
-    it 'writes credentials file in corresponding file in credentials.d' do
-
       SUSE::Connect::Zypper.should_receive(:enable_service_repository).with('name', 'fehu')
       SUSE::Connect::Zypper.should_receive(:enable_service_repository).with('name', 'uruz')
       SUSE::Connect::Zypper.should_receive(:enable_service_repository).with('name', 'ansuz')
@@ -189,6 +174,20 @@ describe SUSE::Connect::System do
       SUSE::Connect::Zypper.should_receive(:enable_service_repository).with('lastname', 'uruz')
       SUSE::Connect::Zypper.should_receive(:enable_service_repository).with('lastname', 'ansuz')
 
+      subject.add_service mock_service
+    end
+
+    it 'enables service repository for each of enabled' do
+
+      SUSE::Connect::Zypper.should_receive(:add_service).with('name', 'url')
+      SUSE::Connect::Zypper.should_receive(:add_service).with('lastname', 'furl')
+
+      subject.add_service mock_service
+    end
+
+    it 'writes credentials file in corresponding file in credentials.d' do
+      SUSE::Connect::Zypper.should_receive(:write_source_credentials).with('name')
+      SUSE::Connect::Zypper.should_receive(:write_source_credentials).with('lastname')
       subject.add_service mock_service
     end
 
