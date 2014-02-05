@@ -8,8 +8,8 @@ module SUSE
           STDOUT.puts msg
         end
 
-        def error(msg)
-          STDERR.puts "ERROR: #{msg}"
+        def error(msg, e=nil)
+          STDERR.puts "ERROR: #{msg}#{(' -> ' + e.to_s) if e}"
         end
 
         def debug(msg)
