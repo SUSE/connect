@@ -58,13 +58,11 @@ describe SUSE::Connect::Zypper do
   describe '.refresh' do
 
     it 'calls zypper with proper arguments' do
-      parameters = "refresh"
-      Object.should_receive(:system).with(include parameters).and_return(true)
+      Object.should_receive(:system).with(include 'refresh').and_return(true)
       subject.refresh
     end
 
   end
-
 
   describe '.enable_service_repository' do
 
@@ -149,9 +147,9 @@ describe SUSE::Connect::Zypper do
   describe '.base_product' do
 
     it 'should return first product from installed product which is base' do
-      parsed_products = [{:is_base => '1', :name => 'SLES'}, {:is_base => '2', :name => 'Cloud'}]
+      parsed_products = [{ :is_base => '1', :name => 'SLES' }, { :is_base => '2', :name => 'Cloud' }]
       subject.stub(:installed_products => parsed_products)
-      subject.base_product.should eq ({:is_base => '1', :name => 'SLES'})
+      subject.base_product.should eq(:is_base => '1', :name => 'SLES')
     end
 
   end
@@ -166,12 +164,14 @@ describe SUSE::Connect::Zypper do
     end
 
     it 'creates a file with source name' do
-      subject.should_receive(:write_credentials_file).with(:login => 'dummy', :password => 'tummy', :filename => 'turbo')
+      subject.should_receive(:write_credentials_file).with(
+          :login => 'dummy',
+          :password => 'tummy',
+          :filename => 'turbo'
+      )
       subject.write_source_credentials('turbo')
     end
 
   end
 
 end
-
-
