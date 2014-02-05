@@ -1,0 +1,16 @@
+{
+  "id": 42,
+  "login":"SCC_mocknumber",
+  "password":"mockpassword",
+  "created_at":"2014-01-15T10:49:36.124Z",
+  "updated_at":"2014-01-15T10:49:36.124Z",
+  "identifier":null,
+  "hwinfo":null,
+  "credentials_file":null,
+  "nnw_system":null,
+  "hostname":"virtual-system.domain.net",
+  "registered_at":"2014-01-15T10:49:36.121Z",
+  "vendor":"SUSE",
+  "parent_id":null,
+  "sys_host_id":null
+}
