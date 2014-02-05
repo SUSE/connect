@@ -1,7 +1,6 @@
 HashSyntax:
   Enabled: false
 
-
 MethodLength:
   Max: 15
 
@@ -12,3 +11,6 @@ SpaceAroundBlockBraces:
   SpaceBeforeBlockParameters: false
   Enabled: true
   EnforcedStyle: space_inside_braces
+
+EmptyLinesAroundBody:
+  Enabled: false

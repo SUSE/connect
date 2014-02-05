@@ -1,14 +1,14 @@
 module SUSE
   module Connect
+    # Simple Logger implementation. Singleton behavior
     class Logger
-
       class << self
 
         def info(msg)
           STDOUT.puts msg
         end
 
-        def error(msg, e=nil)
+        def error(msg, e = nil)
           STDERR.puts "ERROR: #{msg}#{(' -> ' + e.to_s) if e}"
         end
 
