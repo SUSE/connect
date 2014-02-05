@@ -11,7 +11,6 @@ module SUSE
       attr_reader :options, :url, :api
 
       def initialize(opts)
-
         @options            = {}
         @options[:token]    = opts[:token]
         @options[:insecure] = !!opts[:insecure]
@@ -47,7 +46,7 @@ module SUSE
       end
 
       def construct_url
-        @url = requested_secure? ? "https://#{@options[:host]}" : "http://#{@options[:host]}"
+        @url = requested_secure? ? "https://#{@options[:host]}" : "http://#{@options[:host]}:#{@options[:port]}"
       end
 
       def requested_secure?

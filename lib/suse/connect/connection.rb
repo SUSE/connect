@@ -1,3 +1,4 @@
+require 'openssl'
 require 'net/http'
 require 'ostruct'
 require 'json'
@@ -20,7 +21,7 @@ module SUSE
         uri              = URI.parse(endpoint)
         http             = Net::HTTP.new(uri.host, uri.port)
         http.use_ssl     = use_ssl
-        http.verify_mode = insecure ? OpenSSL::SSL::VERIFY_NONE : OpenSSL::SSL::VERIFY_PEER
+        http.verify_mode = insecure ? ::OpenSSL::SSL::VERIFY_NONE : ::OpenSSL::SSL::VERIFY_PEER
         @http            = http
       end
 

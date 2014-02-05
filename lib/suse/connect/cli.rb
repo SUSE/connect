@@ -36,7 +36,7 @@ module SUSE
             @options[:token] = opt
           end
 
-          opts.on('-k', '--insecure', 'Print version') do |opt|
+          opts.on('-k', '--insecure', 'Skip ssl verification (insecure).') do |opt|
             @options[:insecure] = opt
           end
 
@@ -67,6 +67,7 @@ module SUSE
 
       def execute!
         # TODO: pass only what is needed
+        Logger.info(@options) if @options[:verbose]
         SUSE::Connect::Client.new(@options).execute!
       end
 

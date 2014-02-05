@@ -3,4 +3,5 @@
 .bundle/
 coverage/
 Gemfile.lock
+.yardoc/
 
