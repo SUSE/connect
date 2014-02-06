@@ -23,9 +23,11 @@ describe SUSE::Connect::System do
     context :uuid_file_exist do
 
       it 'should return content of UUIDFILE chomped' do
-        File.stub(:exist?).with(subject::UUIDFILE).and_return(false)
-        Object.should_receive(:'`').with(subject::UUIDGEN_LOCATION).and_return "lambada\n"
-        subject.uuid.should eq 'lambada'
+        File.stub(:exist?).with(subject::UUIDFILE).and_return(true)
+        uuidfile = double('uuidfile_mock')
+        uuidfile.stub(:gets => 'megusta', :close => true)
+        File.stub(:open => uuidfile)
+        subject.uuid.should eq 'megusta'
       end
 
     end
@@ -113,6 +115,24 @@ describe SUSE::Connect::System do
 
     end
 
+  end
+
+  describe '.registered?' do
+
+    it 'returns false if credentials are nil' do
+      subject.stub(:credentials => nil)
+      subject.registered?.should be_false
+    end
+
+    it 'returns false if username not prefixed with SCC_' do
+      subject.stub(:credentials => %w{John B})
+      subject.registered?.should be_false
+    end
+
+    it 'returns true if credentials exist and username is prefixed with SCC_' do
+      subject.stub(:credentials => %w{SCC_John B})
+      subject.registered?.should be_true
+    end
   end
 
   describe '.extract_credentials' do

@@ -99,6 +99,12 @@ describe SUSE::Connect::Zypper do
         subject.send(:write_credentials_file, params)
       end
 
+      it 'should produce a log record in case of Exception' do
+        source_cred_file.stub(:puts).and_raise(IOError)
+        SUSE::Connect::Logger.should_receive(:error)
+        subject.send(:write_credentials_file, params)
+      end
+
     end
 
     context :credentials_folder_not_exist do
