@@ -15,7 +15,6 @@ module SUSE
         @options[:token]     = opts[:token]
         @options[:insecure]  = !!opts[:insecure]
         @options[:skip_ssl]  = !!opts[:skip_ssl]
-        pp @options
         setup_host_and_port(opts)
         construct_url
         @api                = Api.new(self)

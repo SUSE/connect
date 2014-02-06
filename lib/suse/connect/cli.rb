@@ -70,7 +70,6 @@ module SUSE
       end
 
       def execute!
-        # TODO: pass only what is needed
         Logger.info(@options) if @options[:verbose]
         SUSE::Connect::Client.new(@options).execute!
       end
