@@ -7,6 +7,10 @@ module SUSE
     #     this library documentation, which is implementing interaction with it
     # Later on, when we will have additional calls - this class will be transformed to module with separate classes
     # divided by entity interactions. System, Subscription, etc.
+    #
+    # SCC's API provides a RESTful API interface. This essentially means that you can send an HTTP request
+    # (GET, PUT/PATCH, POST, or DELETE) to an endpoint, and you'll get back a JSON representation of the resource(s)
+    # (including children) in return. The Connect API is located at https://scc.suse.com/connect.
     class Api
 
       # Returns a new instance of SUSE::Connect::Api
