@@ -1,5 +1,14 @@
-require 'coveralls'
-Coveralls.wear!
+require 'simplecov'
+
+if ENV['TRAVIS']
+  require 'coveralls'
+  SimpleCov.formatter = Coveralls::SimpleCov::Formatter
+end
+
+SimpleCov.minimum_coverage 100
+SimpleCov.start do
+  add_filter '/spec/'
+end
 
 require 'rspec'
 require 'webmock/rspec'
