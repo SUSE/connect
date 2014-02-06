@@ -43,9 +43,9 @@ module SUSE
       # * Optional:
       #     * `hostname` [String]: The system's hostname can be arbitrary and does not have to be unique.
       #                            It will show up in SCC and serves as a human readable identifier to the user.
-      #     * `hwinfo`   [String]: Hardware information used to evaluate a subscription's potential business requirements
-      #                            (e.g. counting `sockets`) and to provide additional help (e.g. vendor specific
-      #                            repositories).
+      #     * `hwinfo`   [String]: Hardware information used to evaluate a subscription's potential business
+      #                            requirements (e.g. counting `sockets`) and to provide additional help
+      #                            (e.g. vendor specific repositories).
       #     * `email`    [String]: The user's email address to ensure he will be able to see his this system, when he
       #                            logs into SCC's web frontend.
       #     * `parent`   [String]: The user's email address to ensure he will be able to see his this system, when he
@@ -58,7 +58,7 @@ module SUSE
       #     -d '{"hostname": "test"}'
       # ```
       #
-      # **Response**
+      # **Example Response**
       #
       # The response will contain the system credentials (login/password) that will get stored on the system in
       # `/etc/zypp/credentials.d/SCCcredentials` to authenticate any subsequent calls to SCC from this system.
@@ -113,13 +113,14 @@ module SUSE
       # curl http://localhost:3000/connect/systems/products  -u<username>:<password> -d \
       #     '{"product_ident": "SLES", "product_version": "11-SP2", "arch": "x86_64", "token": "<token>" }'
       # ```
-      # **Response:**
+      # **Example Response:**
       #
       # ```json
-      #{
-      # "sources": {
+      # {
+      #   "sources": {
       #    "SUSE_Linux_Enterprise_Server_for_x86_AMD64_Intel64_Activation_Code":
-      #       "http://localhost:3000/service?credentials=SUSE_Linux_Enterprise_Server_for_x86_AMD64_Intel64_Activation_Code_credentials"
+      #       "http://localhost:3000/service\
+      #       ?credentials=SUSE_Linux_Enterprise_Server_for_x86_AMD64_Intel64_Activation_Code_credentials"
       #  },
       #    "norefresh": [
       #       "SLES11-SP2-Extension-Store", "SLES10-SP2-Pool"],
@@ -140,7 +141,7 @@ module SUSE
       #       "SLE11-SP3-Debuginfo-Updates",
       #       "SLES11-SP2-Core"
       #    ]
-      #}
+      # }
       # ```
       #
       # **Errors and return codes:**
