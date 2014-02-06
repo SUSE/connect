@@ -1,0 +1,25 @@
+{
+  "sources": {
+    "SUSE_Linux_Enterprise_Server_for_x86_AMD64_Intel64_Activation_Code": "http://localhost:3000/service?credentials=SUSE_Linux_Enterprise_Server_for_x86_AMD64_Intel64_Activation_Code_credentials"
+  },
+  "norefresh": [
+    "SLES11-SP2-Extension-Store", "SLES10-SP2-Pool"
+  ],
+  "enabled": [
+    "SLE11-SP2-Debuginfo-Core",
+    "SLES10-SP4-Online",
+    "SLE11-WebYaST-SP1-Updates",
+    "SLE10-SP3-Debuginfo-Updates",
+    "SLE10-SP4-Debuginfo-Updates",
+    "SLE11-Debuginfo-Pool",
+    "SLES11-Updates",
+    "SLES11-SP1-Updates",
+    "SLE10-SP3-Debuginfo-Pool",
+    "SLE10-SP4-Debuginfo-Pool",
+    "SLES11-SP2-Core",
+    "SLE11-WebYaST-SP1-Pool",
+    "SLES10-SP2-Updates",
+    "SLE11-SP3-Debuginfo-Updates",
+    "SLES11-SP2-Core"
+  ]
+}
