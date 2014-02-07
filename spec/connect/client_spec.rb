@@ -36,7 +36,7 @@ describe SUSE::Connect::Client do
 
       context :secure_requested do
 
-        subject { Client.new(:host => 'dummy', :port => '443') }
+        subject { SUSE::Connect::Client.new(:host => 'http://dummy', :port => '443') }
 
         it 'should build url with https schema if passed 443 port' do
           subject.url.should eq 'http://dummy:443'
