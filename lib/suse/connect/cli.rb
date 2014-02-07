@@ -32,7 +32,7 @@ module SUSE
 
           opts.on('--url [URL]', 'Connection base url (e.g. https://scc.suse.com).') do |opt|
             check_if_param(opt, 'Please provide url parameter')
-            @options[:host] = opt
+            @options[:url] = opt
           end
 
           opts.separator ''

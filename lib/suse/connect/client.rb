@@ -5,17 +5,15 @@ module SUSE
     # Client to interact with API
     class Client
 
-      DEFAULT_PORT = '443'
-      DEFAULT_HOST = 'https://scc.suse.com'
+      DEFAULT_URL = 'https://scc.suse.com'
 
       attr_reader :options, :url, :api
 
       def initialize(opts)
-        @options             = {}
-        @options[:token]     = opts[:token]
-        @options[:insecure]  = !!opts[:insecure]
-        setup_host_and_port(opts)
-        construct_url
+        @options            = {}
+        @options[:token]    = opts[:token]
+        @options[:insecure] = !!opts[:insecure]
+        @url                = opts[:url] || DEFAULT_URL
         @api                = Api.new(self)
       end
 
@@ -39,15 +37,6 @@ module SUSE
       end
 
       private
-
-      def setup_host_and_port(opts)
-        @options[:port] = opts[:port] || DEFAULT_PORT
-        @options[:host] = opts[:host] || DEFAULT_HOST
-      end
-
-      def construct_url
-        @url = "#{@options[:host]}:#{@options[:port]}"
-      end
 
       def token_auth
         raise CannotBuildTokenAuth, 'token auth requested, but no token provided' unless options[:token]
