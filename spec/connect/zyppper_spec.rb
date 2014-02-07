@@ -91,17 +91,17 @@ describe SUSE::Connect::Zypper do
     context :credentials_folder_exist do
 
       before(:each) do
-        Dir.should_receive(:exists?).with(SUSE::Connect::System::ZYPPER_CREDENTIALS_DIR).and_return true
+        Dir.should_receive(:exists?).with(ZYPPER_CREDENTIALS_DIR).and_return true
       end
 
       it 'will not create credentials.d folder' do
-        Dir.should_not_receive(:mkdir).with(SUSE::Connect::System::ZYPPER_CREDENTIALS_DIR)
+        Dir.should_not_receive(:mkdir).with(ZYPPER_CREDENTIALS_DIR)
         subject.send(:write_credentials_file, params)
       end
 
       it 'should produce a log record in case of Exception' do
         source_cred_file.stub(:puts).and_raise(IOError)
-        SUSE::Connect::Logger.should_receive(:error)
+        Logger.should_receive(:error)
         subject.send(:write_credentials_file, params)
       end
 
@@ -110,11 +110,11 @@ describe SUSE::Connect::Zypper do
     context :credentials_folder_not_exist do
 
       before(:each) do
-        Dir.should_receive(:exists?).with(SUSE::Connect::System::ZYPPER_CREDENTIALS_DIR).and_return false
+        Dir.should_receive(:exists?).with(System::ZYPPER_CREDENTIALS_DIR).and_return false
       end
 
       it 'creates credentials.d folder' do
-        Dir.should_receive(:mkdir).with(SUSE::Connect::System::ZYPPER_CREDENTIALS_DIR)
+        Dir.should_receive(:mkdir).with(System::ZYPPER_CREDENTIALS_DIR)
         subject.send(:write_credentials_file, params)
       end
 
@@ -180,7 +180,7 @@ describe SUSE::Connect::Zypper do
     mock_dry_file
 
     it 'extracts username and password from system credentials' do
-      SUSE::Connect::System.should_receive(:credentials)
+      System.should_receive(:credentials)
       subject.write_source_credentials('turbo')
     end
 

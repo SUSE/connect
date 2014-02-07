@@ -19,3 +19,5 @@ require 'support/credentials_mocks'
 RSpec.configure do |c|
   c.order = :random
 end
+
+include SUSE::Connect
