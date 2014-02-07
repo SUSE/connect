@@ -27,13 +27,13 @@ describe SUSE::Connect::Api do
 
     before do
       stub_announce_call
-      SUSE::Connect::Zypper.stub(:write_base_credentials => true)
+      Zypper.stub(:write_base_credentials => true)
     end
 
     mock_dry_file
 
     it 'sends a call with token to api' do
-      SUSE::Connect::Connection.any_instance.should_receive(:post).and_call_original
+      Connection.any_instance.should_receive(:post).and_call_original
       subject.new(client).announce_system('token')
     end
 
@@ -58,7 +58,7 @@ describe SUSE::Connect::Api do
           :arch             => 'x86_64',
           :token            => 'token-shmocken'
       }
-      SUSE::Connect::Connection.any_instance.should_receive(:post)
+      Connection.any_instance.should_receive(:post)
         .with('/connect/systems/products', :auth => 'basic_auth_mock', :params => expected_payload)
         .and_call_original
       subject.new(client).activate_subscription('basic_auth_mock', product)

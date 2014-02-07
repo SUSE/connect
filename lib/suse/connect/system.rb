@@ -3,13 +3,6 @@ module SUSE
     # System class allowing to interact with underlying system
     class System
 
-      UUIDFILE                = '/sys/class/dmi/id/product_uuid'
-      UUIDGEN_LOCATION        = '/usr/bin/uuidgen'
-      SETTINGS_DIRECTORY      = '/etc/suseConnect'
-      ZYPPER_CREDENTIALS_DIR  = '/etc/zypp/credentials.d'
-      CREDENTIALS_NAME        = 'NCCcredentials'
-      NCC_CREDENTIALS_FILE    = File.join(ZYPPER_CREDENTIALS_DIR, CREDENTIALS_NAME)
-
       class << self
 
         def uuid

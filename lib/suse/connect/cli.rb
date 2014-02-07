@@ -52,7 +52,7 @@ module SUSE
           end
 
           opts.on_tail('--version', 'Print version') do
-            puts SUSE::Connect::VERSION
+            puts VERSION
             exit
           end
 
@@ -71,7 +71,7 @@ module SUSE
 
       def execute!
         Logger.info(@options) if @options[:verbose]
-        SUSE::Connect::Client.new(@options).execute!
+        Client.new(@options).execute!
       end
 
       def check_if_param(opt, message)

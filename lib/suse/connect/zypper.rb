@@ -6,7 +6,7 @@ module SUSE
   module Connect
     # Implements zypper interaction
     class Zypper
-      using SUSE::Connect::RexmlRefinement
+      using RexmlRefinement
 
       class << self
         ##
@@ -61,7 +61,7 @@ module SUSE
           write_credentials_file(
               :login => login,
               :password => password,
-              :filename => SUSE::Connect::System::CREDENTIALS_NAME
+              :filename => CREDENTIALS_NAME
           )
         end
 
@@ -69,7 +69,7 @@ module SUSE
 
         # TODO: move to toolkit module and include later ?
         def write_credentials_file(login:, password:, filename:)
-          credentials_dir = SUSE::Connect::System::ZYPPER_CREDENTIALS_DIR
+          credentials_dir = ZYPPER_CREDENTIALS_DIR
           Dir.mkdir(credentials_dir) unless Dir.exists?(credentials_dir)
           credentials_file = File.join(credentials_dir, filename)
 
