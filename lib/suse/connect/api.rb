@@ -21,8 +21,7 @@ module SUSE
         @client     = client
         @connection = Connection.new(
             :endpoint => client.url,
-            :insecure => client.options[:insecure],
-            :skip_ssl  => client.options[:skip_ssl]
+            :insecure => client.options[:insecure]
         )
       end
 

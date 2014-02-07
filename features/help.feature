@@ -23,12 +23,6 @@ Feature: Help output
       -t, --token [TOKEN]              Registration token.
       """
 
-  Scenario: help should contain non-encrypted connection option
-    Then the output should contain:
-    """
-    --skip-ssl                   Skip SSL encryption (use with caution).
-    """
-
   # Common Options
 
   Scenario: help should contain help option

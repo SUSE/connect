@@ -17,7 +17,7 @@ describe SUSE::Connect::Client do
       end
 
       it 'should build url with default host and port' do
-        subject.url.should eq "https://#{subject.class::DEFAULT_HOST}"
+        subject.url.should eq "#{subject.class::DEFAULT_HOST}:443"
       end
 
     end
@@ -39,7 +39,7 @@ describe SUSE::Connect::Client do
         subject { Client.new(:host => 'dummy', :port => '443') }
 
         it 'should build url with https schema if passed 443 port' do
-          subject.url.should eq 'https://dummy'
+          subject.url.should eq 'http://dummy:443'
         end
 
       end

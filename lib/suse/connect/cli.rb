@@ -40,10 +40,6 @@ module SUSE
             @options[:insecure] = opt
           end
 
-          opts.on('--skip-ssl', 'Skip SSL encryption (use with caution).') do |opt|
-            @options[:skip_ssl] = opt
-          end
-
           opts.separator ''
           opts.separator 'Common options:'
 

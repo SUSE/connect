@@ -9,7 +9,7 @@ Feature: Registration
     And the exit status should be 1
 
   Scenario: passed host parameter with argument
-    And I run `SUSEConnect --token 34fd2b04-4e40-425c-a137-7721e0303382 -h 127.0.0.1`
+    And I run `SUSEConnect --token 34fd2b04-4e40-425c-a137-7721e0303382 -h https://localhost:3000/`
     Then outputs should not contain info about required host param
     And the exit status should be 0
 

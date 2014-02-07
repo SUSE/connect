@@ -6,7 +6,7 @@ module SUSE
     class Client
 
       DEFAULT_PORT = '443'
-      DEFAULT_HOST = 'scc.suse.com'
+      DEFAULT_HOST = 'https://scc.suse.com'
 
       attr_reader :options, :url, :api
 
@@ -14,7 +14,6 @@ module SUSE
         @options             = {}
         @options[:token]     = opts[:token]
         @options[:insecure]  = !!opts[:insecure]
-        @options[:skip_ssl]  = !!opts[:skip_ssl]
         setup_host_and_port(opts)
         construct_url
         @api                = Api.new(self)
@@ -47,11 +46,7 @@ module SUSE
       end
 
       def construct_url
-        @url = requested_secure? ? "https://#{@options[:host]}" : "http://#{@options[:host]}:#{@options[:port]}"
-      end
-
-      def requested_secure?
-        @options[:port] == '443'
+        @url = "#{@options[:host]}:#{@options[:port]}"
       end
 
       def token_auth

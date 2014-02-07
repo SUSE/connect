@@ -6,11 +6,10 @@
 
 ```
 Usage: SUSEConnect [options]
-    -h, --host [HOST]                Connection host.
+    -h, --host [URL]                 Connection base url (e.g. https://scc.suse.com).
     -p, --port [PORT]                Connection port.
     -t, --token [TOKEN]              Registration token.
     -k, --insecure                   Skip ssl verification (insecure).
-        --skip-ssl                   Skip SSL encryption (use with caution).
 
 Common options:
     -d, --dry-mode                   Dry mode. Does not make any changes to the system.
