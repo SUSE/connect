@@ -8,13 +8,7 @@ Feature: Help output
   Scenario: help should contain host parameter
     Then the output should contain:
       """
-      -h, --host [HOST]                Connection host.
-      """
-
-  Scenario: help should contain port parameter
-    Then the output should contain:
-      """
-      -p, --port [PORT]                Connection port.
+      --url [URL]                  Connection base url (e.g. https://scc.suse.com).
       """
 
   Scenario: help should contain token parameter

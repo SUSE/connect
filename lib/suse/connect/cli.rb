@@ -21,16 +21,6 @@ module SUSE
         OptionParser.new do |opts|
           opts.banner = 'Usage: SUSEConnect [options]'
 
-          opts.on('-h', '--host [HOST]', 'Connection host.') do |opt|
-            check_if_param(opt, 'Please provide host parameter')
-            @options[:host] = opt
-          end
-
-          opts.on('-p', '--port [PORT]', 'Connection port.') do |opt|
-            check_if_param(opt, 'Please provide port parameter')
-            @options[:port] = opt
-          end
-
           opts.on('-t', '--token [TOKEN]', 'Registration token.') do |opt|
             check_if_param(opt, 'Please provide token parameter')
             @options[:token] = opt
@@ -38,6 +28,11 @@ module SUSE
 
           opts.on('-k', '--insecure', 'Skip ssl verification (insecure).') do |opt|
             @options[:insecure] = opt
+          end
+
+          opts.on('--url [URL]', 'Connection base url (e.g. https://scc.suse.com).') do |opt|
+            check_if_param(opt, 'Please provide url parameter')
+            @options[:host] = opt
           end
 
           opts.separator ''
