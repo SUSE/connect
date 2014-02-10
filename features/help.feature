@@ -8,13 +8,7 @@ Feature: Help output
   Scenario: help should contain host parameter
     Then the output should contain:
       """
-      -h, --host [HOST]                Connection host.
-      """
-
-  Scenario: help should contain port parameter
-    Then the output should contain:
-      """
-      -p, --port [PORT]                Connection port.
+      --url [URL]                  Connection base url (e.g. https://scc.suse.com).
       """
 
   Scenario: help should contain token parameter
@@ -22,12 +16,6 @@ Feature: Help output
       """
       -t, --token [TOKEN]              Registration token.
       """
-
-  Scenario: help should contain non-encrypted connection option
-    Then the output should contain:
-    """
-    --skip-ssl                   Skip SSL encryption (use with caution).
-    """
 
   # Common Options
 

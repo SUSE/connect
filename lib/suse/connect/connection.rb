@@ -17,10 +17,10 @@ module SUSE
 
       attr_accessor :http, :auth
 
-      def initialize(endpoint:, skip_ssl: false, insecure: false)
+      def initialize(endpoint:, insecure: false)
         uri              = URI.parse(endpoint)
         http             = Net::HTTP.new(uri.host, uri.port)
-        http.use_ssl     = !skip_ssl
+        http.use_ssl     = uri.is_a? URI::HTTPS
         http.verify_mode = insecure ? OpenSSL::SSL::VERIFY_NONE : OpenSSL::SSL::VERIFY_PEER
         @http            = http
       end

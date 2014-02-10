@@ -8,40 +8,26 @@ describe SUSE::Connect::Client do
 
     context :empty_opts do
 
-      it 'should set port to default if it was not passed via constructor' do
-        subject.options[:port].should eq subject.class::DEFAULT_PORT
-      end
-
-      it 'should set host to default if it was not passed via constructor' do
-        subject.options[:host].should eq subject.class::DEFAULT_HOST
-      end
-
-      it 'should build url with default host and port' do
-        subject.url.should eq "https://#{subject.class::DEFAULT_HOST}"
+      it 'should set url to default_url' do
+        subject.url.should eq subject.class::DEFAULT_URL
       end
 
     end
 
     context :passed_opts do
 
-      subject { Client.new(:host => 'dummy', :port => '42') }
+      subject { Client.new(:url => 'http://dummy:42') }
+
+      let :parsed_uri do
+        URI.parse(subject.url)
+      end
 
       it 'should set port to one from options if it was passed via constructor' do
-        subject.options[:port].should eq '42'
+        parsed_uri.port.should eq 42
       end
 
       it 'should set host to one from options if it was passed via constructor' do
-        subject.options[:host].should eq 'dummy'
-      end
-
-      context :secure_requested do
-
-        subject { Client.new(:host => 'dummy', :port => '443') }
-
-        it 'should build url with https schema if passed 443 port' do
-          subject.url.should eq 'https://dummy'
-        end
-
+        parsed_uri.host.should eq 'dummy'
       end
 
     end
