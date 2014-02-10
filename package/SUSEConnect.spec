@@ -21,15 +21,19 @@ Version:        0.0.2
 Release:        0
 %define mod_name suse-connect
 %define mod_full_name %{mod_name}-%{version}
+%define mod_branch -%{version}
+%define mod_weight 2
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 BuildRequires:  ruby-macros >= 1
 Requires:       ruby >= 2.0
 BuildRequires:  ruby >= 2.0
+BuildRequires:  update-alternatives
 Url:            https://github.com/SUSE/connect
 Summary:        SUSE Connect utility to register a system with the SUSE Customer
 License:        LGPL-2.1
 Group:          Development/Languages/Ruby
+PreReq:         update-alternatives
 
 %description
 This package provides a command line tool and rubygem library for connecting a
@@ -48,9 +52,30 @@ product subscriptions and enable the product repositories/services locally.
 
 install -D -m 755 %_sourcedir/ncc_scc_migrate.sh %{buildroot}/var/adm/update-scripts/%{name}-%{version}-%{release}-ncc-scc-migrate.sh
 
+mkdir -p %{buildroot}%{_sysconfdir}/alternatives
+mv %{buildroot}%{_bindir}/SUSEConnect{,%{mod_branch}}
+touch %{buildroot}%{_sysconfdir}/alternatives/SUSEConnect
+ln -s %{_sysconfdir}/alternatives/SUSEConnect %{buildroot}%{_bindir}/SUSEConnect
+
+mkdir -p %{buildroot}%{_docdir}/%{name}
+ln -s %{_libdir}/ruby/gems/%{rb_ver}/gems/%{mod_full_name}/README.md %buildroot/%{_docdir}/%{name}/README.md
+ln -s %{_libdir}/ruby/gems/%{rb_ver}/gems/%{mod_full_name}/LICENSE %buildroot/%{_docdir}/%{name}/LICENSE
+
+%post
+/usr/sbin/update-alternatives --install \
+    %{_bindir}/SUSEConnect SUSEConnect %{_bindir}/SUSEConnect%{mod_branch} %{mod_weight}
+
+%preun
+if [ "$1" = 0 ] ; then
+    /usr/sbin/update-alternatives --remove SUSEConnect %{_bindir}/SUSEConnect%{mod_branch}
+fi
 
 %files
 %defattr(-,root,root,-)
+%{_docdir}/%{name}
+%{_bindir}/SUSEConnect%{mod_branch}
+%{_bindir}/SUSEConnect
+%ghost %{_sysconfdir}/alternatives/SUSEConnect
 %{_libdir}/ruby/gems/%{rb_ver}/cache/%{mod_full_name}.gem
 %{_libdir}/ruby/gems/%{rb_ver}/gems/%{mod_full_name}/
 %{_libdir}/ruby/gems/%{rb_ver}/specifications/%{mod_full_name}.gemspec
