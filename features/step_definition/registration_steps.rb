@@ -10,7 +10,7 @@ Then(/^output should inform us about you need an argument if running with url pa
   assert_exact_output('Please provide url parameter', all_output.chomp)
 end
 
-Then(/^outputs should not contain info about required host param$/) do
+Then(/^outputs should not contain info about required url param$/) do
   assert_no_partial_output('Please provide url parameter', all_output.chomp)
 end
 
