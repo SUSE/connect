@@ -1,0 +1,7 @@
+<directory name="SUSEconnect" rev="8" srcmd5="ceead90a4d270533fed939f371e8a0a9" vrev="4">
+  <entry md5="f2f3622896a97ee9a743a986d5f24c74" mtime="1392041795" name="SUSEConnect.changes" size="855" />
+  <entry md5="832c73adfd19cc21bef33a94c8f8dd8f" mtime="1392041426" name="SUSEConnect.spec" size="2087" />
+  <entry md5="345f03571fff1252f28255f36dac07d3" mtime="1392041795" name="SUSEConnect.spec.erb" size="6116" />
+  <entry md5="9beba7db37438c3b05e3ac321069b997" mtime="1392040165" name="ncc_scc_migrate.sh" size="425" />
+  <entry md5="dbd3a9b53d74ef2eec730b3fd4357a5f" mtime="1392040165" name="suse-connect-0.0.2.gem" size="4608" />
+</directory>

@@ -1,0 +1,6 @@
+.osc/*.spec
+.osc/_buildconfig-*
+.osc/_buildinfo-*
+.osc/_build_repositories
+.osc/*changes
+.osc/*.spec.erb
