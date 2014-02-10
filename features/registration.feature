@@ -15,7 +15,6 @@ Feature: Registration
 
   Scenario: usual run
     And I run `SUSEConnect --token 34fd2b04-4e40-425c-a137-7721e0303382`
-    Then outputs should not contain info about required port param
     And the exit status should be 0
 
   Scenario: passed token parameter without argument
