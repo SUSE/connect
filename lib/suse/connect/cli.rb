@@ -11,7 +11,14 @@ module SUSE
       def initialize(argv)
         @options = {}
         extract_options
-        execute!
+      end
+
+      def execute!
+        Logger.info(@options) if @options[:verbose]
+        Client.new(@options).execute!
+      rescue CannotBuildTokenAuth
+        Logger.error 'no registration token provided'
+        exit 1
       end
 
       private
@@ -60,15 +67,10 @@ module SUSE
 
       end
 
-      def execute!
-        Logger.info(@options) if @options[:verbose]
-        Client.new(@options).execute!
-      end
-
       def check_if_param(opt, message)
         unless opt
           puts message
-          exit 1
+          exit_with_code 1
         end
       end
 
