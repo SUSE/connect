@@ -19,3 +19,22 @@ Common options:
         --help                       Show this message.
 
 ```
+
+
+# Building
+
+At first you need to build the gem:
+
+`> gem build suse-connect.gemspec`
+
+This gem can already be installed and used. To create a RPM from this gem you should run:
+
+`> gem2rpm -l -o package/SUSEConnect.spec -t package/SUSEconnect.spec.erb suse-connect-0.0.2.gem`
+
+This will create a .spec file in the package/ subfolder which then can be used to build the package:
+
+`> cd package; osc -A https://api.suse.de build SLE_12 x86_64 --no-verify`
+
+
+
+
