@@ -4,3 +4,4 @@
 .osc/_build_repositories
 .osc/*changes
 .osc/*.spec.erb
+SUSEConnect.spec

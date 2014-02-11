@@ -34,6 +34,17 @@ Release:        0
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 BuildRequires:  ruby-macros >= 1
+
+Requires: util-linux, coreutils, net-tools, hwinfo, zypper
+Conflicts: suseRegister
+%ifnarch ppc ppc64 ppc64le s390 s390x
+%if 0%{?suse_version} == 0 || %suse_version >= 1210
+PreReq: dmidecode
+%else
+PreReq: pmtools
+%endif
+%endif
+
 <% for req in spec.required_ruby_version -%>
 <% unless req.empty? -%>
 Requires:       ruby <%= req %>
@@ -124,8 +135,6 @@ Test::Unit or RSpec files, useful for developers.
 %install
 %gem_install -f --no-rdoc --no-ri
 
-install -D -m 755 %_sourcedir/ncc_scc_migrate.sh %{buildroot}/var/adm/update-scripts/%{name}-%{version}-%{release}-ncc-scc-migrate.sh
-
 <% unless spec.extensions.empty? -%>
 %gem_cleanup
 <% end -%>
@@ -152,6 +161,15 @@ ln -s %{_libdir}/ruby/gems/%{rb_ver}/gems/%{mod_full_name}/<%= file %> %buildroo
     %{_bindir}/<%= executable %> <%= executable %> %{_bindir}/<%= executable %>%{mod_branch} %{mod_weight}
 <% end -%>
 
+if [ -s /etc/zypp/credentials.d/NCCcredentials ]; then
+    # setting this to be able to run the script from within a zypper transaction
+    export ZYPP_READONLY_HACK=true
+    # TODO implement migration scenario in SUSEConnect and SCC API
+    # TODO the idea is to call product activate with token=auto
+    #echo "Migrating system from NCC to SCC"
+    #SUSEConnect --ncc
+fi
+
 %preun
 <% spec.executables.each do |executable| -%>
 if [ "$1" = 0 ] ; then
@@ -176,8 +194,6 @@ fi
 %exclude %{_libdir}/ruby/gems/%{rb_ver}/gems/%{mod_full_name}/<%= framework %>
 <% end -%>
 %{_libdir}/ruby/gems/%{rb_ver}/specifications/%{mod_full_name}.gemspec
-/var/adm/update-scripts/%{name}-%{version}-%{release}-ncc-scc-migrate.sh
-
 
 <% if false #spec.has_rdoc -%>
 %files doc
