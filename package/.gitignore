@@ -4,4 +4,5 @@
 .osc/_build_repositories
 .osc/*changes
 .osc/*.spec.erb
+.osc/ncc_scc_migrate.sh
 SUSEConnect.spec
