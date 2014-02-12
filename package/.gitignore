@@ -6,3 +6,4 @@
 .osc/*.spec.erb
 .osc/ncc_scc_migrate.sh
 SUSEConnect.spec
+SUSEConnect.1.gz

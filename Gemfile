@@ -9,6 +9,7 @@ end
 
 group :development do
   gem 'redcarpet'
+  gem 'ronn'
 end
 
 group :test do
