@@ -42,15 +42,15 @@ module SUSE
         @opts = OptionParser.new
 
         @opts.banner = 'SUSEConnect is a command line tool for connecting a client system to the SUSE Customer Center.'
-        @opts.separator 'It will connect the system to your product subscriptions and enable the product ' +
+        @opts.separator 'It will connect the system to your product subscriptions and enable the product ' \
                         'repositories/services locally.'
         @opts.separator ''
         @opts.separator 'Please visit https://scc.suse.com to see and manage your subscriptions.'
         @opts.separator ''
         @opts.separator 'Usage: SUSEConnect [options]'
 
-        @opts.on('-t', '--token [TOKEN]', 'Registration token. The repositories of the subscription with this ' +
-                                          'registration token will get activated on this system.') do |opt|
+        @opts.on('-t', '--token [TOKEN]', 'Registration token. The repositories of the subscription with this ' \
+                                           'registration token will get activated on this system.') do |opt|
           check_if_param(opt, 'Please provide a registration token parameter')
           @options[:token] = opt
         end
