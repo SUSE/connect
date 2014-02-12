@@ -10,7 +10,7 @@ module SUSE
     class ApiError < StandardError
       attr_accessor :code, :body
 
-      def initialize(code:, body:)
+      def initialize(code, body)
         @code, @body = code, body
       end
     end

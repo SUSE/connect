@@ -17,7 +17,7 @@ module SUSE
 
       attr_accessor :http, :auth
 
-      def initialize(endpoint:, insecure: false)
+      def initialize(endpoint, insecure: false)
         uri              = URI.parse(endpoint)
         http             = Net::HTTP.new(uri.host, uri.port)
         http.use_ssl     = uri.is_a? URI::HTTPS
@@ -31,7 +31,7 @@ module SUSE
         define_method name_for_method do |path, auth: nil, params: {} |
           @auth = auth
           response = json_request(name_for_method.downcase.to_sym, path, params)
-          raise(ApiError, :code => response.code, :body => response.body) unless response.success
+          raise(ApiError.new(response.code, response.body)) unless response.success
           response
         end
       end

@@ -38,7 +38,7 @@ describe SUSE::Connect::Zypper do
   describe '.add_service' do
 
     it 'calls zypper with proper arguments' do
-      parameters = "--quiet --non-interactive addservice http://example.com 'branding'"
+      parameters = "--quiet --non-interactive addservice -t ris http://example.com 'branding'"
       Object.should_receive(:system).with(include parameters).and_return(true)
       subject.add_service('branding', 'http://example.com')
     end
@@ -96,13 +96,13 @@ describe SUSE::Connect::Zypper do
 
       it 'will not create credentials.d folder' do
         Dir.should_not_receive(:mkdir).with(ZYPPER_CREDENTIALS_DIR)
-        subject.send(:write_credentials_file, params)
+        subject.send(:write_credentials_file, *params)
       end
 
       it 'should produce a log record in case of Exception' do
         source_cred_file.stub(:puts).and_raise(IOError)
         Logger.should_receive(:error)
-        subject.send(:write_credentials_file, params)
+        subject.send(:write_credentials_file, *params)
       end
 
     end
@@ -115,25 +115,25 @@ describe SUSE::Connect::Zypper do
 
       it 'creates credentials.d folder' do
         Dir.should_receive(:mkdir).with(System::ZYPPER_CREDENTIALS_DIR)
-        subject.send(:write_credentials_file, params)
+        subject.send(:write_credentials_file, *params)
       end
 
     end
 
     it 'opens a file for writing with name of source suffixed by _credentials' do
       File.should_receive(:open).with('/etc/zypp/credentials.d/ha_credentials', 'w')
-      subject.send(:write_credentials_file, params)
+      subject.send(:write_credentials_file, *params)
     end
 
     it 'writes a file with corresponding product credentials' do
       source_cred_file.should_receive(:puts).with('username=SCC_Kif')
       source_cred_file.should_receive(:puts).with('password=Kroker')
-      subject.send(:write_credentials_file, params)
+      subject.send(:write_credentials_file, *params)
     end
 
     it 'closes a file for credentials' do
       source_cred_file.should_receive(:close)
-      subject.send(:write_credentials_file, params)
+      subject.send(:write_credentials_file, *params)
     end
 
   end
@@ -165,11 +165,7 @@ describe SUSE::Connect::Zypper do
     mock_dry_file
 
     it 'should call write_credentials_file' do
-      subject.should_receive(:write_credentials_file).with(
-          :login => 'dummy',
-          :password => 'tummy',
-          :filename => 'NCCcredentials'
-      )
+      subject.should_receive(:write_credentials_file).with('dummy', 'tummy', 'NCCcredentials')
       subject.write_base_credentials('dummy', 'tummy')
 
     end
@@ -185,11 +181,7 @@ describe SUSE::Connect::Zypper do
     end
 
     it 'creates a file with source name' do
-      subject.should_receive(:write_credentials_file).with(
-          :login => 'dummy',
-          :password => 'tummy',
-          :filename => 'turbo'
-      )
+      subject.should_receive(:write_credentials_file).with('dummy', 'tummy', 'turbo_credentials')
       subject.write_source_credentials('turbo')
     end
 

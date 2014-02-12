@@ -7,7 +7,7 @@ describe SUSE::Connect::Connection do
   describe '.new' do
 
     let :secure_connection do
-      subject.new(:endpoint => 'https://example.com')
+      subject.new('https://example.com')
     end
 
     it 'stores http object' do
@@ -34,7 +34,7 @@ describe SUSE::Connect::Connection do
     context :passed_options do
 
       let :secure_connection do
-        subject.new(:endpoint => 'https://example.com', :insecure => true)
+        subject.new('https://example.com', :insecure => true)
       end
 
       it 'set ssl to true by default' do
@@ -52,7 +52,7 @@ describe SUSE::Connect::Connection do
   describe '?json_request' do
 
     let :connection do
-      subject.new(:endpoint => 'leg')
+      subject.new('leg')
     end
 
     before do
@@ -101,7 +101,7 @@ describe SUSE::Connect::Connection do
   describe '#post' do
 
     let :connection do
-      subject.new(:endpoint => 'https://example.com')
+      subject.new('https://example.com')
     end
 
     before do

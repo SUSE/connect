@@ -20,7 +20,7 @@ module SUSE
       def initialize(client)
         @client     = client
         @connection = Connection.new(
-            :endpoint => client.url,
+            client.url,
             :insecure => client.options[:insecure]
         )
       end

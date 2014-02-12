@@ -166,11 +166,7 @@ describe SUSE::Connect::System do
 
     let :mock_service do
       sources = { 'name' => 'url', 'lastname' => 'furl' }
-      Service.new(
-          :sources   => sources,
-          :enabled   => %w{ fehu uruz ansuz },
-          :norefresh => %w{ green coffee loki }
-      )
+      Service.new(sources, %w{ fehu uruz ansuz }, %w{ green coffee loki })
     end
 
     it 'removes old service' do
