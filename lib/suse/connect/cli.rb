@@ -19,6 +19,15 @@ module SUSE
       rescue CannotBuildTokenAuth
         Logger.error 'no registration token provided'
         exit 1
+      rescue ApiError => e
+        Logger.error "ApiError with response: #{e.body} Code: #{e.code}"
+        exit 1
+      rescue Errno::ECONNREFUSED
+        Logger.error 'connection refused by server'
+        exit 1
+      rescue JSON::ParserError
+        Logger.error 'cannot parse response from server'
+        exit 1
       end
 
       private
@@ -70,7 +79,7 @@ module SUSE
       def check_if_param(opt, message)
         unless opt
           puts message
-          exit_with_code 1
+          exit 1
         end
       end
 
