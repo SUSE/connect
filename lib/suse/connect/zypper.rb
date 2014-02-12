@@ -1,5 +1,4 @@
 require 'rexml/document'
-require 'debugger'
 require 'suse/connect/rexml_refinement'
 
 module SUSE
