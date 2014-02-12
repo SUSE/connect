@@ -28,6 +28,9 @@ module SUSE
       rescue JSON::ParserError
         Logger.error 'cannot parse response from server'
         exit 1
+      rescue Errno::EACCES
+        Logger.error 'access error - cannot create required folder/file'
+        exit 1
       end
 
       private

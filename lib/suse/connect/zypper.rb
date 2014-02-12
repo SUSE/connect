@@ -74,7 +74,7 @@ module SUSE
           rescue IOError => e
             Logger.error(e.message)
           ensure
-            file.close
+            file.close if file
           end
         end
 

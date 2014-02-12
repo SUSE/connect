@@ -39,6 +39,15 @@ describe SUSE::Connect::Cli do
       cli.execute!
     end
 
+    it 'should produce log output if EACCES encountered' do
+      Logger.should_receive(:error).with('access error - cannot create required folder/file')
+      Client.any_instance.stub(:execute!).and_raise Errno::EACCES
+      cli = subject.new({})
+      cli.stub(:exit => true)
+      cli.execute!
+    end
+
+
   end
 
   describe '?extract_options' do
