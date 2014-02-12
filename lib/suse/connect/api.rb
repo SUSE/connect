@@ -21,7 +21,8 @@ module SUSE
         @client     = client
         @connection = Connection.new(
             client.url,
-            :insecure => client.options[:insecure]
+            :insecure => client.options[:insecure],
+            :debug => client.options[:debug]
         )
       end
 

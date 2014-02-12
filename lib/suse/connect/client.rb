@@ -15,6 +15,7 @@ module SUSE
         @options            = {}
         @options[:token]    = opts[:token]
         @options[:insecure] = !!opts[:insecure]
+        @options[:debug]    = !!opts[:verbose]
         @url                = opts[:url] || DEFAULT_URL
         @api                = Api.new(self)
       end
