@@ -40,14 +40,22 @@ module SUSE
       def extract_options # rubocop:disable MethodLength
 
         @opts = OptionParser.new
-        @opts.banner = 'Usage: SUSEConnect [options]'
 
-        @opts.on('-t', '--token [TOKEN]', 'Registration token.') do |opt|
-          check_if_param(opt, 'Please provide token parameter')
+        @opts.banner = 'SUSEConnect is a command line tool for connecting a client system to the SUSE Customer Center.'
+        @opts.separator 'It will connect the system to your product subscriptions and enable the product ' +
+                        'repositories/services locally.'
+        @opts.separator ''
+        @opts.separator 'Please visit https://scc.suse.com to see and manage your subscriptions.'
+        @opts.separator ''
+        @opts.separator 'Usage: SUSEConnect [options]'
+
+        @opts.on('-t', '--token [TOKEN]', 'Registration token. The repositories of the subscription with this ' +
+                                          'registration token will get activated on this system.') do |opt|
+          check_if_param(opt, 'Please provide a registration token parameter')
           @options[:token] = opt
         end
 
-        @opts.on('-k', '--insecure', 'Skip ssl verification (insecure).') do |opt|
+        @opts.on('-k', '--insecure', 'Skip SSL verification (insecure).') do |opt|
           @options[:insecure] = opt
         end
 
@@ -63,12 +71,12 @@ module SUSE
           @options[:dry] = opt
         end
 
-        @opts.on_tail('--version', 'Print version') do
+        @opts.on('--version', 'Print version') do
           puts VERSION
           exit
         end
 
-        @opts.on_tail('--help', 'Show this message.') do
+        @opts.on('-h', '--help', 'Show this message.') do
           puts @opts
           exit
         end
