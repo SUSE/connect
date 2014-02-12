@@ -153,9 +153,9 @@ describe SUSE::Connect::Zypper do
   describe '.base_product' do
 
     it 'should return first product from installed product which is base' do
-      parsed_products = [{ :is_base => '1', :name => 'SLES' }, { :is_base => '2', :name => 'Cloud' }]
+      parsed_products = [{ :isbase => '1', :name => 'SLES' }, { :isbase => '2', :name => 'Cloud' }]
       subject.stub(:installed_products => parsed_products)
-      subject.base_product.should eq(:is_base => '1', :name => 'SLES')
+      subject.base_product.should eq(:isbase => '1', :name => 'SLES')
     end
 
   end
