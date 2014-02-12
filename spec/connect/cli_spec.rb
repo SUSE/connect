@@ -47,6 +47,14 @@ describe SUSE::Connect::Cli do
       cli.execute!
     end
 
+    it 'should output help if nothing passed to bin' do
+      Client.any_instance.stub(:execute!).and_raise TokenNotPresent
+      cli = subject.new({})
+      cli.stub(:exit => true)
+      cli.should_receive(:puts).with kind_of(OptionParser)
+      cli.execute!
+    end
+
   end
 
   describe '?extract_options' do

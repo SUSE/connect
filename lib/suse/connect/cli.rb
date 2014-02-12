@@ -19,6 +19,8 @@ module SUSE
       rescue CannotBuildTokenAuth
         Logger.error 'no registration token provided'
         exit 1
+      rescue TokenNotPresent
+        puts @opts
       rescue ApiError => e
         Logger.error "ApiError with response: #{e.body} Code: #{e.code}"
         exit 1
@@ -37,45 +39,45 @@ module SUSE
 
       def extract_options # rubocop:disable MethodLength
 
-        OptionParser.new do |opts|
-          opts.banner = 'Usage: SUSEConnect [options]'
+        @opts = OptionParser.new
+        @opts.banner = 'Usage: SUSEConnect [options]'
 
-          opts.on('-t', '--token [TOKEN]', 'Registration token.') do |opt|
-            check_if_param(opt, 'Please provide token parameter')
-            @options[:token] = opt
-          end
+        @opts.on('-t', '--token [TOKEN]', 'Registration token.') do |opt|
+          check_if_param(opt, 'Please provide token parameter')
+          @options[:token] = opt
+        end
 
-          opts.on('-k', '--insecure', 'Skip ssl verification (insecure).') do |opt|
-            @options[:insecure] = opt
-          end
+        @opts.on('-k', '--insecure', 'Skip ssl verification (insecure).') do |opt|
+          @options[:insecure] = opt
+        end
 
-          opts.on('--url [URL]', 'Connection base url (e.g. https://scc.suse.com).') do |opt|
-            check_if_param(opt, 'Please provide url parameter')
-            @options[:url] = opt
-          end
+        @opts.on('--url [URL]', 'Connection base url (e.g. https://scc.suse.com).') do |opt|
+          check_if_param(opt, 'Please provide url parameter')
+          @options[:url] = opt
+        end
 
-          opts.separator ''
-          opts.separator 'Common options:'
+        @opts.separator ''
+        @opts.separator 'Common options:'
 
-          opts.on('-d', '--dry-mode', 'Dry mode. Does not make any changes to the system.') do |opt|
-            @options[:dry] = opt
-          end
+        @opts.on('-d', '--dry-mode', 'Dry mode. Does not make any changes to the system.') do |opt|
+          @options[:dry] = opt
+        end
 
-          opts.on_tail('--version', 'Print version') do
-            puts VERSION
-            exit
-          end
+        @opts.on_tail('--version', 'Print version') do
+          puts VERSION
+          exit
+        end
 
-          opts.on_tail('--help', 'Show this message.') do
-            puts opts
-            exit
-          end
+        @opts.on_tail('--help', 'Show this message.') do
+          puts @opts
+          exit
+        end
 
-          opts.on('-v', '--verbose', 'Run verbosely.') do |opt|
-            @options[:verbose] = opt
-          end
+        @opts.on('-v', '--verbose', 'Run verbosely.') do |opt|
+          @options[:verbose] = opt
+        end
 
-        end.parse!
+        @opts.parse!
 
       end
 
