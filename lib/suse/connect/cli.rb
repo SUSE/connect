@@ -13,7 +13,7 @@ module SUSE
         extract_options
       end
 
-      def execute!
+      def execute! # rubocop:disable MethodLength
         Logger.info(@options) if @options[:verbose]
         Client.new(@options).execute!
       rescue CannotBuildTokenAuth

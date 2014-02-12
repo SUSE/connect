@@ -17,7 +17,7 @@ describe SUSE::Connect::Cli do
 
     it 'should produce log output if ApiError encountered' do
       Logger.should_receive(:error).with('ApiError with response: {:test=>1} Code: 222')
-      Client.any_instance.stub(:execute!).and_raise ApiError.new(222, {:test => 1})
+      Client.any_instance.stub(:execute!).and_raise ApiError.new(222, :test => 1)
       cli = subject.new({})
       cli.stub(:exit => true)
       cli.execute!
@@ -46,7 +46,6 @@ describe SUSE::Connect::Cli do
       cli.stub(:exit => true)
       cli.execute!
     end
-
 
   end
 
@@ -108,6 +107,5 @@ describe SUSE::Connect::Cli do
       subject.new({}).send(:check_if_param, nil, 'Kaboom')
     end
   end
-
 
 end
