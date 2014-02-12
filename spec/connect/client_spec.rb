@@ -141,11 +141,12 @@ describe SUSE::Connect::Client do
 
     it 'returns string for auth header' do
       System.stub(:credentials => %w{bob dylan})
-      base64_line = "Basic #{Base64.encode64('bob:dylan')}"
+      base64_line = 'Basic Ym9iOmR5bGFu'
       Client.new({}).send(:basic_auth).should eq base64_line
     end
 
     it 'raise if cannot get credentials' do
+      System.stub(:credentials => nil)
       expect { Client.new({}).send(:basic_auth) }
         .to raise_error CannotBuildBasicAuth, 'cannot get proper username and password'
     end

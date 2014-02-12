@@ -1,9 +1,11 @@
-require 'base64'
+require 'net/http'
 
 module SUSE
   module Connect
     # Client to interact with API
     class Client
+      # TODO: drop this in favor of clear auth implementation
+      include ::Net::HTTPHeader
 
       DEFAULT_URL = 'https://scc.suse.com'
 
@@ -30,9 +32,8 @@ module SUSE
 
       def activate_subscription
         base_product    = Zypper.base_product
-        # TODO: handle non 200ish return codes
-        response = @api.activate_subscription(basic_auth, base_product).body
-        service = Service.new(response)
+        response = @api.activate_subscription(basic_auth, base_product)
+        service = Service.new(response.body)
         System.add_service(service)
       end
 
@@ -48,7 +49,7 @@ module SUSE
         username, password = System.credentials
 
         if username && password
-          "Basic #{::Base64.encode64(username + ':' + password)}"
+          basic_encode(username, password)
         else
           raise CannotBuildBasicAuth, 'cannot get proper username and password'
         end
