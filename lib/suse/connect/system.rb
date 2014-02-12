@@ -52,8 +52,6 @@ module SUSE
             end
 
           else
-            # TODO: part of logging system
-            # Logger.info "NCC credentials file not found at: #{NCC_CREDENTIALS_FILE}"
             nil
           end
         end

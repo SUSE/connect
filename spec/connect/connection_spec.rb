@@ -141,6 +141,44 @@ describe SUSE::Connect::Connection do
       result.body.should eq('keyyo' => 'vallue')
       result.code.should eq 200
     end
+
+    it 'raise an ApiError if response code anything but 200' do
+      stub_request(:post, 'https://example.com/api/v1/test')
+      .with(
+          :body => '',
+          :headers => { 'Authorization' => 'Token token=zulu' }
+      )
+      .to_return(
+          :status => 422,
+          :body => '{}'
+      )
+
+      expect { connection.post(
+          '/api/v1/test',
+          :auth   => 'Token token=zulu',
+          :params => {}
+      )}.to raise_error ApiError
+    end
+
+    it 'raise an error with response from api if response code anything but 200' do
+      parsed_output = OpenStruct.new(
+          :code => 422,
+          :body => {'error'=>'These are not the droids you were looking for'}
+      )
+
+      connection.should_receive(:json_request).and_return parsed_output
+      expect do
+        connection.post(
+          '/api/v1/test',
+          :auth   => 'Token token=zulu',
+          :params => {}
+        )
+      end.to raise_error(ApiError) do |error|
+        error.code.should eq 422
+        error.body.should eq({'error' => 'These are not the droids you were looking for'})
+      end
+
+    end
   end
 
 end

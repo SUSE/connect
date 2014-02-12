@@ -20,7 +20,9 @@ module SUSE
         end
 
         def base_product
-          installed_products.select {|product| product[:is_base] == '1' }.first
+          base = installed_products.select {|product| product[:isbase] == '1' }.first
+          raise CannotDetectBaseProduct unless base
+          base
         end
 
         def add_service(service_name, service_url)
