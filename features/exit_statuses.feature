@@ -9,3 +9,7 @@ Feature: exit statuses
   Scenario: version call should exit with 0
     When I run `SUSEConnect --version`
     Then the exit status should be 0
+
+  Scenario: binary call without token should exit with 1
+    When I run `SUSEConnect`
+    Then the exit status should be 1

@@ -1,12 +1,11 @@
 require 'rexml/document'
-require 'debugger'
 require 'suse/connect/rexml_refinement'
 
 module SUSE
   module Connect
     # Implements zypper interaction
     class Zypper
-      using RexmlRefinement
+      include RexmlRefinement
 
       class << self
         ##
@@ -20,11 +19,18 @@ module SUSE
         end
 
         def base_product
-          installed_products.select {|product| product[:is_base] == '1' }.first
+          base = installed_products.select {|product| product[:isbase] == '1' }.first
+          raise CannotDetectBaseProduct unless base
+          base
         end
 
         def add_service(service_name, service_url)
-          zypper_args = "--quiet --non-interactive addservice #{service_url} '#{service_name}'"
+          zypper_args = "--quiet --non-interactive addservice -t ris #{service_url} '#{service_name}'"
+          call(zypper_args)
+        end
+
+        def enable_autorefresh_service(service_name)
+          zypper_args = "--quiet --non-interactive modifyservice -r #{service_name}"
           call(zypper_args)
         end
 
@@ -35,6 +41,10 @@ module SUSE
 
         def refresh
           call('refresh')
+        end
+
+        def refresh_services
+          call('refresh-services -r')
         end
 
         def enable_service_repository(service_name, repository)
@@ -50,25 +60,17 @@ module SUSE
         # TODO: introduce Source class
         def write_source_credentials(source_name)
           login, password = System.credentials
-          write_credentials_file(
-              :login => login,
-              :password => password,
-              :filename => source_name
-          )
+          write_credentials_file(login, password, "#{source_name}_credentials")
         end
 
         def write_base_credentials(login, password)
-          write_credentials_file(
-              :login => login,
-              :password => password,
-              :filename => CREDENTIALS_NAME
-          )
+          write_credentials_file(login, password, CREDENTIALS_NAME)
         end
 
         private
 
         # TODO: move to toolkit module and include later ?
-        def write_credentials_file(login:, password:, filename:)
+        def write_credentials_file(login, password, filename)
           credentials_dir = ZYPPER_CREDENTIALS_DIR
           Dir.mkdir(credentials_dir) unless Dir.exists?(credentials_dir)
           credentials_file = File.join(credentials_dir, filename)
@@ -80,7 +82,7 @@ module SUSE
           rescue IOError => e
             Logger.error(e.message)
           ensure
-            file.close
+            file.close if file
           end
         end
 

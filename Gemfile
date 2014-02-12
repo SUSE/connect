@@ -1,7 +1,5 @@
 source 'https://rubygems.org'
 
-ruby '2.1.0'
-
 group :test, :development do
   gem 'debugger'
   gem 'yard'

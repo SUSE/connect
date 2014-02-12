@@ -8,7 +8,7 @@ def mock_dry_file
   end
 
   let :params do
-    { :login => 'Kif', :password => 'Kroker', :filename => 'ha_credentials' }
+    %w{ Kif Kroker ha_credentials }
   end
 
   # TODO: Mock it explicitly by path

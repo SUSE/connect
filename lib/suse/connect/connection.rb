@@ -17,18 +17,21 @@ module SUSE
 
       attr_accessor :http, :auth
 
-      def initialize(endpoint:, insecure: false)
+      def initialize(endpoint, insecure: false, debug: false)
         uri              = URI.parse(endpoint)
         http             = Net::HTTP.new(uri.host, uri.port)
         http.use_ssl     = uri.is_a? URI::HTTPS
         http.verify_mode = insecure ? OpenSSL::SSL::VERIFY_NONE : OpenSSL::SSL::VERIFY_PEER
         @http            = http
+        @http.set_debug_output(STDERR) if debug
       end
 
       VERB_TO_CLASS.keys.each do |name_for_method|
         define_method name_for_method do |path, auth: nil, params: {} |
           @auth = auth
-          json_request name_for_method.downcase.to_sym, path, params
+          response = json_request(name_for_method.downcase.to_sym, path, params)
+          raise(ApiError.new(response.code, response.body)) unless response.success
+          response
         end
       end
 
@@ -38,11 +41,15 @@ module SUSE
         request                   = VERB_TO_CLASS[method].new(path)
         request['Authorization']  = auth if auth
         request['Content-Type']   = 'application/json'
+        request['Accept']         = 'application/json'
         request.body              = params.to_json unless params.empty?
         response                  = @http.request(request)
         body                      = JSON.parse(response.body)
-
-        OpenStruct.new(:code => response.code.to_i, :body => body)
+        OpenStruct.new(
+            :code => response.code.to_i,
+            :body => body,
+            :success => response.is_a?(Net::HTTPSuccess)
+        )
       end
 
     end

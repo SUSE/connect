@@ -20,8 +20,9 @@ module SUSE
       def initialize(client)
         @client     = client
         @connection = Connection.new(
-            :endpoint => client.url,
-            :insecure => client.options[:insecure]
+            client.url,
+            :insecure => client.options[:insecure],
+            :debug => client.options[:debug]
         )
       end
 
@@ -57,8 +58,8 @@ module SUSE
       # **Curl Example:**
       #
       # ```
-      # curl http://127.0.0.1:3000/connect/subscriptions/systems -H 'Authorization: Token token="4e4ad427"' \
-      #     -d '{"hostname": "test"}'
+      # curl http://127.0.0.1:3000/connect/subscriptions/systems -H 'Content-Type: application/json' \
+      #     -H 'Authorization: Token token="4e4ad427"' -d '{"hostname": "test"}'
       # ```
       #
       # **Example Response**
@@ -113,8 +114,8 @@ module SUSE
       # **Curl example**
       #
       # ```
-      # curl http://localhost:3000/connect/systems/products  -u<username>:<password> -d \
-      #     '{"product_ident": "SLES", "product_version": "11-SP2", "arch": "x86_64", "token": "<token>" }'
+      # curl http://localhost:3000/connect/systems/products  -u<username>:<pass> -H 'Content-Type: application/json' \
+      #     -d '{"product_ident": "SLES", "product_version": "11-SP2", "arch": "x86_64", "token": "<token>" }'
       # ```
       # **Example Response:**
       #
@@ -161,15 +162,14 @@ module SUSE
       # @todo TODO: introduce Product class
       def activate_subscription(auth, product)
         raise TokenNotPresent unless @client.options[:token]
-
         payload = {
             :product_ident => product[:name],
             :product_version => product[:version],
             :arch => product[:arch],
             :token => @client.options[:token]
         }
-
         @connection.post('/connect/systems/products', :auth => auth, :params => payload)
+
       end
 
     end
