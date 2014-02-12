@@ -212,7 +212,7 @@ describe SUSE::Connect::System do
     end
 
     it 'refresh services' do
-      Zypper.should_receive(:refresh).exactly(1).times
+      Zypper.should_receive(:refresh_services).exactly(1).times
       subject.add_service mock_service
     end
 

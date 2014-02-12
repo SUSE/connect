@@ -30,6 +30,11 @@ module SUSE
           call(zypper_args)
         end
 
+        def enable_autorefresh_service(service_name)
+          zypper_args = "--quiet --non-interactive modifyservice -r #{service_name}"
+          call(zypper_args)
+        end
+
         def remove_service(service_name)
           zypper_args = "--quiet --non-interactive removeservice '#{service_name}'"
           call(zypper_args)
@@ -37,6 +42,10 @@ module SUSE
 
         def refresh
           call('refresh')
+        end
+
+        def refresh_services
+          call('refresh-services -r')
         end
 
         def enable_service_repository(service_name, repository)
