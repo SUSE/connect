@@ -1,30 +1,8 @@
 -------------------------------------------------------------------
 Mon Feb 10 14:14:47 UTC 2014 - tschmidt@suse.com
 
-- Re-implementation in ruby 2.1
-- using gem2rpm to create package
-
--------------------------------------------------------------------
-Wed Jan 15 10:50:36 UTC 2014 - schubi@suse.com
-
-- new log handling 
-- refactoring
-- adapting to new SCC announce
-- changed requirements to dmidecode BNC#858692
-- version 0.3
-
--------------------------------------------------------------------
-Tue Oct 22 08:23:09 UTC 2013 - schubi@suse.com
-
-- added log2 patch for SLES10
-
--------------------------------------------------------------------
-Tue Oct  1 17:02:59 UTC 2013 - tschmidt@suse.com
-
-- switch to mruby implementation
-
--------------------------------------------------------------------
-Wed May  2 11:34:43 UTC 2012 - schubi@suse.com
-
-- Initial 
-
+- Initial version
+  SUSE Connect is a utility to register a system with the SUSE Customer Center.
+  This package provides a command line tool and rubygem library for connecting a client system
+  to the SUSE Customer Center. It will connect the system to your product subscriptions and enable
+  the product repositories/services locally.
