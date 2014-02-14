@@ -10,9 +10,11 @@ At first you need to build the gem:
 
 This gem can already be installed and used. To create a RPM from this gem you need to create the .spec file:
 
-`> cp suse-connect-*.gem package/`
-`> cd package`
-`> gem2rpm -l -o SUSEConnect.spec -t SUSEConnect.spec.erb suse-connect-0.0.2.gem`
+```
+> cp suse-connect-*.gem package/
+> cd package
+> gem2rpm -l -o SUSEConnect.spec -t SUSEConnect.spec.erb suse-connect-0.0.2.gem
+```
 
 To create the man page do:
 
