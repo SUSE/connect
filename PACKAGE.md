@@ -13,7 +13,7 @@ This gem can already be installed and used. To create a RPM from this gem you ne
 ```
 > cp suse-connect-*.gem package/
 > cd package
-> gem2rpm -l -o SUSEConnect.spec -t SUSEConnect.spec.erb suse-connect-0.0.2.gem
+> gem2rpm -l -o SUSEConnect.spec -t SUSEConnect.spec.erb suse-connect-*.gem
 ```
 
 To create the man page do:
