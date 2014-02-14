@@ -3,5 +3,17 @@
   <description>This package provides a command line tool and rubygem library for connecting a&#13;
 client system to the SUSE Customer Center. It will connect the system to your&#13;
 product subscriptions and enable the product repositories/services locally.</description>
+  <person userid="b4mboo" role="bugowner"/>
+  <person userid="digitaltomm" role="bugowner"/>
+  <person userid="kalabiyau" role="bugowner"/>
+  <person userid="schubi2" role="bugowner"/>
+  <person userid="vlewin" role="bugowner"/>
+  <person userid="wstephenson" role="bugowner"/>
+  <person userid="b4mboo" role="maintainer"/>
+  <person userid="digitaltomm" role="maintainer"/>
+  <person userid="kalabiyau" role="maintainer"/>
+  <person userid="schubi2" role="maintainer"/>
+  <person userid="vlewin" role="maintainer"/>
+  <person userid="wstephenson" role="maintainer"/>
 </package>
 
