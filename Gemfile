@@ -8,6 +8,7 @@ end
 group :development do
   gem 'redcarpet'
   gem 'ronn'
+  gem 'rake'
 end
 
 group :test do
