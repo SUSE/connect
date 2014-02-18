@@ -1,4 +1,4 @@
-<directory name="SUSEconnect" rev="13" srcmd5="db321ed9615e12616b7cc873febefd41" vrev="3">
+<directory name="SUSEConnect" rev="1" srcmd5="db321ed9615e12616b7cc873febefd41" vrev="1">
   <entry md5="3e1e6f2b8cd9108d1420b67d97d799f5" mtime="1392391556" name="SUSEConnect.1.gz" size="387" />
   <entry md5="d3b8e7914892628b8fc9c8097e483bf7" mtime="1392391556" name="SUSEConnect.changes" size="591" />
   <entry md5="12a26749d3b633821d245f4e4a703b78" mtime="1392391556" name="SUSEConnect.spec" size="4003" />
