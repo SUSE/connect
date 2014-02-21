@@ -1,0 +1,18 @@
+<?xml version='1.0'?>
+<stream>
+  <product-list>
+    <product name="SUSE_SLES" version="11.3" release="1.138" epoch="0" arch="x86_64" productline="sles" registerrelease="" vendor="SUSE LINUX Products GmbH, Nuernberg, Germany" summary="SUSE Linux Enterprise Server 11 SP3" shortname="SLES11_SP3" flavor="" isbase="1" repo="@System" installed="1">
+      <description>
+        SUSE Linux Enterprise offers a comprehensive
+        suite of products built on a single code base.
+        The platform addresses business needs from
+        the smallest thin-client devices to the world’s
+        most powerful high-performance computing
+        and mainframe servers. SUSE Linux Enterprise
+        offers common management tools and technology
+        certifications across the platform, and
+        each product is enterprise-class.
+      </description>
+    </product>
+  </product-list>
+</stream>

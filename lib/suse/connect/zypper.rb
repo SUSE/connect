@@ -19,7 +19,7 @@ module SUSE
         end
 
         def base_product
-          base = installed_products.select {|product| product[:isbase] == '1' }.first
+          base = installed_products.select {|product| %w{1 true}.include?(product[:isbase]) }.first
           raise CannotDetectBaseProduct unless base
           base
         end
