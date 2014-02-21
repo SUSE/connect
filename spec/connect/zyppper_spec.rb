@@ -10,10 +10,60 @@ describe SUSE::Connect::Zypper do
 
   describe '.installed_products' do
 
-    it 'returns valid list of products based on proper XML' do
-      xml = File.read('spec/fixtures/products_valid.xml')
-      Object.should_receive(:'`').with(include 'zypper').and_return(xml)
-      subject.installed_products.first[:name].should eq 'SUSE_SLES'
+    context :sle11 do
+      context :sp3 do
+
+        let(:xml) { File.read('spec/fixtures/product_valid_sle11sp3.xml') }
+
+        before do
+          Object.should_receive(:'`').with(include 'zypper').and_return(xml)
+        end
+
+        it 'returns valid list of products based on proper XML' do
+          subject.installed_products.first[:name].should eq 'SUSE_SLES'
+        end
+
+        it 'returns valid version' do
+          subject.installed_products.first[:version].should eq '11.3'
+        end
+
+        it 'returns valid arch' do
+          subject.installed_products.first[:arch].should eq 'x86_64'
+        end
+
+        it 'returns proper base product' do
+          subject.base_product[:name].should eq 'SUSE_SLES'
+        end
+
+      end
+    end
+
+    context :sle12 do
+      context :sp0 do
+
+        let(:xml) { File.read('spec/fixtures/product_valid_sle12sp0.xml') }
+
+        before do
+          Object.should_receive(:'`').with(include 'zypper').and_return(xml)
+        end
+
+        it 'returns valid name' do
+          subject.installed_products.first[:name].should eq 'SLES'
+        end
+
+        it 'returns valid version' do
+          subject.installed_products.first[:version].should eq '12'
+        end
+
+        it 'returns valid arch' do
+          subject.installed_products.first[:arch].should eq 'x86_64'
+        end
+
+        it 'returns proper base product' do
+          puts subject.base_product[:name].should eq 'SLES'
+        end
+
+      end
     end
 
   end
