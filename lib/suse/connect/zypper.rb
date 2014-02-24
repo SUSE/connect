@@ -15,11 +15,11 @@ module SUSE
           zypper_out = `zypper --no-refresh --quiet --xmlout --non-interactive products -i`
           xml_doc = REXML::Document.new(zypper_out, :compress_whitespace => [])
           # Not unary because of https://bugs.ruby-lang.org/issues/9451
-          xml_doc.root.elements['product-list'].elements.map {|x| x.to_hash }
+          xml_doc.root.elements['product-list'].elements.map(&:to_hash)
         end
 
         def base_product
-          base = installed_products.select {|product| %w{1 true}.include?(product[:isbase]) }.first
+          base = installed_products.select {|product| %w{1 true yes}.include?(product[:isbase]) }.first
           raise CannotDetectBaseProduct unless base
           base
         end
