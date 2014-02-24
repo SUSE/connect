@@ -65,7 +65,13 @@ describe SUSE::Connect::Cli do
     end
 
     it 'sets token options' do
-      ARGV = %w{-t matoken}
+      ARGV = %w{-r matoken}
+      cli = subject.new(ARGV)
+      cli.options[:token].should eq 'matoken'
+    end
+
+    it 'sets token options' do
+      ARGV = %w{--regcode matoken}
       cli = subject.new(ARGV)
       cli.options[:token].should eq 'matoken'
     end

@@ -49,9 +49,9 @@ module SUSE
         @opts.separator ''
         @opts.separator 'Usage: SUSEConnect [options]'
 
-        @opts.on('-t', '--token [TOKEN]', 'Registration token. The repositories of the subscription with this ' \
-                                           'registration token will get activated on this system.') do |opt|
-          check_if_param(opt, 'Please provide a registration token parameter')
+        @opts.on('-r', '--regcode [REGCODE]', 'Registration code. The repositories of the subscription with this ' \
+                                              'registration code will get activated on this system.') do |opt|
+          check_if_param(opt, 'Please provide a registration code parameter')
           @options[:token] = opt
         end
 

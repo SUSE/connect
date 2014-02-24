@@ -60,7 +60,7 @@ describe SUSE::Connect::Zypper do
         end
 
         it 'returns proper base product' do
-          puts subject.base_product[:name].should eq 'SLES'
+          subject.base_product[:name].should eq 'SLES'
         end
 
       end

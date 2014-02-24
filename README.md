@@ -2,20 +2,9 @@
 [![Code Climate](https://codeclimate.com/github/SUSE/connect.png)](https://codeclimate.com/github/SUSE/connect)
 [![Coverage Status](https://coveralls.io/repos/SUSE/connect/badge.png?branch=master)](https://coveralls.io/r/SUSE/connect)
 
-# SUSEConnect Usage
+#SUSEConnect
 
-```
-Usage: SUSEConnect [options]
-    -t, --token [TOKEN]              Registration token.
-    -k, --insecure                   Skip ssl verification (insecure).
-        --url [URL]                  Connection base url (e.g. https://scc.suse.com).
+is a command line tool for connecting a client system to the SUSE Customer Center.
+It will connect the system to your product subscriptions and enable the product repositories/services locally.
 
-Common options:
-    -d, --dry-mode                   Dry mode. Does not make any changes to the system.
-    -v, --verbose                    Run verbosely.
-        --version                    Print version
-        --help                       Show this message.
-
-```
-
-
+Please visit https://scc.suse.com to see and manage your subscriptions.

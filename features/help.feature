@@ -14,7 +14,7 @@ Feature: Help output
   Scenario: help should contain token parameter
     Then the output should contain:
       """
-      -t, --token [TOKEN]              Registration token.
+      -r, --regcode [REGCODE]          Registration code. The repositories of the subscription with this registration code will get activated on this system.
       """
 
   # Common Options
