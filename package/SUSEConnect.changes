@@ -1,4 +1,14 @@
 -------------------------------------------------------------------
+Mon Feb 24 10:18:17 UTC 2014 - kalabiyau@suse.de
+
+- token parameter replaced by regcode parameter
+
+-------------------------------------------------------------------
+Sat Feb 22 10:34:28 UTC 2014 - achernikov@suse.de
+
+- Conforming with new zypper products output structure for SLE12 
+
+-------------------------------------------------------------------
 Fri Feb 14 15:16:50 UTC 2014 - bamboo@suse.com
 
 - Add license file
