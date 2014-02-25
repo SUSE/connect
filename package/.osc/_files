@@ -1,7 +1,7 @@
-<directory name="SUSEConnect" rev="1" srcmd5="db321ed9615e12616b7cc873febefd41" vrev="1">
-  <entry md5="3e1e6f2b8cd9108d1420b67d97d799f5" mtime="1392391556" name="SUSEConnect.1.gz" size="387" />
-  <entry md5="d3b8e7914892628b8fc9c8097e483bf7" mtime="1392391556" name="SUSEConnect.changes" size="591" />
-  <entry md5="12a26749d3b633821d245f4e4a703b78" mtime="1392391556" name="SUSEConnect.spec" size="4003" />
+<directory name="SUSEConnect" rev="4" srcmd5="55ccc0edf103caf2f02a2a4e1bdfd136" vrev="1">
+  <entry md5="595b542204487b39908ebc90b84635f7" mtime="1393237253" name="SUSEConnect.1.gz" size="298" />
+  <entry md5="c96d612b2be892f1a7dffe36599e53c3" mtime="1393237254" name="SUSEConnect.changes" size="944" />
+  <entry md5="e0eaf7a6deb81aab455523ba7f841695" mtime="1393237254" name="SUSEConnect.spec" size="4003" />
   <entry md5="363c9aa378cb41241d6919e879447434" mtime="1392391556" name="SUSEConnect.spec.erb" size="6927" />
-  <entry md5="dcfe85447549d7e02677e1989aa47dd9" mtime="1392391556" name="suse-connect-0.0.5.gem" size="21504" />
+  <entry md5="8f6b086ec8115b85077a02e46a9fba69" mtime="1393237254" name="suse-connect-0.0.7.gem" size="21504" />
 </directory>
