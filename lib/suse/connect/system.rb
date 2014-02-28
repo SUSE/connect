@@ -94,6 +94,10 @@ module SUSE
 
         end
 
+        def hostname
+          Socket.gethostname || Socket.ip_address_list.find {|intf| intf.ipv4_private? }.ip_address
+        end
+
         private
 
         ##

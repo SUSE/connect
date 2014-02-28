@@ -37,6 +37,19 @@ describe SUSE::Connect::Api do
       subject.new(client).announce_system('token')
     end
 
+    context :hostname_detected do
+      it 'sends a call with hostname' do
+        Socket.stub(:gethostname => 'vargan')
+        payload = ['/connect/subscriptions/systems', :auth => 'token', :params => { :hostname => 'vargan' }]
+        Connection.any_instance.should_receive(:post).with(*payload).and_call_original
+        subject.new(client).announce_system('token')
+      end
+    end
+
+    context :no_hostname do
+      it 'sends a call with ip'
+    end
+
   end
 
   describe 'activate_subscription' do

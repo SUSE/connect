@@ -90,7 +90,8 @@ module SUSE
       # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
       #
       def announce_system(auth)
-        @connection.post('/connect/subscriptions/systems', :auth => auth)
+        payload = { :hostname => System.hostname }
+        @connection.post('/connect/subscriptions/systems', :auth => auth, :params => payload)
       end
 
       # Activate a product and receive the services list.
