@@ -47,7 +47,12 @@ describe SUSE::Connect::Api do
     end
 
     context :no_hostname do
-      it 'sends a call with ip'
+      it 'sends a call with ip' do
+        System.stub(:hostname => '192.168.42.42')
+        payload = ['/connect/subscriptions/systems', :auth => 'token', :params => { :hostname => '192.168.42.42' }]
+        Connection.any_instance.should_receive(:post).with(*payload).and_call_original
+        subject.new(client).announce_system('token')
+      end
     end
 
   end
