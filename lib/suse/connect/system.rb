@@ -94,6 +94,15 @@ module SUSE
 
         end
 
+        def hostname
+          hostname = Socket.gethostname
+          if hostname && hostname != '(none)'
+            hostname
+          else
+            Socket.ip_address_list.find {|intf| intf.ipv4_private? }.ip_address
+          end
+        end
+
         private
 
         ##

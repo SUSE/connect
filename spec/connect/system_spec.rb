@@ -231,4 +231,31 @@ describe SUSE::Connect::System do
 
   end
 
+  describe '.hostname' do
+    context :hostname_detected do
+      it 'returns hostname' do
+        Socket.stub(:gethostname => 'vargan')
+        subject.hostname.should eq 'vargan'
+      end
+    end
+
+    context :hostname_nil do
+      it 'returns first private ip' do
+        stubbed_ip_address_list = [Addrinfo.ip('127.0.0.1'), Addrinfo.ip('192.168.42.42')]
+        Socket.stub(:ip_address_list => stubbed_ip_address_list)
+        Socket.stub(:gethostname => nil)
+        subject.hostname.should eq '192.168.42.42'
+      end
+    end
+
+    context :hostname_is_none do
+      it 'returns first private ip' do
+        stubbed_ip_address_list = [Addrinfo.ip('127.0.0.1'), Addrinfo.ip('192.168.42.42')]
+        Socket.stub(:ip_address_list => stubbed_ip_address_list)
+        Socket.stub(:gethostname => '(none)')
+        subject.hostname.should eq '192.168.42.42'
+      end
+    end
+  end
+
 end
