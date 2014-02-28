@@ -1,4 +1,8 @@
-# SUSEConnect Development
+# SUSEConnect Packaging
+
+As a first option you can use `rake build` which will produce all the steps described before
+
+## TL;DR
 
 Install the needed libraries:
 
