@@ -16,6 +16,11 @@ task :rubocop do
   sh 'bundle exec rubocop -c .rubocop.yml'
 end
 
+desc 'increase version of a gem'
+task :bump do
+  sh 'gem bump --no-commit'
+end
+
 desc 'Run RSpec'
 RSpec::Core::RakeTask.new(:spec)
 

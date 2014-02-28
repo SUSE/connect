@@ -10,6 +10,7 @@ group :development do
   gem 'ronn'
   gem 'rake'
   gem 'gem2rpm'
+  gem 'gem-release'
 end
 
 group :test do
