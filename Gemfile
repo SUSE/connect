@@ -9,6 +9,8 @@ group :development do
   gem 'redcarpet'
   gem 'ronn'
   gem 'rake'
+  gem 'gem2rpm'
+  gem 'gem-release'
 end
 
 group :test do

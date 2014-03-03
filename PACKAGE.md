@@ -1,4 +1,9 @@
-# SUSEConnect Development
+# SUSEConnect Packaging
+
+As a first option you can use `rake build` which will produce all the steps described before
+After you build package locally and happy with result - commit changes to IBS instance.
+
+## TL;DR
 
 Install the needed libraries:
 

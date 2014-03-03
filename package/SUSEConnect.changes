@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Feb 28 14:40:07 UTC 2014 - achernikov@suse.de
+
+- Announce call now sending hostname alongside with main payload 
+
+-------------------------------------------------------------------
 Tue Feb 25 10:31:30 UTC 2014 - achernikov@suse.de
 
 - add ca-certificates as a required package
