@@ -84,4 +84,40 @@ describe SUSE::Connect::Api do
 
   end
 
+  describe 'products' do
+
+    before do
+      stub_products_call
+    end
+
+    it 'is public' do
+      Connection.any_instance.should_receive(:get).with('/connect/products', :auth => nil).and_call_original
+      subject.new(client).products
+    end
+
+    it 'respond with proper status code' do
+      subject.new(client).products.code.should eq 200
+    end
+
+    it 'returns array of products' do
+      subject.new(client).products.body.should respond_to(:first)
+    end
+
+    it 'conforms with predefined structure' do
+      response = subject.new(client).products.body
+      # TODO: reuse structure checker from upstream
+      response.first['repos'].should be_kind_of Array
+
+      %w{id name distro_target description url tags}.each do |key|
+        response.first['repos'].first[key].should_not be_nil
+      end
+
+      %w{id zypper_name zypper_version release arch friendly_name product_class repos}.each do |key|
+        response.first[key].should_not be_nil
+      end
+
+    end
+
+  end
+
 end

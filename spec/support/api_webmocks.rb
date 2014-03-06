@@ -20,3 +20,11 @@ def stub_activate_call
     .with(:headers => headers, :body => request_body)
     .to_return(:status => 200, :body => response_body, :headers => {})
 end
+
+def stub_products_call
+  headers = { 'Content-Type' => 'application/json' }
+  response_body = JSON.parse(File.read('spec/fixtures/products_response.json')).to_json
+  stub_request(:get, 'https://example.com/connect/products')
+    .with(:headers => headers)
+    .to_return(:status => 200, :body => response_body, :headers => {})
+end
