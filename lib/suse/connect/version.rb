@@ -1,6 +1,6 @@
 module SUSE
   # Provides access to version number of a gem
   module Connect
-    VERSION = '0.0.8'
+    VERSION = '0.0.9'
   end
 end

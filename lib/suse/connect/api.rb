@@ -160,6 +160,8 @@ module SUSE
       #   In this case we expects Base64 encoded string with login and password
       # @param product [Hash] product
       #
+      # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
+      #
       # @todo TODO: introduce Product class
       def activate_subscription(auth, product)
         raise TokenNotPresent unless @client.options[:token]
@@ -171,6 +173,53 @@ module SUSE
         }
         @connection.post('/connect/systems/products', :auth => auth, :params => payload)
 
+      end
+
+      # List all publicly available products. This includes a list of all repositories for each product.
+      #
+      # `GET /connect/products`
+      #
+      # **Curl example**
+      #
+      # ```
+      # curl http://localhost:3000/connect/products -H 'Content-Type: application/json'
+      # ```
+      #
+      # **Example Response:**
+      #
+      # ```json
+      # [
+      #   {
+      #     "id": 42,
+      #     "zypper_name": "SUSE_SLES",
+      #     "zypper_version": "11",
+      #     "release": "GA",
+      #     "arch": "x86_64",
+      #     "friendly_name": "SUSE Linux Enterprise Server 11 x86_64",
+      #     "product_class": "7261"
+      #     "repos":
+      #       [
+      #         {
+      #           "id": 1150,
+      #           "name": "SLES12-Pool",
+      #           "distro_target": "sle-12-x86_64",
+      #           "description": "description",
+      #           "url": "https://nu.novell.com/suse/x86_64/update/SLE-SERVER/12-POOL",
+      #           "tags": ["enabled", "autorefresh"]
+      #         }
+      #       ]
+      #   }
+      # ]
+      # ```
+      #
+      # * `/etc/products.d/baseproduct` conformity:
+      #   * `zypper_name` is `name`
+      #   * `zypper_version` is `version`
+      #
+      # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
+      #
+      def products
+        @connection.get('/connect/products', :auth => nil)
       end
 
     end

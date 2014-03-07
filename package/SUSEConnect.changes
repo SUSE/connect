@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Mar  6 09:30:40 UTC 2014 - achernikov@suse.de
+
+- Added products call allowing to get all publicly available
+  products 
+
+-------------------------------------------------------------------
 Fri Feb 28 14:40:07 UTC 2014 - achernikov@suse.de
 
 - Announce call now sending hostname alongside with main payload 

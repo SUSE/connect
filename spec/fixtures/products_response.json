@@ -1,0 +1,22 @@
+[
+  {
+    "id": 42,
+    "zypper_name": "SLES",
+    "zypper_version": "11",
+    "release": "GA",
+    "arch": "x86_64",
+    "friendly_name": "SUSE Linux Enterprise Server 11 x86_64",
+    "product_class": "7261",
+    "repos":
+        [
+          {
+            "id": 1150,
+            "name": "SLES11-Pool",
+            "distro_target": "sle-11-x86_64",
+            "description": "dummy description [WIP]",
+            "url": "https://scc.suse.com/suse/x86_64/update/SLE-SERVER/11-POOL",
+            "tags": ["enabled", "autorefresh"]
+          }
+        ]
+  }
+]

@@ -11,6 +11,7 @@ group :development do
   gem 'rake'
   gem 'gem2rpm'
   gem 'gem-release'
+  gem 'awesome_print'
 end
 
 group :test do
