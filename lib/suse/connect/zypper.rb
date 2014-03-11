@@ -24,6 +24,11 @@ module SUSE
           base
         end
 
+        def distro_target
+            zypper_out = `zypper targetos`
+            zypper_out.chomp
+        end
+
         def add_service(service_name, service_url)
           zypper_args = "--quiet --non-interactive addservice -t ris #{service_url} '#{service_name}'"
           call(zypper_args)

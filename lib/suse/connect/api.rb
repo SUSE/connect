@@ -90,7 +90,10 @@ module SUSE
       # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
       #
       def announce_system(auth)
-        payload = { :hostname => System.hostname }
+        payload = {
+            :hostname => System.hostname,
+            :distro_target => Zypper.distro_target
+        }
         @connection.post('/connect/subscriptions/systems', :auth => auth, :params => payload)
       end
 
@@ -169,6 +172,7 @@ module SUSE
             :product_ident => product[:name],
             :product_version => product[:version],
             :arch => product[:arch],
+            :release_type => product[:release_type],
             :token => @client.options[:token]
         }
         @connection.post('/connect/systems/products', :auth => auth, :params => payload)
