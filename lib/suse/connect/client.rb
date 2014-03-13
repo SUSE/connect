@@ -8,7 +8,7 @@ module SUSE
       include ::Net::HTTPHeader
 
       DEFAULT_URL = 'https://scc.suse.com'
-      OEM_PATH    = '/var/lib/suseRegister/OEM/'
+      OEM_PATH    = '/var/lib/suseRegister/OEM'
 
       attr_reader :options, :url, :api
 
