@@ -68,28 +68,11 @@ describe SUSE::Connect::Zypper do
 
   end
 
-  describe '.call' do
-
-    it 'calls \'zypper\' with given parameters' do
-      Object.should_receive(:system).with(include 'zypper services')
-      subject.send(:call, 'services')
-    end
-
-    it 'logs failing commands' do
-      Object.should_receive(:system).with(include 'nonexistinggibberish').and_return(false)
-      SUSE::Connect::Logger.should_receive(:error).with('command `zypper nonexistinggibberish` failed')
-      subject.send(:call, 'nonexistinggibberish')
-    end
-
-    it 'doesn\'t actually change anything on the system if OPTIONS[:drymode] is set'
-
-  end
-
   describe '.add_service' do
 
     it 'calls zypper with proper arguments' do
-      parameters = "--quiet --non-interactive addservice -t ris http://example.com 'branding'"
-      Object.should_receive(:system).with(include parameters).and_return(true)
+      parameters = "zypper --quiet --non-interactive addservice -t ris http://example.com 'branding'"
+      Object.should_receive(:system).with(parameters).and_return(true)
       subject.add_service('branding', 'http://example.com')
     end
 
@@ -98,8 +81,8 @@ describe SUSE::Connect::Zypper do
   describe '.remove_service' do
 
     it 'calls zypper with proper arguments' do
-      parameters = "--quiet --non-interactive removeservice 'branding'"
-      Object.should_receive(:system).with(include parameters).and_return(true)
+      parameters = "zypper --quiet --non-interactive removeservice 'branding'"
+      Object.should_receive(:system).with(parameters).and_return(true)
       subject.remove_service('branding')
     end
 
@@ -108,7 +91,7 @@ describe SUSE::Connect::Zypper do
   describe '.refresh' do
 
     it 'calls zypper with proper arguments' do
-      Object.should_receive(:system).with(include 'refresh').and_return(true)
+      Object.should_receive(:system).with('zypper refresh').and_return(true)
       subject.refresh
     end
 
@@ -117,8 +100,8 @@ describe SUSE::Connect::Zypper do
   describe '.enable_service_repository' do
 
     it 'calls zypper with proper arguments' do
-      parameters = "--quiet modifyservice --ar-to-enable 'branding:tofu' 'branding'"
-      Object.should_receive(:system).with(include parameters).and_return(true)
+      parameters = "zypper --quiet modifyservice --ar-to-enable 'branding:tofu' 'branding'"
+      Object.should_receive(:system).with(parameters).and_return(true)
       subject.enable_service_repository('branding', 'tofu')
     end
 
@@ -127,8 +110,8 @@ describe SUSE::Connect::Zypper do
   describe '.disable_repository_autorefresh' do
 
     it 'calls zypper with proper arguments' do
-      parameters = "--quiet modifyrepo --no-refresh 'branding:tofu'"
-      Object.should_receive(:system).with(include parameters).and_return(true)
+      parameters = "zypper --quiet modifyrepo --no-refresh 'branding:tofu'"
+      Object.should_receive(:system).with(parameters).and_return(true)
       subject.disable_repository_autorefresh('branding', 'tofu')
     end
 
@@ -215,10 +198,10 @@ describe SUSE::Connect::Zypper do
     mock_dry_file
 
     it 'should call write_credentials_file' do
-      subject.should_receive(:write_credentials_file).with('dummy', 'tummy', 'NCCcredentials')
+      subject.should_receive(:write_credentials_file).with('dummy', 'tummy', 'SCCcredentials')
       subject.write_base_credentials('dummy', 'tummy')
-
     end
+
   end
 
   describe '.write_source_credentials' do
@@ -235,6 +218,13 @@ describe SUSE::Connect::Zypper do
       subject.write_source_credentials('turbo')
     end
 
+  end
+
+  describe '.distro_target' do
+    it 'return zypper targetos output' do
+      Object.should_receive(:'`').with('zypper targetos').and_return('openSUSE-13.1-x86_64')
+      Zypper.distro_target.should eq 'openSUSE-13.1-x86_64'
+    end
   end
 
 end
