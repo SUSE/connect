@@ -208,8 +208,8 @@ describe SUSE::Connect::Zypper do
     context :oem_file_exists do
 
       it 'should extract product_release from OEM file if exists' do
-        File.should_receive(:exists?).with(subject::OEM_PATH+'/SLE_productline1').and_return(true)
-        File.should_receive(:readlines).with(subject::OEM_PATH+'/SLE_productline1').and_return(["ABC\n"])
+        File.should_receive(:exists?).with(subject::OEM_PATH + '/SLE_productline1').and_return(true)
+        File.should_receive(:readlines).with(subject::OEM_PATH + '/SLE_productline1').and_return(["ABC\n"])
         subject.base_product[:release_type].should eq 'ABC'
       end
 
@@ -218,7 +218,7 @@ describe SUSE::Connect::Zypper do
     context :registerrelease_defined do
 
       it 'should extract product_release from registerrelease attribute of product' do
-        File.should_receive(:exists?).with(subject::OEM_PATH+'/SLE_productline1').and_return(false)
+        File.should_receive(:exists?).with(subject::OEM_PATH + '/SLE_productline1').and_return(false)
         subject.stub(:installed_products => [
             { :registerrelease => 'DDD', :isbase => '1', :name => 'SLES', :productline => 'SLE_productline1' }
         ])
@@ -230,7 +230,7 @@ describe SUSE::Connect::Zypper do
     context :flavor_defined do
 
       it 'should extract product_release from flavor file if exists' do
-        File.should_receive(:exists?).with(subject::OEM_PATH+'/SLE_productline1').and_return(false)
+        File.should_receive(:exists?).with(subject::OEM_PATH + '/SLE_productline1').and_return(false)
         subject.stub(:installed_products => [
             {
               :flavor          => 'ZZZ',

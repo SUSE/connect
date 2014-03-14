@@ -1,5 +1,6 @@
 module SUSE
   module Toolkit
+    # Provides basic system calls interface
     module SystemCalls
 
       def call(command)
