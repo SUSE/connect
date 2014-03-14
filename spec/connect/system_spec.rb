@@ -86,8 +86,8 @@ describe SUSE::Connect::System do
       end
 
       before do
-        File.should_receive(:exist?).with(NCC_CREDENTIALS_FILE).and_return(true)
-        File.should_receive(:new).with(NCC_CREDENTIALS_FILE, 'r').and_return(stub_ncc_cred_file)
+        File.should_receive(:exist?).with(CREDENTIALS_FILE).and_return(true)
+        File.should_receive(:new).with(CREDENTIALS_FILE, 'r').and_return(stub_ncc_cred_file)
       end
 
       it 'should raise MalformedNccCredentialsFile if cannot parse lines' do
@@ -106,7 +106,7 @@ describe SUSE::Connect::System do
     context :credentials_not_exist do
 
       before(:each) do
-        File.should_receive(:exist?).with(NCC_CREDENTIALS_FILE).and_return(false)
+        File.should_receive(:exist?).with(CREDENTIALS_FILE).and_return(false)
       end
 
       it 'should produce log message' do
@@ -202,8 +202,8 @@ describe SUSE::Connect::System do
     end
 
     it 'writes credentials file in corresponding file in credentials.d' do
-      Zypper.should_receive(:write_source_credentials).with('name')
-      Zypper.should_receive(:write_source_credentials).with('lastname')
+      Zypper.should_receive(:write_service_credentials).with('name')
+      Zypper.should_receive(:write_service_credentials).with('lastname')
       subject.add_service mock_service
     end
 

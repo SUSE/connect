@@ -40,9 +40,9 @@ module SUSE
         # tuple of username and password or nil for both values
         #
         def credentials
-          if File.exist?(NCC_CREDENTIALS_FILE)
+          if File.exist?(CREDENTIALS_FILE)
 
-            file = File.new(NCC_CREDENTIALS_FILE, 'r')
+            file = File.new(CREDENTIALS_FILE, 'r')
 
             begin
               lines = file.readlines.map(&:chomp)
@@ -69,23 +69,23 @@ module SUSE
 
           raise ArgumentError, 'only Service accepted' unless service.is_a? Service
 
-          service.sources.each do |source_name, source_url|
+          service.sources.each do |service_name, source_url|
 
-            Zypper.remove_service(source_name)
-            Zypper.add_service(source_name, source_url)
+            Zypper.remove_service(service_name)
+            Zypper.add_service(service_name, source_url)
             # TODO: cover
-            Zypper.enable_autorefresh_service(source_name)
+            Zypper.enable_autorefresh_service(service_name)
 
             # TODO: ensure zypper reads and respects repoindex flags
             service.enabled.each do |repo_name|
-              Zypper.enable_service_repository(source_name, repo_name)
+              Zypper.enable_service_repository(service_name, repo_name)
             end
 
-            Zypper.write_source_credentials(source_name)
+            Zypper.write_service_credentials(service_name)
 
             # TODO: ensure zypper reads and respects repoindex flags
             service.norefresh.each do |repo_name|
-              Zypper.disable_repository_autorefresh(source_name, repo_name)
+              Zypper.disable_repository_autorefresh(service_name, repo_name)
             end
 
           end

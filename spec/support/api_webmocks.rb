@@ -14,6 +14,7 @@ def stub_activate_call
       :product_ident    => 'SLES',
       :product_version  => '11-SP2',
       :arch             => 'x86_64',
+      :release_type     => nil,
       :token            => 'token-shmocken'
   }
   stub_request(:post, 'https://example.com/connect/systems/products')

@@ -68,28 +68,11 @@ describe SUSE::Connect::Zypper do
 
   end
 
-  describe '.call' do
-
-    it 'calls \'zypper\' with given parameters' do
-      Object.should_receive(:system).with(include 'zypper services')
-      subject.send(:call, 'services')
-    end
-
-    it 'logs failing commands' do
-      Object.should_receive(:system).with(include 'nonexistinggibberish').and_return(false)
-      SUSE::Connect::Logger.should_receive(:error).with('command `zypper nonexistinggibberish` failed')
-      subject.send(:call, 'nonexistinggibberish')
-    end
-
-    it 'doesn\'t actually change anything on the system if OPTIONS[:drymode] is set'
-
-  end
-
   describe '.add_service' do
 
     it 'calls zypper with proper arguments' do
-      parameters = "--quiet --non-interactive addservice -t ris http://example.com 'branding'"
-      Object.should_receive(:system).with(include parameters).and_return(true)
+      parameters = "zypper --quiet --non-interactive addservice -t ris http://example.com 'branding'"
+      Object.should_receive(:system).with(parameters).and_return(true)
       subject.add_service('branding', 'http://example.com')
     end
 
@@ -98,8 +81,8 @@ describe SUSE::Connect::Zypper do
   describe '.remove_service' do
 
     it 'calls zypper with proper arguments' do
-      parameters = "--quiet --non-interactive removeservice 'branding'"
-      Object.should_receive(:system).with(include parameters).and_return(true)
+      parameters = "zypper --quiet --non-interactive removeservice 'branding'"
+      Object.should_receive(:system).with(parameters).and_return(true)
       subject.remove_service('branding')
     end
 
@@ -108,7 +91,7 @@ describe SUSE::Connect::Zypper do
   describe '.refresh' do
 
     it 'calls zypper with proper arguments' do
-      Object.should_receive(:system).with(include 'refresh').and_return(true)
+      Object.should_receive(:system).with('zypper refresh').and_return(true)
       subject.refresh
     end
 
@@ -117,8 +100,8 @@ describe SUSE::Connect::Zypper do
   describe '.enable_service_repository' do
 
     it 'calls zypper with proper arguments' do
-      parameters = "--quiet modifyservice --ar-to-enable 'branding:tofu' 'branding'"
-      Object.should_receive(:system).with(include parameters).and_return(true)
+      parameters = "zypper --quiet modifyservice --ar-to-enable 'branding:tofu' 'branding'"
+      Object.should_receive(:system).with(parameters).and_return(true)
       subject.enable_service_repository('branding', 'tofu')
     end
 
@@ -127,8 +110,8 @@ describe SUSE::Connect::Zypper do
   describe '.disable_repository_autorefresh' do
 
     it 'calls zypper with proper arguments' do
-      parameters = "--quiet modifyrepo --no-refresh 'branding:tofu'"
-      Object.should_receive(:system).with(include parameters).and_return(true)
+      parameters = "zypper --quiet modifyrepo --no-refresh 'branding:tofu'"
+      Object.should_receive(:system).with(parameters).and_return(true)
       subject.disable_repository_autorefresh('branding', 'tofu')
     end
 
@@ -170,8 +153,8 @@ describe SUSE::Connect::Zypper do
 
     end
 
-    it 'opens a file for writing with name of source suffixed by _credentials' do
-      File.should_receive(:open).with('/etc/zypp/credentials.d/ha_credentials', 'w')
+    it 'opens a file for writing with name of service' do
+      File.should_receive(:open).with('/etc/zypp/credentials.d/ha', 'w')
       subject.send(:write_credentials_file, *params)
     end
 
@@ -202,10 +185,64 @@ describe SUSE::Connect::Zypper do
 
   describe '.base_product' do
 
-    it 'should return first product from installed product which is base' do
-      parsed_products = [{ :isbase => '1', :name => 'SLES' }, { :isbase => '2', :name => 'Cloud' }]
+    let :parsed_products do
+      [
+        { :isbase => '1', :name => 'SLES', :productline => 'SLE_productline1', :registerrelease => '' },
+        { :isbase => '2', :name => 'Cloud', :productline => 'SLE_productline2', :registerrelease => '' }
+      ]
+    end
+
+    before do
       subject.stub(:installed_products => parsed_products)
-      subject.base_product.should eq(:isbase => '1', :name => 'SLES')
+    end
+
+    it 'should return first product from installed product which is base' do
+      subject.base_product.should eq(parsed_products.first)
+    end
+
+    it 'should set release_type to one extracted' do
+      subject.should_receive(:lookup_product_release).and_return('NCR')
+      subject.base_product[:release_type].should eq 'NCR'
+    end
+
+    context :oem_file_exists do
+
+      it 'should extract product_release from OEM file if exists' do
+        File.should_receive(:exists?).with(subject::OEM_PATH + '/SLE_productline1').and_return(true)
+        File.should_receive(:readlines).with(subject::OEM_PATH + '/SLE_productline1').and_return(["ABC\n"])
+        subject.base_product[:release_type].should eq 'ABC'
+      end
+
+    end
+
+    context :registerrelease_defined do
+
+      it 'should extract product_release from registerrelease attribute of product' do
+        File.should_receive(:exists?).with(subject::OEM_PATH + '/SLE_productline1').and_return(false)
+        subject.stub(:installed_products => [
+            { :registerrelease => 'DDD', :isbase => '1', :name => 'SLES', :productline => 'SLE_productline1' }
+        ])
+        subject.base_product[:release_type].should eq 'DDD'
+      end
+
+    end
+
+    context :flavor_defined do
+
+      it 'should extract product_release from flavor file if exists' do
+        File.should_receive(:exists?).with(subject::OEM_PATH + '/SLE_productline1').and_return(false)
+        subject.stub(:installed_products => [
+            {
+              :flavor          => 'ZZZ',
+              :isbase          => '1',
+              :name            => 'SLES',
+              :productline     => 'SLE_productline1',
+              :registerrelease => ''
+            }
+        ])
+        subject.base_product[:release_type].should eq 'ZZZ'
+      end
+
     end
 
   end
@@ -215,26 +252,33 @@ describe SUSE::Connect::Zypper do
     mock_dry_file
 
     it 'should call write_credentials_file' do
-      subject.should_receive(:write_credentials_file).with('dummy', 'tummy', 'NCCcredentials')
+      subject.should_receive(:write_credentials_file).with('dummy', 'tummy', 'SCCcredentials')
       subject.write_base_credentials('dummy', 'tummy')
-
     end
+
   end
 
-  describe '.write_source_credentials' do
+  describe '.write_service_credentials' do
 
     mock_dry_file
 
     it 'extracts username and password from system credentials' do
       System.should_receive(:credentials)
-      subject.write_source_credentials('turbo')
+      subject.write_service_credentials('turbo')
     end
 
     it 'creates a file with source name' do
-      subject.should_receive(:write_credentials_file).with('dummy', 'tummy', 'turbo_credentials')
-      subject.write_source_credentials('turbo')
+      subject.should_receive(:write_credentials_file).with('dummy', 'tummy', 'turbo')
+      subject.write_service_credentials('turbo')
     end
 
+  end
+
+  describe '.distro_target' do
+    it 'return zypper targetos output' do
+      Object.should_receive(:'`').with('zypper targetos').and_return('openSUSE-13.1-x86_64')
+      Zypper.distro_target.should eq 'openSUSE-13.1-x86_64'
+    end
   end
 
 end

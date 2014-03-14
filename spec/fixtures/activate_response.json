@@ -1,6 +1,6 @@
 {
   "sources": {
-    "SUSE_Linux_Enterprise_Server_for_x86_AMD64_Intel64_Activation_Code": "http://localhost:3000/service?credentials=SUSE_Linux_Enterprise_Server_for_x86_AMD64_Intel64_Activation_Code_credentials"
+    "SUSE_Linux_Enterprise_Server_for_x86_AMD64_Intel64_Activation_Code": "http://localhost:3000/service?credentials=SUSE_Linux_Enterprise_Server_for_x86_AMD64_Intel64_Activation_Code"
   },
   "norefresh": [
     "SLES11-SP2-Extension-Store", "SLES10-SP2-Pool"

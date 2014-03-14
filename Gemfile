@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 group :test, :development do
   gem 'debugger'
   gem 'yard'
+  gem 'awesome_print'
 end
 
 group :development do
@@ -11,7 +12,6 @@ group :development do
   gem 'rake'
   gem 'gem2rpm'
   gem 'gem-release'
-  gem 'awesome_print'
 end
 
 group :test do
