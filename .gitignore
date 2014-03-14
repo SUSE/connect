@@ -6,3 +6,4 @@ Gemfile.lock
 .yardoc/
 *.png
 suse-connect-*.gem
+.vagrant/

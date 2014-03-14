@@ -12,7 +12,7 @@ module SUSE
       end
 
       def write_credentials_file(login, password, filename)
-        credentials_dir = ZYPPER_CREDENTIALS_DIR
+        credentials_dir = SUSE::Connect::ZYPPER_CREDENTIALS_DIR
         Dir.mkdir(credentials_dir) unless Dir.exists?(credentials_dir)
         credentials_file = File.join(credentials_dir, filename)
 

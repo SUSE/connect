@@ -40,9 +40,9 @@ module SUSE
         # tuple of username and password or nil for both values
         #
         def credentials
-          if File.exist?(NCC_CREDENTIALS_FILE)
+          if File.exist?(CREDENTIALS_FILE)
 
-            file = File.new(NCC_CREDENTIALS_FILE, 'r')
+            file = File.new(CREDENTIALS_FILE, 'r')
 
             begin
               lines = file.readlines.map(&:chomp)
