@@ -9,6 +9,8 @@ module SUSE
 
       include RexmlRefinement
 
+      OEM_PATH    = '/var/lib/suseRegister/OEM'
+
       class << self
 
         include SUSE::Toolkit::SystemCalls
@@ -25,6 +27,7 @@ module SUSE
 
         def base_product
           base = installed_products.select {|product| %w{1 true yes}.include?(product[:isbase]) }.first
+          base[:release_type] = lookup_product_release(base)
           raise CannotDetectBaseProduct unless base
           base
         end
@@ -80,6 +83,17 @@ module SUSE
 
         def sccized_login(login)
           login.start_with?('SCC_') ? login : "SCC_#{login}"
+        end
+
+        def lookup_product_release(product)
+          release  = product[:flavor]
+          release  = product[:registerrelease] unless product[:registerrelease].empty?
+          oem_file = File.join(OEM_PATH, product[:productline])
+          if File.exists?(oem_file)
+            line = File.readlines(oem_file).first
+            release = line.chomp if line
+          end
+          release
         end
 
       end

@@ -185,10 +185,64 @@ describe SUSE::Connect::Zypper do
 
   describe '.base_product' do
 
-    it 'should return first product from installed product which is base' do
-      parsed_products = [{ :isbase => '1', :name => 'SLES' }, { :isbase => '2', :name => 'Cloud' }]
+    let :parsed_products do
+      [
+        { :isbase => '1', :name => 'SLES', :productline => 'SLE_productline1', :registerrelease => '' },
+        { :isbase => '2', :name => 'Cloud', :productline => 'SLE_productline2', :registerrelease => '' }
+      ]
+    end
+
+    before do
       subject.stub(:installed_products => parsed_products)
-      subject.base_product.should eq(:isbase => '1', :name => 'SLES')
+    end
+
+    it 'should return first product from installed product which is base' do
+      subject.base_product.should eq(parsed_products.first)
+    end
+
+    it 'should set release_type to one extracted' do
+      subject.should_receive(:lookup_product_release).and_return('NCR')
+      subject.base_product[:release_type].should eq 'NCR'
+    end
+
+    context :oem_file_exists do
+
+      it 'should extract product_release from OEM file if exists' do
+        File.should_receive(:exists?).with(subject::OEM_PATH+'/SLE_productline1').and_return(true)
+        File.should_receive(:readlines).with(subject::OEM_PATH+'/SLE_productline1').and_return(["ABC\n"])
+        subject.base_product[:release_type].should eq 'ABC'
+      end
+
+    end
+
+    context :registerrelease_defined do
+
+      it 'should extract product_release from registerrelease attribute of product' do
+        File.should_receive(:exists?).with(subject::OEM_PATH+'/SLE_productline1').and_return(false)
+        subject.stub(:installed_products => [
+            { :registerrelease => 'DDD', :isbase => '1', :name => 'SLES', :productline => 'SLE_productline1' }
+        ])
+        subject.base_product[:release_type].should eq 'DDD'
+      end
+
+    end
+
+    context :flavor_defined do
+
+      it 'should extract product_release from flavor file if exists' do
+        File.should_receive(:exists?).with(subject::OEM_PATH+'/SLE_productline1').and_return(false)
+        subject.stub(:installed_products => [
+            {
+              :flavor          => 'ZZZ',
+              :isbase          => '1',
+              :name            => 'SLES',
+              :productline     => 'SLE_productline1',
+              :registerrelease => ''
+            }
+        ])
+        subject.base_product[:release_type].should eq 'ZZZ'
+      end
+
     end
 
   end

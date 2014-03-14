@@ -28,11 +28,13 @@ describe SUSE::Connect::Api do
     before do
       stub_announce_call
       Zypper.stub(:write_base_credentials => true)
+      Zypper.stub(:distro_target => 'HHH')
     end
 
     mock_dry_file
 
     it 'sends a call with token to api' do
+      Zypper.stub(:lookup_product_release => 'HHH')
       Connection.any_instance.should_receive(:post).and_call_original
       subject.new(client).announce_system('token')
     end
@@ -40,7 +42,9 @@ describe SUSE::Connect::Api do
     context :hostname_detected do
       it 'sends a call with hostname' do
         Socket.stub(:gethostname => 'vargan')
-        payload = ['/connect/subscriptions/systems', :auth => 'token', :params => { :hostname => 'vargan' }]
+        payload = ['/connect/subscriptions/systems', :auth => 'token', :params => {
+            :hostname => 'vargan', :distro_target => 'HHH' }
+        ]
         Connection.any_instance.should_receive(:post).with(*payload).and_call_original
         subject.new(client).announce_system('token')
       end
@@ -49,7 +53,9 @@ describe SUSE::Connect::Api do
     context :no_hostname do
       it 'sends a call with ip' do
         System.stub(:hostname => '192.168.42.42')
-        payload = ['/connect/subscriptions/systems', :auth => 'token', :params => { :hostname => '192.168.42.42' }]
+        payload = ['/connect/subscriptions/systems', :auth => 'token', :params => {
+            :hostname => '192.168.42.42', :distro_target => 'HHH' }
+        ]
         Connection.any_instance.should_receive(:post).with(*payload).and_call_original
         subject.new(client).announce_system('token')
       end
@@ -74,6 +80,7 @@ describe SUSE::Connect::Api do
           :product_ident    => 'SLES',
           :product_version  => '11-SP2',
           :arch             => 'x86_64',
+          :release_type     => nil,
           :token            => 'token-shmocken'
       }
       Connection.any_instance.should_receive(:post)

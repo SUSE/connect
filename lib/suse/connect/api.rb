@@ -91,7 +91,7 @@ module SUSE
       #
       def announce_system(auth)
         payload = {
-            :hostname => System.hostname,
+            :hostname      => System.hostname,
             :distro_target => Zypper.distro_target
         }
         @connection.post('/connect/subscriptions/systems', :auth => auth, :params => payload)
