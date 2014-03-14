@@ -37,18 +37,15 @@ module SUSE
         end
 
         def add_service(service_name, service_url)
-          cmd = "zypper --quiet --non-interactive addservice -t ris #{service_url} '#{service_name}'"
-          call(cmd)
+          call("zypper --quiet --non-interactive addservice -t ris #{service_url} '#{service_name}'")
         end
 
         def enable_autorefresh_service(service_name)
-          cmd = "zypper --quiet --non-interactive modifyservice -r #{service_name}"
-          call(cmd)
+          call("zypper --quiet --non-interactive modifyservice -r #{service_name}")
         end
 
         def remove_service(service_name)
-          cmd = "zypper --quiet --non-interactive removeservice '#{service_name}'"
-          call(cmd)
+          call("zypper --quiet --non-interactive removeservice '#{service_name}'")
         end
 
         def refresh
@@ -60,13 +57,11 @@ module SUSE
         end
 
         def enable_service_repository(service_name, repository)
-          cmd = "zypper --quiet modifyservice --ar-to-enable '#{service_name}:#{repository}' '#{service_name}'"
-          call(cmd)
+          call("zypper --quiet modifyservice --ar-to-enable '#{service_name}:#{repository}' '#{service_name}'")
         end
 
         def disable_repository_autorefresh(service_name, repository)
-          cmd = "zypper --quiet modifyrepo --no-refresh '#{service_name}:#{repository}'"
-          call(cmd)
+          call("zypper --quiet modifyrepo --no-refresh '#{service_name}:#{repository}'")
         end
 
         # TODO: introduce Source class
