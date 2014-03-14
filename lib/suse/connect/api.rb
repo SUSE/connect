@@ -35,7 +35,7 @@ module SUSE
         @connection.post('/connect/subscriptions/systems', :auth => auth, :params => payload)
       end
 
-      # Activate a product and receive the services list, consuming a regcode.
+      # Activate a product, consuming an entitlement, and receive the updated list of services for the system
       # Find and return the correct list of all available services for this system's combination of subscription,
       # installed product, and architecture.
       #
