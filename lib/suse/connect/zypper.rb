@@ -70,9 +70,9 @@ module SUSE
         end
 
         # TODO: introduce Source class
-        def write_source_credentials(source_name)
+        def write_service_credentials(service_name)
           login, password = System.credentials
-          write_credentials_file(login, password, "#{source_name}_credentials")
+          write_credentials_file(login, password, service_name)
         end
 
         def write_base_credentials(login, password)

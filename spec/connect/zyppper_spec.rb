@@ -153,8 +153,8 @@ describe SUSE::Connect::Zypper do
 
     end
 
-    it 'opens a file for writing with name of source suffixed by _credentials' do
-      File.should_receive(:open).with('/etc/zypp/credentials.d/ha_credentials', 'w')
+    it 'opens a file for writing with name of service' do
+      File.should_receive(:open).with('/etc/zypp/credentials.d/ha', 'w')
       subject.send(:write_credentials_file, *params)
     end
 
@@ -258,18 +258,18 @@ describe SUSE::Connect::Zypper do
 
   end
 
-  describe '.write_source_credentials' do
+  describe '.write_service_credentials' do
 
     mock_dry_file
 
     it 'extracts username and password from system credentials' do
       System.should_receive(:credentials)
-      subject.write_source_credentials('turbo')
+      subject.write_service_credentials('turbo')
     end
 
     it 'creates a file with source name' do
-      subject.should_receive(:write_credentials_file).with('dummy', 'tummy', 'turbo_credentials')
-      subject.write_source_credentials('turbo')
+      subject.should_receive(:write_credentials_file).with('dummy', 'tummy', 'turbo')
+      subject.write_service_credentials('turbo')
     end
 
   end

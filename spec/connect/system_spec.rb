@@ -202,8 +202,8 @@ describe SUSE::Connect::System do
     end
 
     it 'writes credentials file in corresponding file in credentials.d' do
-      Zypper.should_receive(:write_source_credentials).with('name')
-      Zypper.should_receive(:write_source_credentials).with('lastname')
+      Zypper.should_receive(:write_service_credentials).with('name')
+      Zypper.should_receive(:write_service_credentials).with('lastname')
       subject.add_service mock_service
     end
 

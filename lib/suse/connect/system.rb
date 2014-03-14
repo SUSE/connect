@@ -81,7 +81,7 @@ module SUSE
               Zypper.enable_service_repository(source_name, repo_name)
             end
 
-            Zypper.write_source_credentials(source_name)
+            Zypper.write_service_credentials(source_name)
 
             # TODO: ensure zypper reads and respects repoindex flags
             service.norefresh.each do |repo_name|
