@@ -13,6 +13,7 @@ Please visit https://scc.suse.com to see and manage your subscriptions.
 
 ```
 rake build    # build locally (prepare for pushing to ibs)
+rake bump     # increase version of a gem
 rake console  # Run console loaded with gem
 rake rubocop  # Run Rubocop
 rake spec     # Run RSpec
