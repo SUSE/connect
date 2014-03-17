@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Mar 14 13:40:01 UTC 2014 - mc@suse.de
+
+- Send product release_type and distro_target from activate and
+  announce calls respectively
+
+-------------------------------------------------------------------
 Thu Mar  6 09:30:40 UTC 2014 - achernikov@suse.de
 
 - Added products call allowing to get all publicly available
