@@ -70,6 +70,13 @@ module SUSE
         @connection.get('/connect/products', :auth => nil)
       end
 
+      # List all addons available for the given system
+      #
+      # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
+      #
+      def addons
+        @connection.get('/connect/systems/products', :auth => auth)
+      end
     end
   end
 end
