@@ -110,7 +110,7 @@ module SUSE
 
         def extensions_for(product)
           response = @api.addons(Utilities.basic_auth, product)
-          ProductServices.from_hash(JSON.parse(response))
+          ProductExtensions.from_hash(JSON.parse(response))
         end
       end
     end
