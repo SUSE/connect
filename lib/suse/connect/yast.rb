@@ -6,6 +6,7 @@ module SUSE
     module YaST
       # C&P from scc_api
       # Collection of repository services relevant to a registered product
+      # TODO Merge with existing SUSE::Connect::Service
       class ProductServices
 
         attr_reader :services, :norefresh_repos, :enabled_repos
@@ -102,12 +103,15 @@ module SUSE
           Zypper.write_base_credentials(body['login'], body['password'])
         end
 
+        # @param product [Hash] product to be activated
+        # @param token [String] token/regcode for product being activated
         def activate_product(product, token)
           response = @api.activate_subscription(Utilities.basic_auth, product, token)
           # scc_api does not register the services itself, it returns them to YaST
           ProductServices.from_hash(JSON.parse(response))
         end
 
+        # @param product [Hash] product to query extensions for
         def extensions_for(product)
           response = @api.addons(Utilities.basic_auth, product)
           ProductExtensions.from_hash(JSON.parse(response))
