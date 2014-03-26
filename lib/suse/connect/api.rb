@@ -49,14 +49,14 @@ module SUSE
       # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
       #
       # @todo TODO: introduce Product class
-      def activate_subscription(auth, product)
+      def activate_subscription(auth, product, token)
         raise TokenNotPresent unless @client.options[:token]
         payload = {
             :product_ident => product[:name],
             :product_version => product[:version],
             :arch => product[:arch],
             :release_type => product[:release_type],
-            :token => @client.options[:token]
+            :token => token ? token : @client.options[:token]
         }
         @connection.post('/connect/systems/products', :auth => auth, :params => payload)
 
@@ -74,7 +74,7 @@ module SUSE
       #
       # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
       #
-      def addons(product)
+      def addons(auth, product)
         payload = {
             :product_ident => product[:name]
         }
