@@ -87,8 +87,8 @@ module SUSE
       end
 
 
-      # Similar to Client
-      class Connection
+      # TODO merge with SUSE::Connect::Client
+      class Client
         def initialize(email, base_regcode, url = "https://scc.suse.com/connect")
           @email = email
           @base_token = base_regcode
