@@ -2,23 +2,26 @@
 module SUSE
   module Connect
     class Utilities
-      def token_auth
-        raise CannotBuildTokenAuth, 'token auth requested, but no token provided' unless options[:token]
-        "Token token=#{options[:token]}"
-      end
+      class << self
+        include ::Net::HTTPHeader
 
-      def basic_auth
-
-        username, password = System.credentials
-
-        if username && password
-          basic_encode(username, password)
-        else
-          raise CannotBuildBasicAuth, 'cannot get proper username and password'
+        def token_auth(token)
+          raise CannotBuildTokenAuth, 'token auth requested, but no token provided' unless token
+          "Token token=#{token}"
         end
 
-      end
+        def basic_auth
 
+          username, password = System.credentials
+
+          if username && password
+            basic_encode(username, password)
+          else
+            raise CannotBuildBasicAuth, 'cannot get proper username and password'
+          end
+
+        end
+      end
     end
   end
 end
