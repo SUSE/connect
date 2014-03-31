@@ -4,6 +4,7 @@ group :test, :development do
   gem 'debugger'
   gem 'yard'
   gem 'awesome_print'
+  gem 'knife-solo'
 end
 
 group :development do
