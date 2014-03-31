@@ -1,10 +1,18 @@
-require 'rspec'
+require 'spec_helper'
 
-describe 'Models a service returned by the api do
+describe SUSE::Connect::YaST::Service do
 
-  it ' should do
-  something ' do
+  subject { SUSE::Connect::YaST::Service.new(
+      "Test Service", "http://test.com/service/")
+  }
 
-    true.should == false
+  it 'has attribute url' do
+    #subject.instance_variables.contains("@url")
+    expect(subject.url).not_to be_nil
+  end
+
+  it 'has attribute name' do
+    #subject.instance_variables.contains("@url")
+    expect(subject.name).not_to be_nil
   end
 end
