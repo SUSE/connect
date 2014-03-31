@@ -5,6 +5,7 @@ group :test, :development do
   gem 'yard'
   gem 'awesome_print'
   gem 'knife-solo'
+  gem 'openstack'
 end
 
 group :development do
