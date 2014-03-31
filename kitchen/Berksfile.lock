@@ -1,0 +1,15 @@
+{
+  "sources": {
+    "sudo": {
+      "locked_version": "2.1.4",
+      "git": "git://github.com/opscode-cookbooks/sudo.git",
+      "ref": "36130ac4ce5d700b0901431db6ca262038005ff0"
+    },
+    "ohai": {
+      "locked_version": "1.1.12"
+    },
+    "connect": {
+      "path": "./cookbooks/connect"
+    }
+  }
+}
