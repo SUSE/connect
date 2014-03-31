@@ -15,6 +15,7 @@ module SUSE
     require 'suse/connect/system'
     require 'suse/connect/zypper'
     require 'suse/connect/service'
+    require 'suse/connect/source'
     require 'suse/connect/connection'
     require 'suse/connect/api'
     require 'suse/connect/utilities'

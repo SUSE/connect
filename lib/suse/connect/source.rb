@@ -1,5 +1,5 @@
-# Repository service
-class SUSE::Connect::YaST::Service
+# service
+class SUSE::Connect::Source
 
   attr_reader :name, :url
 

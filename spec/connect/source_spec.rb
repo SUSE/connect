@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe SUSE::Connect::YaST::Service do
+describe SUSE::Connect::Source do
 
-  subject { SUSE::Connect::YaST::Service.new(
+  subject { SUSE::Connect::Source.new(
       "Test Service", "http://test.com/service/")
   }
 
