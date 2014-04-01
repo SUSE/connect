@@ -62,7 +62,7 @@ describe SUSE::Connect::Client do
 
     before do
       api_response = double('api_response')
-      api_response.stub(:body => { :sources => { :foo => 'bar' } })
+      api_response.stub(:body => { 'sources' => { :foo => 'bar' }, :enabled => true, :norefresh => false })
       Api.any_instance.stub(:activate_subscription => api_response)
       System.stub(:credentials => %w{ meuser mepassword})
       Zypper.stub(:base_product => ({ :name => 'SLE_BASE' }))
