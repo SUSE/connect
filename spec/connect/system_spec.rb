@@ -176,8 +176,8 @@ describe SUSE::Connect::System do
     end
 
     it 'add each service from set' do
-      Zypper.should_receive(:add_service).with('name', 'url')
-      Zypper.should_receive(:add_service).with('lastname', 'furl')
+      Zypper.should_receive(:add_service).with('name', URI('url'))
+      Zypper.should_receive(:add_service).with('lastname', URI('furl'))
       subject.add_service mock_service
     end
 
@@ -195,8 +195,8 @@ describe SUSE::Connect::System do
 
     it 'enables service repository for each of enabled' do
 
-      Zypper.should_receive(:add_service).with('name', 'url')
-      Zypper.should_receive(:add_service).with('lastname', 'furl')
+      Zypper.should_receive(:add_service).with('name', URI('url'))
+      Zypper.should_receive(:add_service).with('lastname', URI('furl'))
 
       subject.add_service mock_service
     end

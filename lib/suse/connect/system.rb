@@ -69,23 +69,23 @@ module SUSE
 
           raise ArgumentError, 'only Service accepted' unless service.is_a? Service
 
-          service.sources.each do |service_name, source_url|
+          service.sources.each do |source|
 
-            Zypper.remove_service(service_name)
-            Zypper.add_service(service_name, source_url)
+            Zypper.remove_service(source.name)
+            Zypper.add_service(source.name, source.url)
             # TODO: cover
-            Zypper.enable_autorefresh_service(service_name)
+            Zypper.enable_autorefresh_service(source.name)
 
             # TODO: ensure zypper reads and respects repoindex flags
             service.enabled.each do |repo_name|
-              Zypper.enable_service_repository(service_name, repo_name)
+              Zypper.enable_service_repository(source.name, repo_name)
             end
 
-            Zypper.write_service_credentials(service_name)
+            Zypper.write_service_credentials(source.name)
 
             # TODO: ensure zypper reads and respects repoindex flags
             service.norefresh.each do |repo_name|
-              Zypper.disable_repository_autorefresh(service_name, repo_name)
+              Zypper.disable_repository_autorefresh(source.name, repo_name)
             end
 
           end
