@@ -19,5 +19,6 @@ module SUSE
     require 'suse/connect/connection'
     require 'suse/connect/api'
     require 'suse/connect/utilities'
+    require 'suse/connect/yast'
   end
 end
