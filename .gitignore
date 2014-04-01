@@ -2,7 +2,6 @@
 *~
 .bundle/
 coverage/
-Gemfile.lock
 .yardoc/
 *.png
 suse-connect-*.gem
