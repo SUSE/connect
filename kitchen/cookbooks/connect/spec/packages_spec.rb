@@ -3,22 +3,22 @@ require 'chefspec'
 describe 'connect::packages' do
 
   let :chef_run do
-    runner = ChefSpec::ChefRunner.new
-    # runner.node.set[:connect][:packages] = { 'gobo' => true, 'lobo' => false, 'mobo' => true }
+    stub_command("rpm -q git").and_return(true)
+    stub_command("rpm -q osc").and_return(false)
+    stub_command("rpm -q java").and_return(true)
+
+    runner = ChefSpec::Runner.new
+    runner.node.set[:connect][:packages] = { 'osc' => true, 'git' => true, 'java' => false }
     runner.converge 'connect::packages'
     runner
   end
 
   it 'should install all required packages' do
-    debugger
-    %w{ osc }.each do |desired_package|
-      chef_run.should install_package desired_package
-    end
+    chef_run.should install_package 'osc'
+    chef_run.should install_package 'git'
   end
 
   it 'should remove unneeded packages' do
-    %w{ lobo }.each do |undesired_package|
-      chef_run.should remove_package undesired_package
-    end
+    chef_run.should remove_package 'java'
   end
 end
