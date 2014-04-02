@@ -59,7 +59,6 @@ module SUSE
             :token => product[:token] ? product[:token] : @client.options[:token]
         }
         @connection.post('/connect/systems/products', :auth => auth, :params => payload)
-
       end
 
       # List all publicly available products. This includes a list of all repositories for each product.
@@ -75,9 +74,7 @@ module SUSE
       # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
       #
       def addons(auth, product)
-        payload = {
-            :product_ident => product[:name]
-        }
+        payload = { :product_ident => product[:name] }
         @connection.get('/connect/systems/products', :auth => auth, :params => payload)
       end
 

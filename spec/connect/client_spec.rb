@@ -35,7 +35,8 @@ describe SUSE::Connect::Client do
   end
 
   describe '#announce_system' do
-    subject { SUSE::Connect::Client.new({:token => "blabla"}) }
+
+    subject { SUSE::Connect::Client.new(:token => 'blabla') }
 
     before do
       api_response = double('api_response')
@@ -44,15 +45,7 @@ describe SUSE::Connect::Client do
       subject.stub(:token_auth => true)
     end
 
-    #TODO push this into execute! test
-    #it 'writes credentials file' do
-    #  Zypper.should_receive(:write_base_credentials).with('lg', 'pw')
-    #  subject.stub(:api)
-    #  subject.execute!
-    #end
-
     it 'calls underlying api' do
-      #Zypper.stub(:write_base_credentials)
       Api.any_instance.should_receive(:announce_system)
       subject.announce_system
     end
@@ -72,10 +65,10 @@ describe SUSE::Connect::Client do
 
     end
 
-    #it 'selects product' do
-    #  Zypper.should_receive(:base_product).and_return(:name => 'SLE_BASE')
-    #  subject.activate_subscription(Zypper.base_product)
-    #end
+    it 'selects product' do
+      Zypper.should_receive(:base_product).and_return(:name => 'SLE_BASE')
+      subject.activate_subscription(Zypper.base_product)
+    end
 
     it 'gets login and password from system' do
       subject.should_receive(:basic_auth)
@@ -88,37 +81,26 @@ describe SUSE::Connect::Client do
       subject.activate_subscription(Zypper.base_product)
     end
 
-    #it 'adds a service' do
-    #  System.should_receive(:add_service)
-    #  subject.activate_subscription(Zypper.base_product)
-    #end
-
   end
 
   describe '#execute!' do
 
     before do
-      # This is where the stubbing is wrong
-      # I don't know why we would stub the methods that are being tested below
-      # But this was already present
-      #Client.any_instance.stub(:announce_system)
-      #Client.any_instance.stub(:activate_subscription => Service.new( [Source.new("foo", "flub")], true, true))
       Zypper.stub(:base_product => { :name => 'SLE_BASE' })
-      Zypper.stub(:add_service => true)
+      System.stub(:add_service => true)
       Zypper.stub(:write_base_credentials)
+      subject.stub(:activate_subscription)
       subject.class.any_instance.stub(:basic_auth => true)
       subject.class.any_instance.stub(:token_auth => true)
     end
 
     it 'should call announce if system not registered' do
       System.stub(:registered? => false)
-      #System.stub(:add_service => true)
       subject.should_receive(:announce_system)
       subject.execute!
     end
 
     it 'should not call announce on api if system registered' do
-
       System.stub(:registered? => true)
       subject.should_not_receive(:announce_system)
       subject.execute!
@@ -130,34 +112,43 @@ describe SUSE::Connect::Client do
       subject.execute!
     end
 
-  end
-
-  describe '?token_auth' do
-
-    it 'returns string for auth header' do
-      subject.send(:token_auth, 'lambada').should eq 'Token token=lambada'
+    it 'writes credentials file' do
+      System.stub(:registered? => false)
+      subject.stub(:announce_system => %w{ lg pw })
+      Zypper.should_receive(:write_base_credentials).with('lg', 'pw')
+      subject.execute!
     end
 
-    # I think this test can be deleted as we would now get ArgumentError if calling token_auth without args
-    #it 'raise if no token passed, but method requested' do
-    #  expect { subject.send(:token_auth, nil) }
-    #    .to raise_error CannotBuildTokenAuth, 'token auth requested, but no token provided'
-    #end
+    it 'adds service after product activation' do
+      System.stub(:registered? => true)
+      System.should_receive(:add_service)
+      subject.execute!
+    end
 
   end
 
-  describe '?basic_auth' do
+  describe '#products_for' do
 
-    it 'returns string for auth header' do
-      System.stub(:credentials => %w{bob dylan})
-      base64_line = 'Basic Ym9iOmR5bGFu'
-      subject.send(:basic_auth).should eq base64_line
+    let(:stubbed_response) do
+      OpenStruct.new(
+        :code => 200,
+        :body => [{ 'name' => 'short_name', 'zypper_name' => 'zypper_name' }],
+        :success => true
+      )
     end
 
-    it 'raise if cannot get credentials' do
-      System.stub(:credentials => nil)
-      expect { subject.send(:basic_auth) }
-        .to raise_error CannotBuildBasicAuth, 'cannot get proper username and password'
+    before do
+      subject.stub(:basic_auth => 'Basic: encodedstring')
+    end
+
+    it 'collects data from api response' do
+      subject.api.should_receive(:addons).with('Basic: encodedstring', 'SLES').and_return stubbed_response
+      subject.products_for('SLES')
+    end
+
+    it 'returns array of extension products returned from api' do
+      subject.api.should_receive(:addons).with('Basic: encodedstring', 'SLES').and_return stubbed_response
+      pp subject.products_for('SLES').first.should be_kind_of Yast::Extension
     end
 
   end

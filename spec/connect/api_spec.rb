@@ -127,4 +127,34 @@ describe SUSE::Connect::Api do
 
   end
 
+  describe 'products' do
+
+    before do
+      stub_addons_call
+    end
+
+    it 'is authenticated via basic auth' do
+      payload = [
+          '/connect/systems/products',
+          :auth => 'Basic: encodedgibberish',
+          :params => { :product_ident => 'rodent' }
+      ]
+      Connection.any_instance.should_receive(:get)
+        .with(*payload)
+        .and_call_original
+      subject.new(client).addons('Basic: encodedgibberish', :name => 'rodent')
+    end
+
+    it 'respond with proper status code' do
+      response = subject.new(client).addons('Basic: encodedgibberish', :name => 'rodent')
+      response.code.should eq 200
+    end
+
+    it 'returns array of extensions' do
+      body = subject.new(client).addons('Basic: encodedgibberish', :name => 'rodent').body
+      body.should be_kind_of Array
+    end
+
+  end
+
 end

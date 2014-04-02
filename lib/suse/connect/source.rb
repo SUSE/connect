@@ -11,5 +11,3 @@ class SUSE::Connect::Source
     @url = url.is_a?(String) ? URI(url) : url
   end
 end
-
-

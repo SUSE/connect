@@ -9,8 +9,9 @@ describe SUSE::Connect::Service do
     let :sources_mock do
       { 'a' => 'foo', 'b' => 'bar' }
     end
+
     let :sources_output do
-      [Source.new("foo")]
+      [Source.new('foo')]
     end
 
     it 'assigns sources' do

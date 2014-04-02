@@ -10,6 +10,7 @@ module SUSE
 
     require 'suse/connect/version'
     require 'suse/connect/logger'
+    require 'suse/connect/utilities'
     require 'suse/connect/errors'
     require 'suse/connect/client'
     require 'suse/connect/system'
@@ -18,7 +19,6 @@ module SUSE
     require 'suse/connect/source'
     require 'suse/connect/connection'
     require 'suse/connect/api'
-    require 'suse/connect/utilities'
     require 'suse/connect/yast'
   end
 end

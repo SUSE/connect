@@ -11,6 +11,7 @@ SimpleCov.start do
 end
 
 require 'rspec'
+require 'ap'
 require 'webmock/rspec'
 require 'suse/connect'
 require 'support/api_webmocks'

@@ -1,11 +1,16 @@
 require 'spec_helper'
 
-describe SUSE::Connect::YaST::Extension do
+describe SUSE::Connect::Yast::Extension do
 
-  subject { SUSE::Connect::YaST::Extension.new(
-      "SLEEK", "SUSE LINUX ENTERPRISE EXTENSION KDE", "SLEEK puts the modern yet familiar GUI back into SLE that you love", "SLEEK-12")
-  }
-
+  subject do
+    extension_attrs = [
+        'SLEEK',
+        'SUSE LINUX ENTERPRISE EXTENSION KDE',
+        'SLEEK puts the modern yet familiar GUI back into SLE that you love',
+        'SLEEK-12'
+    ]
+    SUSE::Connect::Yast::Extension.new(*extension_attrs)
+  end
   it 'has attribute short_name' do
     expect(subject.short_name).not_to be_nil
   end
