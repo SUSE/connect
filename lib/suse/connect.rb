@@ -10,7 +10,6 @@ module SUSE
 
     require 'suse/connect/version'
     require 'suse/connect/logger'
-    require 'suse/connect/utilities'
     require 'suse/connect/errors'
     require 'suse/connect/client'
     require 'suse/connect/system'

@@ -1,5 +1,5 @@
 module SUSE
-  module Connect
+  module Toolkit
     # utility methods
     module Utilities
 

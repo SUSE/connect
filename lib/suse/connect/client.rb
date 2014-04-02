@@ -1,4 +1,5 @@
 require 'net/http'
+require 'suse/toolkit/utilities'
 
 module SUSE
   module Connect
@@ -6,7 +7,7 @@ module SUSE
     class Client
 
       DEFAULT_URL = 'https://scc.suse.com'
-      include SUSE::Connect::Utilities
+      include SUSE::Toolkit::Utilities
 
       attr_reader :options, :url, :api
 

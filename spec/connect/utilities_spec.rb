@@ -2,10 +2,10 @@ require 'spec_helper'
 
 # Into this class instance we include subject module
 class DummyReceiver
-  include SUSE::Connect::Utilities
+  include SUSE::Toolkit::Utilities
 end
 
-describe SUSE::Connect::Utilities do
+describe SUSE::Toolkit::Utilities do
 
   subject { DummyReceiver.new }
 
