@@ -1,24 +1,20 @@
 require 'chefspec'
+require 'chefspec/deprecations'
 
 describe 'connect::packages' do
 
-  let :chef_run do
-    stub_command("rpm -q git").and_return(true)
-    stub_command("rpm -q osc").and_return(false)
-    stub_command("rpm -q java").and_return(true)
-
+  let(:chef_run) do
     runner = ChefSpec::Runner.new
     runner.node.set[:connect][:packages] = { 'osc' => true, 'git' => true, 'java' => false }
-    runner.converge 'connect::packages'
-    runner
+    runner.converge('connect::packages')
   end
 
   it 'should install all required packages' do
-    chef_run.should install_package 'osc'
-    chef_run.should install_package 'git'
+    expect(chef_run).to install_package('osc')
+    expect(chef_run).to install_package('git')
   end
 
   it 'should remove unneeded packages' do
-    chef_run.should remove_package 'java'
+    expect(chef_run).to remove_package('java')
   end
 end
