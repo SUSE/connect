@@ -50,13 +50,14 @@ module SUSE
       #
       # @todo TODO: introduce Product class
       def activate_subscription(auth, product)
-        raise TokenNotPresent unless product[:token] || @client.options[:token]
+        token = product[:token] || @client.options[:token]
+        raise TokenNotPresent unless token
         payload = {
             :product_ident => product[:name],
             :product_version => product[:version],
             :arch => product[:arch],
             :release_type => product[:release_type],
-            :token => product[:token] ? product[:token] : @client.options[:token]
+            :token => token
         }
         @connection.post('/connect/systems/products', :auth => auth, :params => payload)
       end
