@@ -1,4 +1,6 @@
-class SUSE::Connect::YaST::Extension
+# Product Extensions to give to YaST.
+# TODO: Maybe we should get rid of this class?
+class SUSE::Connect::YaST::Extension # rubocop:disable Documentation
 
   attr_reader :short_name, :long_name, :description, :product_ident
 
