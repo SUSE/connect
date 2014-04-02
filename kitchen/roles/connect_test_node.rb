@@ -5,6 +5,6 @@ run_list(
   'recipe[ohai]',
   'recipe[connect::packages]',
   'recipe[connect::rubygems]',
-  'recipe[connect::SUSEConnect]'
+  'recipe[connect::suse_connect]'
 )
 
