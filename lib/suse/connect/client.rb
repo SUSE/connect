@@ -49,7 +49,7 @@ module SUSE
       def products_for(product)
         response = @api.addons(basic_auth, product).body
         response.map do |extension|
-          Yast::Extension.new(extension['name'], '', '', extension['zypper_name'])
+          SUSE::Connect::YaST::Extension.new(extension['name'], '', '', extension['zypper_name'])
         end
       end
 

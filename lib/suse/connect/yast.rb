@@ -10,3 +10,4 @@ module SUSE
 end
 
 require_relative 'yast/extension'
+require_relative 'yast/product'
