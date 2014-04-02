@@ -1,15 +1,22 @@
 {
   "sources": {
-    "sudo": {
-      "locked_version": "2.1.4",
-      "git": "git://github.com/opscode-cookbooks/sudo.git",
-      "ref": "36130ac4ce5d700b0901431db6ca262038005ff0"
-    },
     "ohai": {
-      "locked_version": "1.1.12"
+      "locked_version": "2.0.0"
     },
     "connect": {
       "path": "./cookbooks/connect"
+    },
+    "vagrant": {
+      "locked_version": "0.2.0"
+    },
+    "dmg": {
+      "locked_version": "2.2.0"
+    },
+    "windows": {
+      "locked_version": "1.30.0"
+    },
+    "chef_handler": {
+      "locked_version": "1.1.5"
     }
   }
 }

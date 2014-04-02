@@ -1,9 +1,6 @@
 site :opscode
 
-# 3rd party cookbooks
-# cookbook 'apt', '~> 1.10.0'
-cookbook 'sudo', :git => 'git://github.com/opscode-cookbooks/sudo.git', :branch => '2.1.4'
-cookbook 'ohai', '~> 1.1.12'
+cookbook 'ohai', '~> 2.0.0'
 
 # Connect cookbooks
 cookbook 'connect', :path => 'cookbooks/connect'
