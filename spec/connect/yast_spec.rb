@@ -4,7 +4,7 @@ describe SUSE::Connect::YaST do
 
   subject { SUSE::Connect::YaST }
 
-  let(:options) { { regcode: 'regcode', email: 'foo@bar.zer' } }
+  let(:options) { { token: 'regcode', email: 'foo@bar.zer' } }
   let(:client) { mock 'client' }
 
   describe '#announce_system' do

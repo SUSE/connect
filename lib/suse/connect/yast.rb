@@ -5,12 +5,12 @@ class SUSE::Connect::YaST
 
     attr_accessor :options
 
-    # Announces the system to SCC (usually by taking a regcode).
+    # Announces the system to SCC (usually by taking a token / regcode).
     # Writes SCC / system credentials to the system and
     # additionally returns them for convenience.
     #
     # @param params [Hash] optional parameters:
-    #  - regcode [String]
+    #  - token [String]
     #  - hostname [String]
     #  - email [String]
     #  - parent [String]
