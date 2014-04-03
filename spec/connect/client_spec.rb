@@ -46,7 +46,13 @@ describe SUSE::Connect::Client do
     end
 
     it 'calls underlying api' do
-      Api.any_instance.should_receive(:announce_system)
+      Zypper.stub :write_base_credentials
+      Api.any_instance.should_receive :announce_system
+      subject.announce_system
+    end
+
+    it 'writes credentials file' do
+      Zypper.should_receive(:write_base_credentials).with('lg', 'pw')
       subject.announce_system
     end
 
@@ -81,6 +87,11 @@ describe SUSE::Connect::Client do
       subject.activate_subscription(Zypper.base_product)
     end
 
+    it 'adds service after product activation' do
+      System.should_receive :add_service
+      subject.activate_subscription Zypper.base_product
+    end
+
   end
 
   describe '#execute!' do
@@ -109,19 +120,6 @@ describe SUSE::Connect::Client do
     it 'should call activate_subscription on api' do
       System.stub(:registered? => true)
       subject.should_receive(:activate_subscription)
-      subject.execute!
-    end
-
-    it 'writes credentials file' do
-      System.stub(:registered? => false)
-      subject.stub(:announce_system => %w{ lg pw })
-      Zypper.should_receive(:write_base_credentials).with('lg', 'pw')
-      subject.execute!
-    end
-
-    it 'adds service after product activation' do
-      System.stub(:registered? => true)
-      System.should_receive(:add_service)
       subject.execute!
     end
 

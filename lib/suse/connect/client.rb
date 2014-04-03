@@ -20,29 +20,21 @@ module SUSE
         @api                = Api.new(self)
       end
 
-      # TODO: find new name because this is specific to cli usage
       def execute!
-
-        unless System.registered?
-          login, password = announce_system
-          Zypper.write_base_credentials(login, password)
-        end
-
-        service = activate_subscription(Zypper.base_product)
-        System.add_service(service)
+        announce_system unless System.registered?
+        activate_subscription Zypper.base_product
       end
 
-      # Announce system via SCC/Registration Proxy
-      #
-      # @returns: [Array] login, password tuple. Those credentials are given by SCC/Registration Proxy
       def announce_system
-        response = @api.announce_system(token_auth(@options[:token]))
-        [response.body['login'], response.body['password']]
+        result = @api.announce_system(token_auth(@options[:token])).body
+        Zypper.write_base_credentials(result['login'], result['password'])
       end
 
-      def activate_subscription(product)
-        response = @api.activate_subscription(basic_auth, product)
-        Service.new(response.body['sources'], response.body['enabled'], response.body['norefresh'])
+      def activate_subscription(product_ident)
+        result = @api.activate_subscription(basic_auth, product_ident).body
+        System.add_service(
+          Service.new(result['sources'], result['enabled'], result['norefresh'])
+        )
       end
 
       # @param product [Hash] product to query extensions for
