@@ -48,10 +48,7 @@ namespace :cloud do
   namespace :vm do
     desc 'Creates and starts new VM instance on cloud.suse.de; Optional parameter: name'
     task :create, :name do |t, args|
-      server = args.has_key?(:name) ? Cloud::VM.create(args[:name]) : Cloud::VM.create
-
-      # Store VM id in the environment variable so the jenkins can access it
-      ENV['CLOUD_VM_ID'] = server.id
+      args.has_key?(:name) ? Cloud::VM.create(args[:name]) : Cloud::VM.create
     end
 
     desc 'Terminate VM instance on cloud.suse.de; Required parameter: name'
