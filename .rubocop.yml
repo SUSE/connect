@@ -17,3 +17,7 @@ EmptyLinesAroundBody:
 
 SignalException:
   Enabled: false
+
+AllCops:
+  Exclude:
+    - vendor/**

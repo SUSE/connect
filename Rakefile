@@ -16,7 +16,7 @@ task :rubocop do
   sh 'bundle exec rubocop -c .rubocop.yml'
 end
 
-desc 'increase version of a gem'
+desc 'Increase version of a gem'
 task :bump do
   sh 'gem bump --no-commit'
 end
@@ -24,7 +24,7 @@ end
 desc 'Run RSpec'
 RSpec::Core::RakeTask.new(:spec)
 
-desc 'build locally (prepare for pushing to ibs)'
+desc 'Build locally (prepare for pushing to ibs)'
 task :build => [:default] do
 
   def gemfilename
@@ -40,4 +40,15 @@ task :build => [:default] do
   sh 'ronn --roff --manual SUSEConnect --pipe ../README.md > SUSEConnect.1 && gzip -f SUSEConnect.1'
   sh 'osc -A https://api.suse.de build SLE_12 x86_64 --no-verify'
 
+end
+
+require_relative 'jenkins/cloud_vm.rb'
+
+namespace :cloud do
+  namespace :vm do
+    desc 'Start new VM instance on cloud.suse.de; Optional parameter: name'
+    task :start, :name do |t, args|
+      args.has_key?(:name) ? Cloud::VM.start(args[:name]) : Cloud::VM.start
+    end
+  end
 end
