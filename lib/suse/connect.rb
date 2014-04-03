@@ -13,6 +13,7 @@ module SUSE
     require 'suse/connect/errors'
     require 'suse/connect/client'
     require 'suse/connect/system'
+    require 'suse/connect/product'
     require 'suse/connect/zypper'
     require 'suse/connect/service'
     require 'suse/connect/source'

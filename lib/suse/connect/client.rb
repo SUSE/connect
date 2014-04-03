@@ -41,7 +41,7 @@ module SUSE
       def products_for(product)
         response = @api.addons(basic_auth, product).body
         response.map do |extension|
-          SUSE::Connect::YaST::Extension.new(extension['name'], '', '', extension['zypper_name'])
+          SUSE::Connect::Product.new(extension['name'], '', '', extension['zypper_name'])
         end
       end
 

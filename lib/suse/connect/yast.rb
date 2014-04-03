@@ -8,6 +8,3 @@ module SUSE
     end
   end
 end
-
-require_relative 'yast/extension'
-require_relative 'yast/product'

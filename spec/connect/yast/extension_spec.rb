@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe SUSE::Connect::YaST::Extension do
+describe SUSE::Connect::Product do
 
   subject do
     extension_attrs = [
@@ -9,7 +9,7 @@ describe SUSE::Connect::YaST::Extension do
         'SLEEK puts the modern yet familiar GUI back into SLE that you love',
         'SLEEK-12'
     ]
-    SUSE::Connect::YaST::Extension.new(*extension_attrs)
+    SUSE::Connect::Product.new(*extension_attrs)
   end
   it 'has attribute short_name' do
     expect(subject.short_name).not_to be_nil

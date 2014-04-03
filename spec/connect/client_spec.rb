@@ -146,7 +146,7 @@ describe SUSE::Connect::Client do
 
     it 'returns array of extension products returned from api' do
       subject.api.should_receive(:addons).with('Basic: encodedstring', 'SLES').and_return stubbed_response
-      subject.products_for('SLES').first.should be_kind_of SUSE::Connect::YaST::Extension
+      subject.products_for('SLES').first.should be_kind_of SUSE::Connect::Product
     end
 
   end
