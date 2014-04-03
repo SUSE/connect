@@ -94,7 +94,7 @@ describe SUSE::Connect::Client do
 
   end
 
-  describe '#execute!' do
+  describe '#register!' do
 
     before do
       Zypper.stub(:base_product => { :name => 'SLE_BASE' })
@@ -108,19 +108,19 @@ describe SUSE::Connect::Client do
     it 'should call announce if system not registered' do
       System.stub(:registered? => false)
       subject.should_receive(:announce_system)
-      subject.execute!
+      subject.register!
     end
 
     it 'should not call announce on api if system registered' do
       System.stub(:registered? => true)
       subject.should_not_receive(:announce_system)
-      subject.execute!
+      subject.register!
     end
 
     it 'should call activate_subscription on api' do
       System.stub(:registered? => true)
       subject.should_receive(:activate_subscription)
-      subject.execute!
+      subject.register!
     end
 
   end

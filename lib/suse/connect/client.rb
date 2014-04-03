@@ -20,7 +20,7 @@ module SUSE
         @api                = Api.new(self)
       end
 
-      def execute!
+      def register!
         announce_system unless System.registered?
         activate_subscription Zypper.base_product
       end

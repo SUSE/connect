@@ -15,7 +15,7 @@ module SUSE
 
       def execute! # rubocop:disable MethodLength
         Logger.info(@options) if @options[:verbose]
-        Client.new(@options).execute!
+        Client.new(@options).register!
       rescue CannotBuildTokenAuth
         Logger.error 'no registration token provided'
         exit 1
