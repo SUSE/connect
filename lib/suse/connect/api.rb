@@ -49,7 +49,7 @@ module SUSE
       # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
       #
       # @todo TODO: introduce Product class
-      def activate_subscription(auth, product)
+      def activate_product(auth, product)
         token = product[:token] || @client.options[:token]
         raise TokenNotPresent unless token
         payload = {

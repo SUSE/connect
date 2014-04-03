@@ -22,7 +22,7 @@ module SUSE
 
       def register!
         announce_system unless System.registered?
-        activate_subscription Zypper.base_product
+        activate_product Zypper.base_product
       end
 
       def announce_system
@@ -30,8 +30,8 @@ module SUSE
         Zypper.write_base_credentials(result['login'], result['password'])
       end
 
-      def activate_subscription(product_ident)
-        result = @api.activate_subscription(basic_auth, product_ident).body
+      def activate_product(product_ident)
+        result = @api.activate_product(basic_auth, product_ident).body
         System.add_service(
           Service.new(result['sources'], result['enabled'], result['norefresh'])
         )

@@ -63,7 +63,7 @@ describe SUSE::Connect::Api do
 
   end
 
-  describe 'activate_subscription' do
+  describe 'activate_product' do
 
     before do
       stub_activate_call
@@ -86,7 +86,7 @@ describe SUSE::Connect::Api do
       Connection.any_instance.should_receive(:post)
         .with('/connect/systems/products', :auth => 'basic_auth_mock', :params => expected_payload)
         .and_call_original
-      subject.new(client).activate_subscription('basic_auth_mock', product)
+      subject.new(client).activate_product('basic_auth_mock', product)
     end
 
   end
