@@ -3,8 +3,6 @@ class SUSE::Connect::YaST
 
   class << self
 
-    attr_accessor :options
-
     # Announces the system to SCC / the registration server.
     # Usually expects a token / regcode to identify the correct subscription.
     # Gets system credentials from SCC and writes them to the system.
