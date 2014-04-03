@@ -46,9 +46,21 @@ require_relative 'jenkins/cloud_vm.rb'
 
 namespace :cloud do
   namespace :vm do
-    desc 'Start new VM instance on cloud.suse.de; Optional parameter: name'
-    task :start, :name do |t, args|
-      args.has_key?(:name) ? Cloud::VM.start(args[:name]) : Cloud::VM.start
+    desc 'Creates and starts new VM instance on cloud.suse.de; Optional parameter: name'
+    task :create, :name do |t, args|
+      server = args.has_key?(:name) ? Cloud::VM.create(args[:name]) : Cloud::VM.create
+
+      # Store VM id in the environment variable so the jenkins can access it
+      ENV['CLOUD_VM_ID'] = server.id
+    end
+
+    desc 'Terminate VM instance on cloud.suse.de; Required parameter: name'
+    task :terminate, :name do |t, args|
+      if args.has_key?(:name)
+        Cloud::VM.destroy(args[:name])
+      else
+        puts 'Please specify the name of the virtual machine'
+      end
     end
   end
 end
