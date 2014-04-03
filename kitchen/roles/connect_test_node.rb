@@ -9,4 +9,3 @@ run_list(
   'recipe[connect::suse_connect]',
   'recipe[connect::clean_up]'
 )
-
