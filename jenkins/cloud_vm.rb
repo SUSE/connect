@@ -1,5 +1,6 @@
 require 'openstack'
 require 'fileutils'
+require 'yaml'
 
 module Cloud
   # Access cloud.suse.de opentsack API
