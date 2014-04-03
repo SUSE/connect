@@ -1,6 +1,8 @@
-package_url = 'http://download.opensuse.org/repositories/openSUSE:/Tools/SLE_11_SP3/x86_64/osc-0.144.1-130.1.x86_64.rpm'
+package_url = 'http://download.opensuse.org/repositories/devel:/tools:/scm/SLE_11_SP3/x86_64/'
+package_name = 'osc-0.145.git.1396510341-84.1.x86_64.rpm'
+
 remote_file '/tmp/osc-0.144.1-130.1.x86_64.rpm' do
-  source package_url
+  source "#{package_url}#{package_name}"
   mode 0644
   action :create_if_missing
 end
