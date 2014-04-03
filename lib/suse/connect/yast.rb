@@ -1,10 +1,3 @@
-module SUSE
-  module Connect
-    # YaST module provides classes emulating the API of the scc_api gem.
-    # 1) Connection is SccApi::Connection
-    # 2) ProductServices
-    module YaST
-
-    end
-  end
+# YaST class provides methods emulating SCC's API.
+class SUSE::Connect::YaST
 end
