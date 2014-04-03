@@ -1,6 +1,11 @@
 site :opscode
 
 cookbook 'ohai', '~> 2.0.0'
+cookbook 'dmg', '~> 2.2.0'
+cookbook 'vagrant', '~> 0.2.0'
+cookbook 'windows', '~> 1.30.0'
+cookbook 'chef_handler', '~> 1.1.5'
+
 
 # Connect cookbooks
 cookbook 'connect', :path => 'cookbooks/connect'
