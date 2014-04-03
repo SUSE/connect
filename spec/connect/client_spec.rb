@@ -36,6 +36,8 @@ describe SUSE::Connect::Client do
 
   describe '#announce_system' do
 
+    subject { SUSE::Connect::Client.new(:token => 'blabla') }
+
     before do
       api_response = double('api_response')
       api_response.stub(:body => { 'login' => 'lg', 'password' => 'pw' })
@@ -43,62 +45,62 @@ describe SUSE::Connect::Client do
       subject.stub(:token_auth => true)
     end
 
-    it 'writes credentials file' do
-      Zypper.should_receive(:write_base_credentials).with('lg', 'pw')
-      subject.stub(:api)
+    it 'calls underlying api' do
+      Zypper.stub :write_base_credentials
+      Api.any_instance.should_receive :announce_system
       subject.announce_system
     end
 
-    it 'calls underlying api' do
-      Zypper.stub(:write_base_credentials)
-      Api.any_instance.should_receive(:announce_system)
+    it 'writes credentials file' do
+      Zypper.should_receive(:write_base_credentials).with('lg', 'pw')
       subject.announce_system
     end
 
   end
 
-  describe '#activate_subscription' do
+  describe '#activate_product' do
 
     before do
       api_response = double('api_response')
-      api_response.stub(:body => { :sources => { :foo => 'bar' } })
-      Api.any_instance.stub(:activate_subscription => api_response)
+      api_response.stub(:body => { 'sources' => { :foo => 'bar' }, :enabled => true, :norefresh => false })
+      Api.any_instance.stub(:activate_product => api_response)
       System.stub(:credentials => %w{ meuser mepassword})
       Zypper.stub(:base_product => ({ :name => 'SLE_BASE' }))
       System.stub(:add_service)
       subject.stub(:basic_auth => 'secretsecret')
+
     end
 
-    it 'selects base product' do
+    it 'selects product' do
       Zypper.should_receive(:base_product).and_return(:name => 'SLE_BASE')
-      subject.activate_subscription
+      subject.activate_product(Zypper.base_product)
     end
 
     it 'gets login and password from system' do
       subject.should_receive(:basic_auth)
-      subject.activate_subscription
+      subject.activate_product(Zypper.base_product)
     end
 
     it 'calls underlying api with proper parameters' do
-      Api.any_instance.should_receive(:activate_subscription)
+      Api.any_instance.should_receive(:activate_product)
         .with('secretsecret', Zypper.base_product)
-      subject.activate_subscription
+      subject.activate_product(Zypper.base_product)
     end
 
-    it 'adds a service' do
-      System.should_receive(:add_service)
-      subject.activate_subscription
+    it 'adds service after product activation' do
+      System.should_receive :add_service
+      subject.activate_product Zypper.base_product
     end
 
   end
 
-  describe '#execute!' do
+  describe '#register!' do
 
     before do
-      Client.any_instance.stub(:announce_system)
-      Client.any_instance.stub(:activate_subscription)
       Zypper.stub(:base_product => { :name => 'SLE_BASE' })
-      Zypper.stub(:add_service => true)
+      System.stub(:add_service => true)
+      Zypper.stub(:write_base_credentials)
+      subject.stub(:activate_product)
       subject.class.any_instance.stub(:basic_auth => true)
       subject.class.any_instance.stub(:token_auth => true)
     end
@@ -106,49 +108,45 @@ describe SUSE::Connect::Client do
     it 'should call announce if system not registered' do
       System.stub(:registered? => false)
       subject.should_receive(:announce_system)
-      subject.execute!
+      subject.register!
     end
 
     it 'should not call announce on api if system registered' do
-
       System.stub(:registered? => true)
       subject.should_not_receive(:announce_system)
-      subject.execute!
+      subject.register!
     end
 
-    it 'should call activate_subscription on api' do
+    it 'should call activate_product on api' do
       System.stub(:registered? => true)
-      subject.should_receive(:activate_subscription)
-      subject.execute!
+      subject.should_receive(:activate_product)
+      subject.register!
     end
 
   end
 
-  describe '?token_auth' do
+  describe '#products_for' do
 
-    it 'returns string for auth header' do
-      Client.new(:token => 'lambada').send(:token_auth).should eq 'Token token=lambada'
+    let(:stubbed_response) do
+      OpenStruct.new(
+        :code => 200,
+        :body => [{ 'name' => 'short_name', 'zypper_name' => 'zypper_name' }],
+        :success => true
+      )
     end
 
-    it 'raise if no token passed, but method requested' do
-      expect { Client.new({}).send(:token_auth) }
-        .to raise_error CannotBuildTokenAuth, 'token auth requested, but no token provided'
+    before do
+      subject.stub(:basic_auth => 'Basic: encodedstring')
     end
 
-  end
-
-  describe '?basic_auth' do
-
-    it 'returns string for auth header' do
-      System.stub(:credentials => %w{bob dylan})
-      base64_line = 'Basic Ym9iOmR5bGFu'
-      Client.new({}).send(:basic_auth).should eq base64_line
+    it 'collects data from api response' do
+      subject.api.should_receive(:addons).with('Basic: encodedstring', 'SLES').and_return stubbed_response
+      subject.products_for('SLES')
     end
 
-    it 'raise if cannot get credentials' do
-      System.stub(:credentials => nil)
-      expect { Client.new({}).send(:basic_auth) }
-        .to raise_error CannotBuildBasicAuth, 'cannot get proper username and password'
+    it 'returns array of extension products returned from api' do
+      subject.api.should_receive(:addons).with('Basic: encodedstring', 'SLES').and_return stubbed_response
+      subject.products_for('SLES').first.should be_kind_of SUSE::Connect::Product
     end
 
   end

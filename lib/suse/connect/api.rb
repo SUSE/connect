@@ -49,17 +49,17 @@ module SUSE
       # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
       #
       # @todo TODO: introduce Product class
-      def activate_subscription(auth, product)
-        raise TokenNotPresent unless @client.options[:token]
+      def activate_product(auth, product)
+        token = product[:token] || @client.options[:token]
+        raise TokenNotPresent unless token
         payload = {
             :product_ident => product[:name],
             :product_version => product[:version],
             :arch => product[:arch],
             :release_type => product[:release_type],
-            :token => @client.options[:token]
+            :token => token
         }
         @connection.post('/connect/systems/products', :auth => auth, :params => payload)
-
       end
 
       # List all publicly available products. This includes a list of all repositories for each product.
@@ -68,6 +68,15 @@ module SUSE
       #
       def products
         @connection.get('/connect/products', :auth => nil)
+      end
+
+      # List all addons available for the given system
+      #
+      # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
+      #
+      def addons(auth, product)
+        payload = { :product_ident => product[:name] }
+        @connection.get('/connect/systems/products', :auth => auth, :params => payload)
       end
 
     end

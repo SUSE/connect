@@ -63,7 +63,7 @@ describe SUSE::Connect::Api do
 
   end
 
-  describe 'activate_subscription' do
+  describe 'activate_product' do
 
     before do
       stub_activate_call
@@ -86,7 +86,7 @@ describe SUSE::Connect::Api do
       Connection.any_instance.should_receive(:post)
         .with('/connect/systems/products', :auth => 'basic_auth_mock', :params => expected_payload)
         .and_call_original
-      subject.new(client).activate_subscription('basic_auth_mock', product)
+      subject.new(client).activate_product('basic_auth_mock', product)
     end
 
   end
@@ -123,6 +123,36 @@ describe SUSE::Connect::Api do
         response.first[key].should_not be_nil
       end
 
+    end
+
+  end
+
+  describe 'products' do
+
+    before do
+      stub_addons_call
+    end
+
+    it 'is authenticated via basic auth' do
+      payload = [
+          '/connect/systems/products',
+          :auth => 'Basic: encodedgibberish',
+          :params => { :product_ident => 'rodent' }
+      ]
+      Connection.any_instance.should_receive(:get)
+        .with(*payload)
+        .and_call_original
+      subject.new(client).addons('Basic: encodedgibberish', :name => 'rodent')
+    end
+
+    it 'responds with proper status code' do
+      response = subject.new(client).addons('Basic: encodedgibberish', :name => 'rodent')
+      response.code.should eq 200
+    end
+
+    it 'returns array of extensions' do
+      body = subject.new(client).addons('Basic: encodedgibberish', :name => 'rodent').body
+      body.should be_kind_of Array
     end
 
   end

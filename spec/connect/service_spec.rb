@@ -10,8 +10,16 @@ describe SUSE::Connect::Service do
       { 'a' => 'foo', 'b' => 'bar' }
     end
 
+    let :sources_output do
+      [Source.new('foo')]
+    end
+
     it 'assigns sources' do
-      subject.new(sources_mock).sources.should eq(sources_mock)
+
+      src = subject.new(sources_mock).sources
+      expect(src).to be_a Array
+      expect(src.first).to be_a Source
+
     end
 
     it 'assigns norefresh' do

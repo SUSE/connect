@@ -6,7 +6,10 @@ module SUSE
       attr_reader :sources, :norefresh, :enabled
 
       def initialize(sources, enabled = [], norefresh = [])
-        @sources    = sources
+        @sources = []
+        sources.each do |service_name, source_url|
+          @sources << Source.new(service_name, source_url)
+        end
         @norefresh  = norefresh
         @enabled    = enabled
       end

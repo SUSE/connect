@@ -1,13 +1,13 @@
 require 'net/http'
+require 'suse/toolkit/utilities'
 
 module SUSE
   module Connect
     # Client to interact with API
     class Client
-      # TODO: drop this in favor of clear auth implementation
-      include ::Net::HTTPHeader
 
       DEFAULT_URL = 'https://scc.suse.com'
+      include SUSE::Toolkit::Utilities
 
       attr_reader :options, :url, :api
 
@@ -20,42 +20,31 @@ module SUSE
         @api                = Api.new(self)
       end
 
-      def execute!
+      def register!
         announce_system unless System.registered?
-        activate_subscription
+        activate_product Zypper.base_product
       end
 
       def announce_system
-        response = @api.announce_system(token_auth)
-        body = response.body
-        Zypper.write_base_credentials(body['login'], body['password'])
+        result = @api.announce_system(token_auth(@options[:token])).body
+        Zypper.write_base_credentials(result['login'], result['password'])
       end
 
-      def activate_subscription
-        base_product    = Zypper.base_product
-        response = @api.activate_subscription(basic_auth, base_product)
-        service = Service.new(response.body['sources'], response.body['enabled'], response.body['norefresh'])
-        System.add_service(service)
+      def activate_product(product_ident)
+        result = @api.activate_product(basic_auth, product_ident).body
+        System.add_service(
+          Service.new(result['sources'], result['enabled'], result['norefresh'])
+        )
       end
 
-      private
-
-      def token_auth
-        raise CannotBuildTokenAuth, 'token auth requested, but no token provided' unless options[:token]
-        "Token token=#{options[:token]}"
-      end
-
-      def basic_auth
-
-        username, password = System.credentials
-
-        if username && password
-          basic_encode(username, password)
-        else
-          raise CannotBuildBasicAuth, 'cannot get proper username and password'
+      # @param product [Hash] product to query extensions for
+      def products_for(product)
+        response = @api.addons(basic_auth, product).body
+        response.map do |extension|
+          SUSE::Connect::Product.new(extension['name'], '', '', extension['zypper_name'])
         end
-
       end
+
     end
   end
 end
