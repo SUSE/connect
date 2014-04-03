@@ -145,7 +145,7 @@ describe SUSE::Connect::Api do
       subject.new(client).addons('Basic: encodedgibberish', :name => 'rodent')
     end
 
-    it 'respond with proper status code' do
+    it 'responds with proper status code' do
       response = subject.new(client).addons('Basic: encodedgibberish', :name => 'rodent')
       response.code.should eq 200
     end
