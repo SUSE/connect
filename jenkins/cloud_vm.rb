@@ -38,7 +38,7 @@ module Cloud
         puts "*** Attaching floating ip '#{address.ip}' to '#{name}' VM ..."
         connection.attach_floating_ip(:server_id => server.id, :ip_id => address.id)
 
-        puts '*** Creating node configuration file #{address.ip}.json ...'
+        puts "*** Creating node configuration file #{address.ip}.json ..."
         create_node_file(address.ip)
 
         store_vm_info(server.id, name, address.ip)
