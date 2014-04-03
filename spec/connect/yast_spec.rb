@@ -4,8 +4,10 @@ describe SUSE::Connect::YaST do
 
   subject { SUSE::Connect::YaST }
 
-  let(:params) { { token: 'regcode', email: 'foo@bar.zer' } }
   let(:client) { double 'client' }
+  let :params do
+    { token: 'regcode', email: 'foo@bar.zer', product_ident: 'SLE95' }
+  end
 
   before { Client.stub(:new).and_return(client) }
 
@@ -50,15 +52,35 @@ describe SUSE::Connect::YaST do
     end
 
     it 'uses product_ident as parameter for Client#activate_product' do
-      params[:product_ident] = 'SLE95'
-      pp params
-      client.should_receive(:activate_product).with('SLE95')
+      client.should_receive(:activate_product).with(params[:product_ident])
       subject.activate_product params
     end
 
   end
 
   describe '#list_products' do
+
+    before { client.stub :list_products }
+
+    it 'calls list_products on an instance of Client' do
+      client.should_receive :list_products
+      subject.list_products
+    end
+
+    it 'forwards all params to an instance of Client' do
+      Client.should_receive(:new).with(params).and_return(client)
+      subject.list_products params
+    end
+
+    it 'falls back to use an empty Hash as params if none are specified' do
+      Client.should_receive(:new).with({}).and_return(client)
+      subject.list_products
+    end
+
+    it 'uses product_ident as parameter for Client#list_products' do
+      client.should_receive(:list_products).with(params[:product_ident])
+      subject.list_products params
+    end
 
   end
 

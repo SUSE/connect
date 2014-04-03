@@ -125,7 +125,7 @@ describe SUSE::Connect::Client do
 
   end
 
-  describe '#products_for' do
+  describe '#list_products' do
 
     let(:stubbed_response) do
       OpenStruct.new(
@@ -141,12 +141,12 @@ describe SUSE::Connect::Client do
 
     it 'collects data from api response' do
       subject.api.should_receive(:addons).with('Basic: encodedstring', 'SLES').and_return stubbed_response
-      subject.products_for('SLES')
+      subject.list_products('SLES')
     end
 
     it 'returns array of extension products returned from api' do
       subject.api.should_receive(:addons).with('Basic: encodedstring', 'SLES').and_return stubbed_response
-      subject.products_for('SLES').first.should be_kind_of SUSE::Connect::Product
+      subject.list_products('SLES').first.should be_kind_of SUSE::Connect::Product
     end
 
   end

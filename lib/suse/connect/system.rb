@@ -91,7 +91,7 @@ module SUSE
           end
           # TODO: cover
           Zypper.refresh_services
-
+          service
         end
 
         def hostname

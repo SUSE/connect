@@ -38,10 +38,10 @@ module SUSE
       end
 
       # @param product [Hash] product to query extensions for
-      def products_for(product)
-        response = @api.addons(basic_auth, product).body
-        response.map do |extension|
-          SUSE::Connect::Product.new(extension['name'], '', '', extension['zypper_name'])
+      def list_products(product_ident)
+        result = @api.addons(basic_auth, product_ident).body
+        result.map do |product|
+          SUSE::Connect::Product.new(product['name'], '', '', product['zypper_name'])
         end
       end
 
