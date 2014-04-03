@@ -5,5 +5,3 @@ description       'Tests SUSEConnect'
 version           '0.0.1'
 
 supports 'suse'
-
-depends 'vagrant'
