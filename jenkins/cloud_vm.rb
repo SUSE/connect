@@ -40,6 +40,8 @@ module Cloud
         puts '*** Creating node configuration file #{address.ip}.json ...'
         create_node_file(address.ip)
 
+        store_vm_info(server.id, name, address.ip)
+
         server
       end
 
@@ -48,8 +50,12 @@ module Cloud
         if vm
           vm = connection.get_server vm[:id]
           vm.delete!
+
+          # Remove vm info file
+          File.delete('vm_info.yml')
         else
           puts "ERROR: Cann't find VM with name '#{name}'"
+          exit(1)
         end
       end
 
@@ -58,6 +64,10 @@ module Cloud
         src = File.join(dir, 'template.json')
         dest = File.join(dir, "#{ip}.json")
         FileUtils.cp(src, dest)
+      end
+
+      def store_vm_info(id, name, ip)
+        File.open('vm_info.yml', 'w') {|f| YAML.dump({ vm: { id: id, name: name, ip: ip } }, f) }
       end
     end
   end
