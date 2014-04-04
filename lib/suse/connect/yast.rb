@@ -8,17 +8,14 @@ class SUSE::Connect::YaST
     # Gets system credentials from SCC and writes them to the system.
     # Additionally, returns the credentials for convenience.
     #
-    # @param params [Hash] optional parameters:
-    #  - token [String]
-    #  - hostname [String]
-    #  - email [String]
-    #  - parent [String]
-    #  - hwinfo [Hash]
+    # @param [Hash] params
+    #   * :token [String] registration code/token
+    #   * :hostname [String]
+    #   * :email [String]
+    #   * :parent [String]
+    #   * :hwinfo [Hash]
     #
-    # == Returns:
-    # SCC / system credentials [Hash]:
-    #  - login [String]
-    #  - password [String]
+    # @return [Array <String>] SCC / system credentials - login and password tuple
     def announce_system(params = {})
       Client.new(params).announce_system
     end
@@ -29,15 +26,14 @@ class SUSE::Connect::YaST
     # Gets a service for the product from SCC and adds it to the system.
     # Additionally, returns the service for convenience.
     #
-    # @param params [Hash] optional parameters:
-    #  - token [String]
-    #  - product_ident [String]
-    #  - product_version [String]
-    #  - arch [String]
-    #  - email [String]
+    # @param [Hash] params
+    #  - :token [String]
+    #  - :product_ident [String]
+    #  - :product_version [String]
+    #  - :arch [String]
+    #  - :email [String]
     #
-    # == Returns:
-    # Service [Service]
+    # @return [Service] Service
     def activate_product(params = {})
       Client.new(params).activate_product(params[:product_ident])
     end
@@ -47,11 +43,10 @@ class SUSE::Connect::YaST
     # products for the system that are extensions to the specified product.
     # Gets the list from SCC and returns them.
     #
-    # @param params [Hash] optional parameters:
-    #  - product_ident [String]
+    # @param [Hash] params
+    #  * :product_ident [String]
     #
-    # == Returns:
-    # [Product, Product] [Array]
+    # @return [Array <Product>] array of {Product}s
     def list_products(params = {})
       Client.new(params).list_products(params[:product_ident])
     end
