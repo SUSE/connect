@@ -32,6 +32,7 @@ module Cloud
 
         attach_ip(server, address)
 
+        # FIXME: Speed up testing, check with Net::SSH if machine is ready for provisioning
         delay = (ENV['TIME_WAIT'] || 10).to_i
         puts "*** Waiting #{delay} seconds for the machine to boot ..."
         sleep(delay)
