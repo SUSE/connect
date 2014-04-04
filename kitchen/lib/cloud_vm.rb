@@ -69,7 +69,7 @@ module Cloud
       end
 
       def create_node_file(ip)
-        dir = File.join(File.expand_path(File.dirname(__FILE__)), '../kitchen/nodes')
+        dir = File.join(File.expand_path(File.dirname(__FILE__)), '../nodes')
         src = File.join(dir, 'template.json')
         dest = File.join(dir, "#{ip}.json")
         FileUtils.cp(src, dest)
