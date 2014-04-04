@@ -41,23 +41,3 @@ task :build => [:default] do
   sh 'osc -A https://api.suse.de build SLE_12 x86_64 --no-verify'
 
 end
-
-require_relative 'jenkins/cloud_vm.rb'
-
-namespace :cloud do
-  namespace :vm do
-    desc 'Creates and starts new VM instance on cloud.suse.de; Optional parameter: name'
-    task :create, :name do |t, args|
-      args.has_key?(:name) ? Cloud::VM.create(args[:name]) : Cloud::VM.create
-    end
-
-    desc 'Terminate VM instance on cloud.suse.de; Required parameter: name'
-    task :terminate, :name do |t, args|
-      if args.has_key?(:name)
-        Cloud::VM.destroy(args[:name])
-      else
-        puts 'Please specify the name of the virtual machine'
-      end
-    end
-  end
-end
