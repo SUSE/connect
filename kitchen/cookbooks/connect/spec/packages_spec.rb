@@ -8,30 +8,20 @@ describe 'connect::packages' do
       'gcc' => true,
       'git' => true,
       'ruby-devel' => true,
-      'osc' => false
+      'osc' => true,
+      'SUSEConnect' => false
     }
     runner.converge('connect::packages')
   end
 
   it 'should install all required packages' do
     expect(chef_run).to install_package('gcc')
-    expect(chef_run).to install_package('ruby-devel')
     expect(chef_run).to install_package('git')
+    expect(chef_run).to install_package('osc')
+    expect(chef_run).to install_package('ruby-devel')
   end
 
   it 'should remove unneeded packages' do
-    expect(chef_run).to remove_package('osc')
-  end
-
-  it 'downloads osc package' do
-    expect(chef_run).to create_remote_file_if_missing('/tmp/osc-0.144.1-130.1.x86_64.rpm')
-  end
-
-  it 'installs osc package' do
-    zypp_cmd = 'zypper --non-interactive --no-gpg-checks --quiet install --auto-agree-with-licenses'
-    package_src = '/tmp/osc-0.144.1-130.1.x86_64.rpm'
-    expect(chef_run).to run_execute('install osc package').with(
-      command: "#{zypp_cmd} #{package_src}"
-    )
+    expect(chef_run).to remove_package('SUSEConnect')
   end
 end

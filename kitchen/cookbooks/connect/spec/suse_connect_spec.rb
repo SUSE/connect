@@ -10,12 +10,6 @@ describe 'connect::rubygems' do
     )
   end
 
-  it 'installs bundler gem' do
-    expect(chef_run).to run_execute('install_bundler_gem').with(
-      command: 'gem install bundler'
-    )
-  end
-
   it 'installs required gems' do
     expect(chef_run).to run_execute('bundle_instal').with(
       command: 'bundle install',

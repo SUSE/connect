@@ -4,10 +4,6 @@ git '/tmp/connect' do
   action 'sync'
 end
 
-execute 'install_bundler_gem' do
-  command 'gem install bundler'
-end
-
 execute 'bundle_instal' do
   command 'bundle install'
   cwd '/tmp/connect'
