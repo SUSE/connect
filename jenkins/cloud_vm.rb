@@ -30,13 +30,11 @@ module Cloud
         puts "*** Creating new '#{name}' VM ..."
         server = connection.create_server(:name => name, :imageRef => image.id, :flavorRef => flavor.id)
 
+        attach_ip(server, address)
+
         delay = (ENV['TIME_WAIT'] || 10).to_i
-
         puts "*** Waiting #{delay} seconds for the machine to boot ..."
-        sleep(delay) # Wait 10 seconds until machine gets initialized
-
-        puts "*** Attaching floating ip '#{address.ip}' to '#{name}' VM ..."
-        connection.attach_floating_ip(:server_id => server.id, :ip_id => address.id)
+        sleep(delay)
 
         puts "*** Creating node configuration file #{address.ip}.json ..."
         create_node_file(address.ip)
@@ -57,6 +55,16 @@ module Cloud
         else
           puts "ERROR: Cann't find VM with name '#{name}'"
           exit(1)
+        end
+      end
+
+      def attach_ip(server, address)
+        begin
+          puts "*** Attaching floating ip '#{address.ip}' to '#{server.name}' VM ..."
+          connection.attach_floating_ip(:server_id => server.id, :ip_id => address.id)
+        rescue OpenStack::Exception::BadRequest
+          sleep 5
+          attach_ip(server, address)
         end
       end
 
