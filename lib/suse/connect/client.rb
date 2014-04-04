@@ -12,8 +12,8 @@ module SUSE
       attr_reader :options, :url, :api
 
       def initialize(opts)
-        @options            = {}
-        @options[:token]    = opts[:token]
+        @options            = opts
+        # !!: Set :insecure and :debug explicitly to boolean values.
         @options[:insecure] = !!opts[:insecure]
         @options[:debug]    = !!opts[:verbose]
         @url                = opts[:url] || DEFAULT_URL
@@ -21,27 +21,33 @@ module SUSE
       end
 
       def register!
-        announce_system unless System.registered?
-        activate_product Zypper.base_product
+        unless System.registered?
+          login, password = announce_system
+          Zypper.write_base_credentials(login, password)
+        end
+
+        service = activate_product(Zypper.base_product)
+        System.add_service(service)
       end
 
+      # Announce system via SCC/Registration Proxy
+      #
+      # @returns: [Array] login, password tuple. Those credentials are given by SCC/Registration Proxy
       def announce_system
-        result = @api.announce_system(token_auth(@options[:token])).body
-        Zypper.write_base_credentials(result['login'], result['password'])
+        response = @api.announce_system(token_auth(@options[:token]))
+        [response.body['login'], response.body['password']]
       end
 
       def activate_product(product_ident)
         result = @api.activate_product(basic_auth, product_ident).body
-        System.add_service(
-          Service.new(result['sources'], result['enabled'], result['norefresh'])
-        )
+        Service.new(result['sources'], result['enabled'], result['norefresh'])
       end
 
       # @param product [Hash] product to query extensions for
-      def products_for(product)
-        response = @api.addons(basic_auth, product).body
-        response.map do |extension|
-          SUSE::Connect::Product.new(extension['name'], '', '', extension['zypper_name'])
+      def list_products(product_ident)
+        result = @api.addons(basic_auth, product_ident).body
+        result.map do |product|
+          SUSE::Connect::Product.new(product['name'], '', '', product['zypper_name'])
         end
       end
 

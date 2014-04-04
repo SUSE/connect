@@ -30,6 +30,11 @@ describe SUSE::Connect::Client do
         parsed_uri.host.should eq 'dummy'
       end
 
+      it 'allows to pass arbitrary options' do
+        client = Client.new(foo: 'bar')
+        expect(client.options[:foo]).to eq 'bar'
+      end
+
     end
 
   end
@@ -46,13 +51,7 @@ describe SUSE::Connect::Client do
     end
 
     it 'calls underlying api' do
-      Zypper.stub :write_base_credentials
-      Api.any_instance.should_receive :announce_system
-      subject.announce_system
-    end
-
-    it 'writes credentials file' do
-      Zypper.should_receive(:write_base_credentials).with('lg', 'pw')
+      Api.any_instance.should_receive(:announce_system)
       subject.announce_system
     end
 
@@ -87,11 +86,6 @@ describe SUSE::Connect::Client do
       subject.activate_product(Zypper.base_product)
     end
 
-    it 'adds service after product activation' do
-      System.should_receive :add_service
-      subject.activate_product Zypper.base_product
-    end
-
   end
 
   describe '#register!' do
@@ -123,9 +117,22 @@ describe SUSE::Connect::Client do
       subject.register!
     end
 
+    it 'writes credentials file' do
+      System.stub(:registered? => false)
+      subject.stub(:announce_system => %w{ lg pw })
+      Zypper.should_receive(:write_base_credentials).with('lg', 'pw')
+      subject.register!
+    end
+
+    it 'adds service after product activation' do
+      System.stub(:registered? => true)
+      System.should_receive(:add_service)
+      subject.register!
+    end
+
   end
 
-  describe '#products_for' do
+  describe '#list_products' do
 
     let(:stubbed_response) do
       OpenStruct.new(
@@ -141,12 +148,12 @@ describe SUSE::Connect::Client do
 
     it 'collects data from api response' do
       subject.api.should_receive(:addons).with('Basic: encodedstring', 'SLES').and_return stubbed_response
-      subject.products_for('SLES')
+      subject.list_products('SLES')
     end
 
     it 'returns array of extension products returned from api' do
       subject.api.should_receive(:addons).with('Basic: encodedstring', 'SLES').and_return stubbed_response
-      subject.products_for('SLES').first.should be_kind_of SUSE::Connect::Product
+      subject.list_products('SLES').first.should be_kind_of SUSE::Connect::Product
     end
 
   end

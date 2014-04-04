@@ -25,7 +25,7 @@ module SUSE
         ensure
           file.close if file
         end
-
+        [login, password]
       end
     end
   end
