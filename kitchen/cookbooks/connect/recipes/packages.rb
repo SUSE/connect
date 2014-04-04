@@ -2,7 +2,8 @@ package_url = 'http://download.opensuse.org/repositories/openSUSE:/Tools/SLE_11_
 package_name = 'osc-0.145.0-131.1.x86_64.rpm'
 
 remote_file "/tmp/#{package_name}" do
-  source package_url
+  puts "* download osc package: #{package_url}#{package_name}"
+  source "#{package_url}#{package_name}"
   mode 0644
   action :create_if_missing
 end
