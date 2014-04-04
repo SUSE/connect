@@ -59,13 +59,13 @@ module Cloud
       end
 
       def attach_ip(server, address)
-        begin
-          puts "*** Attaching floating ip '#{address.ip}' to '#{server.name}' VM ..."
-          connection.attach_floating_ip(:server_id => server.id, :ip_id => address.id)
+        puts "*** Attaching floating ip '#{address.ip}' to '#{server.name}' VM ..."
+        connection.attach_floating_ip(:server_id => server.id, :ip_id => address.id)
+
         rescue OpenStack::Exception::BadRequest
           sleep 5
           attach_ip(server, address)
-        end
+
       end
 
       def create_node_file(ip)
