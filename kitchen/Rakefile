@@ -1,7 +1,6 @@
 $LOAD_PATH << 'lib'
 
 require 'cloud_vm'
-require 'debugger'
 
 namespace :cloud do
   namespace :vm do
