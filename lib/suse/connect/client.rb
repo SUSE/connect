@@ -12,8 +12,8 @@ module SUSE
       attr_reader :options, :url, :api
 
       def initialize(opts)
-        @options            = {}
-        @options[:token]    = opts[:token]
+        @options            = opts
+        # !!: Set :insecure and :debug explicitly to boolean values.
         @options[:insecure] = !!opts[:insecure]
         @options[:debug]    = !!opts[:verbose]
         @url                = opts[:url] || DEFAULT_URL
