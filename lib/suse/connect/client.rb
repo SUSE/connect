@@ -21,20 +21,26 @@ module SUSE
       end
 
       def register!
-        announce_system unless System.registered?
-        activate_product Zypper.base_product
+        unless System.registered?
+          login, password = announce_system
+          Zypper.write_base_credentials(login, password)
+        end
+
+        service = activate_product(Zypper.base_product)
+        System.add_service(service)
       end
 
+      # Announce system via SCC/Registration Proxy
+      #
+      # @returns: [Array] login, password tuple. Those credentials are given by SCC/Registration Proxy
       def announce_system
-        result = @api.announce_system(token_auth(@options[:token])).body
-        Zypper.write_base_credentials(result['login'], result['password'])
+        response = @api.announce_system(token_auth(@options[:token]))
+        [response.body['login'], response.body['password']]
       end
 
       def activate_product(product_ident)
         result = @api.activate_product(basic_auth, product_ident).body
-        System.add_service(
-          Service.new(result['sources'], result['enabled'], result['norefresh'])
-        )
+        Service.new(result['sources'], result['enabled'], result['norefresh'])
       end
 
       # @param product [Hash] product to query extensions for
