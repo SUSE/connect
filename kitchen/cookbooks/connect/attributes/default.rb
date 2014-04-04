@@ -1,6 +1,7 @@
 default[:connect][:packages] = {
   'gcc' => true,
   'git' => true,
+  'osc' => true,
   'ruby-devel' => true
 }
 
