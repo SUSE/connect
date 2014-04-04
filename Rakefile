@@ -41,14 +41,3 @@ task :build => [:default] do
   sh 'osc -A https://api.suse.de build SLE_12 x86_64 --no-verify'
 
 end
-
-require_relative 'jenkins/cloud_vm.rb'
-
-namespace :cloud do
-  namespace :vm do
-    desc 'Start new VM instance on cloud.suse.de; Optional parameter: name'
-    task :start, :name do |t, args|
-      args.has_key?(:name) ? Cloud::VM.start(args[:name]) : Cloud::VM.start
-    end
-  end
-end
