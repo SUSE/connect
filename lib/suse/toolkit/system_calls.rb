@@ -18,7 +18,7 @@ module SUSE
 
         begin
           file = File.open(credentials_file, 'w')
-          file.puts("username=#{sccized_login(login)}")
+          file.puts("username=#{login}")
           file.puts("password=#{password}")
         rescue IOError => e
           Logger.error(e.message)
