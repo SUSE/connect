@@ -8,7 +8,6 @@ Then(/^SUSEConnect should create the '(.+)' file$/) do |file|
 end
 
 And(/^Credentials file should contain 'SCC' prefixed system guid$/) do
-  step "I run `cat /etc/zypp/credentials.d/SCCcredentials`"
+  step 'I run `cat /etc/zypp/credentials.d/SCCcredentials`'
   step 'the stdout should contain "username=SCC_"'
 end
-
