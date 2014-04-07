@@ -32,8 +32,8 @@ module SUSE
       #
       def announce_system(auth)
         payload = {
-            :hostname      => System.hostname,
-            :distro_target => Zypper.distro_target
+          :hostname      => System.hostname,
+          :distro_target => Zypper.distro_target
         }
         @connection.post('/connect/subscriptions/systems', :auth => auth, :params => payload)
       end
@@ -52,11 +52,11 @@ module SUSE
       def activate_product(auth, product)
         token = product[:token] || @client.options[:token]
         payload = {
-            :product_ident => product[:name],
-            :product_version => product[:version],
-            :arch => product[:arch],
-            :release_type => product[:release_type],
-            :token => token
+          :product_ident => product[:name],
+          :product_version => product[:version],
+          :arch => product[:arch],
+          :release_type => product[:release_type],
+          :token => token
         }
         @connection.post('/connect/systems/products', :auth => auth, :params => payload)
       end

@@ -43,7 +43,7 @@ describe SUSE::Connect::Api do
       it 'sends a call with hostname' do
         Socket.stub(:gethostname => 'vargan')
         payload = ['/connect/subscriptions/systems', :auth => 'token', :params => {
-            :hostname => 'vargan', :distro_target => 'HHH' }
+          :hostname => 'vargan', :distro_target => 'HHH' }
         ]
         Connection.any_instance.should_receive(:post).with(*payload).and_call_original
         subject.new(client).announce_system('token')
@@ -54,7 +54,7 @@ describe SUSE::Connect::Api do
       it 'sends a call with ip' do
         System.stub(:hostname => '192.168.42.42')
         payload = ['/connect/subscriptions/systems', :auth => 'token', :params => {
-            :hostname => '192.168.42.42', :distro_target => 'HHH' }
+          :hostname => '192.168.42.42', :distro_target => 'HHH' }
         ]
         Connection.any_instance.should_receive(:post).with(*payload).and_call_original
         subject.new(client).announce_system('token')
@@ -71,17 +71,17 @@ describe SUSE::Connect::Api do
 
     it 'sends a call with basic auth and params to api' do
       product = {
-          :name    => 'SLES',
-          :version => '11-SP2',
-          :arch    => 'x86_64',
-          :token   => 'token-shmocken'
+        :name    => 'SLES',
+        :version => '11-SP2',
+        :arch    => 'x86_64',
+        :token   => 'token-shmocken'
       }
       expected_payload = {
-          :product_ident    => 'SLES',
-          :product_version  => '11-SP2',
-          :arch             => 'x86_64',
-          :release_type     => nil,
-          :token            => 'token-shmocken'
+        :product_ident    => 'SLES',
+        :product_version  => '11-SP2',
+        :arch             => 'x86_64',
+        :release_type     => nil,
+        :token            => 'token-shmocken'
       }
       Connection.any_instance.should_receive(:post)
         .with('/connect/systems/products', :auth => 'basic_auth_mock', :params => expected_payload)
@@ -135,9 +135,9 @@ describe SUSE::Connect::Api do
 
     it 'is authenticated via basic auth' do
       payload = [
-          '/connect/systems/products',
-          :auth => 'Basic: encodedgibberish',
-          :params => { :product_ident => 'rodent' }
+        '/connect/systems/products',
+        :auth => 'Basic: encodedgibberish',
+        :params => { :product_ident => 'rodent' }
       ]
       Connection.any_instance.should_receive(:get)
         .with(*payload)

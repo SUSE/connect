@@ -11,10 +11,31 @@ SpaceBeforeBlockBraces:
   Enabled: true
   EnforcedStyle: space
 
+SpaceInsideBlockBraces:
+  EnforcedStyle: space
+  SpaceBeforeBlockParameters: false
+
 EmptyLinesAroundBody:
   Enabled: false
 
 SignalException:
+  Enabled: false
+
+DoubleNegation:
+  Enabled: false
+
+PercentLiteralDelimiters:
+  PreferredDelimiters:
+    '%w': '{}'
+
+SingleSpaceBeforeFirstArg:
+  Enabled: false
+
+FileName:
+  Exclude:
+    - SUSEConnect
+
+ClassAndModuleChildren:
   Enabled: false
 
 AllCops:
