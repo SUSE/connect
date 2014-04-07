@@ -106,7 +106,7 @@ describe SUSE::Connect::Connection do
 
     before do
       stub_request(:post, 'https://example.com/api/v1/test')
-      .with(:body => '', :headers => { 'Authorization' => 'Token token=zulu' })
+      .with(:body => '', :headers => { 'Authorization' => 'Token token=zulu'})
       .to_return(:status => 200, :body => '{}', :headers => {})
     end
 
@@ -114,6 +114,15 @@ describe SUSE::Connect::Connection do
       result = connection.post('/api/v1/test', :auth => 'Token token=zulu')
       result.body.should eq({})
       result.code.should eq 200
+    end
+
+    it 'sends Accept-Language header with specified language' do
+      stub_request(:post, 'https://example.com/api/v1/test')
+      .with(:body => '', :headers => { 'Authorization' => 'Token token=zulu', 'Accept-Language' => 'blabla'})
+      .to_return(:status => 200, :body => '{}', :headers => {})
+
+      connection = subject.new('https://example.com', :language => 'blabla')
+      result = connection.post('/api/v1/test', :auth => 'Token token=zulu')
     end
 
     it 'converts response into proper hash' do
