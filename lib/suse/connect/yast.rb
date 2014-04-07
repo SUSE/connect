@@ -5,7 +5,7 @@ class SUSE::Connect::YaST
 
     # Announces the system to SCC / the registration server.
     # Usually expects a token / regcode to identify the correct subscription.
-    # Gets system credentials from SCC and writes them to the system.
+    # Gets system credentials from SCC.
     # Additionally, returns the credentials for convenience.
     #
     # @param [Hash] params
@@ -23,7 +23,7 @@ class SUSE::Connect::YaST
     # Activates a product on SCC / the registration server.
     # Expects a product_ident to identify the correct service.
     # Mostly requires token / regcode (except for free extensions or upgrades).
-    # Gets a service for the product from SCC and adds it to the system.
+    # Gets a service for the product from SCC.
     # Additionally, returns the service for convenience.
     #
     # @param [Hash] params
