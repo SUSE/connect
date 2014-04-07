@@ -3,6 +3,6 @@ Feature: SUSEConnect full stack integration testing
   This means we have to register a test machine against production server and examine all relevant data
 
   Scenario: Successful system registration
-    When I register a system with regcode 'E9DB3A42DF2288'
+    When I register a system with valid regcode
     Then SUSEConnect should create the 'SCCcredentials' file
-    And Credentials file should contain 'SCC_' prefixed system guid
+    And Credentials file should contain 'SCC' prefixed system guid
