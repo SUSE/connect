@@ -7,10 +7,9 @@ MethodLength:
 LineLength:
   Max: 120
 
-SpaceAroundBlockBraces:
-  SpaceBeforeBlockParameters: false
+SpaceBeforeBlockBraces:
   Enabled: true
-  EnforcedStyle: space_inside_braces
+  EnforcedStyle: space
 
 EmptyLinesAroundBody:
   Enabled: false
