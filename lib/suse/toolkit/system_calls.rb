@@ -2,9 +2,10 @@ module SUSE
   module Toolkit
     # Provides basic system calls interface
     module SystemCalls
+      include Connect::Logger
 
       def call(command)
-        system(command) ? true : Logger.error("command `#{command}` failed")
+        system(command) ? true : log.error("command `#{command}` failed")
       end
 
       def call_with_output(command)
@@ -21,7 +22,7 @@ module SUSE
           file.puts("username=#{login}")
           file.puts("password=#{password}")
         rescue IOError => e
-          Logger.error(e.message)
+          log.error(e.message)
         ensure
           file.close if file
         end
