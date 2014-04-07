@@ -25,7 +25,9 @@ module SUSE
       def register!
         unless System.registered?
           login, password = announce_system
-          Zypper.write_base_credentials(login, password)
+
+          credentials = Credentials.new(login, password, Credentials::GLOBAL_CREDENTIALS_FILE)
+          credentials.write
         end
 
         service = activate_product(Zypper.base_product)
