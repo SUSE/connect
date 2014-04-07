@@ -41,18 +41,52 @@ describe SUSE::Connect::Client do
 
   describe '#announce_system' do
 
-    subject { SUSE::Connect::Client.new(:token => 'blabla') }
+    context :direct_connection do
 
-    before do
-      api_response = double('api_response')
-      api_response.stub(:body => { 'login' => 'lg', 'password' => 'pw' })
-      Api.any_instance.stub(:announce_system => api_response)
-      subject.stub(:token_auth => true)
+      subject { SUSE::Connect::Client.new(:token => 'blabla') }
+
+      before do
+        api_response = double('api_response')
+        api_response.stub(:body => { 'login' => 'lg', 'password' => 'pw' })
+        Api.any_instance.stub(:announce_system => api_response)
+        subject.stub(:token_auth => true)
+      end
+
+      it 'calls underlying api' do
+        Zypper.stub :write_base_credentials
+        Api.any_instance.should_receive :announce_system
+        subject.announce_system
+      end
+
+      it 'raises exception if no regcode provided' do
+        subject = SUSE::Connect::Client.new({})
+        expect { subject.announce_system }.to raise_error CannotBuildTokenAuth
+      end
+
     end
 
-    it 'calls underlying api' do
-      Api.any_instance.should_receive(:announce_system)
-      subject.announce_system
+    context :registration_proxy_connection do
+
+      subject { SUSE::Connect::Client.new(:url => 'http://smt.local') }
+
+      before do
+        api_response = double('api_response')
+        api_response.stub(:body => { 'login' => 'lg', 'password' => 'pw' })
+        Zypper.stub(:write_base_credentials).with('lg', 'pw')
+        Api.any_instance.stub(:announce_system => api_response)
+        subject.stub(:token_auth => true)
+      end
+
+      it 'not raising exception if regcode is absent' do
+        expect { subject.announce_system }.not_to raise_error
+      end
+
+      it 'calls underlying api' do
+        Zypper.stub :write_base_credentials
+        Api.any_instance.should_receive :announce_system
+        subject.announce_system
+      end
+
     end
 
   end
@@ -154,6 +188,18 @@ describe SUSE::Connect::Client do
     it 'returns array of extension products returned from api' do
       subject.api.should_receive(:addons).with('Basic: encodedstring', 'SLES').and_return stubbed_response
       subject.list_products('SLES').first.should be_kind_of SUSE::Connect::Product
+    end
+
+  end
+
+  describe '#via_registration_proxy?' do
+
+    it 'returns true if url parameter differs from default one' do
+      subject.class.new(:url => 'http://example.org').send(:via_registration_proxy?).should be_true
+    end
+
+    it 'returns false if url parameter is the same as default one' do
+      subject.class.new(:url => subject.class::DEFAULT_URL).send(:via_registration_proxy?).should be_false
     end
 
   end
