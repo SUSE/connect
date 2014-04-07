@@ -124,7 +124,7 @@ describe SUSE::Connect::Zypper do
     context :credentials_folder_exist do
 
       before(:each) do
-        Dir.should_receive(:exists?).with(ZYPPER_CREDENTIALS_DIR).and_return true
+        Dir.should_receive(:exist?).with(ZYPPER_CREDENTIALS_DIR).and_return true
       end
 
       it 'will not create credentials.d folder' do
@@ -143,7 +143,7 @@ describe SUSE::Connect::Zypper do
     context :credentials_folder_not_exist do
 
       before(:each) do
-        Dir.should_receive(:exists?).with(System::ZYPPER_CREDENTIALS_DIR).and_return false
+        Dir.should_receive(:exist?).with(System::ZYPPER_CREDENTIALS_DIR).and_return false
       end
 
       it 'creates credentials.d folder' do
@@ -205,10 +205,10 @@ describe SUSE::Connect::Zypper do
       subject.base_product[:release_type].should eq 'NCR'
     end
 
-    context :oem_file_exists do
+    context :oem_file_exist do
 
-      it 'should extract product_release from OEM file if exists' do
-        File.should_receive(:exists?).with(subject::OEM_PATH + '/SLE_productline1').and_return(true)
+      it 'should extract product_release from OEM file if exist' do
+        File.should_receive(:exist?).with(subject::OEM_PATH + '/SLE_productline1').and_return(true)
         File.should_receive(:readlines).with(subject::OEM_PATH + '/SLE_productline1').and_return(["ABC\n"])
         subject.base_product[:release_type].should eq 'ABC'
       end
@@ -218,9 +218,9 @@ describe SUSE::Connect::Zypper do
     context :registerrelease_defined do
 
       it 'should extract product_release from registerrelease attribute of product' do
-        File.should_receive(:exists?).with(subject::OEM_PATH + '/SLE_productline1').and_return(false)
+        File.should_receive(:exist?).with(subject::OEM_PATH + '/SLE_productline1').and_return(false)
         subject.stub(:installed_products => [
-            { :registerrelease => 'DDD', :isbase => '1', :name => 'SLES', :productline => 'SLE_productline1' }
+          { :registerrelease => 'DDD', :isbase => '1', :name => 'SLES', :productline => 'SLE_productline1' }
         ])
         subject.base_product[:release_type].should eq 'DDD'
       end
@@ -229,16 +229,16 @@ describe SUSE::Connect::Zypper do
 
     context :flavor_defined do
 
-      it 'should extract product_release from flavor file if exists' do
-        File.should_receive(:exists?).with(subject::OEM_PATH + '/SLE_productline1').and_return(false)
+      it 'should extract product_release from flavor file if exist' do
+        File.should_receive(:exist?).with(subject::OEM_PATH + '/SLE_productline1').and_return(false)
         subject.stub(:installed_products => [
-            {
-              :flavor          => 'ZZZ',
-              :isbase          => '1',
-              :name            => 'SLES',
-              :productline     => 'SLE_productline1',
-              :registerrelease => ''
-            }
+          {
+            :flavor          => 'ZZZ',
+            :isbase          => '1',
+            :name            => 'SLES',
+            :productline     => 'SLE_productline1',
+            :registerrelease => ''
+          }
         ])
         subject.base_product[:release_type].should eq 'ZZZ'
       end

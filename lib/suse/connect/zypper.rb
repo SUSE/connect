@@ -84,7 +84,7 @@ module SUSE
           release  = product[:flavor]
           release  = product[:registerrelease] unless product[:registerrelease].empty?
           oem_file = File.join(OEM_PATH, product[:productline])
-          if File.exists?(oem_file)
+          if File.exist?(oem_file)
             line = File.readlines(oem_file).first
             release = line.chomp if line
           end

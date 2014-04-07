@@ -13,7 +13,7 @@ end
 
 desc 'Run Rubocop'
 task :rubocop do
-  sh 'bundle exec rubocop -c .rubocop.yml'
+  sh 'bundle exec rubocop -c rubocop.yml'
 end
 
 desc 'Increase version of a gem'

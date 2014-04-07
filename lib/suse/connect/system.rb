@@ -21,10 +21,10 @@ module SUSE
 
         def hwinfo
           info = {
-              :cpu_type       => `uname -p`,
-              :cpu_count      => `grep "processor" /proc/cpuinfo | wc -l`,
-              :platform_type  => `uname -i`,
-              :hostname       => `hostname`
+            :cpu_type       => `uname -p`,
+            :cpu_count      => `grep "processor" /proc/cpuinfo | wc -l`,
+            :platform_type  => `uname -i`,
+            :hostname       => `hostname`
           }
 
           info.values.each(&:chomp!)
