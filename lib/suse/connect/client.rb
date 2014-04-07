@@ -18,7 +18,7 @@ module SUSE
         # !!: Set :insecure and :debug explicitly to boolean values.
         @options[:insecure] = !!opts[:insecure]
         @options[:debug]    = !!opts[:verbose]
-        @options[:token]    = via_registration_proxy? ? '' : opts[:token]
+        @options[:token]    = opts[:token]
         @api                = Api.new(self)
       end
 
@@ -51,12 +51,6 @@ module SUSE
         result.map do |product|
           SUSE::Connect::Product.new(product['name'], '', '', product['zypper_name'])
         end
-      end
-
-      private
-
-      def via_registration_proxy?
-        @url != DEFAULT_URL
       end
 
     end

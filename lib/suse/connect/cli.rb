@@ -16,11 +16,6 @@ module SUSE
       def execute! # rubocop:disable MethodLength
         Logger.info(@options) if @options[:verbose]
         Client.new(@options).register!
-      rescue CannotBuildTokenAuth
-        Logger.error 'no registration token provided'
-        exit 1
-      rescue TokenNotPresent
-        puts @opts
       rescue ApiError => e
         Logger.error "ApiError with response: #{e.body} Code: #{e.code}"
         exit 1

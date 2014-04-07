@@ -58,11 +58,6 @@ describe SUSE::Connect::Client do
         subject.announce_system
       end
 
-      it 'raises exception if no regcode provided' do
-        subject = SUSE::Connect::Client.new({})
-        expect { subject.announce_system }.to raise_error CannotBuildTokenAuth
-      end
-
     end
 
     context :registration_proxy_connection do
@@ -188,18 +183,6 @@ describe SUSE::Connect::Client do
     it 'returns array of extension products returned from api' do
       subject.api.should_receive(:addons).with('Basic: encodedstring', 'SLES').and_return stubbed_response
       subject.list_products('SLES').first.should be_kind_of SUSE::Connect::Product
-    end
-
-  end
-
-  describe '#via_registration_proxy?' do
-
-    it 'returns true if url parameter differs from default one' do
-      subject.class.new(:url => 'http://example.org').send(:via_registration_proxy?).should be_true
-    end
-
-    it 'returns false if url parameter is the same as default one' do
-      subject.class.new(:url => subject.class::DEFAULT_URL).send(:via_registration_proxy?).should be_false
     end
 
   end

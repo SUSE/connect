@@ -7,14 +7,6 @@ describe SUSE::Connect::Cli do
 
   describe '#execute!' do
 
-    it 'should produce log output if no token provided' do
-      Logger.should_receive(:error).with('no registration token provided')
-      Client.any_instance.stub(:register!).and_raise CannotBuildTokenAuth
-      cli = subject.new({})
-      cli.stub(:exit => true)
-      cli.execute!
-    end
-
     it 'should produce log output if ApiError encountered' do
       Logger.should_receive(:error).with('ApiError with response: {:test=>1} Code: 222')
       Client.any_instance.stub(:register!).and_raise ApiError.new(222, :test => 1)
@@ -44,14 +36,6 @@ describe SUSE::Connect::Cli do
       Client.any_instance.stub(:register!).and_raise Errno::EACCES
       cli = subject.new({})
       cli.stub(:exit => true)
-      cli.execute!
-    end
-
-    it 'should output help if nothing passed to bin' do
-      Client.any_instance.stub(:register!).and_raise TokenNotPresent
-      cli = subject.new({})
-      cli.stub(:exit => true)
-      cli.should_receive(:puts).with kind_of(OptionParser)
       cli.execute!
     end
 

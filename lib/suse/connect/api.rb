@@ -51,7 +51,6 @@ module SUSE
       # @todo TODO: introduce Product class
       def activate_product(auth, product)
         token = product[:token] || @client.options[:token]
-        raise TokenNotPresent unless token
         payload = {
             :product_ident => product[:name],
             :product_version => product[:version],
