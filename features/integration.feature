@@ -6,4 +6,3 @@ Feature: SUSEConnect full stack integration testing
     When I register a system with regcode 'E9DB3A42DF2288'
     Then SUSEConnect should create the 'SCCcredentials' file
     And Credentials file should contain 'SCC_' prefixed system guid
-    And the exit status should be 0
