@@ -6,7 +6,6 @@ module SUSE
       include ::Net::HTTPHeader
 
       def token_auth(token)
-        raise SUSE::Connect::CannotBuildTokenAuth, 'token auth requested, but no token provided' unless token
         "Token token=#{token}"
       end
 

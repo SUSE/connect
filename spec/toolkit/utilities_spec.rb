@@ -15,9 +15,8 @@ describe SUSE::Toolkit::Utilities do
       subject.send(:token_auth, 'lambada').should eq 'Token token=lambada'
     end
 
-    it 'raise if no token passed, but method requested' do
-      expect { subject.send(:token_auth, nil) }
-        .to raise_error CannotBuildTokenAuth, 'token auth requested, but no token provided'
+    it 'not raising if no token passed, but method requested' do
+      expect { subject.send(:token_auth, nil) }.not_to raise_error
     end
 
   end

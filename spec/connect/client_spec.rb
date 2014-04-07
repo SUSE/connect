@@ -41,18 +41,47 @@ describe SUSE::Connect::Client do
 
   describe '#announce_system' do
 
-    subject { SUSE::Connect::Client.new(:token => 'blabla') }
+    context :direct_connection do
 
-    before do
-      api_response = double('api_response')
-      api_response.stub(:body => { 'login' => 'lg', 'password' => 'pw' })
-      Api.any_instance.stub(:announce_system => api_response)
-      subject.stub(:token_auth => true)
+      subject { SUSE::Connect::Client.new(:token => 'blabla') }
+
+      before do
+        api_response = double('api_response')
+        api_response.stub(:body => { 'login' => 'lg', 'password' => 'pw' })
+        Api.any_instance.stub(:announce_system => api_response)
+        subject.stub(:token_auth => true)
+      end
+
+      it 'calls underlying api' do
+        Zypper.stub :write_base_credentials
+        Api.any_instance.should_receive :announce_system
+        subject.announce_system
+      end
+
     end
 
-    it 'calls underlying api' do
-      Api.any_instance.should_receive(:announce_system)
-      subject.announce_system
+    context :registration_proxy_connection do
+
+      subject { SUSE::Connect::Client.new(:url => 'http://smt.local') }
+
+      before do
+        api_response = double('api_response')
+        api_response.stub(:body => { 'login' => 'lg', 'password' => 'pw' })
+        Zypper.stub(:write_base_credentials).with('lg', 'pw')
+        Api.any_instance.stub(:announce_system => api_response)
+        subject.stub(:token_auth => true)
+      end
+
+      it 'not raising exception if regcode is absent' do
+        expect { subject.announce_system }.not_to raise_error
+      end
+
+      it 'calls underlying api' do
+        Zypper.stub :write_base_credentials
+        Api.any_instance.should_receive :announce_system
+        subject.announce_system
+      end
+
     end
 
   end
