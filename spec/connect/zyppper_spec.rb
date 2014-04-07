@@ -159,7 +159,7 @@ describe SUSE::Connect::Zypper do
     end
 
     it 'writes a file with corresponding product credentials' do
-      source_cred_file.should_receive(:puts).with('username=SCC_Kif')
+      source_cred_file.should_receive(:puts).with('username=Kif')
       source_cred_file.should_receive(:puts).with('password=Kroker')
       subject.send(:write_credentials_file, *params)
     end
