@@ -24,7 +24,7 @@ module SUSE
         http.verify_mode = insecure ? OpenSSL::SSL::VERIFY_NONE : OpenSSL::SSL::VERIFY_PEER
         @http            = http
         @http.set_debug_output(STDERR) if debug
-        @language = language if language
+        @language        = language if language
       end
 
       VERB_TO_CLASS.keys.each do |name_for_method|
