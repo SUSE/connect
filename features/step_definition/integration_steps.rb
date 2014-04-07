@@ -8,7 +8,7 @@ Given(/^I register a system with (valid|invalid) regcode$/) do |condition|
     puts ENV['REGCODE'].inspect
     step "I run `SUSEConnect --token #{ENV['REGCODE']}`"
   else
-    step "I run `SUSEConnect --token INVALID_REGCODE`"
+    step 'I run `SUSEConnect --token INVALID_REGCODE`'
   end
 
   step 'the exit status should be 0'
