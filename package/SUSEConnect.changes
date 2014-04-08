@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Apr  7 15:24:46 UTC 2014 - achernikov@suse.de
+
+- Do not require regcode. API server will throw appropriate error
+  if that is required in particular case
+
+-------------------------------------------------------------------
 Fri Mar 14 13:40:01 UTC 2014 - mc@suse.de
 
 - Send product release_type and distro_target from activate and
