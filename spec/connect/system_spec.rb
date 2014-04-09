@@ -115,6 +115,18 @@ describe SUSE::Connect::System do
 
     end
 
+    context :remove_credentials do
+
+      before(:each) do
+        File.should_receive(:exist?).with(CREDENTIALS_FILE).at_least(1).times.and_return(true)
+        File.should_receive(:delete).with(CREDENTIALS_FILE).and_return(true)
+      end
+
+      it 'should remove credentials file' do
+        subject.remove_credentials.should be_true
+      end
+
+    end
   end
 
   describe '.registered?' do
