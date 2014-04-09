@@ -44,7 +44,7 @@ module SUSE
         request['Accept']         = 'application/json'
         request.body              = params.to_json unless params.empty?
         response                  = @http.request(request)
-        body                      = JSON.parse(response.body)
+        body                      = JSON.parse(response.body) if response.body
         OpenStruct.new(
             :code => response.code.to_i,
             :body => body,
