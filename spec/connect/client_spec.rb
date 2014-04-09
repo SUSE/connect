@@ -197,7 +197,7 @@ describe SUSE::Connect::Client do
     end
 
     before do
-      File.should_receive(:delete).with(CREDENTIALS_FILE).and_return(true)
+      System.should_receive(:remove_credentials).and_return(true)
       subject.stub(:basic_auth => 'Basic: encodedstring')
     end
 
