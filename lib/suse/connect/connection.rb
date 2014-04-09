@@ -39,14 +39,14 @@ module SUSE
       private
 
       def json_request(method, path, params = {})
-        request                   = VERB_TO_CLASS[method].new(path)
-        request['Authorization']  = auth
-        request['Content-Type']   = 'application/json'
-        request['Accept']         = 'application/json'
-        request['Accept-Language']= language
-        request.body              = params.to_json unless params.empty?
-        response                  = @http.request(request)
-        body                      = JSON.parse(response.body)
+        request                    = VERB_TO_CLASS[method].new(path)
+        request['Authorization']   = auth
+        request['Content-Type']    = 'application/json'
+        request['Accept']          = 'application/json'
+        request['Accept-Language'] = language
+        request.body               = params.to_json unless params.empty?
+        response                   = @http.request(request)
+        body                       = JSON.parse(response.body)
         OpenStruct.new(
             :code => response.code.to_i,
             :body => body,

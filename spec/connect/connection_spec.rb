@@ -123,6 +123,7 @@ describe SUSE::Connect::Connection do
 
       connection = subject.new('https://example.com', :language => 'blabla')
       result = connection.post('/api/v1/test', :auth => 'Token token=zulu')
+      result.code.should eq 200
     end
 
     it 'converts response into proper hash' do
