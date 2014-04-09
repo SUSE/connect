@@ -187,4 +187,24 @@ describe SUSE::Connect::Client do
 
   end
 
+  describe '#deregister!' do
+    let(:stubbed_response) do
+      OpenStruct.new(
+        :code => 204,
+        :body => nil,
+        :success => true
+      )
+    end
+
+    before do
+      File.should_receive(:delete).with(CREDENTIALS_FILE).and_return(true)
+      subject.stub(:basic_auth => 'Basic: encodedstring')
+    end
+
+    it 'calls underlying api and removes credentials file' do
+      subject.api.should_receive(:deregister).with('Basic: encodedstring').and_return stubbed_response
+      subject.deregister!.should be_true
+    end
+  end
+
 end
