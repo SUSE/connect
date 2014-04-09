@@ -65,6 +65,10 @@ module SUSE
           username && username.include?('SCC_')
         end
 
+        def remove_credentials
+          File.delete CREDENTIALS_FILE if registered?
+        end
+
         def add_service(service)
 
           raise ArgumentError, 'only Service accepted' unless service.is_a? Service
