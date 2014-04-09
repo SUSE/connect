@@ -86,9 +86,7 @@ module SUSE
         end
 
         @opts.on('-l [LANG]', '--language [LANG]', 'Translate messages into this language (comma-separated list of ISO 639-1 codes') do |opt|
-          sanitized_langs = opt.split(',').select{ |lang| lang.length == 2 }
-          break unless sanitized_langs.count > 0
-          @options[:language] = sanitized_langs.join(',')
+          @options[:language] = opt
         end
 
         @opts.parse!
