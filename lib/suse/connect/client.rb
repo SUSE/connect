@@ -53,6 +53,11 @@ module SUSE
         end
       end
 
+      # @returns: Empty body and 204 status code
+      def deregister!
+        @api.deregister(basic_auth)
+        System.remove_credentials
+      end
     end
   end
 end
