@@ -134,7 +134,7 @@ describe SUSE::Connect::Zypper do
 
       it 'should produce a log record in case of Exception' do
         source_cred_file.stub(:puts).and_raise(IOError)
-        Logger.should_receive(:error)
+        SUSE::Connect::GlobalLogger.instance.log.should_receive(:error)
         subject.send(:write_credentials_file, *params)
       end
 

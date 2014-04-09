@@ -18,7 +18,7 @@ describe SUSE::Toolkit::SystemCalls do
 
     it 'should produce log output if call failed' do
       Object.should_receive(:system).with('date').and_return(false)
-      Logger.should_receive(:error)
+      SUSE::Connect::GlobalLogger.instance.log.should_receive(:error)
       subject.send(:call, 'date')
     end
 
