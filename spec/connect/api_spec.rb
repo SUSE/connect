@@ -157,4 +157,33 @@ describe SUSE::Connect::Api do
 
   end
 
+  describe 'deregister' do
+    before do
+      stub_deregister_call
+    end
+
+    it 'is authenticated via basic auth' do
+      payload = [
+        '/connect/systems/',
+        :auth => 'Basic: encodedgibberish'
+      ]
+
+      Connection.any_instance.should_receive(:delete)
+        .with(*payload)
+        .and_call_original
+
+      subject.new(client).deregister('Basic: encodedgibberish')
+    end
+
+    it 'responds with proper status code' do
+      response = subject.new(client).deregister('Basic: encodedgibberish')
+      response.code.should eq 204
+    end
+
+    it 'returns empty body' do
+      body = subject.new(client).deregister('Basic: encodedgibberish').body
+      body.should be_nil
+    end
+  end
+
 end
