@@ -24,7 +24,7 @@ module SUSE
         http.verify_mode = insecure ? OpenSSL::SSL::VERIFY_NONE : OpenSSL::SSL::VERIFY_PEER
         @http            = http
         @http.set_debug_output(STDERR) if debug
-        @language        = language if language
+        @language        = language
       end
 
       VERB_TO_CLASS.keys.each do |name_for_method|
@@ -40,10 +40,10 @@ module SUSE
 
       def json_request(method, path, params = {})
         request                   = VERB_TO_CLASS[method].new(path)
-        request['Authorization']  = auth if auth
+        request['Authorization']  = auth
         request['Content-Type']   = 'application/json'
         request['Accept']         = 'application/json'
-        request['Accept-Language']= language if language
+        request['Accept-Language']= language
         request.body              = params.to_json unless params.empty?
         response                  = @http.request(request)
         body                      = JSON.parse(response.body)
