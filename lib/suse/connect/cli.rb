@@ -85,7 +85,7 @@ module SUSE
           @options[:verbose] = opt
         end
 
-        @opts.on('-l [LANG]', '--language [LANG]', 'Translate messages into this language (comma-separated list of ISO 639-1 codes') do |opt|
+        @opts.on('-l [LANG]', '--language [LANG]', 'comma-separated list of ISO 639-1 codes' do |opt|
           @options[:language] = opt
         end
 
