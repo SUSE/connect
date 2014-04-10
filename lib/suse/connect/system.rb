@@ -41,7 +41,7 @@ module SUSE
         #
         def credentials
           if File.exist?(Credentials::GLOBAL_CREDENTIALS_FILE)
-            Credentials::read(Credentials::GLOBAL_CREDENTIALS_FILE)
+            Credentials.read(Credentials::GLOBAL_CREDENTIALS_FILE)
           else
             nil
           end
