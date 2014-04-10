@@ -40,8 +40,8 @@ module SUSE
         # Credentials object or nil
         #
         def credentials
-          if File.exist?(CREDENTIALS_FILE)
-            Credentials.read(CREDENTIALS_FILE)
+          if File.exist?(Credentials::GLOBAL_CREDENTIALS_FILE)
+            Credentials::read(Credentials::GLOBAL_CREDENTIALS_FILE)
           else
             nil
           end
@@ -56,7 +56,7 @@ module SUSE
         end
 
         def remove_credentials
-          File.delete CREDENTIALS_FILE if registered?
+          File.delete Credentials::GLOBAL_CREDENTIALS_FILE if registered?
         end
 
         def add_service(service)
