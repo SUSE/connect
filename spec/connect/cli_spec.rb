@@ -112,6 +112,13 @@ describe SUSE::Connect::Cli do
       cli.options[:debug].should be_true
     end
 
+    it 'sets root option' do
+      argv = %w{--root /path/to/root}
+      subject.new(argv)
+      $suse_connect_filesystem_root.should eq '/path/to/root'
+      $suse_connect_filesystem_root = ''
+    end
+
   end
 
   describe 'errors on invalid options' do

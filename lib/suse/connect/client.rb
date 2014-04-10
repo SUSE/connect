@@ -31,7 +31,7 @@ module SUSE
       def register!
         unless System.registered?
           login, password = announce_system
-          Credentials.new(login, password, Credentials::GLOBAL_CREDENTIALS_FILE).write
+          Credentials.new(login, password, Credentials.system_credentials_file).write
         end
         service = activate_product(@options[:product])
         System.add_service(service)
