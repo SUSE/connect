@@ -59,6 +59,13 @@ module Cloud
         end
       end
 
+      # Deregister VM system
+      def deregister!
+        $LOAD_PATH << File.expand_path(File.join(File.dirname(__FILE__), '../../lib'))
+        require File.expand_path(File.join(File.dirname(__FILE__), '../../lib/suse/connect.rb'))
+        SUSE::Connect::Client.new({}).deregister!
+      end
+
       def attach_ip(server, address)
         puts "*** Attaching floating ip '#{address.ip}' to '#{server.name}' VM ..."
         connection.attach_floating_ip(:server_id => server.id, :ip_id => address.id)
