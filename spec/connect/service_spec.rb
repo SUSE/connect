@@ -38,7 +38,7 @@ describe SUSE::Connect::Service do
       subject.new(sources_mock).norefresh.should eq([])
     end
 
-    # TODO: part of ruby 2.1
+    # TODO: return when we will receive ruby 2.1.1
     xit 'raise if no sources passed' do
       expect { subject.new }.to raise_error ArgumentError, 'missing keyword: sources'
     end

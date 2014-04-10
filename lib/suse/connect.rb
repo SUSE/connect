@@ -4,9 +4,6 @@ module SUSE
 
     UUIDFILE                = '/sys/class/dmi/id/product_uuid'
     UUIDGEN_LOCATION        = '/usr/bin/uuidgen'
-    ZYPPER_CREDENTIALS_DIR  = '/etc/zypp/credentials.d'
-    CREDENTIALS_NAME        = 'SCCcredentials'
-    CREDENTIALS_FILE        = File.join(ZYPPER_CREDENTIALS_DIR, CREDENTIALS_NAME)
 
     require 'suse/connect/version'
     require 'suse/connect/logger'
@@ -21,5 +18,6 @@ module SUSE
     require 'suse/connect/credentials'
     require 'suse/connect/api'
     require 'suse/connect/yast'
+
   end
 end

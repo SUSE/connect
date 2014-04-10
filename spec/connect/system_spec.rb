@@ -2,6 +2,8 @@ require 'spec_helper'
 
 describe SUSE::Connect::System do
 
+  let(:credentials_file) { SUSE::Connect::Credentials::GLOBAL_CREDENTIALS_FILE }
+
   before(:each) do
     Object.stub(:system => true)
   end
@@ -86,17 +88,17 @@ describe SUSE::Connect::System do
       end
 
       before do
-        File.stub(:exist?).with(CREDENTIALS_FILE).and_return(true)
+        File.stub(:exist?).with(credentials_file).and_return(true)
       end
 
       it 'should raise MalformedSccCredentialsFile if cannot parse lines' do
-        File.stub(:read).with(CREDENTIALS_FILE).and_return("me\nfe")
+        File.stub(:read).with(credentials_file).and_return("me\nfe")
         expect { subject.credentials }
           .to raise_error MalformedSccCredentialsFile, 'Cannot parse credentials file'
       end
 
       it 'should return username and password' do
-        File.stub(:read).with(CREDENTIALS_FILE).and_return("username=bill\npassword=nevermore")
+        File.stub(:read).with(credentials_file).and_return("username=bill\npassword=nevermore")
         subject.credentials.username.should eq 'bill'
         subject.credentials.password.should eq 'nevermore'
       end
@@ -106,7 +108,7 @@ describe SUSE::Connect::System do
     context :credentials_not_exist do
 
       before(:each) do
-        File.should_receive(:exist?).with(CREDENTIALS_FILE).and_return(false)
+        File.should_receive(:exist?).with(credentials_file).and_return(false)
       end
 
       it 'should produce log message' do
@@ -119,7 +121,7 @@ describe SUSE::Connect::System do
 
       before(:each) do
         subject.should_receive(:registered?).and_return(true)
-        File.should_receive(:delete).with(CREDENTIALS_FILE).and_return(true)
+        File.should_receive(:delete).with(credentials_file).and_return(true)
       end
 
       it 'should remove credentials file' do
