@@ -2,37 +2,13 @@ require 'spec_helper'
 
 describe SUSE::Connect::System do
 
+  let(:credentials_file) { Credentials::GLOBAL_CREDENTIALS_FILE }
+
   before(:each) do
     Object.stub(:system => true)
   end
 
   subject { SUSE::Connect::System }
-
-  describe '.uuid' do
-
-    context :uuid_file_not_exist do
-
-      it 'should fallback to uuidgen if uuid_file not found' do
-        File.stub(:exist?).with(UUIDFILE).and_return(false)
-        Object.should_receive(:'`').with(UUIDGEN_LOCATION).and_return 'lambada'
-        subject.uuid.should eq 'lambada'
-      end
-
-    end
-
-    context :uuid_file_exist do
-
-      it 'should return content of UUIDFILE chomped' do
-        File.stub(:exist?).with(UUIDFILE).and_return(true)
-        uuidfile = double('uuidfile_mock')
-        uuidfile.stub(:gets => 'megusta', :close => true)
-        File.stub(:open => uuidfile)
-        subject.uuid.should eq 'megusta'
-      end
-
-    end
-
-  end
 
   describe '.hwinfo' do
 
@@ -86,17 +62,17 @@ describe SUSE::Connect::System do
       end
 
       before do
-        File.stub(:exist?).with(CREDENTIALS_FILE).and_return(true)
+        File.stub(:exist?).with(credentials_file).and_return(true)
       end
 
       it 'should raise MalformedSccCredentialsFile if cannot parse lines' do
-        File.stub(:read).with(CREDENTIALS_FILE).and_return("me\nfe")
+        File.stub(:read).with(credentials_file).and_return("me\nfe")
         expect { subject.credentials }
           .to raise_error MalformedSccCredentialsFile, 'Cannot parse credentials file'
       end
 
       it 'should return username and password' do
-        File.stub(:read).with(CREDENTIALS_FILE).and_return("username=bill\npassword=nevermore")
+        File.stub(:read).with(credentials_file).and_return("username=bill\npassword=nevermore")
         subject.credentials.username.should eq 'bill'
         subject.credentials.password.should eq 'nevermore'
       end
@@ -106,7 +82,7 @@ describe SUSE::Connect::System do
     context :credentials_not_exist do
 
       before(:each) do
-        File.should_receive(:exist?).with(CREDENTIALS_FILE).and_return(false)
+        File.should_receive(:exist?).with(credentials_file).and_return(false)
       end
 
       it 'should produce log message' do
@@ -119,7 +95,7 @@ describe SUSE::Connect::System do
 
       before(:each) do
         subject.should_receive(:registered?).and_return(true)
-        File.should_receive(:delete).with(CREDENTIALS_FILE).and_return(true)
+        File.should_receive(:delete).with(credentials_file).and_return(true)
       end
 
       it 'should remove credentials file' do
@@ -150,7 +126,7 @@ describe SUSE::Connect::System do
   describe '.add_service' do
 
     before(:each) do
-      Zypper.stub(:write_credentials_file)
+      Zypper.stub(:write_service_credentials)
       Credentials.any_instance.stub(:write)
     end
 
@@ -184,10 +160,8 @@ describe SUSE::Connect::System do
     end
 
     it 'enables service repository for each of enabled' do
-
       Zypper.should_receive(:add_service).with('name', URI('url'))
       Zypper.should_receive(:add_service).with('lastname', URI('furl'))
-
       subject.add_service mock_service
     end
 

@@ -35,7 +35,7 @@ Release:        0
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 BuildRequires:  ruby-macros >= 1
 
-Requires: util-linux, coreutils, net-tools, hwinfo, zypper, ca-certificates-mozilla
+Requires: coreutils, net-tools, hwinfo, zypper, ca-certificates-mozilla
 Conflicts: suseRegister
 %ifnarch ppc ppc64 ppc64le s390 s390x
 %if 0%{?suse_version} == 0 || %suse_version >= 1210

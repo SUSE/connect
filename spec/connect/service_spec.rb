@@ -15,11 +15,9 @@ describe SUSE::Connect::Service do
     end
 
     it 'assigns sources' do
-
       src = subject.new(sources_mock).sources
       expect(src).to be_a Array
       expect(src.first).to be_a Source
-
     end
 
     it 'assigns norefresh' do
@@ -38,7 +36,7 @@ describe SUSE::Connect::Service do
       subject.new(sources_mock).norefresh.should eq([])
     end
 
-    # TODO: part of ruby 2.1
+    # TODO: return when we will receive ruby 2.1.1
     xit 'raise if no sources passed' do
       expect { subject.new }.to raise_error ArgumentError, 'missing keyword: sources'
     end
