@@ -47,6 +47,7 @@ module SUSE
     #     end
     #   end
     module Logger
+
       def log
         GlobalLogger.instance.log
       end

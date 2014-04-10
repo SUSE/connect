@@ -20,3 +20,7 @@ def mock_dry_file
   end
 
 end
+
+def fixtures_dir
+  File.expand_path('../../fixtures', __FILE__)
+end
