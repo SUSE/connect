@@ -5,20 +5,6 @@ module SUSE
 
       class << self
 
-        def uuid
-          if File.exist? UUIDFILE
-            file = File.open(UUIDFILE, 'r')
-            begin
-              client_id = file.gets
-            ensure
-              file.close
-            end
-            client_id
-          else
-            `/usr/bin/uuidgen`.chomp.strip
-          end
-        end
-
         def hwinfo
           info = {
             :cpu_type       => `uname -p`,
