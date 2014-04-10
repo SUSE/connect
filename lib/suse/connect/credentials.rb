@@ -9,6 +9,8 @@ module SUSE
     # or the services credentials
     class Credentials
 
+      include Logger
+
       DEFAULT_CREDENTIALS_DIR = '/etc/zypp/credentials.d'
       GLOBAL_CREDENTIALS_FILE = File.join(DEFAULT_CREDENTIALS_DIR, 'SCCcredentials')
 
@@ -23,13 +25,11 @@ module SUSE
 
       def self.read(file)
         raise MissingSccCredentialsFile unless File.exist?(file)
-
         content = File.read(file)
-
         user, passwd = parse(content)
-        #        log.info("Reading credentials from #{file}")
+        log.info("Reading credentials from #{file}")
         credentials = Credentials.new(user, passwd, file)
-        #        log.debug("Read credentials: #{credentials}")
+        log.debug("Read credentials: #{credentials}")
         credentials
       end
 
