@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe SUSE::Connect::System do
 
-  let(:credentials_file) { SUSE::Connect::Credentials::GLOBAL_CREDENTIALS_FILE }
+  let(:credentials_file) { Credentials::GLOBAL_CREDENTIALS_FILE }
 
   before(:each) do
     Object.stub(:system => true)
