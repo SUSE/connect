@@ -15,11 +15,9 @@ describe SUSE::Connect::Service do
     end
 
     it 'assigns sources' do
-
       src = subject.new(sources_mock).sources
       expect(src).to be_a Array
       expect(src.first).to be_a Source
-
     end
 
     it 'assigns norefresh' do
