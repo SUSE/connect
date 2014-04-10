@@ -63,7 +63,7 @@ module SUSE
 
       # security - override to_s to avoid writing the password to log
       def to_s
-        "#<#{self.class}:#{sprintf("%0#16x", object_id)} " +
+        "#<#{self.class}:#{format("%0#16x", object_id)} " \
           "@username=#{username.inspect}, @password=\"[FILTERED]\", @file=#{file.inspect}>"
       end
 
