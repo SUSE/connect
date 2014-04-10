@@ -1,4 +1,3 @@
-
 require 'logger'
 require 'singleton'
 
@@ -7,6 +6,7 @@ module SUSE
 
     # the default logger
     class DefaultLogger < ::Logger
+
       def initialize(*args)
         super(*args)
         self.level = ::Logger::WARN
@@ -15,6 +15,7 @@ module SUSE
           "#{msg}\n"
         end
       end
+
     end
 
     # Singleton log instance used by SUSE::Connect::Logger module
@@ -22,14 +23,15 @@ module SUSE
     # @example Set own logger
     #   GlobalLogger.instance.log = ::Logger.new($stderr)
     class GlobalLogger
+
       include Singleton
 
       attr_accessor :log
 
-      # log to stdout by default
       def initialize
         @log = DefaultLogger.new($stdout)
       end
+
     end
 
     # Module provides access to specific logging. To set logging see GlobalLogger.
