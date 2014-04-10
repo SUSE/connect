@@ -53,24 +53,22 @@ module SUSE
 
             Zypper.remove_service(source.name)
             Zypper.add_service(source.name, source.url)
-            # TODO: cover
             Zypper.enable_autorefresh_service(source.name)
 
-            # TODO: ensure zypper reads and respects repoindex flags
             service.enabled.each do |repo_name|
               Zypper.enable_service_repository(source.name, repo_name)
             end
 
             Zypper.write_service_credentials(source.name)
 
-            # TODO: ensure zypper reads and respects repoindex flags
             service.norefresh.each do |repo_name|
               Zypper.disable_repository_autorefresh(source.name, repo_name)
             end
 
           end
-          # TODO: cover
+
           Zypper.refresh_services
+
           service
         end
 

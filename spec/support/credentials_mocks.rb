@@ -16,7 +16,7 @@ def mock_dry_file
     File.stub(:open => source_cred_file)
     File.any_instance.stub(:puts => true)
     Dir.stub(:mkdir => true)
-    SUSE::Connect::System.stub(:credentials => %w{ dummy tummy })
+    SUSE::Connect::System.stub(:credentials => Credentials.new('dummy', 'tummy'))
   end
 
 end

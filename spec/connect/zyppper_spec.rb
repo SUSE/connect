@@ -202,7 +202,7 @@ describe SUSE::Connect::Zypper do
       Credentials.any_instance.stub(:write)
     end
 
-    it 'should call write_credentials_file' do
+    it 'should call write_base_credentials_file' do
       Credentials.should_receive(:new).with('dummy', 'tummy', Credentials::GLOBAL_CREDENTIALS_FILE).and_call_original
       subject.write_base_credentials('dummy', 'tummy')
     end

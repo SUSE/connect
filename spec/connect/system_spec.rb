@@ -126,7 +126,7 @@ describe SUSE::Connect::System do
   describe '.add_service' do
 
     before(:each) do
-      Zypper.stub(:write_credentials_file)
+      Zypper.stub(:write_service_credentials)
       Credentials.any_instance.stub(:write)
     end
 
@@ -160,10 +160,8 @@ describe SUSE::Connect::System do
     end
 
     it 'enables service repository for each of enabled' do
-
       Zypper.should_receive(:add_service).with('name', URI('url'))
       Zypper.should_receive(:add_service).with('lastname', URI('furl'))
-
       subject.add_service mock_service
     end
 
