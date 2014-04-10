@@ -10,32 +10,6 @@ describe SUSE::Connect::System do
 
   subject { SUSE::Connect::System }
 
-  describe '.uuid' do
-
-    context :uuid_file_not_exist do
-
-      it 'should fallback to uuidgen if uuid_file not found' do
-        File.stub(:exist?).with(UUIDFILE).and_return(false)
-        Object.should_receive(:'`').with(UUIDGEN_LOCATION).and_return 'lambada'
-        subject.uuid.should eq 'lambada'
-      end
-
-    end
-
-    context :uuid_file_exist do
-
-      it 'should return content of UUIDFILE chomped' do
-        File.stub(:exist?).with(UUIDFILE).and_return(true)
-        uuidfile = double('uuidfile_mock')
-        uuidfile.stub(:gets => 'megusta', :close => true)
-        File.stub(:open => uuidfile)
-        subject.uuid.should eq 'megusta'
-      end
-
-    end
-
-  end
-
   describe '.hwinfo' do
 
     before do
