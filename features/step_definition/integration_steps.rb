@@ -2,9 +2,9 @@ Given(/^I register a system with (valid|invalid) regcode$/) do |condition|
   regcode = condition == 'valid' ? ENV['REGCODE'] : 'INVALID_REGCODE'
 
   url = ENV['LOCAL_SERVER'] || 'https://barium.scc.suse.de --insecure'
-  connect_cmd = "SUSEConnect -r #{ENV['REGCODE']} --url #{url}"
+  connect_cmd = "SUSEConnect -r #{regcode} --url #{url}"
   response = `#{connect_cmd}`
-  puts "ERROR: #{response.inspect}" if $?.exitstatus == 1
+  puts "ERROR: #{response.inspect}" if $?.exitstatus == 1 # rubocop:disable SpecialGlobalVars
 
   step 'the exit status should be 0'
 end
