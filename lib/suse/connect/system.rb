@@ -5,20 +5,6 @@ module SUSE
 
       class << self
 
-        def uuid
-          if File.exist? UUIDFILE
-            file = File.open(UUIDFILE, 'r')
-            begin
-              client_id = file.gets
-            ensure
-              file.close
-            end
-            client_id
-          else
-            `/usr/bin/uuidgen`.chomp.strip
-          end
-        end
-
         def hwinfo
           info = {
             :cpu_type       => `uname -p`,
@@ -67,24 +53,22 @@ module SUSE
 
             Zypper.remove_service(source.name)
             Zypper.add_service(source.name, source.url)
-            # TODO: cover
             Zypper.enable_autorefresh_service(source.name)
 
-            # TODO: ensure zypper reads and respects repoindex flags
             service.enabled.each do |repo_name|
               Zypper.enable_service_repository(source.name, repo_name)
             end
 
             Zypper.write_service_credentials(source.name)
 
-            # TODO: ensure zypper reads and respects repoindex flags
             service.norefresh.each do |repo_name|
               Zypper.disable_repository_autorefresh(source.name, repo_name)
             end
 
           end
-          # TODO: cover
+
           Zypper.refresh_services
+
           service
         end
 

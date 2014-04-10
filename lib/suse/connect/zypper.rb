@@ -64,10 +64,8 @@ module SUSE
           call("zypper --quiet modifyrepo --no-refresh '#{service_name}:#{repository}'")
         end
 
-        # TODO: introduce Source class
         def write_service_credentials(service_name)
-          login, password = System.credentials
-
+          login, password = System.credentials.username, System.credentials.password
           credentials = Credentials.new(login, password, service_name)
           credentials.write
         end
