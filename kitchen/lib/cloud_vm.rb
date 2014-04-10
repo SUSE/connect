@@ -46,8 +46,6 @@ module Cloud
       end
 
       def destroy(name = 'SUSEConnect_testing')
-        deregister!
-
         vm = connection.servers.find {|s| s[:name] == name }
         if vm
           vm = connection.get_server vm[:id]
