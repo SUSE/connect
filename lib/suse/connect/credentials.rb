@@ -33,10 +33,14 @@ module SUSE
         credentials
       end
 
+      def filename
+        filename = Pathname.new(file).absolute? ? file : File.join(DEFAULT_CREDENTIALS_DIR, file)
+        $root.nil? || $root.empty? ? filename : File.join($root, filename)
+      end
+
       # Write credentials to a file
       def write
         raise 'Invalid filename' if file.nil? || file.empty?
-        filename = Pathname.new(file).absolute? ? file : File.join(DEFAULT_CREDENTIALS_DIR, file)
         dirname = File.dirname(filename)
         FileUtils.mkdir_p(dirname) unless File.exist?(dirname)
         log.info("Writing credentials to #{filename}")
