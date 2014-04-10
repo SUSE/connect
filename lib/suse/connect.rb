@@ -18,6 +18,7 @@ module SUSE
     require 'suse/connect/service'
     require 'suse/connect/source'
     require 'suse/connect/connection'
+    require 'suse/connect/credentials'
     require 'suse/connect/api'
     require 'suse/connect/yast'
   end

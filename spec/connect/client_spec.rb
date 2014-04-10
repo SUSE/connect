@@ -92,7 +92,7 @@ describe SUSE::Connect::Client do
       api_response = double('api_response')
       api_response.stub(:body => { 'sources' => { :foo => 'bar' }, :enabled => true, :norefresh => false })
       Api.any_instance.stub(:activate_product => api_response)
-      System.stub(:credentials => %w{ meuser mepassword})
+      System.stub(:credentials => Credentials.new('meuser', 'mepassword'))
       Zypper.stub(:base_product => ({ :name => 'SLE_BASE' }))
       System.stub(:add_service)
       subject.stub(:basic_auth => 'secretsecret')
@@ -123,6 +123,7 @@ describe SUSE::Connect::Client do
       Zypper.stub(:base_product => { :name => 'SLE_BASE' })
       System.stub(:add_service => true)
       Zypper.stub(:write_base_credentials)
+      Credentials.any_instance.stub(:write)
       subject.stub(:activate_product)
       subject.class.any_instance.stub(:basic_auth => true)
       subject.class.any_instance.stub(:token_auth => true)
@@ -149,7 +150,7 @@ describe SUSE::Connect::Client do
     it 'writes credentials file' do
       System.stub(:registered? => false)
       subject.stub(:announce_system => %w{ lg pw })
-      Zypper.should_receive(:write_base_credentials).with('lg', 'pw')
+      Credentials.should_receive(:new).with('lg', 'pw', Credentials::GLOBAL_CREDENTIALS_FILE).and_call_original
       subject.register!
     end
 

@@ -117,60 +117,6 @@ describe SUSE::Connect::Zypper do
 
   end
 
-  describe '?write_credentials_file' do
-
-    mock_dry_file
-
-    context :credentials_folder_exist do
-
-      before(:each) do
-        Dir.should_receive(:exist?).with(ZYPPER_CREDENTIALS_DIR).and_return true
-      end
-
-      it 'will not create credentials.d folder' do
-        Dir.should_not_receive(:mkdir).with(ZYPPER_CREDENTIALS_DIR)
-        subject.send(:write_credentials_file, *params)
-      end
-
-      it 'should produce a log record in case of Exception' do
-        source_cred_file.stub(:puts).and_raise(IOError)
-        SUSE::Connect::GlobalLogger.instance.log.should_receive(:error)
-        subject.send(:write_credentials_file, *params)
-      end
-
-    end
-
-    context :credentials_folder_not_exist do
-
-      before(:each) do
-        Dir.should_receive(:exist?).with(System::ZYPPER_CREDENTIALS_DIR).and_return false
-      end
-
-      it 'creates credentials.d folder' do
-        Dir.should_receive(:mkdir).with(System::ZYPPER_CREDENTIALS_DIR)
-        subject.send(:write_credentials_file, *params)
-      end
-
-    end
-
-    it 'opens a file for writing with name of service' do
-      File.should_receive(:open).with('/etc/zypp/credentials.d/ha', 'w')
-      subject.send(:write_credentials_file, *params)
-    end
-
-    it 'writes a file with corresponding product credentials' do
-      source_cred_file.should_receive(:puts).with('username=Kif')
-      source_cred_file.should_receive(:puts).with('password=Kroker')
-      subject.send(:write_credentials_file, *params)
-    end
-
-    it 'closes a file for credentials' do
-      source_cred_file.should_receive(:close)
-      subject.send(:write_credentials_file, *params)
-    end
-
-  end
-
   describe '?sccized_login' do
 
     it 'should prepend login with SCC_ unless it already there' do
@@ -194,6 +140,7 @@ describe SUSE::Connect::Zypper do
 
     before do
       subject.stub(:installed_products => parsed_products)
+      Credentials.any_instance.stub(:write)
     end
 
     it 'should return first product from installed product which is base' do
@@ -251,8 +198,12 @@ describe SUSE::Connect::Zypper do
 
     mock_dry_file
 
+    before do
+      Credentials.any_instance.stub(:write)
+    end
+
     it 'should call write_credentials_file' do
-      subject.should_receive(:write_credentials_file).with('dummy', 'tummy', 'SCCcredentials')
+      Credentials.should_receive(:new).with('dummy', 'tummy', Credentials::GLOBAL_CREDENTIALS_FILE).and_call_original
       subject.write_base_credentials('dummy', 'tummy')
     end
 
@@ -262,13 +213,17 @@ describe SUSE::Connect::Zypper do
 
     mock_dry_file
 
+    before do
+      Credentials.any_instance.stub(:write)
+    end
+
     it 'extracts username and password from system credentials' do
       System.should_receive(:credentials)
       subject.write_service_credentials('turbo')
     end
 
     it 'creates a file with source name' do
-      subject.should_receive(:write_credentials_file).with('dummy', 'tummy', 'turbo')
+      Credentials.should_receive(:new).with('dummy', 'tummy', 'turbo').and_call_original
       subject.write_service_credentials('turbo')
     end
 

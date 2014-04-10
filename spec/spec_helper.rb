@@ -23,3 +23,7 @@ RSpec.configure do |c|
 end
 
 include SUSE::Connect
+
+def fixtures_dir
+  File.expand_path('../fixtures', __FILE__)
+end
