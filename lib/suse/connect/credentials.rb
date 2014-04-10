@@ -1,15 +1,5 @@
-
-# TODO: the global rubocop style does not match the SUSE style guide
-# see https://github.com/SUSE/style-guides/blob/master/Ruby.md#strings
-# rubocop:disable StringLiterals
-
-require "fileutils"
-require "pathname"
-
-# TODO: use a logger
-# require "logger"
-
-require "suse/connect/errors"
+require 'fileutils'
+require 'pathname'
 
 module SUSE
   module Connect
@@ -18,12 +8,9 @@ module SUSE
     # It can read the global credentials (/etc/zypp/credentials.d/SCCcredentials)
     # or the services credentials
     class Credentials
-      #      include Logger
 
-      # the default location of credential files
-      DEFAULT_CREDENTIALS_DIR = "/etc/zypp/credentials.d"
-      # global credentials
-      GLOBAL_CREDENTIALS_FILE = File.join(DEFAULT_CREDENTIALS_DIR, "SCCcredentials")
+      DEFAULT_CREDENTIALS_DIR = '/etc/zypp/credentials.d'
+      GLOBAL_CREDENTIALS_FILE = File.join(DEFAULT_CREDENTIALS_DIR, 'SCCcredentials')
 
       attr_reader :username, :password
       attr_accessor :file
@@ -48,39 +35,41 @@ module SUSE
 
       # Write credentials to a file
       def write
-        raise "Invalid filename" if file.nil? || file.empty?
+        raise 'Invalid filename' if file.nil? || file.empty?
         filename = Pathname.new(file).absolute? ? file : File.join(DEFAULT_CREDENTIALS_DIR, file)
-
-        # create the target directory if it is missing
         dirname = File.dirname(filename)
         FileUtils.mkdir_p(dirname) unless File.exist?(dirname)
-
-        #        log.info("Writing credentials to #{filename}")
-        #        log.debug("Credentials to write: #{self}")
-        # make sure only the owner can read the content
+        log.info("Writing credentials to #{filename}")
+        log.debug("Credentials to write: #{self}")
         File.write(filename, serialize, :perm => 0600)
       end
 
       # security - override to_s to avoid writing the password to log
       def to_s
-        "#<#{self.class}:#{format("%0#16x", object_id)} " \
-          "@username=#{username.inspect}, @password=\"[FILTERED]\", @file=#{file.inspect}>"
+        contents = {}
+        contents[:class]    = self.class
+        contents[:id]       = format('%0#16x', object_id)
+        contents[:username] = username.inspect
+        contents[:password] = '[FILTERED]'.inspect
+        contents[:file]     = file.inspect
+        format('#<%{class}:%{id} @username=%{username}, @password=%{password}, @file=%{file}>', contents)
       end
 
       private
 
       # parse a credentials file content
       def self.parse(input)
+
         if input.match(/^\s*username\s*=\s*(\S+)\s*$/)
           user = Regexp.last_match(1)
         else
-          raise MalformedSccCredentialsFile, "Cannot parse credentials file"
+          raise MalformedSccCredentialsFile, 'Cannot parse credentials file'
         end
 
         if input.match(/^\s*password\s*=\s*(\S+)\s*$/)
           passwd = Regexp.last_match(1)
         else
-          raise MalformedSccCredentialsFile, "Cannot parse credentials file"
+          raise MalformedSccCredentialsFile, 'Cannot parse credentials file'
         end
 
         [user,  passwd]
