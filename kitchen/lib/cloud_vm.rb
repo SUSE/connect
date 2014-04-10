@@ -46,6 +46,8 @@ module Cloud
       end
 
       def destroy(name = 'SUSEConnect_testing')
+        deregister!
+
         vm = connection.servers.find {|s| s[:name] == name }
         if vm
           vm = connection.get_server vm[:id]
@@ -57,6 +59,13 @@ module Cloud
           puts "ERROR: Cann't find VM with name '#{name}'"
           exit(1)
         end
+      end
+
+      # Deregister VM system
+      def deregister!
+        $LOAD_PATH << File.expand_path(File.join(File.dirname(__FILE__), '../../lib'))
+        require File.expand_path(File.join(File.dirname(__FILE__), '../../lib/suse/connect.rb'))
+        SUSE::Connect::Client.new({}).deregister!
       end
 
       def attach_ip(server, address)
