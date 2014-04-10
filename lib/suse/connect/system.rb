@@ -21,10 +21,10 @@ module SUSE
 
         def hwinfo
           info = {
-              :cpu_type       => `uname -p`,
-              :cpu_count      => `grep "processor" /proc/cpuinfo | wc -l`,
-              :platform_type  => `uname -i`,
-              :hostname       => `hostname`
+            :cpu_type       => `uname -p`,
+            :cpu_count      => `grep "processor" /proc/cpuinfo | wc -l`,
+            :platform_type  => `uname -i`,
+            :hostname       => `hostname`
           }
 
           info.values.each(&:chomp!)
@@ -34,23 +34,14 @@ module SUSE
           info
         end
 
-        # returns username and password from NCC_CREDENTIALS_FILE
+        # returns username and password from SCC_CREDENTIALS_FILE
         #
         # == Returns:
-        # tuple of username and password or nil for both values
+        # Credentials object or nil
         #
         def credentials
           if File.exist?(CREDENTIALS_FILE)
-
-            file = File.new(CREDENTIALS_FILE, 'r')
-
-            begin
-              lines = file.readlines.map(&:chomp)
-              extract_credentials(lines)
-            ensure
-              file.close
-            end
-
+            Credentials.read(CREDENTIALS_FILE)
           else
             nil
           end
@@ -60,9 +51,12 @@ module SUSE
         # == Returns:
         #
         def registered?
-          return false unless credentials
-          username = credentials.first
-          username && username.include?('SCC_')
+          creds = credentials
+          creds && creds.username && creds.username.include?('SCC_')
+        end
+
+        def remove_credentials
+          File.delete CREDENTIALS_FILE if registered?
         end
 
         def add_service(service)
@@ -101,31 +95,6 @@ module SUSE
           else
             Socket.ip_address_list.find {|intf| intf.ipv4_private? }.ip_address
           end
-        end
-
-        private
-
-        ##
-        # Assuming structure:
-        # username=<32 symbols line>
-        # password=<32 symbols line>
-        # will raise MalformedNccCredentialsFile if cannot parse
-        # provided lines
-        def extract_credentials(lines)
-          return nil unless lines.count == 2
-
-          begin
-            username = divide_credential_tuple lines.select {|line| line =~ /^username=.*/ }.first
-            password = divide_credential_tuple lines.select {|line| line =~ /^password=.*/ }.first
-          rescue
-            raise MalformedNccCredentialsFile, 'Cannot parse credentials file'
-          end
-
-          [username, password]
-        end
-
-        def divide_credential_tuple(tuple)
-          tuple.split('=').last
         end
 
       end

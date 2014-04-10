@@ -9,7 +9,7 @@ It will connect the system to your product subscriptions and enable the product 
 
 Please visit https://scc.suse.com to see and manage your subscriptions.
 
-# Rake taks
+# Rake tasks
 
 ```
 rake build    # build locally (prepare for pushing to ibs)

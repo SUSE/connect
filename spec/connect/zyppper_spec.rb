@@ -117,60 +117,6 @@ describe SUSE::Connect::Zypper do
 
   end
 
-  describe '?write_credentials_file' do
-
-    mock_dry_file
-
-    context :credentials_folder_exist do
-
-      before(:each) do
-        Dir.should_receive(:exists?).with(ZYPPER_CREDENTIALS_DIR).and_return true
-      end
-
-      it 'will not create credentials.d folder' do
-        Dir.should_not_receive(:mkdir).with(ZYPPER_CREDENTIALS_DIR)
-        subject.send(:write_credentials_file, *params)
-      end
-
-      it 'should produce a log record in case of Exception' do
-        source_cred_file.stub(:puts).and_raise(IOError)
-        Logger.should_receive(:error)
-        subject.send(:write_credentials_file, *params)
-      end
-
-    end
-
-    context :credentials_folder_not_exist do
-
-      before(:each) do
-        Dir.should_receive(:exists?).with(System::ZYPPER_CREDENTIALS_DIR).and_return false
-      end
-
-      it 'creates credentials.d folder' do
-        Dir.should_receive(:mkdir).with(System::ZYPPER_CREDENTIALS_DIR)
-        subject.send(:write_credentials_file, *params)
-      end
-
-    end
-
-    it 'opens a file for writing with name of service' do
-      File.should_receive(:open).with('/etc/zypp/credentials.d/ha', 'w')
-      subject.send(:write_credentials_file, *params)
-    end
-
-    it 'writes a file with corresponding product credentials' do
-      source_cred_file.should_receive(:puts).with('username=SCC_Kif')
-      source_cred_file.should_receive(:puts).with('password=Kroker')
-      subject.send(:write_credentials_file, *params)
-    end
-
-    it 'closes a file for credentials' do
-      source_cred_file.should_receive(:close)
-      subject.send(:write_credentials_file, *params)
-    end
-
-  end
-
   describe '?sccized_login' do
 
     it 'should prepend login with SCC_ unless it already there' do
@@ -194,6 +140,7 @@ describe SUSE::Connect::Zypper do
 
     before do
       subject.stub(:installed_products => parsed_products)
+      Credentials.any_instance.stub(:write)
     end
 
     it 'should return first product from installed product which is base' do
@@ -205,10 +152,10 @@ describe SUSE::Connect::Zypper do
       subject.base_product[:release_type].should eq 'NCR'
     end
 
-    context :oem_file_exists do
+    context :oem_file_exist do
 
-      it 'should extract product_release from OEM file if exists' do
-        File.should_receive(:exists?).with(subject::OEM_PATH + '/SLE_productline1').and_return(true)
+      it 'should extract product_release from OEM file if exist' do
+        File.should_receive(:exist?).with(subject::OEM_PATH + '/SLE_productline1').and_return(true)
         File.should_receive(:readlines).with(subject::OEM_PATH + '/SLE_productline1').and_return(["ABC\n"])
         subject.base_product[:release_type].should eq 'ABC'
       end
@@ -218,9 +165,9 @@ describe SUSE::Connect::Zypper do
     context :registerrelease_defined do
 
       it 'should extract product_release from registerrelease attribute of product' do
-        File.should_receive(:exists?).with(subject::OEM_PATH + '/SLE_productline1').and_return(false)
+        File.should_receive(:exist?).with(subject::OEM_PATH + '/SLE_productline1').and_return(false)
         subject.stub(:installed_products => [
-            { :registerrelease => 'DDD', :isbase => '1', :name => 'SLES', :productline => 'SLE_productline1' }
+          { :registerrelease => 'DDD', :isbase => '1', :name => 'SLES', :productline => 'SLE_productline1' }
         ])
         subject.base_product[:release_type].should eq 'DDD'
       end
@@ -229,16 +176,16 @@ describe SUSE::Connect::Zypper do
 
     context :flavor_defined do
 
-      it 'should extract product_release from flavor file if exists' do
-        File.should_receive(:exists?).with(subject::OEM_PATH + '/SLE_productline1').and_return(false)
+      it 'should extract product_release from flavor file if exist' do
+        File.should_receive(:exist?).with(subject::OEM_PATH + '/SLE_productline1').and_return(false)
         subject.stub(:installed_products => [
-            {
-              :flavor          => 'ZZZ',
-              :isbase          => '1',
-              :name            => 'SLES',
-              :productline     => 'SLE_productline1',
-              :registerrelease => ''
-            }
+          {
+            :flavor          => 'ZZZ',
+            :isbase          => '1',
+            :name            => 'SLES',
+            :productline     => 'SLE_productline1',
+            :registerrelease => ''
+          }
         ])
         subject.base_product[:release_type].should eq 'ZZZ'
       end
@@ -251,8 +198,12 @@ describe SUSE::Connect::Zypper do
 
     mock_dry_file
 
+    before do
+      Credentials.any_instance.stub(:write)
+    end
+
     it 'should call write_credentials_file' do
-      subject.should_receive(:write_credentials_file).with('dummy', 'tummy', 'SCCcredentials')
+      Credentials.should_receive(:new).with('dummy', 'tummy', Credentials::GLOBAL_CREDENTIALS_FILE).and_call_original
       subject.write_base_credentials('dummy', 'tummy')
     end
 
@@ -262,13 +213,17 @@ describe SUSE::Connect::Zypper do
 
     mock_dry_file
 
+    before do
+      Credentials.any_instance.stub(:write)
+    end
+
     it 'extracts username and password from system credentials' do
       System.should_receive(:credentials)
       subject.write_service_credentials('turbo')
     end
 
     it 'creates a file with source name' do
-      subject.should_receive(:write_credentials_file).with('dummy', 'tummy', 'turbo')
+      Credentials.should_receive(:new).with('dummy', 'tummy', 'turbo').and_call_original
       subject.write_service_credentials('turbo')
     end
 

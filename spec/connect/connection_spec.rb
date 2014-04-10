@@ -152,6 +152,21 @@ describe SUSE::Connect::Connection do
       result.code.should eq 200
     end
 
+    it 'accepts empty request body' do
+
+      stub_request(:delete, 'https://example.com/api/v1/test')
+        .with(:headers => { 'Authorization' => 'Token token=zulu' })
+        .to_return(:status => 204, :body => nil, :headers => {})
+
+      result = connection.delete(
+          '/api/v1/test',
+          :auth => 'Token token=zulu'
+      )
+
+      result.body.should be_nil
+      result.code.should eq 204
+    end
+
     it 'raise an ApiError if response code anything but 200' do
       stub_request(:post, 'https://example.com/api/v1/test')
       .with(

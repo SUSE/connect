@@ -33,8 +33,8 @@ module SUSE
       #
       def announce_system(auth)
         payload = {
-            :hostname      => System.hostname,
-            :distro_target => Zypper.distro_target
+          :hostname      => System.hostname,
+          :distro_target => Zypper.distro_target
         }
         @connection.post('/connect/subscriptions/systems', :auth => auth, :params => payload)
       end
@@ -52,13 +52,12 @@ module SUSE
       # @todo TODO: introduce Product class
       def activate_product(auth, product)
         token = product[:token] || @client.options[:token]
-        raise TokenNotPresent unless token
         payload = {
-            :product_ident => product[:name],
-            :product_version => product[:version],
-            :arch => product[:arch],
-            :release_type => product[:release_type],
-            :token => token
+          :product_ident => product[:name],
+          :product_version => product[:version],
+          :arch => product[:arch],
+          :release_type => product[:release_type],
+          :token => token
         }
         @connection.post('/connect/systems/products', :auth => auth, :params => payload)
       end
@@ -80,6 +79,16 @@ module SUSE
         @connection.get('/connect/systems/products', :auth => auth, :params => payload)
       end
 
+      # Deregister/unregister a system
+      #
+      # @param auth [String] authorizaztion string which will be injected in `Authorization` header in request.
+      #   In this case we expects Base64 encoded string with login and password
+      #
+      # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
+      #
+      def deregister(auth)
+        @connection.delete('/connect/systems/', :auth => auth)
+      end
     end
   end
 end

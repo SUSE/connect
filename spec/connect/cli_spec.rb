@@ -1,57 +1,46 @@
 require 'spec_helper'
 require 'suse/connect/cli'
+require 'stringio'
 
 describe SUSE::Connect::Cli do
 
   subject { SUSE::Connect::Cli }
 
   describe '#execute!' do
+    let(:default_logger) { SUSE::Connect::GlobalLogger.instance.log }
+    let(:string_logger) { ::Logger.new(StringIO.new) }
+    let(:cli) { subject.new({}) }
 
-    it 'should produce log output if no token provided' do
-      Logger.should_receive(:error).with('no registration token provided')
-      Client.any_instance.stub(:register!).and_raise CannotBuildTokenAuth
-      cli = subject.new({})
+    before do
       cli.stub(:exit => true)
-      cli.execute!
+      SUSE::Connect::GlobalLogger.instance.log = string_logger
+    end
+
+    after do
+      SUSE::Connect::GlobalLogger.instance.log = default_logger
     end
 
     it 'should produce log output if ApiError encountered' do
-      Logger.should_receive(:error).with('ApiError with response: {:test=>1} Code: 222')
+      string_logger.should_receive(:error).with('ApiError with response: {:test=>1} Code: 222')
       Client.any_instance.stub(:register!).and_raise ApiError.new(222, :test => 1)
-      cli = subject.new({})
-      cli.stub(:exit => true)
       cli.execute!
     end
 
     it 'should produce log output if ApiError encountered' do
-      Logger.should_receive(:error).with('connection refused by server')
+      string_logger.should_receive(:error).with('connection refused by server')
       Client.any_instance.stub(:register!).and_raise Errno::ECONNREFUSED
-      cli = subject.new({})
-      cli.stub(:exit => true)
       cli.execute!
     end
 
     it 'should produce log output if ApiError encountered' do
-      Logger.should_receive(:error).with('cannot parse response from server')
+      string_logger.should_receive(:error).with('cannot parse response from server')
       Client.any_instance.stub(:register!).and_raise JSON::ParserError
-      cli = subject.new({})
-      cli.stub(:exit => true)
       cli.execute!
     end
 
     it 'should produce log output if EACCES encountered' do
-      Logger.should_receive(:error).with('access error - cannot create required folder/file')
+      string_logger.should_receive(:error).with('access error - cannot create required folder/file')
       Client.any_instance.stub(:register!).and_raise Errno::EACCES
-      cli = subject.new({})
-      cli.stub(:exit => true)
-      cli.execute!
-    end
-
-    it 'should output help if nothing passed to bin' do
-      Client.any_instance.stub(:register!).and_raise TokenNotPresent
-      cli = subject.new({})
-      cli.stub(:exit => true)
-      cli.should_receive(:puts).with kind_of(OptionParser)
       cli.execute!
     end
 

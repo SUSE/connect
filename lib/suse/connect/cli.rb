@@ -5,6 +5,7 @@ module SUSE
   module Connect
     # Command line interface for interacting with SUSEConnect
     class Cli
+      include Logger
 
       attr_reader :options
 
@@ -14,24 +15,19 @@ module SUSE
       end
 
       def execute! # rubocop:disable MethodLength
-        Logger.info(@options) if @options[:verbose]
+        log.info(@options) if @options[:verbose]
         Client.new(@options).register!
-      rescue CannotBuildTokenAuth
-        Logger.error 'no registration token provided'
-        exit 1
-      rescue TokenNotPresent
-        puts @opts
       rescue ApiError => e
-        Logger.error "ApiError with response: #{e.body} Code: #{e.code}"
+        log.error "ApiError with response: #{e.body} Code: #{e.code}"
         exit 1
       rescue Errno::ECONNREFUSED
-        Logger.error 'connection refused by server'
+        log.error 'connection refused by server'
         exit 1
       rescue JSON::ParserError
-        Logger.error 'cannot parse response from server'
+        log.error 'cannot parse response from server'
         exit 1
       rescue Errno::EACCES
-        Logger.error 'access error - cannot create required folder/file'
+        log.error 'access error - cannot create required folder/file'
         exit 1
       end
 
@@ -83,6 +79,7 @@ module SUSE
 
         @opts.on('-v', '--verbose', 'Run verbosely.') do |opt|
           @options[:verbose] = opt
+          SUSE::Connect::GlobalLogger.instance.log.level = ::Logger::INFO if opt
         end
 
         @opts.on('-l [LANG]', '--language [LANG]', 'comma-separated list of ISO 639-1 codes') do |opt|

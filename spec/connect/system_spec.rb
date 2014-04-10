@@ -86,19 +86,19 @@ describe SUSE::Connect::System do
       end
 
       before do
-        File.should_receive(:exist?).with(CREDENTIALS_FILE).and_return(true)
-        File.should_receive(:new).with(CREDENTIALS_FILE, 'r').and_return(stub_ncc_cred_file)
+        File.stub(:exist?).with(CREDENTIALS_FILE).and_return(true)
       end
 
-      it 'should raise MalformedNccCredentialsFile if cannot parse lines' do
-        stub_ncc_cred_file.should_receive(:readlines).and_return(%w{ me fe })
+      it 'should raise MalformedSccCredentialsFile if cannot parse lines' do
+        File.stub(:read).with(CREDENTIALS_FILE).and_return("me\nfe")
         expect { subject.credentials }
-          .to raise_error MalformedNccCredentialsFile, 'Cannot parse credentials file'
+          .to raise_error MalformedSccCredentialsFile, 'Cannot parse credentials file'
       end
 
       it 'should return username and password' do
-        stub_ncc_cred_file.should_receive(:readlines).and_return(%w{ username=bill password=nevermore })
-        subject.credentials.should eq %w{ bill nevermore }
+        File.stub(:read).with(CREDENTIALS_FILE).and_return("username=bill\npassword=nevermore")
+        subject.credentials.username.should eq 'bill'
+        subject.credentials.password.should eq 'nevermore'
       end
 
     end
@@ -115,6 +115,18 @@ describe SUSE::Connect::System do
 
     end
 
+    context :remove_credentials do
+
+      before(:each) do
+        subject.should_receive(:registered?).and_return(true)
+        File.should_receive(:delete).with(CREDENTIALS_FILE).and_return(true)
+      end
+
+      it 'should remove credentials file' do
+        subject.remove_credentials.should be_true
+      end
+
+    end
   end
 
   describe '.registered?' do
@@ -125,36 +137,13 @@ describe SUSE::Connect::System do
     end
 
     it 'returns false if username not prefixed with SCC_' do
-      subject.stub(:credentials => %w{John B})
+      subject.stub(:credentials => Credentials.new('John', 'B'))
       subject.registered?.should be_false
     end
 
     it 'returns true if credentials exist and username is prefixed with SCC_' do
-      subject.stub(:credentials => %w{SCC_John B})
+      subject.stub(:credentials => Credentials.new('SCC_John', 'B'))
       subject.registered?.should be_true
-    end
-  end
-
-  describe '.extract_credentials' do
-
-    it 'should return nils touple if there more than two elements' do
-      subject.send(:extract_credentials, [1, 2, 3]).should be_nil
-    end
-
-    it 'should extract proper parts from credentials lines' do
-      subject.send(:extract_credentials, %w{ username=john password=secret }).should eq %w{ john secret }
-    end
-
-    it 'should extract proper parts from credentials lines with reverse order' do
-      subject.send(:extract_credentials, %w{ password=secret  username=john }).should eq %w{ john secret }
-    end
-
-  end
-
-  describe '.divide_credential_tuple' do
-    it 'takes part of a string after equal sign' do
-      subject.send(:divide_credential_tuple, 'username=1234').should eq '1234'
-      subject.send(:divide_credential_tuple, 'user=name=1234').should eq '1234'
     end
   end
 
@@ -162,6 +151,7 @@ describe SUSE::Connect::System do
 
     before(:each) do
       Zypper.stub(:write_credentials_file)
+      Credentials.any_instance.stub(:write)
     end
 
     let :mock_service do

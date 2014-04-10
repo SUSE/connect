@@ -41,18 +41,47 @@ describe SUSE::Connect::Client do
 
   describe '#announce_system' do
 
-    subject { SUSE::Connect::Client.new(:token => 'blabla') }
+    context :direct_connection do
 
-    before do
-      api_response = double('api_response')
-      api_response.stub(:body => { 'login' => 'lg', 'password' => 'pw' })
-      Api.any_instance.stub(:announce_system => api_response)
-      subject.stub(:token_auth => true)
+      subject { SUSE::Connect::Client.new(:token => 'blabla') }
+
+      before do
+        api_response = double('api_response')
+        api_response.stub(:body => { 'login' => 'lg', 'password' => 'pw' })
+        Api.any_instance.stub(:announce_system => api_response)
+        subject.stub(:token_auth => true)
+      end
+
+      it 'calls underlying api' do
+        Zypper.stub :write_base_credentials
+        Api.any_instance.should_receive :announce_system
+        subject.announce_system
+      end
+
     end
 
-    it 'calls underlying api' do
-      Api.any_instance.should_receive(:announce_system)
-      subject.announce_system
+    context :registration_proxy_connection do
+
+      subject { SUSE::Connect::Client.new(:url => 'http://smt.local') }
+
+      before do
+        api_response = double('api_response')
+        api_response.stub(:body => { 'login' => 'lg', 'password' => 'pw' })
+        Zypper.stub(:write_base_credentials).with('lg', 'pw')
+        Api.any_instance.stub(:announce_system => api_response)
+        subject.stub(:token_auth => true)
+      end
+
+      it 'not raising exception if regcode is absent' do
+        expect { subject.announce_system }.not_to raise_error
+      end
+
+      it 'calls underlying api' do
+        Zypper.stub :write_base_credentials
+        Api.any_instance.should_receive :announce_system
+        subject.announce_system
+      end
+
     end
 
   end
@@ -63,7 +92,7 @@ describe SUSE::Connect::Client do
       api_response = double('api_response')
       api_response.stub(:body => { 'sources' => { :foo => 'bar' }, :enabled => true, :norefresh => false })
       Api.any_instance.stub(:activate_product => api_response)
-      System.stub(:credentials => %w{ meuser mepassword})
+      System.stub(:credentials => Credentials.new('meuser', 'mepassword'))
       Zypper.stub(:base_product => ({ :name => 'SLE_BASE' }))
       System.stub(:add_service)
       subject.stub(:basic_auth => 'secretsecret')
@@ -94,6 +123,7 @@ describe SUSE::Connect::Client do
       Zypper.stub(:base_product => { :name => 'SLE_BASE' })
       System.stub(:add_service => true)
       Zypper.stub(:write_base_credentials)
+      Credentials.any_instance.stub(:write)
       subject.stub(:activate_product)
       subject.class.any_instance.stub(:basic_auth => true)
       subject.class.any_instance.stub(:token_auth => true)
@@ -120,7 +150,7 @@ describe SUSE::Connect::Client do
     it 'writes credentials file' do
       System.stub(:registered? => false)
       subject.stub(:announce_system => %w{ lg pw })
-      Zypper.should_receive(:write_base_credentials).with('lg', 'pw')
+      Credentials.should_receive(:new).with('lg', 'pw', Credentials::GLOBAL_CREDENTIALS_FILE).and_call_original
       subject.register!
     end
 
@@ -156,6 +186,26 @@ describe SUSE::Connect::Client do
       subject.list_products('SLES').first.should be_kind_of SUSE::Connect::Product
     end
 
+  end
+
+  describe '#deregister!' do
+    let(:stubbed_response) do
+      OpenStruct.new(
+        :code => 204,
+        :body => nil,
+        :success => true
+      )
+    end
+
+    before do
+      System.should_receive(:remove_credentials).and_return(true)
+      subject.stub(:basic_auth => 'Basic: encodedstring')
+    end
+
+    it 'calls underlying api and removes credentials file' do
+      subject.api.should_receive(:deregister).with('Basic: encodedstring').and_return stubbed_response
+      subject.deregister!.should be_true
+    end
   end
 
 end

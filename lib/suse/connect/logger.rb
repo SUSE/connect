@@ -1,22 +1,60 @@
+
+require 'logger'
+require 'singleton'
+
 module SUSE
   module Connect
-    # Simple Logger implementation. Singleton behavior
-    class Logger
-      class << self
 
-        def info(msg)
-          STDOUT.puts msg
+    # the default logger
+    class DefaultLogger < ::Logger
+      def initialize(*args)
+        super(*args)
+        self.level = ::Logger::WARN
+        # by default log only the message
+        self.formatter = proc do |severity, datetime, progname, msg|
+          "#{msg}\n"
         end
-
-        def error(msg, e = nil)
-          STDERR.puts "ERROR: #{msg}#{(' -> ' + e.to_s) if e}"
-        end
-
-        def debug(msg)
-          STDOUT.puts "DEBUG: #{msg}"
-        end
-
       end
     end
+
+    # Singleton log instance used by SUSE::Connect::Logger module
+    #
+    # @example Set own logger
+    #   GlobalLogger.instance.log = ::Logger.new($stderr)
+    class GlobalLogger
+      include Singleton
+
+      attr_accessor :log
+
+      # log to stdout by default
+      def initialize
+        @log = DefaultLogger.new($stdout)
+      end
+    end
+
+    # Module provides access to specific logging. To set logging see GlobalLogger.
+    #
+    # @example Add logging to class
+    #   class A
+    #     include ::SUSE::Connect::Logger
+    #
+    #     def self.f
+    #       log.info "self f"
+    #     end
+    #
+    #     def a
+    #       log.debug "a"
+    #     end
+    #   end
+    module Logger
+      def log
+        GlobalLogger.instance.log
+      end
+
+      def self.included(base)
+        base.extend self
+      end
+    end
+
   end
 end

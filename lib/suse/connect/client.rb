@@ -6,25 +6,29 @@ module SUSE
     # Client to interact with API
     class Client
 
-      DEFAULT_URL = 'https://scc.suse.com'
       include SUSE::Toolkit::Utilities
+
+      DEFAULT_URL = 'https://scc.suse.com'
 
       attr_reader :options, :url, :api
 
       def initialize(opts)
         @options            = opts
+        @url                = opts[:url] || DEFAULT_URL
         # !!: Set :insecure and :debug explicitly to boolean values.
         @options[:insecure] = !!opts[:insecure]
         @options[:debug]    = !!opts[:verbose]
         @options[:language] = opts[:language]
-        @url                = opts[:url] || DEFAULT_URL
+        @options[:token]    = opts[:token]
         @api                = Api.new(self)
       end
 
       def register!
         unless System.registered?
           login, password = announce_system
-          Zypper.write_base_credentials(login, password)
+
+          credentials = Credentials.new(login, password, Credentials::GLOBAL_CREDENTIALS_FILE)
+          credentials.write
         end
 
         service = activate_product(Zypper.base_product)
@@ -52,6 +56,11 @@ module SUSE
         end
       end
 
+      # @returns: Empty body and 204 status code
+      def deregister!
+        @api.deregister(basic_auth)
+        System.remove_credentials
+      end
     end
   end
 end

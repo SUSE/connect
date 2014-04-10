@@ -6,13 +6,13 @@ module SUSE
       include ::Net::HTTPHeader
 
       def token_auth(token)
-        raise SUSE::Connect::CannotBuildTokenAuth, 'token auth requested, but no token provided' unless token
         "Token token=#{token}"
       end
 
       def basic_auth
-
-        username, password = SUSE::Connect::System.credentials
+        system_credentials = SUSE::Connect::Credentials.read(Credentials::GLOBAL_CREDENTIALS_FILE)
+        username = system_credentials.username
+        password = system_credentials.password
 
         if username && password
           basic_encode(username, password)
@@ -20,6 +20,8 @@ module SUSE
           raise SUSE::Connect::CannotBuildBasicAuth, 'cannot get proper username and password'
         end
 
+      rescue
+        raise SUSE::Connect::CannotBuildBasicAuth, 'cannot get proper username and password'
       end
 
     end
