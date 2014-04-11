@@ -18,6 +18,7 @@ module SUSE
         @client     = client
         @connection = Connection.new(
             client.url,
+            :language => client.options[:language],
             :insecure => client.options[:insecure],
             :debug => client.options[:debug]
         )

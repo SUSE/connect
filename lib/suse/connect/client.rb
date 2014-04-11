@@ -18,6 +18,7 @@ module SUSE
         # !!: Set :insecure and :debug explicitly to boolean values.
         @options[:insecure] = !!opts[:insecure]
         @options[:debug]    = !!opts[:verbose]
+        @options[:language] = opts[:language]
         @options[:token]    = opts[:token]
         @api                = Api.new(self)
       end
