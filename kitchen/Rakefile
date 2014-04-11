@@ -32,14 +32,14 @@ namespace :dotoscrc do
       username = args[:username]
       password = args[:password]
 
-      oscrc = File.open(File.join(ENV['HOME'], '.oscrc'), "w")
+      oscrc = File.open(File.join(ENV['HOME'], '.oscrc'), 'w')
       oscrc.puts '[https://api.suse.de]'
       oscrc.puts "user=#{username}"
       oscrc.puts "pass=#{password}"
       oscrc.puts 'trusted_prj=SUSE:SLE-12:GA'
       oscrc.close
     else
-      puts "ERROR: Missing required paramters [:username, :password]"
+      puts 'ERROR: Missing required paramters [:username, :password]'
     end
 
   end
