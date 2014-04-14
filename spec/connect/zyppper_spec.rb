@@ -117,18 +117,6 @@ describe SUSE::Connect::Zypper do
 
   end
 
-  describe '?sccized_login' do
-
-    it 'should prepend login with SCC_ unless it already there' do
-      subject.send(:sccized_login, 'bender').should eq 'SCC_bender'
-    end
-
-    it 'should return login if in is prefixed with SCC' do
-      subject.send(:sccized_login, 'SCC_kif').should eq 'SCC_kif'
-    end
-
-  end
-
   describe '.base_product' do
 
     let :parsed_products do

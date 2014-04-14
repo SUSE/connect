@@ -16,7 +16,5 @@ module SUSE
     require 'suse/connect/api'
     require 'suse/connect/yast'
 
-    include Logger
-
   end
 end

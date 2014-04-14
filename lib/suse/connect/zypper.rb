@@ -77,10 +77,6 @@ module SUSE
 
         private
 
-        def sccized_login(login)
-          login.start_with?('SCC_') ? login : "SCC_#{login}"
-        end
-
         def lookup_product_release(product)
           release  = product[:flavor]
           release  = product[:registerrelease] unless product[:registerrelease].empty?
