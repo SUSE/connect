@@ -4,17 +4,17 @@ git '/tmp/connect' do
   action 'sync'
 end
 
-execute 'bundle_instal' do
+execute 'sudo bundle install' do
   command 'sudo bundle install'
   cwd node[:connect][:project]
 end
 
-execute 'build_suse_connect_gem' do
+execute 'build SUSEConnect gem' do
   command 'gem build suse-connect.gemspec'
   cwd node[:connect][:project]
 end
 
-execute 'install_suse_connect_gem' do
+execute 'install SUSEConnect gem' do
   command 'gem install suse-connect-*'
   cwd node[:connect][:project]
 end
@@ -32,5 +32,13 @@ end
 execute 'create man page for SUSEConnect' do
   command 'ronn --roff --manual SUSEConnect --pipe ../README.md > SUSEConnect.1 && gzip SUSEConnect.1'
   not_if { ::File.exist?('/tmp/connect/package/SUSEConnect.1.gz')}
+  cwd "#{node[:connect][:project]}/package"
+end
+
+python_path = '$PYTHONPATH:/usr/lib64/python2.6/site-packages/'
+osc_build = 'osc -A https://api.suse.de build SLE_12 x86_64 --no-verify'
+
+execute 'build SUSEConnect RPM' do
+  command "su vagrant -l -c 'cd #{node[:connect][:project]}/package && export PYTHONPATH=#{python_path} && #{osc_build}'"
   cwd "#{node[:connect][:project]}/package"
 end

@@ -11,23 +11,33 @@ describe 'connect::rubygems' do
   end
 
   it 'installs required gems' do
-    expect(chef_run).to run_execute('bundle_instal').with(
+    expect(chef_run).to run_execute('sudo bundle install').with(
       command: 'sudo bundle install',
       cwd: '/tmp/connect'
     )
   end
 
-  it 'builds suse_connect gem from source' do
-    expect(chef_run).to run_execute('build_suse_connect_gem').with(
+  it 'builds SUSEConnect gem from source' do
+    expect(chef_run).to run_execute('build SUSEConnect gem').with(
       command: 'gem build suse-connect.gemspec',
       cwd: '/tmp/connect'
     )
   end
 
-  it 'installs suse_connect gem' do
-    expect(chef_run).to run_execute('install_suse_connect_gem').with(
+  it 'installs SUSEConnect gem' do
+    expect(chef_run).to run_execute('install SUSEConnect gem').with(
       command: 'gem install suse-connect-*',
       cwd: '/tmp/connect'
+    )
+  end
+
+  it 'builds SUSEConnect RPM' do
+    python_path = '$PYTHONPATH:/usr/lib64/python2.6/site-packages/'
+    osc_build = 'osc -A https://api.suse.de build SLE_12 x86_64 --no-verify'
+
+    expect(chef_run).to run_execute('build SUSEConnect RPM').with(
+      command: "su vagrant -l -c 'cd /tmp/connect/package && export PYTHONPATH=#{python_path} && #{osc_build}'",
+      cwd: '/tmp/connect/package'
     )
   end
 end
