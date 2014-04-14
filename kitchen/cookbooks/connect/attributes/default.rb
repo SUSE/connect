@@ -1,7 +1,10 @@
+default[:connect][:project] = '/tmp/connect'
+
 default[:connect][:packages] = {
   'gcc' => true,
   'git' => true,
   'osc' => true,
+  'build' => true,
   'ruby-devel' => true
 }
 
