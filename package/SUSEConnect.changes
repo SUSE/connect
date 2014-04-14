@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Apr 14 10:45:33 UTC 2014 - achernikov@suse.de
+
+- Client will accept given login received from API 
+
+-------------------------------------------------------------------
 Mon Apr  7 15:24:46 UTC 2014 - achernikov@suse.de
 
 - Do not require regcode. API server will throw appropriate error
