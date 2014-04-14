@@ -32,16 +32,17 @@ end
 
 execute 'create man page for SUSEConnect' do
   command 'ronn --roff --manual SUSEConnect --pipe ../README.md > SUSEConnect.1 && gzip SUSEConnect.1'
-  not_if { ::File.exist?('/tmp/connect/package/SUSEConnect.1.gz')}
+  not_if { ::File.exist?('/tmp/connect/package/SUSEConnect.1.gz') }
   cwd "#{node[:connect][:project]}/package"
 end
 
 python_path = '$PYTHONPATH:/usr/lib64/python2.6/site-packages/'
+dir = '#{node[:connect][:project]}/package'
 osc_url = 'https://api.suse.de'
 osc_build = "osc -A #{osc_url} build #{node[:connect][:osc][:project]} #{node[:connect][:osc][:arch]} --no-verify"
 
 execute 'build SUSEConnect RPM' do
-  command "su vagrant -l -c 'cd #{node[:connect][:project]}/package && export PYTHONPATH=#{python_path} && #{osc_build}'"
+  command "su vagrant -l -c 'cd #{dir} && export PYTHONPATH=#{python_path} && #{osc_build}'"
   cwd "#{node[:connect][:project]}/package"
 end
 
