@@ -58,6 +58,12 @@ describe SUSE::Connect::Client do
         subject.announce_system
       end
 
+      it 'passes the optional parameter "distro_target" to the API' do
+        optional_target = 'optional_target'
+        Api.any_instance.should_receive(:announce_system).with(true, optional_target)
+        subject.announce_system(optional_target)
+      end
+
     end
 
     context :registration_proxy_connection do
