@@ -26,17 +26,17 @@ end
 namespace :dotoscrc do
   desc 'Creates ~/.oscrc configuration file'
   task :create, [:username, :password] do |t, args|
-    puts ENV.inspect
     args = args.to_hash
     if args.key?(:username) && args.key?(:password)
       username = args[:username]
       password = args[:password]
 
       oscrc = File.open(File.join(ENV['HOME'], '.oscrc'), 'w')
+      oscrc.puts '[general]'
       oscrc.puts '[https://api.suse.de]'
       oscrc.puts "user=#{username}"
       oscrc.puts "pass=#{password}"
-      oscrc.puts 'trusted_prj=SUSE:SLE-12:GA'
+      oscrc.puts 'trusted_prj=SLE_12 SUSE:SLE-12:GA'
       oscrc.close
     else
       puts 'ERROR: Missing required paramters [:username, :password]'
