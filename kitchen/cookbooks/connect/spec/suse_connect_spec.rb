@@ -37,14 +37,15 @@ describe 'connect::rubygems' do
     osc_build = 'osc -A https://api.suse.de build SLE_12 x86_64 --no-verify'
 
     expect(chef_run).to run_execute('build SUSEConnect RPM').with(
-      command: "su vagrant -l -c 'cd /tmp/connect/package && export PYTHONPATH=#{python_path} && #{osc_build}'",
+      command: "export PYTHONPATH=#{python_path}; #{osc_build}",
       cwd: '/tmp/connect/package'
     )
   end
 
   it 'installs SUSEConnect RPM' do
+    zypper_options = '--non-interactive  --no-gpg-checks'
     expect(chef_run).to run_execute('install SUSEConnect RPM').with(
-      command: 'zypper in /var/tmp/build-root/SLE_12-x86_64/home/abuild/rpmbuild/RPMS/x86_64/*',
+      command: "zypper #{zypper_options} in /var/tmp/build-root/SLE_12-x86_64/home/abuild/rpmbuild/RPMS/x86_64/*",
       cwd: '/tmp/connect/package'
     )
   end
