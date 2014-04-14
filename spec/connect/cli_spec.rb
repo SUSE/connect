@@ -101,10 +101,17 @@ describe SUSE::Connect::Cli do
       subject.new(ARGV)
     end
 
-    it 'sets verbopse options' do
+    it 'sets verbose option' do
       ARGV = %w{-v}
       cli = subject.new(ARGV)
       cli.options[:verbose].should be_true
+    end
+
+    it 'sets root option' do
+      ARGV = %w{--root /path/to/root}
+      subject.new(ARGV)
+      $root.should eq '/path/to/root'
+      $root = nil
     end
 
   end
