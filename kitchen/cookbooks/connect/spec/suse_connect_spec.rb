@@ -12,7 +12,7 @@ describe 'connect::rubygems' do
 
   it 'installs required gems' do
     expect(chef_run).to run_execute('bundle_instal').with(
-      command: 'bundle install',
+      command: 'sudo bundle install',
       cwd: '/tmp/connect'
     )
   end
