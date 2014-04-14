@@ -14,6 +14,14 @@ describe 'connect::packages' do
     runner.converge('connect::packages')
   end
 
+  before do
+    stub_command("rpm -q gcc").and_return(false)
+    stub_command("rpm -q git").and_return(false)
+    stub_command("rpm -q osc").and_return(false)
+    stub_command("rpm -q build").and_return(false)
+    stub_command("rpm -q ruby-devel").and_return(false)
+  end
+
   it 'should install all required packages' do
     expect(chef_run).to install_package('gcc')
     expect(chef_run).to install_package('git')
