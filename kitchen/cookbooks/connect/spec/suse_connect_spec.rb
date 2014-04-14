@@ -24,12 +24,13 @@ describe 'connect::rubygems' do
     )
   end
 
-  it 'installs SUSEConnect gem' do
-    expect(chef_run).to run_execute('install SUSEConnect gem').with(
-      command: 'gem install suse-connect-*',
-      cwd: '/tmp/connect'
-    )
-  end
+  # NOTE: Disabled because of RPM testing
+  # it 'installs SUSEConnect gem' do
+  #   expect(chef_run).to run_execute('install SUSEConnect gem').with(
+  #     command: 'gem install suse-connect-*',
+  #     cwd: '/tmp/connect'
+  #   )
+  # end
 
   it 'builds SUSEConnect RPM' do
     python_path = '$PYTHONPATH:/usr/lib64/python2.6/site-packages/'
@@ -37,6 +38,13 @@ describe 'connect::rubygems' do
 
     expect(chef_run).to run_execute('build SUSEConnect RPM').with(
       command: "su vagrant -l -c 'cd /tmp/connect/package && export PYTHONPATH=#{python_path} && #{osc_build}'",
+      cwd: '/tmp/connect/package'
+    )
+  end
+
+  it 'installs SUSEConnect RPM' do
+    expect(chef_run).to run_execute('install SUSEConnect RPM').with(
+      command: 'zypper in /var/tmp/build-root/SLE_12-x86_64/home/abuild/rpmbuild/RPMS/x86_64/*',
       cwd: '/tmp/connect/package'
     )
   end

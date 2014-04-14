@@ -14,10 +14,11 @@ execute 'build SUSEConnect gem' do
   cwd node[:connect][:project]
 end
 
-execute 'install SUSEConnect gem' do
-  command 'gem install suse-connect-*'
-  cwd node[:connect][:project]
-end
+# NOTE: Disabled because of RPM testing
+# execute 'install SUSEConnect gem' do
+#   command 'gem install suse-connect-*'
+#   cwd node[:connect][:project]
+# end
 
 execute 'cp suse-connect-*.gem package/' do
   command 'cp suse-connect-*.gem package/'
@@ -36,9 +37,15 @@ execute 'create man page for SUSEConnect' do
 end
 
 python_path = '$PYTHONPATH:/usr/lib64/python2.6/site-packages/'
-osc_build = 'osc -A https://api.suse.de build SLE_12 x86_64 --no-verify'
+osc_url = 'https://api.suse.de'
+osc_build = "osc -A #{osc_url} build #{node[:connect][:osc][:project]} #{node[:connect][:osc][:arch]} --no-verify"
 
 execute 'build SUSEConnect RPM' do
   command "su vagrant -l -c 'cd #{node[:connect][:project]}/package && export PYTHONPATH=#{python_path} && #{osc_build}'"
+  cwd "#{node[:connect][:project]}/package"
+end
+
+execute 'install SUSEConnect RPM' do
+  command 'zypper in /var/tmp/build-root/SLE_12-x86_64/home/abuild/rpmbuild/RPMS/x86_64/*'
   cwd "#{node[:connect][:project]}/package"
 end
