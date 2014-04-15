@@ -5,7 +5,7 @@ Given(/^I register a system with (valid|invalid) regcode$/) do |condition|
   connect_cmd = "SUSEConnect -r #{regcode} --url #{url}"
   response = `#{connect_cmd}`
 
-  puts "API ERROR: #{response.inspect}" unless $?.exitstatus.zero?
+  puts "API ERROR: #{response.inspect}" unless $?.exitstatus.zero? # rubocop:disable SpecialGlobalVars
 end
 
 Then(/^SUSEConnect should create the '(.+)' file$/) do |file_name|
