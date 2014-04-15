@@ -8,5 +8,5 @@ def service_name
 end
 
 And(/^I wait a while$/) do
-  sleep 2
+  sleep 1
 end
