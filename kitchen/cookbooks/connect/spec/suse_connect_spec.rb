@@ -37,7 +37,7 @@ describe 'connect::rubygems' do
     osc_build = 'osc -A https://api.suse.de build SLE_12 x86_64 --no-verify'
 
     expect(chef_run).to run_execute('build SUSEConnect RPM').with(
-      command: "export PYTHONPATH=#{python_path}; #{osc_build}",
+      command: "export PYTHONPATH=#{python_path}; echo 2|#{osc_build}",
       cwd: '/tmp/connect/package'
     )
   end
