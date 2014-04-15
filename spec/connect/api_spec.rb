@@ -39,6 +39,12 @@ describe SUSE::Connect::Api do
       subject.new(client).announce_system('token')
     end
 
+    it 'won\'t access Zypper if the optional parameter "distro_target" is set' do
+      Zypper.should_receive(:distro_target).never
+      Connection.any_instance.should_receive(:post).and_call_original
+      subject.new(client).announce_system('token', 'optional_target')
+    end
+
     context :hostname_detected do
       it 'sends a call with hostname' do
         Socket.stub(:gethostname => 'vargan')

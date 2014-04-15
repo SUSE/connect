@@ -31,10 +31,12 @@ module SUSE
       #   In this case we expect Token authentication where token is a registration code.
       # @return [OpenStruct] responding to #body(response from SCC), #code(natural HTTP response code) and #success.
       #
-      def announce_system(auth)
+      def announce_system(auth, distro_target = nil)
         payload = {
           :hostname      => System.hostname,
-          :distro_target => Zypper.distro_target
+          # TODO: Catch any exceptions Zypper might raise, if YaST has already
+          # locked it. Return an understandable Error message to the user.
+          :distro_target => distro_target || Zypper.distro_target
         }
         @connection.post('/connect/subscriptions/systems', :auth => auth, :params => payload)
       end

@@ -5,19 +5,21 @@ class SUSE::Connect::YaST
 
     # Announces the system to SCC / the registration server.
     # Usually expects a token / regcode to identify the correct subscription.
+    # Additionally, distro_target should be set to avoid calls to Zypper.
     # Gets system credentials from SCC.
     # Additionally, returns the credentials for convenience.
     #
     # @param [Hash] params
     #   * :token [String] registration code/token
     #   * :hostname [String]
+    #   * :distro_target [String]
     #   * :email [String]
     #   * :parent [String]
     #   * :hwinfo [Hash]
     #
     # @return [Array <String>] SCC / system credentials - login and password tuple
     def announce_system(params = {})
-      Client.new(params).announce_system
+      Client.new(params).announce_system(params[:distro_target])
     end
 
     # Activates a product on SCC / the registration server.

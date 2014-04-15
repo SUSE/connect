@@ -36,8 +36,8 @@ module SUSE
       # Announce system via SCC/Registration Proxy
       #
       # @returns: [Array] login, password tuple. Those credentials are given by SCC/Registration Proxy
-      def announce_system
-        response = @api.announce_system(token_auth(@options[:token]))
+      def announce_system(distro_target = nil)
+        response = @api.announce_system(token_auth(@options[:token]), distro_target)
         [response.body['login'], response.body['password']]
       end
 
