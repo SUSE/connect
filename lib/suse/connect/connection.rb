@@ -31,7 +31,7 @@ module SUSE
         define_method name_for_method do |path, auth: nil, params: {} |
           @auth = auth
           response = json_request(name_for_method.downcase.to_sym, path, params)
-          raise(ApiError.new(response.code, response.body)) unless response.success
+          raise(ApiError, response) unless response.success
           response
         end
       end
