@@ -13,7 +13,6 @@ class SUSE::Connect::YaST
     #   * :token [String] registration code/token
     #   * :hostname [String]
     #   * :distro_target [String]
-    #   * :email [String]
     #   * :parent [String]
     #   * :hwinfo [Hash]
     #
@@ -37,7 +36,7 @@ class SUSE::Connect::YaST
     #
     # @return [Service] Service
     def activate_product(params = {})
-      Client.new(params).activate_product(params[:product_ident])
+      Client.new(params).activate_product(params[:product_ident], params[:email])
     end
 
     # Lists all available products for a system.
