@@ -23,7 +23,7 @@ module Cloud
       end
 
       def create(name = 'SUSEConnect_testing')
-        image = connection.get_image('4f977f83-6e14-446a-b06c-db07aad7d051')
+        image = connection.get_image('19724f29-9713-4277-b359-2029508acf16')
         flavor = connection.get_flavor(2)
         address = connection.get_floating_ips.select {|ip| ip.instance_id.nil? }.first || connection.create_floating_ip
 
