@@ -71,28 +71,44 @@ describe SUSE::Connect::Api do
 
   describe 'activate_product' do
 
-    before do
-      stub_activate_call
-    end
+    let(:api_endpoint) { '/connect/systems/products' }
+    let(:basic_auth) { 'basic_auth_mock' }
 
-    it 'sends a call with basic auth and params to api' do
-      product = {
+    let(:product) do
+      {
         :name    => 'SLES',
         :version => '11-SP2',
         :arch    => 'x86_64',
         :token   => 'token-shmocken'
       }
-      expected_payload = {
+    end
+
+    let(:payload) do
+      {
         :product_ident    => 'SLES',
         :product_version  => '11-SP2',
         :arch             => 'x86_64',
         :release_type     => nil,
-        :token            => 'token-shmocken'
+        :token            => 'token-shmocken',
+        :email            => nil
       }
+    end
+
+    it 'calls ConnectAPI with basic auth and params and receives a JSON in return' do
+      stub_activate_call
       Connection.any_instance.should_receive(:post)
-        .with('/connect/systems/products', :auth => 'basic_auth_mock', :params => expected_payload)
+        .with(api_endpoint, :auth => basic_auth, :params => payload)
         .and_call_original
-      subject.new(client).activate_product('basic_auth_mock', product)
+      response = subject.new(client).activate_product(basic_auth, product)
+      response.body['sources'].keys.first.should include('SUSE')
+    end
+
+    it 'allows to add an optional parameter "email"' do
+      email = 'email@domain.com'
+      payload[:email] = email
+      Connection.any_instance.should_receive(:post)
+        .with(api_endpoint, :auth => basic_auth, :params => payload)
+      subject.new(client).activate_product(basic_auth, product, email)
     end
 
   end
