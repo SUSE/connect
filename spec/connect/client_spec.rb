@@ -117,8 +117,15 @@ describe SUSE::Connect::Client do
 
     it 'calls underlying api with proper parameters' do
       Api.any_instance.should_receive(:activate_product)
-        .with('secretsecret', Zypper.base_product)
+        .with('secretsecret', Zypper.base_product, nil)
       subject.activate_product(Zypper.base_product)
+    end
+
+    it 'allows to pass an optional parameter "email"' do
+      email = 'email@domain.com'
+      Api.any_instance.should_receive(:activate_product)
+        .with('secretsecret', Zypper.base_product, email)
+      subject.activate_product(Zypper.base_product, email)
     end
 
   end
