@@ -52,7 +52,7 @@ describe SUSE::Connect::YaST do
     end
 
     it 'uses product_ident as parameter for Client#activate_product' do
-      client.should_receive(:activate_product).with(params[:product_ident])
+      client.should_receive(:activate_product).with(params[:product_ident], params[:email])
       subject.activate_product params
     end
 

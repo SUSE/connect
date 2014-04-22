@@ -15,7 +15,8 @@ def stub_activate_call
     :product_version  => '11-SP2',
     :arch             => 'x86_64',
     :release_type     => nil,
-    :token            => 'token-shmocken'
+    :token            => 'token-shmocken',
+    :email            => nil
   }
   stub_request(:post, 'https://example.com/connect/systems/products')
     .with(:headers => headers, :body => request_body)

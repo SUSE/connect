@@ -41,8 +41,8 @@ module SUSE
         [response.body['login'], response.body['password']]
       end
 
-      def activate_product(product_ident)
-        result = @api.activate_product(basic_auth, product_ident).body
+      def activate_product(product_ident, email = nil)
+        result = @api.activate_product(basic_auth, product_ident, email).body
         Service.new(result['sources'], result['enabled'], result['norefresh'])
       end
 

@@ -41,25 +41,29 @@ module SUSE
         @connection.post('/connect/subscriptions/systems', :auth => auth, :params => payload)
       end
 
-      # Activate a product, consuming an entitlement, and receive the updated list of services for the system
-      # Find and return the correct list of all available services for this system's combination of subscription,
+      # Activate a product, consuming an entitlement, and receive the updated
+      # list of services for the system. Find and return the correct list of all
+      # available services for this system's combination of subscription,
       # installed product, and architecture.
       #
-      # @param auth [String] authorizaztion string which will be injected in `Authorization` header in request.
+      # @param auth [String] authorization string which will be injected in `Authorization` header in request.
       #   In this case we expects Base64 encoded string with login and password
       # @param product [Hash] product
+      # @param email [String] Adds the user to the respective organization or
+      #   sends an SCC invitation.
       #
       # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
       #
       # @todo TODO: introduce Product class
-      def activate_product(auth, product)
+      def activate_product(auth, product, email = nil)
         token = product[:token] || @client.options[:token]
         payload = {
           :product_ident => product[:name],
           :product_version => product[:version],
           :arch => product[:arch],
           :release_type => product[:release_type],
-          :token => token
+          :token => token,
+          :email => email
         }
         @connection.post('/connect/systems/products', :auth => auth, :params => payload)
       end
