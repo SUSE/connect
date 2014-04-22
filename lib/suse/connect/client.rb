@@ -50,7 +50,7 @@ module SUSE
       def list_products(product_ident)
         result = @api.addons(basic_auth, product_ident).body
         result.map do |product|
-          SUSE::Connect::Product.new(product['name'], '', '', product['zypper_name'])
+          SUSE::Connect::Product.new(product)
         end
       end
 
