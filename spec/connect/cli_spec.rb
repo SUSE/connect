@@ -22,7 +22,9 @@ describe SUSE::Connect::Cli do
 
     it 'should produce log output if ApiError encountered' do
       string_logger.should_receive(:error).with('ApiError with response: {:test=>1} Code: 222')
-      Client.any_instance.stub(:register!).and_raise ApiError.new(222, :test => 1)
+      response = Net::HTTPResponse.new('1.1', 222, 'Test')
+      expect(response).to receive(:body).and_return('{:test=>1}')
+      Client.any_instance.stub(:register!).and_raise ApiError.new(response)
       cli.execute!
     end
 
