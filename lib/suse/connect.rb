@@ -15,6 +15,7 @@ module SUSE
     require 'suse/connect/credentials'
     require 'suse/connect/api'
     require 'suse/connect/yast'
+    require 'suse/connect/ssl_certificate'
 
   end
 end
