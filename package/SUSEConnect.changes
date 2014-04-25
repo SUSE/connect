@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Fri Apr 25 13:22:40 UTC 2014 - lslezak@suse.cz
+
+- added customizable verify_callback for HTTP connection
+  (by default logs SSL errors)
+- 0.0.15
+
+-------------------------------------------------------------------
 Mon Apr 14 10:45:33 UTC 2014 - achernikov@suse.de
 
 - Client will accept given login received from API 
