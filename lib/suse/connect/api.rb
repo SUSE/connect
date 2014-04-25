@@ -20,6 +20,7 @@ module SUSE
             client.url,
             :language => client.options[:language],
             :insecure => client.options[:insecure],
+            :verify_callback => client.options[:verify_callback],
             :debug => client.options[:debug]
         )
       end
