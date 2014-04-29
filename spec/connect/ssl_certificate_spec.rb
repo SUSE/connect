@@ -18,6 +18,10 @@ describe SUSE::Connect::SSLCertificate do
     it 'writes the PEM certificate into the system and activates it' do
       cert = OpenSSL::X509::Certificate.new(test_cert)
 
+      expect(File).to receive(:exist?).with(
+        SUSE::Connect::SSLCertificate::SERVER_CERT_FILE
+      ).and_return(false)
+
       expect(File).to receive(:write).with(
         SUSE::Connect::SSLCertificate::SERVER_CERT_FILE,
         cert.to_pem
