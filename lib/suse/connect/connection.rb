@@ -23,11 +23,11 @@ module SUSE
         http             = Net::HTTP.new(uri.host, uri.port)
         http.use_ssl     = uri.is_a? URI::HTTPS
         http.verify_mode = insecure ? OpenSSL::SSL::VERIFY_NONE : OpenSSL::SSL::VERIFY_PEER
-        set_verify_callback(http, verify_callback)
 
         @http            = http
         @http.set_debug_output(STDERR) if debug
         @language        = language
+        self.verify_callback = verify_callback
       end
 
       VERB_TO_CLASS.keys.each do |name_for_method|
@@ -59,8 +59,9 @@ module SUSE
 
       # set a verify_callback to HTTP object, use a custom callback
       # or the default if not set
-      def set_verify_callback(http, callback)
+      def verify_callback=(callback)
         if callback
+          log.info "Using custom verify_callback: #{callback.source_location.map(&:to_s).join(':')}"
           http.verify_callback = callback
         else
           # log some error details which are not included in the SSL exception
