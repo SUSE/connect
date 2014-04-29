@@ -1,9 +1,12 @@
 -------------------------------------------------------------------
-Fri Apr 25 13:22:40 UTC 2014 - lslezak@suse.cz
+Tue Apr 29 09:12:27 UTC 2014 - wstephenson@suse.com
 
-- added customizable verify_callback for HTTP connection
-  (by default logs SSL errors)
-- 0.0.15
+- Update to version 0.0.15
+  - Made Client a useful entry point for YaST to use gem
+  - Made use of zypper optional for YaST
+  - added customizable verify_callback for HTTP connection
+    (by default logs SSL errors)
+  - send email when activating product
 
 -------------------------------------------------------------------
 Mon Apr 14 10:45:33 UTC 2014 - achernikov@suse.de
