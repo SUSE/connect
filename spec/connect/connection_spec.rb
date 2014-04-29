@@ -29,12 +29,35 @@ describe SUSE::Connect::Connection do
         secure_connection.http.verify_mode.should eq OpenSSL::SSL::VERIFY_PEER
       end
 
+      it 'sets a default verify_callack' do
+        expect(secure_connection.http.verify_callback).to be_a(Proc)
+      end
+
+      it 'logs the error in the default verify_callack and returns failure' do
+        context = double
+        expect(context).to receive(:error_string).and_return('ERROR')
+        context.stub_chain(:current_cert, :issuer).and_return('ISSUER')
+        context.stub_chain(:current_cert, :subject).and_return('SUBJECT')
+
+        logger = double
+        expect(logger).to receive(:error) do |msg|
+          msg.match(/(ERROR|ISSUER|SUBJECT)/)
+        end.exactly(3).times
+
+        allow(secure_connection).to receive(:log).and_return(logger)
+
+        # call the default callbak
+        expect(secure_connection.http.verify_callback.call(false, context)).to be_false
+      end
+
     end
 
     context :passed_options do
+      # just an empty lambda function
+      let(:callback) { ->(p1, p2) {} }
 
       let :secure_connection do
-        subject.new('https://example.com', :insecure => true)
+        subject.new('https://example.com', :insecure => true, :verify_callback => callback)
       end
 
       it 'set ssl to true by default' do
@@ -43,6 +66,10 @@ describe SUSE::Connect::Connection do
 
       it 'set insecure to false by default' do
         secure_connection.http.verify_mode.should eq OpenSSL::SSL::VERIFY_NONE
+      end
+
+      it 'sets the provided verify_callback' do
+        expect(secure_connection.http.verify_callback).to be callback
       end
 
     end
