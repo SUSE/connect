@@ -15,19 +15,21 @@ module SUSE
       end
 
       def execute! # rubocop:disable MethodLength
-        log.info(@options) if @options[:verbose]
+
+        puts @opts; exit unless @options[:token]
         Client.new(@options).register!
+
       rescue ApiError => e
         log.error "ApiError with response: #{e.body} Code: #{e.code}"
         exit 1
       rescue Errno::ECONNREFUSED
-        log.error 'connection refused by server'
+        log.error 'Connection refused by server'
         exit 1
       rescue JSON::ParserError
-        log.error 'cannot parse response from server'
+        log.error 'Cannot parse response from server'
         exit 1
       rescue Errno::EACCES
-        log.error 'access error - cannot create required folder/file'
+        log.error 'Access error - cannot create required folder/file'
         exit 1
       end
 
@@ -44,6 +46,11 @@ module SUSE
         @opts.separator 'Please visit https://scc.suse.com to see and manage your subscriptions.'
         @opts.separator ''
         @opts.separator 'Usage: SUSEConnect [options]'
+
+        @opts.on('-p', '--product []', 'Product. Choose which product to activate (default: the system\'s baseproduct.') do |opt|
+          check_if_param(opt, 'Please provide a product parameter')
+          @options[:token] = opt
+        end
 
         @opts.on('-r', '--regcode [REGCODE]', 'Registration code. The repositories of the subscription with this ' \
                                               'registration code will get activated on this system.') do |opt|
@@ -87,6 +94,7 @@ module SUSE
         end
 
         @opts.parse!
+        log.info("cmd options: '#{@options}'") if @options[:verbose]
 
       end
 

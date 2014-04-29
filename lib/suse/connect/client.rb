@@ -23,12 +23,12 @@ module SUSE
         @api                = Api.new(self)
       end
 
+      # Registers the base product
       def register!
         unless System.registered?
           login, password = announce_system
           Credentials.new(login, password, Credentials::GLOBAL_CREDENTIALS_FILE).write
         end
-
         service = activate_product(Zypper.base_product)
         System.add_service(service)
       end
