@@ -1,10 +1,16 @@
 source 'https://rubygems.org'
 
-gem 'berkshelf'
-gem 'knife-solo'
-gem 'chefspec'
-gem 'rspec'
-gem 'strainer'
-gem 'debugger'
 gem 'openstack'
 gem 'rake'
+
+group :development do
+  gem 'berkshelf'
+  gem 'knife-solo'
+end
+
+group :test do
+  gem 'chefspec'
+  gem 'rspec'
+  gem 'strainer'
+  gem 'debugger'
+end
