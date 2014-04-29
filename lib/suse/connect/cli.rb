@@ -16,20 +16,20 @@ module SUSE
 
       def execute! # rubocop:disable MethodLength
 
-        puts @opts; exit unless @options[:token]
+        (puts @opts; exit) unless @options[:token]
         Client.new(@options).register!
 
       rescue ApiError => e
-        log.error "ApiError with response: #{e.body} Code: #{e.code}"
+        log.error "Error: SCC returned '#{e.message}'"
         exit 1
       rescue Errno::ECONNREFUSED
-        log.error 'Connection refused by server'
+        log.error 'Error: Connection refused by server'
         exit 1
       rescue JSON::ParserError
-        log.error 'Cannot parse response from server'
+        log.error 'Error: Cannot parse response from server'
         exit 1
-      rescue Errno::EACCES
-        log.error 'Access error - cannot create required folder/file'
+      rescue Errno::EACCES => e
+        log.error "Error: Access error - #{e.message}"
         exit 1
       end
 
@@ -86,7 +86,7 @@ module SUSE
 
         @opts.on('-v', '--verbose', 'Run verbosely.') do |opt|
           @options[:verbose] = opt
-          SUSE::Connect::GlobalLogger.instance.log.level = ::Logger::INFO if opt
+          SUSE::Connect::GlobalLogger.instance.log.level = ::Logger::DEBUG if opt
         end
 
         @opts.on('-l [LANG]', '--language [LANG]', 'comma-separated list of ISO 639-1 codes') do |opt|
@@ -94,7 +94,7 @@ module SUSE
         end
 
         @opts.parse!
-        log.info("cmd options: '#{@options}'") if @options[:verbose]
+        log.info("cmd options: '#{@options}'")
 
       end
 
