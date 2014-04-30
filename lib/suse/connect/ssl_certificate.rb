@@ -21,7 +21,14 @@ module SUSE
       # @param cert [OpenSSL::X509::Certificate] the certificate
       # @return [String] fingerprint in "AB:CD:EF:..." format
       def self.sha1_fingerprint(cert)
-        OpenSSL::Digest::SHA1.new(cert.to_der).to_s.upcase.scan(/../).join(':')
+        format_digest(OpenSSL::Digest::SHA1, cert)
+      end
+
+      # compute SHA256 fingerprint of a certificate
+      # @param cert [OpenSSL::X509::Certificate] the certificate
+      # @return [String] fingerprint in "AB:CD:EF:..." format
+      def self.sha256_fingerprint(cert)
+        format_digest(OpenSSL::Digest::SHA256, cert)
       end
 
       # import the SSL certificate into the system
@@ -35,6 +42,13 @@ module SUSE
         # update the symlinks
         log.info "Executing #{UPDATE_CERTIFICATES}..."
         call_with_output(UPDATE_CERTIFICATES)
+      end
+
+      # @param digest_class [Class] target digest class (e.g. OpenSSL::Digest::SHA1)
+      # @param cert [OpenSSL::X509::Certificate] the certificate
+      # @return [String] digest in "AB:CD:EF:..." format
+      def self.format_digest(digest_class, cert)
+        digest_class.new(cert.to_der).to_s.upcase.scan(/../).join(':')
       end
     end
 

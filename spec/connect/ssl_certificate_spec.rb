@@ -14,6 +14,16 @@ describe SUSE::Connect::SSLCertificate do
     end
   end
 
+  describe '.sha256_fingerprint' do
+    it 'returns the certificate SHA256 fingerprint' do
+      cert = OpenSSL::X509::Certificate.new(test_cert)
+      # obtained via "openssl x509 -in spec/fixtures/test.pem -outform DER | sha256sum"
+      sha256 = '2A:02:DA:EC:A9:FF:4C:B4:A6:C0:57:08:F6:1C:8B:B0:94:FA:F4:60:96:5E:18:48:CA:84:81:48:60:F3:CB:BF'
+
+      expect(SUSE::Connect::SSLCertificate.sha256_fingerprint(cert)).to eq(sha256)
+    end
+  end
+
   describe '.import' do
     it 'writes the PEM certificate into the system and activates it' do
       cert = OpenSSL::X509::Certificate.new(test_cert)
