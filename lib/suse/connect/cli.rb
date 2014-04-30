@@ -11,6 +11,7 @@ module SUSE
 
       def initialize(argv)
         @options = {}
+        @argv = argv
         extract_options
       end
 
@@ -47,9 +48,14 @@ module SUSE
         @opts.separator ''
         @opts.separator 'Usage: SUSEConnect [options]'
 
-        @opts.on('-p', '--product []', 'Product. Choose which product to activate (default: the system\'s baseproduct.') do |opt|
-          check_if_param(opt, 'Please provide a product parameter')
-          @options[:token] = opt
+        @opts.on('-p', '--product [PRODUCT]', 'Product to activate (default: the system\'s baseproduct). ' +
+                                        'For installed products you can find these values by calling: \'zypper products\'. ' +
+                                        'Format: <name>-<version>-<architecture>') do |opt|
+          check_if_param(opt, 'Please provide a product identifier')
+          check_if_param((opt =~ /\S+-\S+-\S+/), 'Please provide the product identifier in this format: <name>-<version>-<architecture>. ' +
+                                      'For installed products you can find these values by calling: \'zypper products\'. ')
+          @options[:product] = { :name => opt.split('-')[0], :version => opt.split('-')[1],
+                                 :arch => opt.split('-')[2]}
         end
 
         @opts.on('-r', '--regcode [REGCODE]', 'Registration code. The repositories of the subscription with this ' \
@@ -93,14 +99,14 @@ module SUSE
           @options[:language] = opt
         end
 
-        @opts.parse!
+        @opts.parse(@argv)
         log.info("cmd options: '#{@options}'")
 
       end
 
       def check_if_param(opt, message)
         unless opt
-          puts message
+          log.error message
           exit 1
         end
       end

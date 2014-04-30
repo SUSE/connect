@@ -5,25 +5,26 @@ require 'stringio'
 describe SUSE::Connect::Cli do
 
   subject { SUSE::Connect::Cli }
+  let(:default_logger) { SUSE::Connect::GlobalLogger.instance.log }
+  let(:string_logger) { ::Logger.new(StringIO.new) }
+  let(:cli) { subject.new({}) }
+
+  before do
+    subject.any_instance.stub(:exit)
+    subject.any_instance.stub(:puts => true)
+    SUSE::Connect::GlobalLogger.instance.log = string_logger
+  end
+
+  after do
+    SUSE::Connect::GlobalLogger.instance.log = default_logger
+  end
 
   describe '#execute!' do
-    let(:default_logger) { SUSE::Connect::GlobalLogger.instance.log }
-    let(:string_logger) { ::Logger.new(StringIO.new) }
-    let(:cli) { subject.new({}) }
-
-    before do
-      cli.stub(:exit => true)
-      SUSE::Connect::GlobalLogger.instance.log = string_logger
-    end
-
-    after do
-      SUSE::Connect::GlobalLogger.instance.log = default_logger
-    end
 
     it 'should produce log output if ApiError encountered' do
       string_logger.should_receive(:error).with("Error: SCC returned 'test'")
       response = Net::HTTPResponse.new('1.1', 222, 'Test')
-      expect(response).to receive(:body).and_return('localized_error'=>'test')
+      expect(response).to receive(:body).and_return('localized_error' => 'test')
       Client.any_instance.stub(:register!).and_raise ApiError.new(response)
       cli.execute!
     end
@@ -50,71 +51,86 @@ describe SUSE::Connect::Cli do
 
   describe '?extract_options' do
 
-    before do
-      Object.send(:remove_const, :ARGV)
-      subject.any_instance.stub(:exit)
-    end
-
     it 'sets token options' do
-      ARGV = %w{-r matoken}
-      cli = subject.new(ARGV)
+      argv = %w{-r matoken}
+      cli = subject.new(argv)
       cli.options[:token].should eq 'matoken'
     end
 
+    it 'sets product options' do
+      argv = %w{--product sles-12-i386}
+      cli = subject.new(argv)
+      cli.options[:product].should eq ({:name => 'sles', :version => '12', :arch => 'i386'})
+    end
+
     it 'sets token options' do
-      ARGV = %w{--regcode matoken}
-      cli = subject.new(ARGV)
+      argv = %w{--regcode matoken}
+      cli = subject.new(argv)
       cli.options[:token].should eq 'matoken'
     end
 
     it 'sets insecure options' do
-      ARGV = %w{--insecure}
-      cli = subject.new(ARGV)
+      argv = %w{--insecure}
+      cli = subject.new(argv)
       cli.options[:insecure].should be_true
     end
 
     it 'sets url options' do
-      ARGV = %w{--url test}
-      cli = subject.new(ARGV)
+      argv = %w{--url test}
+      cli = subject.new(argv)
       cli.options[:url].should eq 'test'
     end
 
     it 'sets insecure options' do
-      ARGV = %w{-d}
-      cli = subject.new(ARGV)
+      argv = %w{-d}
+      cli = subject.new(argv)
       cli.options[:dry].should be_true
     end
 
     it 'sets language options' do
-      ARGV = %w{-l de}
-      cli = subject.new(ARGV)
+      argv = %w{-l de}
+      cli = subject.new(argv)
       cli.options[:language].should eq 'de'
     end
 
     it 'puts version on version flag' do
-      ARGV = %w{--version}
+      argv = %w{--version}
       subject.any_instance.should_receive(:puts).with(VERSION)
-      subject.new(ARGV)
+      subject.new(argv)
     end
 
     it 'output help on help flag' do
-      ARGV = %w{--help}
+      argv = %w{--help}
       subject.any_instance.should_receive(:puts)
-      subject.new(ARGV)
+      subject.new(argv)
     end
 
-    it 'sets verbopse options' do
-      ARGV = %w{-v}
-      cli = subject.new(ARGV)
+    it 'sets verbose options' do
+      argv = %w{-v}
+      cli = subject.new(argv)
       cli.options[:verbose].should be_true
     end
 
   end
 
+
+  describe 'errors on invalid options' do
+
+    it 'error on invalid product options format' do
+      string_logger.should_receive(:error) do |msg|
+        msg =~ /Please provide the product identifier in this format:/
+      end
+      argv = %w{--product sles}
+      cli = subject.new(argv)
+    end
+
+  end
+
+
   describe '?check_if_param' do
     it 'will exit with message if opt is nil' do
       subject.any_instance.should_receive(:exit)
-      subject.any_instance.should_receive(:puts).with 'Kaboom'
+      string_logger.should_receive(:error).with("Kaboom")
       subject.new({}).send(:check_if_param, nil, 'Kaboom')
     end
   end

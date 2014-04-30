@@ -20,16 +20,17 @@ module SUSE
         @options[:debug]    = !!opts[:verbose]
         @options[:language] = opts[:language]
         @options[:token]    = opts[:token]
+        @options[:product] = opts[:product] || Zypper.base_product
         @api                = Api.new(self)
       end
 
-      # Registers the base product
+      # Activates a product and writes credentials file if the system was not yet announced
       def register!
         unless System.registered?
           login, password = announce_system
           Credentials.new(login, password, Credentials::GLOBAL_CREDENTIALS_FILE).write
         end
-        service = activate_product(Zypper.base_product)
+        service = activate_product(@options[:product])
         System.add_service(service)
       end
 
