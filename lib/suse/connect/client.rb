@@ -41,12 +41,16 @@ module SUSE
         [response.body['login'], response.body['password']]
       end
 
+      # Activate a product
+      #
+      # @param product_ident [Hash] with product parameters
+      # @returns: Service for this product
       def activate_product(product_ident, email = nil)
         result = @api.activate_product(basic_auth, product_ident, email).body
         Service.new(result['sources'], result['enabled'], result['norefresh'])
       end
 
-      # @param product [Hash] product to query extensions for
+      # @param product_ident [Hash] product to query extensions for
       def list_products(product_ident)
         result = @api.addons(basic_auth, product_ident).body
         result.map do |product|
@@ -59,6 +63,7 @@ module SUSE
         @api.deregister(basic_auth)
         System.remove_credentials
       end
+
     end
   end
 end

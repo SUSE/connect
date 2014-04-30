@@ -21,27 +21,27 @@ describe SUSE::Connect::Cli do
     end
 
     it 'should produce log output if ApiError encountered' do
-      string_logger.should_receive(:error).with('ApiError with response: {:test=>1} Code: 222')
+      string_logger.should_receive(:error).with("Error: SCC returned 'test'")
       response = Net::HTTPResponse.new('1.1', 222, 'Test')
-      expect(response).to receive(:body).and_return('{:test=>1}')
+      expect(response).to receive(:body).and_return('localized_error'=>'test')
       Client.any_instance.stub(:register!).and_raise ApiError.new(response)
       cli.execute!
     end
 
     it 'should produce log output if ApiError encountered' do
-      string_logger.should_receive(:error).with('connection refused by server')
+      string_logger.should_receive(:error).with('Error: Connection refused by server')
       Client.any_instance.stub(:register!).and_raise Errno::ECONNREFUSED
       cli.execute!
     end
 
     it 'should produce log output if ApiError encountered' do
-      string_logger.should_receive(:error).with('cannot parse response from server')
+      string_logger.should_receive(:error).with('Error: Cannot parse response from server')
       Client.any_instance.stub(:register!).and_raise JSON::ParserError
       cli.execute!
     end
 
     it 'should produce log output if EACCES encountered' do
-      string_logger.should_receive(:error).with('access error - cannot create required folder/file')
+      string_logger.should_receive(:error).with('Error: Access error - Permission denied')
       Client.any_instance.stub(:register!).and_raise Errno::EACCES
       cli.execute!
     end
