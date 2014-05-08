@@ -48,7 +48,7 @@ describe SUSE::Connect::Credentials do
       end
     end
 
-    it 'compute filename to write properly --root case' do
+    it 'computes the filename to write in the --root case' do
       $root = '/path/to/root'
       credentials = Credentials.new('name', '1234', 'SLES')
       credentials.filename.should start_with '/path/to/root/'
