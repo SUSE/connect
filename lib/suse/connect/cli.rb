@@ -24,7 +24,7 @@ module SUSE
         Client.new(@options).register!
 
       rescue ApiError => e
-        log.error "Error: SCC returned '#{e.message}'"
+        log.error "Error: SCC returned '#{e.message}' (#{e.code})"
         exit 1
       rescue Errno::ECONNREFUSED
         log.error 'Error: Connection refused by server'

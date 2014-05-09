@@ -23,7 +23,7 @@ describe SUSE::Connect::Cli do
   describe '#execute!' do
 
     it 'should produce log output if ApiError encountered' do
-      string_logger.should_receive(:error).with("Error: SCC returned 'test'")
+      string_logger.should_receive(:error).with("Error: SCC returned 'test' (222)")
       response = Net::HTTPResponse.new('1.1', 222, 'Test')
       expect(response).to receive(:body).and_return('localized_error' => 'test')
       Client.any_instance.stub(:register!).and_raise ApiError.new(response)

@@ -22,12 +22,8 @@ module SUSE
         @response.code
       end
 
-      def body
-        @response.body
-      end
-
       def message
-        body['localized_error']
+        @response.body['localized_error']
       end
 
     end
