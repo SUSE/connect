@@ -17,7 +17,10 @@ module SUSE
 
       def execute! # rubocop:disable MethodLength
 
-        (puts @opts; exit) unless @options[:token]
+        unless @options[:token]
+          puts @opts
+          exit
+        end
         Client.new(@options).register!
 
       rescue ApiError => e
@@ -48,14 +51,15 @@ module SUSE
         @opts.separator ''
         @opts.separator 'Usage: SUSEConnect [options]'
 
-        @opts.on('-p', '--product [PRODUCT]', 'Product to activate (default: the system\'s baseproduct). ' +
-                                        'For installed products you can find these values by calling: \'zypper products\'. ' +
-                                        'Format: <name>-<version>-<architecture>') do |opt|
+        @opts.on('-p', '--product [PRODUCT]', 'Product to activate (default: the system\'s baseproduct). ' \
+                                        'For installed products you can find these values by calling: ' \
+                                        'zypper products\'. Format: <name>-<version>-<architecture>') do |opt|
           check_if_param(opt, 'Please provide a product identifier')
-          check_if_param((opt =~ /\S+-\S+-\S+/), 'Please provide the product identifier in this format: <name>-<version>-<architecture>. ' +
-                                      'For installed products you can find these values by calling: \'zypper products\'. ')
+          check_if_param((opt =~ /\S+-\S+-\S+/), 'Please provide the product identifier in this format: ' \
+            '<name>-<version>-<architecture>. For installed products you can find these values by calling: ' \
+            '\'zypper products\'. ')
           @options[:product] = { :name => opt.split('-')[0], :version => opt.split('-')[1],
-                                 :arch => opt.split('-')[2]}
+                                 :arch => opt.split('-')[2] }
         end
 
         @opts.on('-r', '--regcode [REGCODE]', 'Registration code. The repositories of the subscription with this ' \

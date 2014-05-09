@@ -61,7 +61,7 @@ describe SUSE::Connect::Cli do
     it 'sets product options' do
       argv = %w{--product sles-12-i386}
       cli = subject.new(argv)
-      cli.options[:product].should eq ({:name => 'sles', :version => '12', :arch => 'i386'})
+      cli.options[:product].should eq(:name => 'sles', :version => '12', :arch => 'i386')
     end
 
     it 'sets token options' do
@@ -114,7 +114,6 @@ describe SUSE::Connect::Cli do
 
   end
 
-
   describe 'errors on invalid options' do
 
     it 'error on invalid product options format' do
@@ -122,16 +121,15 @@ describe SUSE::Connect::Cli do
         msg =~ /Please provide the product identifier in this format:/
       end
       argv = %w{--product sles}
-      cli = subject.new(argv)
+      subject.new(argv)
     end
 
   end
 
-
   describe '?check_if_param' do
     it 'will exit with message if opt is nil' do
       subject.any_instance.should_receive(:exit)
-      string_logger.should_receive(:error).with("Kaboom")
+      string_logger.should_receive(:error).with('Kaboom')
       subject.new({}).send(:check_if_param, nil, 'Kaboom')
     end
   end
