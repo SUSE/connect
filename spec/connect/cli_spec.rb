@@ -10,6 +10,7 @@ describe SUSE::Connect::Cli do
   let(:cli) { subject.new({}) }
 
   before do
+    Zypper.stub(:base_product => {})
     subject.any_instance.stub(:exit)
     subject.any_instance.stub(:puts => true)
     SUSE::Connect::GlobalLogger.instance.log = string_logger
