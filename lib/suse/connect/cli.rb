@@ -11,23 +11,29 @@ module SUSE
 
       def initialize(argv)
         @options = {}
+        @argv = argv
         extract_options
       end
 
       def execute! # rubocop:disable MethodLength
-        log.info(@options) if @options[:verbose]
+
+        unless @options[:token]
+          puts @opts
+          exit
+        end
         Client.new(@options).register!
+
       rescue ApiError => e
-        log.error "ApiError with response: #{e.body} Code: #{e.code}"
+        log.error "Error: SCC returned '#{e.message}' (#{e.code})"
         exit 1
       rescue Errno::ECONNREFUSED
-        log.error 'connection refused by server'
+        log.error 'Error: Connection refused by server'
         exit 1
       rescue JSON::ParserError
-        log.error 'cannot parse response from server'
+        log.error 'Error: Cannot parse response from server'
         exit 1
-      rescue Errno::EACCES
-        log.error 'access error - cannot create required folder/file'
+      rescue Errno::EACCES => e
+        log.error "Error: Access error - #{e.message}"
         exit 1
       end
 
@@ -44,6 +50,17 @@ module SUSE
         @opts.separator 'Please visit https://scc.suse.com to see and manage your subscriptions.'
         @opts.separator ''
         @opts.separator 'Usage: SUSEConnect [options]'
+
+        @opts.on('-p', '--product [PRODUCT]', 'Product to activate (default: the system\'s baseproduct). ' \
+                                        'For installed products you can find these values by calling: ' \
+                                        'zypper products\'. Format: <name>-<version>-<architecture>') do |opt|
+          check_if_param(opt, 'Please provide a product identifier')
+          check_if_param((opt =~ /\S+-\S+-\S+/), 'Please provide the product identifier in this format: ' \
+            '<name>-<version>-<architecture>. For installed products you can find these values by calling: ' \
+            '\'zypper products\'. ')
+          @options[:product] = { :name => opt.split('-')[0], :version => opt.split('-')[1],
+                                 :arch => opt.split('-')[2] }
+        end
 
         @opts.on('-r', '--regcode [REGCODE]', 'Registration code. The repositories of the subscription with this ' \
                                               'registration code will get activated on this system.') do |opt|
@@ -79,20 +96,21 @@ module SUSE
 
         @opts.on('-v', '--verbose', 'Run verbosely.') do |opt|
           @options[:verbose] = opt
-          SUSE::Connect::GlobalLogger.instance.log.level = ::Logger::INFO if opt
+          SUSE::Connect::GlobalLogger.instance.log.level = ::Logger::DEBUG if opt
         end
 
         @opts.on('-l [LANG]', '--language [LANG]', 'comma-separated list of ISO 639-1 codes') do |opt|
           @options[:language] = opt
         end
 
-        @opts.parse!
+        @opts.parse(@argv)
+        log.info("cmd options: '#{@options}'")
 
       end
 
       def check_if_param(opt, message)
         unless opt
-          puts message
+          log.error message
           exit 1
         end
       end
