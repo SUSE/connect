@@ -68,7 +68,7 @@ module SUSE
           @options[:dry] = opt
         end
 
-        @opts.on('--version', "print program version") do
+        @opts.on('--version', 'print program version') do
           puts VERSION
           exit
         end
@@ -78,7 +78,8 @@ module SUSE
           SUSE::Connect::GlobalLogger.instance.log.level = ::Logger::INFO if opt
         end
 
-        @opts.on('-l [LANG]', '--language [LANG]', 'Translate error messages into one of LANG which is a', '  comma-separated list of ISO 639-1 codes') do |opt|
+        @opts.on('-l [LANG]', '--language [LANG]', 'Translate error messages into one of LANG which is a',
+                 '  comma-separated list of ISO 639-1 codes') do |opt|
           @options[:language] = opt
         end
 
