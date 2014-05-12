@@ -39,7 +39,7 @@ module SUSE
 
         @opts.separator 'Register SUSE Linux Enterprise installations with the SUSE Customer Center.'
         @opts.separator 'Registration allows access to software repositories including updates,'
-        @opts.separator 'and allows online management of subscriptions and organisations'
+        @opts.separator 'and allows online management of subscriptions and organizations'
         @opts.separator ''
         @opts.separator 'Manage subscriptions at https://scc.suse.com'
         @opts.separator ''
