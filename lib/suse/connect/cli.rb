@@ -37,16 +37,17 @@ module SUSE
 
         @opts = OptionParser.new
 
-        @opts.banner = 'SUSEConnect is a command line tool for connecting a client system to the SUSE Customer Center.'
-        @opts.separator 'It will connect the system to your product subscriptions and enable the product ' \
-                        'repositories/services locally.'
+        @opts.separator 'Register SUSE Linux Enterprise installations with the SUSE Customer Center.'
+        @opts.separator 'Registration allows access to software repositories including updates,'
+        @opts.separator 'and allows online management of subscriptions and organisations'
         @opts.separator ''
-        @opts.separator 'Please visit https://scc.suse.com to see and manage your subscriptions.'
+        @opts.separator 'Manage subscriptions at https://scc.suse.com'
         @opts.separator ''
-        @opts.separator 'Usage: SUSEConnect [options]'
 
-        @opts.on('-r', '--regcode [REGCODE]', 'Registration code. The repositories of the subscription with this ' \
-                                              'registration code will get activated on this system.') do |opt|
+        @opts.on('-r', '--regcode [REGCODE]', 'Subscription registration code for the',
+                 '  base SUSE Linux Enterprise product on this system.',
+                 '  Relates this installation to the specified subscription,',
+                 '  and enables software repositories for the base product') do |opt|
           check_if_param(opt, 'Please provide a registration code parameter')
           @options[:token] = opt
         end
@@ -55,37 +56,38 @@ module SUSE
           @options[:insecure] = opt
         end
 
-        @opts.on('--url [URL]', 'Connection base url (e.g. https://scc.suse.com).') do |opt|
-          check_if_param(opt, 'Please provide url parameter')
+        @opts.on('--url [URL]', 'URL of registration server (e.g. https://scc.suse.com).') do |opt|
+          check_if_param(opt, 'Please provide registration server URL')
           @options[:url] = opt
         end
 
         @opts.separator ''
         @opts.separator 'Common options:'
 
-        @opts.on('-d', '--dry-mode', 'Dry mode. Does not make any changes to the system.') do |opt|
+        @opts.on('-d', '--dry-run', 'only print what would be done') do |opt|
           @options[:dry] = opt
         end
 
-        @opts.on('--version', 'Print version') do
+        @opts.on('--version', "print program version") do
           puts VERSION
           exit
         end
 
-        @opts.on('-h', '--help', 'Show this message.') do
-          puts @opts
-          exit
-        end
-
-        @opts.on('-v', '--verbose', 'Run verbosely.') do |opt|
+        @opts.on('-v', '--verbose', 'provide verbose output') do |opt|
           @options[:verbose] = opt
           SUSE::Connect::GlobalLogger.instance.log.level = ::Logger::INFO if opt
         end
 
-        @opts.on('-l [LANG]', '--language [LANG]', 'comma-separated list of ISO 639-1 codes') do |opt|
+        @opts.on('-l [LANG]', '--language [LANG]', 'Translate error messages into one of LANG which is a', '  comma-separated list of ISO 639-1 codes') do |opt|
           @options[:language] = opt
         end
 
+        @opts.on_tail('-h', '--help', 'show this message') do
+          puts @opts
+          exit
+        end
+
+        @opts.set_summary_width(24)
         @opts.parse!
 
       end
