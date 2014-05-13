@@ -51,9 +51,9 @@ module SUSE
         @opts.separator ''
 
         @opts.on('-p', '--product [PRODUCT]', 'Activate PRODUCT. Defaults to the base SUSE Linux',
-                                        'Enterprise product on this system.',
-                                        'Product identifiers can be obtained with \'zypper products\'',
-                                        'Format: <name>-<version>-<architecture>') do |opt|
+                 '  Enterprise product on this system.',
+                 '  Product identifiers can be obtained with \'zypper products\'',
+                 '  Format: <name>-<version>-<architecture>') do |opt|
           check_if_param(opt, 'Please provide a product identifier')
           check_if_param((opt =~ /\S+-\S+-\S+/), 'Please provide the product identifier in this format: ' \
             '<name>-<version>-<architecture>. For installed products you can find these values by calling: ' \
