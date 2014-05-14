@@ -41,6 +41,28 @@ describe SUSE::Connect::Client do
 
     end
 
+    context :from_config do
+
+      subject { Client.new({}) }
+
+      before do
+        SUSE::Connect::Config.any_instance.stub(:read).and_return({ 'regcode' => 'from_config', 'url' => 'localhost', 'language' => 'RU'})
+      end
+
+      it 'should set url to the config URL' do
+        expect(subject.url).to eq 'localhost'
+      end
+
+      it 'should set token to one from config file' do
+        expect(subject.options[:token]).to eq 'from_config'
+      end
+
+      it 'should set language to one from config file' do
+        expect(subject.options[:language]).to eq 'RU'
+      end
+
+    end
+
   end
 
   describe '#announce_system' do
