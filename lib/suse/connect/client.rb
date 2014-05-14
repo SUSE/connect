@@ -13,14 +13,17 @@ module SUSE
       attr_reader :options, :url, :api
 
       def initialize(opts)
+        # Read SUSConnect.yml config file
+        config = Config.new('/tmp/SUSEConnect.yml')
+
         @options            = opts
-        @url                = opts[:url] || DEFAULT_URL
+        @url                = opts[:url] || config.url || DEFAULT_URL
         # !!: Set :insecure and :debug explicitly to boolean values.
         @options[:insecure] = !!opts[:insecure]
         @options[:debug]    = !!opts[:verbose]
-        @options[:language] = opts[:language]
-        @options[:token]    = opts[:token]
-        @options[:product] = opts[:product] || Zypper.base_product
+        @options[:language] = opts[:language] || config.language
+        @options[:token]    = opts[:token] || config.regcode
+        @options[:product]  = opts[:product] || Zypper.base_product
         @api                = Api.new(self)
       end
 
