@@ -46,7 +46,11 @@ describe SUSE::Connect::Client do
       subject { Client.new({}) }
 
       before do
-        SUSE::Connect::Config.any_instance.stub(:read).and_return({ 'regcode' => 'from_config', 'url' => 'localhost', 'language' => 'RU'})
+        SUSE::Connect::Config.any_instance.stub(:read).and_return(
+          'regcode' => 'from_config',
+          'url' => 'localhost',
+          'language' => 'RU'
+        )
       end
 
       it 'should set url to the config URL' do

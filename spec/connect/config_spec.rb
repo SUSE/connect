@@ -40,7 +40,11 @@ describe SUSE::Connect::Config do
     context '#read' do
       it 'reads configuration settings from YAML file if present' do
         File.should_receive(:exist?).at_least(:once).with(config_file).and_return(true)
-        YAML.should_receive(:load_file).with(config_file).and_return({'regcode' => 'test', 'url' => 'localhost', 'language' => 'DE'})
+        YAML.should_receive(:load_file).with(config_file).and_return(
+          'regcode' => 'test',
+          'url' => 'localhost',
+          'language' => 'DE'
+        )
 
         settings = config.read
         expect(settings).to be_kind_of(Hash)
@@ -60,7 +64,11 @@ describe SUSE::Connect::Config do
 
     it 'reads configuration settings from YAML file' do
       File.should_receive(:exist?).at_least(:once).with(config_file).and_return(true)
-      YAML.should_receive(:load_file).with(config_file).and_return({'regcode' => 'test', 'url' => 'localhost', 'language' => 'DE'})
+      YAML.should_receive(:load_file).with(config_file).and_return(
+        'regcode' => 'test',
+        'url' => 'localhost',
+        'language' => 'DE'
+      )
 
       settings = config.read
       expect(settings).to be_kind_of(Hash)

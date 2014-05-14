@@ -22,9 +22,9 @@ module SUSE
       def initialize(file = DEFAULT_CONFIG_FILE)
         @file = file
 
-        self.read.keys.each do |key|
+        read.keys.each do |key|
           if self.class.attributes.include?(key.to_sym)
-            instance_variable_set("@#{key}", self.read[key])
+            instance_variable_set("@#{key}", read[key])
           end
         end
       end
@@ -33,16 +33,16 @@ module SUSE
         if File.exist?(@file)
           @settings ||= YAML.load_file(@file)
         else
-         {}
+          {}
         end
       end
 
       def write
-        !File.write(@file, self.to_yml).zero?
+        !File.write(@file, to_yml).zero?
       end
 
       def to_yml
-        YAML.dump(self.to_hash)
+        YAML.dump(to_hash)
       end
 
       def to_hash
