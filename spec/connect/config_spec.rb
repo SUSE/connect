@@ -1,6 +1,5 @@
 require 'spec_helper'
 require 'rubygems'
-require 'debugger'
 
 describe SUSE::Connect::Config do
   let(:config_file) { File.expand_path File.join(File.dirname(__FILE__), '../fixtures/SUSEConnect.yml') }
