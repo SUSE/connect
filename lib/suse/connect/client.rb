@@ -14,7 +14,7 @@ module SUSE
 
       def initialize(opts)
         # Read SUSConnect.yml config file
-        config = Config.new('/tmp/SUSEConnect.yml')
+        config = Config.new
 
         @options            = opts
         @url                = opts[:url] || config.url || DEFAULT_URL
