@@ -10,8 +10,10 @@ describe SUSE::Connect::Product do
       'zypper_name' => 'SLEEK-12',
       'zypper_version' => '12',
       'arch' => 'x86_64',
-      'free' => true
-    }
+      'free' => true,
+      'eula_url' => 'https://nu.novell.com/SUSE:/Products:/SLE-12/images/' \
+        'repo/SLE-12-module-sleek-POOL-x86_64-Media.license/'
+      }
     SUSE::Connect::Product.new(extension)
   end
 
@@ -39,8 +41,8 @@ describe SUSE::Connect::Product do
     expect(subject.arch).not_to be_nil
   end
 
-  it 'has attribute free' do
-    expect(subject.free).not_to be_nil
+  it 'has attribute eula_url' do
+    expect(subject.eula_url).not_to be_nil
   end
 
 end
