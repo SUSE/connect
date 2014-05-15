@@ -49,20 +49,20 @@ module SUSE
       #
       # @param auth [String] authorization string which will be injected in `Authorization` header in request.
       #   In this case we expects Base64 encoded string with login and password
-      # @param product [Hash] product
+      # @param product_ident [Hash] product
       # @param email [String] Adds the user to the respective organization or
       #   sends an SCC invitation.
       #
       # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
       #
       # @todo TODO: introduce Product class
-      def activate_product(auth, product, email = nil)
-        token = product[:token] || @client.options[:token]
+      def activate_product(auth, product_ident, email = nil)
+        token = product_ident[:token] || @client.options[:token]
         payload = {
-          :product_ident => product[:name],
-          :product_version => product[:version],
-          :arch => product[:arch],
-          :release_type => product[:release_type],
+          :product_ident => product_ident[:name],
+          :product_version => product_ident[:version],
+          :arch => product_ident[:arch],
+          :release_type => product_ident[:release_type],
           :token => token,
           :email => email
         }

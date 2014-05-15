@@ -28,8 +28,8 @@ module SUSE
 
         def base_product
           base = installed_products.select {|product| %w{1 true yes}.include?(product[:isbase]) }.first
-          base[:release_type] = lookup_product_release(base)
           raise CannotDetectBaseProduct unless base
+          base[:release_type] = lookup_product_release(base)
           base
         end
 

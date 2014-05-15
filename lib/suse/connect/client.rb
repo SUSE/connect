@@ -13,23 +13,27 @@ module SUSE
       attr_reader :options, :url, :api
 
       def initialize(opts)
+        # Read SUSConnect.yml config file
+        config = Config.new
+
         @options            = opts
-        @url                = opts[:url] || DEFAULT_URL
+        @url                = opts[:url] || config.url || DEFAULT_URL
         # !!: Set :insecure and :debug explicitly to boolean values.
         @options[:insecure] = !!opts[:insecure]
         @options[:debug]    = !!opts[:verbose]
-        @options[:language] = opts[:language]
-        @options[:token]    = opts[:token]
+        @options[:language] = opts[:language] || config.language
+        @options[:token]    = opts[:token] || config.regcode
+        @options[:product]  = opts[:product] || Zypper.base_product
         @api                = Api.new(self)
       end
 
+      # Activates a product and writes credentials file if the system was not yet announced
       def register!
         unless System.registered?
           login, password = announce_system
           Credentials.new(login, password, Credentials::GLOBAL_CREDENTIALS_FILE).write
         end
-
-        service = activate_product(Zypper.base_product)
+        service = activate_product(@options[:product])
         System.add_service(service)
       end
 
@@ -41,12 +45,16 @@ module SUSE
         [response.body['login'], response.body['password']]
       end
 
+      # Activate a product
+      #
+      # @param product_ident [Hash] with product parameters
+      # @returns: Service for this product
       def activate_product(product_ident, email = nil)
         result = @api.activate_product(basic_auth, product_ident, email).body
         Service.new(result['sources'], result['enabled'], result['norefresh'])
       end
 
-      # @param product [Hash] product to query extensions for
+      # @param product_ident [Hash] product to query extensions for
       def list_products(product_ident)
         result = @api.addons(basic_auth, product_ident).body
         result.map do |product|
@@ -59,6 +67,7 @@ module SUSE
         @api.deregister(basic_auth)
         System.remove_credentials
       end
+
     end
   end
 end

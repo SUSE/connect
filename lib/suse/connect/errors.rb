@@ -10,7 +10,7 @@ module SUSE
     # Basic error for API interactions. Collects HTTP response (which includes
     # status code and response body) for future showing to user via {Cli}
     class ApiError < StandardError
-      attr_accessor :response
+      attr_accessor :response, :message
 
       # @param response [Net::HTTPResponse] the HTTP response error returned
       # by API request
@@ -22,9 +22,10 @@ module SUSE
         @response.code
       end
 
-      def body
-        @response.body
+      def message
+        @response.body['localized_error']
       end
+
     end
 
   end

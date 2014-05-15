@@ -13,6 +13,7 @@ module SUSE
     require 'suse/connect/source'
     require 'suse/connect/connection'
     require 'suse/connect/credentials'
+    require 'suse/connect/config'
     require 'suse/connect/api'
     require 'suse/connect/yast'
     require 'suse/connect/ssl_certificate'

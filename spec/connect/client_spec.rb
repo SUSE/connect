@@ -4,6 +4,10 @@ describe SUSE::Connect::Client do
 
   subject { SUSE::Connect::Client.new({}) }
 
+  before do
+    Zypper.stub(:base_product => {})
+  end
+
   describe '.new' do
 
     context :empty_opts do
@@ -33,6 +37,32 @@ describe SUSE::Connect::Client do
       it 'allows to pass arbitrary options' do
         client = Client.new(foo: 'bar')
         expect(client.options[:foo]).to eq 'bar'
+      end
+
+    end
+
+    context :from_config do
+
+      subject { Client.new({}) }
+
+      before do
+        SUSE::Connect::Config.any_instance.stub(:read).and_return(
+          'regcode' => 'from_config',
+          'url' => 'localhost',
+          'language' => 'RU'
+        )
+      end
+
+      it 'should set url to the config URL' do
+        expect(subject.url).to eq 'localhost'
+      end
+
+      it 'should set token to one from config file' do
+        expect(subject.options[:token]).to eq 'from_config'
+      end
+
+      it 'should set language to one from config file' do
+        expect(subject.options[:language]).to eq 'RU'
       end
 
     end
