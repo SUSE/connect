@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'rubygems'
 
 describe SUSE::Connect::Config do
-  let(:config_file) { File.expand_path File.join(File.dirname(__FILE__), '../fixtures/SUSEConnect.yml') }
+  let(:config_file) { File.expand_path File.join(File.dirname(__FILE__), '../fixtures/SUSEConnect') }
 
   context 'class methods' do
     subject { SUSE::Connect::Config }
@@ -25,8 +25,8 @@ describe SUSE::Connect::Config do
 
     context '#initializer' do
       it 'allows to read a config file from defferent location' do
-        config = subject.new('/tmp/SUSEConnect.yml')
-        expect(config.instance_variable_get :@file).to eq '/tmp/SUSEConnect.yml'
+        config = subject.new('/tmp/SUSEConnect')
+        expect(config.instance_variable_get :@file).to eq '/tmp/SUSEConnect'
       end
 
       it 'initializes SUSE::Connect::Config object with properties from config file' do
