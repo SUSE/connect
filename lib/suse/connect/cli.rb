@@ -1,6 +1,8 @@
 require 'optparse'
 require 'suse/connect'
 
+$root = nil
+
 module SUSE
   module Connect
     # Command line interface for interacting with SUSEConnect
@@ -84,6 +86,11 @@ module SUSE
 
         @opts.on('-d', '--dry-run', 'only print what would be done') do |opt|
           @options[:dry] = opt
+        end
+
+        @opts.on('--root <dir>', 'operate on a different root directory') do |opt|
+          check_if_param(opt, 'Please provide path parameter')
+          $root = opt
         end
 
         @opts.on('--version', 'print program version') do

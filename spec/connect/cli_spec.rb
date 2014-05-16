@@ -112,6 +112,13 @@ describe SUSE::Connect::Cli do
       cli.options[:verbose].should be_true
     end
 
+    it 'sets root option' do
+      ARGV = %w{--root /path/to/root}
+      subject.new(ARGV)
+      $root.should eq '/path/to/root'
+      $root = nil
+    end
+
   end
 
   describe 'errors on invalid options' do

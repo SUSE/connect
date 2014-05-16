@@ -38,6 +38,9 @@ FileName:
 ClassAndModuleChildren:
   Enabled: false
 
+GlobalVars:
+  AllowedVariables: ['$root']
+
 AllCops:
   Exclude:
     - vendor/**

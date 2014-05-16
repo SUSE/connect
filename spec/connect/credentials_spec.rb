@@ -48,6 +48,13 @@ describe SUSE::Connect::Credentials do
       end
     end
 
+    it 'computes the filename to write in the --root case' do
+      $root = '/path/to/root'
+      credentials = Credentials.new('name', '1234', 'SLES')
+      credentials.filename.should start_with '/path/to/root/'
+      $root = nil
+    end
+
     it 'raises an error when file name is not set' do
       credentials = Credentials.new('name', '1234', '')
       expect { credentials.write }.to raise_error(RuntimeError)
