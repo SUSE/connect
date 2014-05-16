@@ -40,7 +40,8 @@ def stub_addons_call
 end
 
 def stub_deregister_call
-  headers = { 'Accept' => 'application/json', 'Authorization' => 'Basic: encodedgibberish' }
+  headers = { 'Accept' => 'application/json,application/vnd.scc.suse.com.v1+json', \
+              'Authorization' => 'Basic: encodedgibberish' }
   stub_request(:delete, 'https://example.com/connect/systems/')
     .with(:headers => headers)
     .to_return(:status => 204, :body => '', :headers => {})

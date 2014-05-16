@@ -1,4 +1,22 @@
 -------------------------------------------------------------------
+Fri May 16 12:08:17 UTC 2014 - wstephenson@suse.com
+
+- Update to version 0.0.17
+  - Introduce API versioning header for forward compatibility
+
+-------------------------------------------------------------------
+Thu May 15 10:14:53 UTC 2014 - wstephenson@suse.com
+
+- Update to version 0.0.16
+  - Include EULA URL in products (API)
+  - Improve --help output
+
+-------------------------------------------------------------------
+Wed Apr 30 09:09:28 UTC 2014 - wstephenson@suse.com
+
+- Add support for SHA256 SSL fingerprints
+
+-------------------------------------------------------------------
 Tue Apr 29 09:12:27 UTC 2014 - wstephenson@suse.com
 
 - Update to version 0.0.15
