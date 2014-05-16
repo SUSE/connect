@@ -45,7 +45,7 @@ module SUSE
         request                    = VERB_TO_CLASS[method].new(path)
         request['Authorization']   = auth
         request['Content-Type']    = 'application/json'
-        request['Accept']          = 'application/json'
+        request['Accept']          = 'application/json,application/vnd.scc.suse.com.v1+json'
         request['Accept-Language'] = language
         request.body               = params.to_json unless params.empty?
         response                   = @http.request(request)
