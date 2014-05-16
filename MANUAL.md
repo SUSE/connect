@@ -46,9 +46,12 @@ Manage subscriptions at https://scc.suse.com
   * `-v`, `--verbose`:
     Provide verbose output
 
-  * `-l <LANG>`, `--language <LANG>`:, 'translate error messages into one of LANG which is a',
-                 '  comma-separated list of ISO 639-1 codes') do |opt|
-        @opts.on_tail('-h', '--help', 'show this message') do
+  * `-l <LANG>`, `--language <LANG>`:
+    translate error messages into one of LANG which is a comma-separated list
+    of ISO 639-1 codes
+  
+  * `-h`, `--help`: 
+    show help message
 
 ## DIAGNOSTICS
   The following errors may be given on stderr:
