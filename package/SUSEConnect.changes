@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon May 19 08:04:03 UTC 2014 - wstephenson@suse.com
+
+- Update to version 0.0.18
+  - Rename --verbose CLI option to --debug
+
+-------------------------------------------------------------------
 Fri May 16 12:08:17 UTC 2014 - wstephenson@suse.com
 
 - Update to version 0.0.17
