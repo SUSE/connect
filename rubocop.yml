@@ -38,6 +38,9 @@ FileName:
 ClassAndModuleChildren:
   Enabled: false
 
+GlobalVars:
+  AllowedVariables: ['$suse_connect_filesystem_root']
+
 AllCops:
   Exclude:
     - vendor/**

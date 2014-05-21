@@ -1,6 +1,8 @@
 require 'optparse'
 require 'suse/connect'
 
+$suse_connect_filesystem_root = ''
+
 module SUSE
   module Connect
     # Command line interface for interacting with SUSEConnect
@@ -84,6 +86,11 @@ module SUSE
 
         @opts.on('-d', '--dry-run', 'only print what would be done') do |opt|
           @options[:dry] = opt
+        end
+
+        @opts.on('--root [PATH]', 'Path to the root folder, uses the same parameter for zypper.') do |opt|
+          check_if_param(opt, 'Please provide path parameter')
+          $suse_connect_filesystem_root = opt
         end
 
         @opts.on('--version', 'print program version') do

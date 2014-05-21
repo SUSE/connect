@@ -10,7 +10,7 @@ module SUSE
       end
 
       def basic_auth
-        system_credentials = SUSE::Connect::Credentials.read(SUSE::Connect::Credentials::GLOBAL_CREDENTIALS_FILE)
+        system_credentials = SUSE::Connect::Credentials.read(SUSE::Connect::Credentials.system_credentials_file)
         username = system_credentials.username
         password = system_credentials.password
 
