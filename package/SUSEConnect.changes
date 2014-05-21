@@ -1,9 +1,15 @@
 -------------------------------------------------------------------
+Mon May 19 08:04:03 UTC 2014 - wstephenson@suse.com
+
+- Update to version 0.0.18
+  - Rename --verbose CLI option to --debug
+
+-------------------------------------------------------------------
 Fri May 16 12:08:17 UTC 2014 - wstephenson@suse.com
 
 - Update to version 0.0.17
   - Introduce API versioning header for forward compatibility
-
+  - Improve man page
 -------------------------------------------------------------------
 Thu May 15 10:14:53 UTC 2014 - wstephenson@suse.com
 

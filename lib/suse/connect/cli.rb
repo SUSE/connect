@@ -91,8 +91,8 @@ module SUSE
           exit
         end
 
-        @opts.on('-v', '--verbose', 'provide verbose output') do |opt|
-          @options[:verbose] = opt
+        @opts.on('--debug', 'provide debug output') do |opt|
+          @options[:debug] = opt
           SUSE::Connect::GlobalLogger.instance.log.level = ::Logger::DEBUG if opt
         end
 
