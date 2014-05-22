@@ -49,12 +49,14 @@ Manage subscriptions at https://scc.suse.com
   * `-l <LANG>`, `--language <LANG>`:
     translate error messages into one of LANG which is a comma-separated list
     of ISO 639-1 codes
-  
-  * `-h`, `--help`: 
+
+  * `-h`, `--help`:
     show help message
 
 ## DIAGNOSTICS
   The following errors may be given on stderr:
+
+  TBD
 
 ## COMPARED TO SUSE_REGISTER
 ### BEFORE
@@ -62,15 +64,30 @@ Manage subscriptions at https://scc.suse.com
 ### AFTER
   `SUSEConnect --url <registration-server-url> -r <regcode> >> <logfile>`
 
+  TBD
+
 ## USE WITH SMT
-  SUSEConnect can also be used to register systems with a local SUSE Subscription Management Tool, instead of the SUSE Customer Center.  
+  SUSEConnect can also be used to register systems with a local SUSE Subscription Management Tool, instead of the SUSE Customer Center.  Use `SUSEConnect --url <smt-server-url>` to register systems with SMT and set [proxies][ENVIRONMENT] as required.
+
+  TBD
+
+## IMPLEMENTATION
+  SUSEConnect is implemented in Ruby 2.0.  It communicates with the registration server using a RESTful JSON API over HTTP using TLS encryption.
+
+## ENVIRONMENT
+  SUSEConnect respects the HTTP_PROXY and HTTPS_PROXY environment variables.
 
 ## FILES
   * `/etc/SUSEConnect`:
-    Configuration file containing server URL etc
+    Configuration file containing server URL, regcode and language for registration 
+    TBD
 
 ## AUTHOR
   SUSE Linux Products GmbH <scc-feedback@suse.de>
 
 ## LINKS
   https://scc.suse.com
+
+## SEE ALSO
+
+SUSEConnect(5)
