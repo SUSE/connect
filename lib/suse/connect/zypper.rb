@@ -58,7 +58,7 @@ module SUSE
         end
 
         def enable_service_repository(service_name, repository)
-          call("zypper --quiet modifyservice --ar-to-enable '#{Shellwords.escape(service_name)}:#{Shellwords.escape(repository)}' " +
+          call("zypper --quiet modifyservice --ar-to-enable '#{Shellwords.escape(service_name)}:#{Shellwords.escape(repository)}' " \
             "'#{Shellwords.escape(service_name)}'")
         end
 

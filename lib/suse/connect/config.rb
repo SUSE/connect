@@ -16,7 +16,7 @@ module SUSE
         end
       end
 
-      attribute_accessors :url, :regcode, :language
+      attribute_accessors :url, :regcode, :language, :insecure
 
       def initialize(file = DEFAULT_CONFIG_FILE)
         @file = file
@@ -30,7 +30,7 @@ module SUSE
 
       def read
         if File.exist?(@file)
-          @settings ||= YAML.load_file(@file)
+          @settings ||= YAML.load_file(@file) || {}
         else
           {}
         end

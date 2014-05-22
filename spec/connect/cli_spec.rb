@@ -70,12 +70,6 @@ describe SUSE::Connect::Cli do
       cli.options[:token].should eq 'matoken'
     end
 
-    it 'sets insecure options' do
-      argv = %w{--insecure}
-      cli = subject.new(argv)
-      cli.options[:insecure].should be_true
-    end
-
     it 'sets url options' do
       argv = %w{--url test}
       cli = subject.new(argv)
