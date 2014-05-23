@@ -43,8 +43,8 @@ Manage subscriptions at https://scc.suse.com
   * `--version`:
     Print program version
 
-  * `-v`, `--verbose`:
-    Provide verbose output
+  * `--debug`:
+    Provide debug output
 
   * `-l <LANG>`, `--language <LANG>`:
     translate error messages into one of LANG which is a comma-separated list
