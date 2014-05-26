@@ -24,16 +24,16 @@ module SUSE
         Client.new(@options).register!
 
       rescue Errno::ECONNREFUSED
-        log.error "Error: Connection refused by server #{@options[:url] || 'https://scc.suse.com'}"
+        log.fatal "Error: Connection refused by server #{@options[:url] || 'https://scc.suse.com'}"
         exit 64
-      rescue JSON::ParserError
-        log.error 'Error: Cannot parse response from server'
-        exit 65
       rescue Errno::EACCES => e
-        log.error "Error: Access error - #{e.message}"
+        log.fatal "Error: Access error - #{e.message}"
+        exit 65
+      rescue JSON::ParserError
+        log.fatal 'Error: Cannot parse response from server'
         exit 66
       rescue ApiError => e
-        log.error "Error: SCC returned '#{e.message}' (#{e.code})"
+        log.fatal "Error: SCC returned '#{e.message}' (#{e.code})"
         exit 67
       end
 
