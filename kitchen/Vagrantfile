@@ -5,6 +5,8 @@
 # vagrant box add openstack_box veewee/boxes/openstack.box --provider=openstack --force
 # vagrant up --provider=openstack
 
+require 'berkshelf/vagrant'
+
 Vagrant.configure('2') do |config|
 
   config.berkshelf.enabled = true
