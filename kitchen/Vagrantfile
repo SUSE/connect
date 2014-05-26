@@ -26,9 +26,8 @@ Vagrant.configure('2') do |config|
     end
 
     config.vm.provision :chef_solo do |chef|
-      chef.log_level = :debug
-      #chef.roles_path = 'roles'
-      #chef.node_name = "jenkins_scc_connect_build_#{ENV['BUILD_NUMBER']}"
+      chef.log_level = :info
+      chef.roles_path = 'roles'
       chef.add_role 'connect_test_node'
     end
   end
