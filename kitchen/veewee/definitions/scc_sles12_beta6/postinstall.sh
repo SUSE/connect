@@ -23,7 +23,7 @@ echo -e "\n# added by veewee/postinstall.sh" >> /etc/ssh/sshd_config
 echo -e "UseDNS no\n" >> /etc/ssh/sshd_config
 
 # Remove all repositories
-sudo zypper --non-interactive rr SUSE-Linux-Enterprise-Server-12-12.0-
+sudo zypper --non-interactive rr SLE-12-standard
 rm /etc/zypp/locks
 zypper refresh
 
