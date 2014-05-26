@@ -35,10 +35,5 @@ cd /root/
 sudo wget --http-user=username --http-password=password -O .oscrc http://gaffer.suse.de:9999/files/.oscrc
 cat /root/.oscrc
 
-cd /root/
-sudo wget --http-user=username --http-password=password -O regcode.txt http://gaffer.suse.de:9999/files/regcode.txt
-sudo cat regcode.txt >> /root/.bashrc
-cat /root/.bashrc
-
 echo -e "\nall done.\n"
 exit
