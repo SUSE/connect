@@ -1,6 +1,6 @@
 require 'chefspec'
 
-describe 'connect::rubygems' do
+describe 'connect::suse_connect' do
   let(:chef_run) { ChefSpec::Runner.new.converge 'connect::suse_connect' }
 
   it 'clones connect github repo' do
