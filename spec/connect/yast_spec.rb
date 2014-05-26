@@ -5,7 +5,7 @@ describe SUSE::Connect::YaST do
   subject { SUSE::Connect::YaST }
 
   let :params do
-    { token: 'regcode', email: 'foo@bar.zer', product_ident: 'SLE95', :distro_target => 'sles12'}
+    { token: 'regcode', email: 'foo@bar.zer', product_ident: 'SLE95', :distro_target => 'sles12' }
   end
 
   describe '#announce_system' do
