@@ -5,8 +5,10 @@ describe 'connect::integration_tests' do
 
   it 'runs cucumber tests' do
     expect(chef_run).to run_execute('integration testing').with(
-      command: 'sudo LOCAL_SERVER=https://scc.suse.com cucumber /tmp/connect/features/integration.feature',
-      cwd: '/tmp/connect'
+      command: 'cucumber /tmp/connect/features/integration.feature',
+      cwd: '/tmp/connect',
+      user: 'root',
+      group: 'root'
     )
   end
 end
