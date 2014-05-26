@@ -19,7 +19,7 @@ module SUSE
 
         unless @options[:token]
           puts @opts
-          exit
+          exit(1)
         end
         Client.new(@options).register!
 
