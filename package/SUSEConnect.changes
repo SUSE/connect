@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Mon May 26 12:57:30 UTC 2014 - wstephenson@suse.com
+
+- Update to version 0.0.18
+  - Standardise and document error codes
+  - SUSEConnect(5) config file man page
+
+-------------------------------------------------------------------
 Fri May 16 12:08:17 UTC 2014 - wstephenson@suse.com
 
 - Update to version 0.0.17
