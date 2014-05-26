@@ -6,6 +6,10 @@
 # vagrant up --provider=openstack
 
 Vagrant.configure('2') do |config|
+
+  config.berkshelf.enabled = true
+  config.berkshelf.berksfile_path = 'Berksfile'
+
   config.vm.define "jenkins_scc_connect_build_#{ENV['BUILD_NUMBER']}" do |config|
     config.vm.box = 'openstack'
     config.vm.hostname = 'suse-connect-testing'
