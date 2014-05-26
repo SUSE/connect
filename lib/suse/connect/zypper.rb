@@ -81,7 +81,7 @@ module SUSE
         private
 
         def root_arg
-          "--root '#{SUSE::Connect::System.filesystem_root}' " unless SUSE::Connect::System.filesystem_root.empty?
+          "--root '#{SUSE::Connect::System.filesystem_root}' " if SUSE::Connect::System.filesystem_root
         end
 
         def call_zypper(silent, args)

@@ -3,8 +3,6 @@ module SUSE
     # System class allowing to interact with underlying system
     class System
 
-      @filesystem_root = ''
-
       class << self
 
         attr_accessor :filesystem_root
