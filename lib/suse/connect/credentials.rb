@@ -27,7 +27,7 @@ module SUSE
         if SUSE::Connect::System.filesystem_root
           File.join(SUSE::Connect::System.filesystem_root, GLOBAL_CREDENTIALS_FILE)
         else
-         GLOBAL_CREDENTIALS_FILE
+          GLOBAL_CREDENTIALS_FILE
         end
       end
 
