@@ -1,8 +1,8 @@
 Given(/^I register a system with (valid|invalid) regcode$/) do |condition|
-  regcode = if condition == 'valid'
-    YAML.load_file('/root/.regcode')['code']
+  if condition == 'valid'
+    regcode = YAML.load_file('/root/.regcode')['code']
   else
-    'INVALID_REGCODE'
+    regcode = 'INVALID_REGCODE'
   end
 
   connect_cmd = "SUSEConnect -r #{regcode}"
