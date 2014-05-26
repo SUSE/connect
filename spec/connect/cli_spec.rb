@@ -116,7 +116,7 @@ describe SUSE::Connect::Cli do
       argv = %w{--root /path/to/root}
       subject.new(argv)
       SUSE::Connect::System.filesystem_root.should eq '/path/to/root'
-      SUSE::Connect::System.filesystem_root = ''
+      SUSE::Connect::System.filesystem_root = nil
     end
 
   end
