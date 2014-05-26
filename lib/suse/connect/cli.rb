@@ -1,8 +1,6 @@
 require 'optparse'
 require 'suse/connect'
 
-$suse_connect_filesystem_root = ''
-
 module SUSE
   module Connect
     # Command line interface for interacting with SUSEConnect
