@@ -30,7 +30,7 @@ module SUSE
 
       def read
         if File.exist?(@file)
-          @settings ||= YAML.load_file(@file) || {}
+          @settings ||= (YAML.load_file(@file) || {})
         else
           {}
         end
