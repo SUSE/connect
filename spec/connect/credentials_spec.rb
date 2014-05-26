@@ -12,10 +12,10 @@ describe SUSE::Connect::Credentials do
     end
 
     it 'with root folder set' do
-      $suse_connect_filesystem_root = '/path/to/root'
-      expected = File.join($suse_connect_filesystem_root, Credentials::GLOBAL_CREDENTIALS_FILE)
+      SUSE::Connect::System.filesystem_root = '/path/to/root'
+      expected = File.join('/path/to/root', Credentials::GLOBAL_CREDENTIALS_FILE)
       expect(Credentials.system_credentials_file).to eq expected
-      $suse_connect_filesystem_root = ''
+      SUSE::Connect::System.filesystem_root = ''
     end
 
   end
@@ -64,10 +64,10 @@ describe SUSE::Connect::Credentials do
     end
 
     it 'compute filename to write properly --root case' do
-      $suse_connect_filesystem_root = '/path/to/root'
+      SUSE::Connect::System.filesystem_root = '/path/to/root'
       credentials = Credentials.new('name', '1234', 'SLES')
       credentials.filename.should start_with '/path/to/root/'
-      $suse_connect_filesystem_root = ''
+      SUSE::Connect::System.filesystem_root = ''
     end
 
     it 'raises an error when file name is not set' do

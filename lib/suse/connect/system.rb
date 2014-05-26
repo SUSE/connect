@@ -3,14 +3,18 @@ module SUSE
     # System class allowing to interact with underlying system
     class System
 
+      @filesystem_root = ''
+
       class << self
+
+        attr_accessor :filesystem_root
 
         def hwinfo
           info = {
-            :cpu_type       => `uname -p`,
-            :cpu_count      => `grep "processor" /proc/cpuinfo | wc -l`,
-            :platform_type  => `uname -i`,
-            :hostname       => `hostname`
+            :cpu_type => `uname -p`,
+            :cpu_count => `grep "processor" /proc/cpuinfo | wc -l`,
+            :platform_type => `uname -i`,
+            :hostname => `hostname`
           }
 
           info.values.each(&:chomp!)

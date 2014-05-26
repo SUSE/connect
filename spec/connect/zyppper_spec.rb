@@ -16,12 +16,12 @@ describe SUSE::Connect::Zypper do
         let(:xml) { File.read('spec/fixtures/product_valid_sle11sp3.xml') }
 
         before do
-          $suse_connect_filesystem_root = '/path/to/root'
+          SUSE::Connect::System.filesystem_root = '/path/to/root'
           Object.should_receive(:'`').with(include "zypper --root '/path/to/root' ").and_return(xml)
         end
 
         after do
-          $suse_connect_filesystem_root = ''
+          SUSE::Connect::System.filesystem_root = ''
         end
 
         it 'returns valid list of products based on proper XML' do
@@ -85,9 +85,9 @@ describe SUSE::Connect::Zypper do
       parameters = "zypper --root '/path/to/root' --quiet --non-interactive addservice " \
                    "-t ris http://example.com 'branding'"
       Object.should_receive(:system).with(parameters).and_return(true)
-      $suse_connect_filesystem_root = '/path/to/root'
+      SUSE::Connect::System.filesystem_root = '/path/to/root'
       subject.add_service('branding', 'http://example.com')
-      $suse_connect_filesystem_root = ''
+      SUSE::Connect::System.filesystem_root = ''
     end
 
   end
@@ -103,9 +103,9 @@ describe SUSE::Connect::Zypper do
     it 'calls zypper with proper arguments --root case' do
       parameters = "zypper --root '/path/to/root' --quiet --non-interactive removeservice 'branding'"
       Object.should_receive(:system).with(parameters).and_return(true)
-      $suse_connect_filesystem_root = '/path/to/root'
+      SUSE::Connect::System.filesystem_root = '/path/to/root'
       subject.remove_service('branding')
-      $suse_connect_filesystem_root = ''
+      SUSE::Connect::System.filesystem_root = ''
     end
 
   end
@@ -118,10 +118,10 @@ describe SUSE::Connect::Zypper do
     end
 
     it 'calls zypper with proper arguments --root case' do
-      $suse_connect_filesystem_root = '/path/to/root'
+      SUSE::Connect::System.filesystem_root = '/path/to/root'
       Object.should_receive(:system).with("zypper --root '/path/to/root' refresh").and_return(true)
       subject.refresh
-      $suse_connect_filesystem_root = ''
+      SUSE::Connect::System.filesystem_root = ''
     end
 
   end
@@ -137,9 +137,9 @@ describe SUSE::Connect::Zypper do
     it 'calls zypper with proper arguments --root case' do
       parameters = "zypper --root '/path/to/root' --quiet modifyservice --ar-to-enable 'branding:tofu' 'branding'"
       Object.should_receive(:system).with(parameters).and_return(true)
-      $suse_connect_filesystem_root = '/path/to/root'
+      SUSE::Connect::System.filesystem_root = '/path/to/root'
       subject.enable_service_repository('branding', 'tofu')
-      $suse_connect_filesystem_root = ''
+      SUSE::Connect::System.filesystem_root = ''
     end
 
   end
@@ -155,9 +155,9 @@ describe SUSE::Connect::Zypper do
     it 'calls zypper with proper arguments --root case' do
       parameters = "zypper --root '/path/to/root' --quiet modifyrepo --no-refresh 'branding:tofu'"
       Object.should_receive(:system).with(parameters).and_return(true)
-      $suse_connect_filesystem_root = '/path/to/root'
+      SUSE::Connect::System.filesystem_root = '/path/to/root'
       subject.disable_repository_autorefresh('branding', 'tofu')
-      $suse_connect_filesystem_root = ''
+      SUSE::Connect::System.filesystem_root = ''
     end
 
   end
@@ -270,9 +270,9 @@ describe SUSE::Connect::Zypper do
 
     it 'return zypper targetos output --root case' do
       Object.should_receive(:'`').with("zypper --root '/path/to/root' targetos").and_return('openSUSE-13.1-x86_64')
-      $suse_connect_filesystem_root = '/path/to/root'
+      SUSE::Connect::System.filesystem_root = '/path/to/root'
       Zypper.distro_target.should eq 'openSUSE-13.1-x86_64'
-      $suse_connect_filesystem_root = ''
+      SUSE::Connect::System.filesystem_root = ''
     end
   end
 

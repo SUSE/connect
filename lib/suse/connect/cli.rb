@@ -88,7 +88,8 @@ module SUSE
 
         @opts.on('--root [PATH]', 'Path to the root folder, uses the same parameter for zypper.') do |opt|
           check_if_param(opt, 'Please provide path parameter')
-          $suse_connect_filesystem_root = opt
+          @options[:filesystem_root] = opt
+          SUSE::Connect::System.filesystem_root = opt
         end
 
         @opts.on('--version', 'print program version') do

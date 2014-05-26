@@ -1,5 +1,3 @@
-require 'suse/connect/version'
-
 def service_name
   base_product = SUSE::Connect::Zypper.base_product
   if base_product[:name] == 'openSUSE'

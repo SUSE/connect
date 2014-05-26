@@ -39,7 +39,7 @@ ClassAndModuleChildren:
   Enabled: false
 
 GlobalVars:
-  AllowedVariables: ['$suse_connect_filesystem_root']
+  AllowedVariables: []
 
 AllCops:
   Exclude:
