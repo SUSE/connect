@@ -81,6 +81,12 @@ describe SUSE::Connect::Zypper do
       subject.add_service('branding', 'http://example.com')
     end
 
+    it 'escapes shell parameters' do
+      parameters = "zypper --quiet --non-interactive addservice -t ris http://example.com\\;id 'branding'"
+      Object.should_receive(:system).with(parameters).and_return(true)
+      subject.add_service('branding', 'http://example.com;id')
+    end
+
     it 'calls zypper with proper arguments --root case' do
       parameters = "zypper --root '/path/to/root' --quiet --non-interactive addservice " \
                    "-t ris http://example.com 'branding'"

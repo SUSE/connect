@@ -1,4 +1,5 @@
 require 'rexml/document'
+require 'shellwords'
 require 'suse/connect/rexml_refinement'
 require 'suse/toolkit/system_calls'
 
@@ -39,15 +40,15 @@ module SUSE
 
         def add_service(service_name, service_url)
           call_zypper(:silently, "--quiet --non-interactive addservice -t ris " \
-               "#{service_url} '#{service_name}'")
+               "#{Shellwords.escape(service_url)} '#{Shellwords.escape(service_name)}'")
         end
 
         def enable_autorefresh_service(service_name)
-          call_zypper(:silently, "--quiet --non-interactive modifyservice -r #{service_name}")
+          call_zypper(:silently, "--quiet --non-interactive modifyservice -r #{Shellwords.escape(service_name)}")
         end
 
         def remove_service(service_name)
-          call_zypper(:silently, "--quiet --non-interactive removeservice '#{service_name}'")
+          call_zypper(:silently, "--quiet --non-interactive removeservice '#{Shellwords.escape(service_name)}'")
         end
 
         def refresh
@@ -60,11 +61,11 @@ module SUSE
 
         def enable_service_repository(service_name, repository)
           call_zypper(:silently, "--quiet modifyservice --ar-to-enable " \
-               "'#{service_name}:#{repository}' '#{service_name}'")
+               "'#{Shellwords.escape(service_name)}:#{Shellwords.escape(repository)}' '#{Shellwords.escape(service_name)}'")
         end
 
         def disable_repository_autorefresh(service_name, repository)
-          call_zypper(:silently, "--quiet modifyrepo --no-refresh '#{service_name}:#{repository}'")
+          call_zypper(:silently, "--quiet modifyrepo --no-refresh '#{Shellwords.escape(service_name)}:#{Shellwords.escape(repository)}'")
         end
 
         def write_service_credentials(service_name)

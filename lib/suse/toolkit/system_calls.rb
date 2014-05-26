@@ -5,10 +5,12 @@ module SUSE
       include Connect::Logger
 
       def call(command)
-        system(command) ? true : log.error("command `#{command}` failed")
+        log.debug("Calling: '#{command}'")
+        system(command) ? true : log.error("command '#{command}' failed")
       end
 
       def call_with_output(command)
+        log.debug("Calling: '#{command}'")
         `#{command}`.chomp
       end
 

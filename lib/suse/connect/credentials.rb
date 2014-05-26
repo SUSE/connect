@@ -33,7 +33,7 @@ module SUSE
         user, passwd = parse(content)
         log.info("Reading credentials from #{file}")
         credentials = Credentials.new(user, passwd, file)
-        log.debug("Read credentials: #{credentials}")
+        log.debug("Read credentials: #{credentials.username} : #{credentials.password}")
         credentials
       end
 

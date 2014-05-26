@@ -72,10 +72,6 @@ module SUSE
           @options[:token] = opt
         end
 
-        @opts.on('-k', '--insecure', 'Skip SSL verification (insecure).') do |opt|
-          @options[:insecure] = opt
-        end
-
         @opts.on('--url [URL]', 'URL of registration server (e.g. https://scc.suse.com).') do |opt|
           check_if_param(opt, 'Please provide registration server URL')
           @options[:url] = opt

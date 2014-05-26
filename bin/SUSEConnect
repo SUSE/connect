@@ -3,4 +3,10 @@
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 require 'suse/connect/cli'
 
-SUSE::Connect::Cli.new(ARGV.dup).execute!
+cli = SUSE::Connect::Cli.new(ARGV.dup)
+begin
+  cli.execute!
+rescue => e
+  puts "Connect error #{e.class}: #{e.message}"
+  cli.log.debug e.backtrace.join("\n")
+end
