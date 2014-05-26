@@ -55,9 +55,12 @@ Manage subscriptions at https://scc.suse.com
 
 ## DIAGNOSTICS
   The following errors may be given on stderr:
-
-  TBD
-
+  
+  * 64: Connection refused
+  * 65: Access error, eg files not readable
+  * 66: Parser error: Server JSON response was not parseable
+  * 67: Server responded with error: see log output
+ 
 ## COMPARED TO SUSE_REGISTER
 ### BEFORE
   `suse_register -a email=<email> -a regcode-sles=<regcode> -L <logfile>`
