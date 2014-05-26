@@ -6,6 +6,10 @@ describe SUSE::Connect::Zypper do
     Object.stub(:system => true)
   end
 
+  after(:each) do
+    SUSE::Connect::System.filesystem_root = nil
+  end
+
   subject { SUSE::Connect::Zypper }
 
   describe '.installed_products' do
@@ -16,12 +20,7 @@ describe SUSE::Connect::Zypper do
         let(:xml) { File.read('spec/fixtures/product_valid_sle11sp3.xml') }
 
         before do
-          SUSE::Connect::System.filesystem_root = '/path/to/root'
-          Object.should_receive(:'`').with(include "zypper --root '/path/to/root' ").and_return(xml)
-        end
-
-        after do
-          SUSE::Connect::System.filesystem_root = ''
+          Object.should_receive(:'`').and_return(xml)
         end
 
         it 'returns valid list of products based on proper XML' do
@@ -87,7 +86,6 @@ describe SUSE::Connect::Zypper do
       Object.should_receive(:system).with(parameters).and_return(true)
       SUSE::Connect::System.filesystem_root = '/path/to/root'
       subject.add_service('branding', 'http://example.com')
-      SUSE::Connect::System.filesystem_root = ''
     end
 
   end
@@ -105,7 +103,6 @@ describe SUSE::Connect::Zypper do
       Object.should_receive(:system).with(parameters).and_return(true)
       SUSE::Connect::System.filesystem_root = '/path/to/root'
       subject.remove_service('branding')
-      SUSE::Connect::System.filesystem_root = ''
     end
 
   end
@@ -121,7 +118,6 @@ describe SUSE::Connect::Zypper do
       SUSE::Connect::System.filesystem_root = '/path/to/root'
       Object.should_receive(:system).with("zypper --root '/path/to/root' refresh").and_return(true)
       subject.refresh
-      SUSE::Connect::System.filesystem_root = ''
     end
 
   end
@@ -139,7 +135,6 @@ describe SUSE::Connect::Zypper do
       Object.should_receive(:system).with(parameters).and_return(true)
       SUSE::Connect::System.filesystem_root = '/path/to/root'
       subject.enable_service_repository('branding', 'tofu')
-      SUSE::Connect::System.filesystem_root = ''
     end
 
   end
@@ -157,7 +152,6 @@ describe SUSE::Connect::Zypper do
       Object.should_receive(:system).with(parameters).and_return(true)
       SUSE::Connect::System.filesystem_root = '/path/to/root'
       subject.disable_repository_autorefresh('branding', 'tofu')
-      SUSE::Connect::System.filesystem_root = ''
     end
 
   end
@@ -272,7 +266,6 @@ describe SUSE::Connect::Zypper do
       Object.should_receive(:'`').with("zypper --root '/path/to/root' targetos").and_return('openSUSE-13.1-x86_64')
       SUSE::Connect::System.filesystem_root = '/path/to/root'
       Zypper.distro_target.should eq 'openSUSE-13.1-x86_64'
-      SUSE::Connect::System.filesystem_root = ''
     end
   end
 
