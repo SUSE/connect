@@ -38,6 +38,8 @@ task :build => [:default] do
   Dir.chdir('package')
   sh "gem2rpm -l -o SUSEConnect.spec -t SUSEConnect.spec.erb #{gemfilename}"
   sh 'ronn --roff --manual SUSEConnect --pipe ../MANUAL.md > SUSEConnect.8 && gzip -f SUSEConnect.8'
+  sh 'ronn --roff --manual SUSEConnect --pipe ../MANPAGE_CONFIG.md > SUSEConnect.5 && gzip -f SUSEConnect.5'
+
   sh 'osc -A https://api.suse.de build SLE_12 x86_64 --no-verify'
 
 end
