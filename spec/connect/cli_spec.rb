@@ -31,7 +31,7 @@ describe SUSE::Connect::Cli do
     end
 
     it 'should produce log output if ApiError encountered' do
-      string_logger.should_receive(:error).with('Error: Connection refused by server')
+      string_logger.should_receive(:error).with('Error: Connection refused by server https://scc.suse.com')
       Client.any_instance.stub(:register!).and_raise Errno::ECONNREFUSED
       cli.execute!
     end
