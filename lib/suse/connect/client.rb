@@ -39,6 +39,12 @@ module SUSE
         System.add_service(service)
       end
 
+      # @returns: Empty body and 204 status code
+      def deregister!
+        @api.deregister(basic_auth)
+        System.remove_credentials
+      end
+
       # Announce system via SCC/Registration Proxy
       #
       # @returns: [Array] login, password tuple. Those credentials are given by SCC/Registration Proxy
@@ -56,18 +62,22 @@ module SUSE
         Service.new(result['sources'], result['enabled'], result['norefresh'])
       end
 
+      # Upgrade a product
+      # System upgrade (eg SLES11 -> SLES12) without regcode
+      #
+      # @param product_ident [Hash] with product parameters
+      # @returns: Service for this product
+      def upgrade_product(product_ident)
+        result = @api.upgrade_product(basic_auth, product_ident).body
+        Service.new(result['sources'], result['enabled'], result['norefresh'])
+      end
+
       # @param product_ident [Hash] product to query extensions for
       def list_products(product_ident)
         result = @api.addons(basic_auth, product_ident).body
         result.map do |product|
           SUSE::Connect::Product.new(product)
         end
-      end
-
-      # @returns: Empty body and 204 status code
-      def deregister!
-        @api.deregister(basic_auth)
-        System.remove_credentials
       end
 
     end

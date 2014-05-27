@@ -124,38 +124,64 @@ describe SUSE::Connect::Client do
 
   describe '#activate_product' do
 
+    let (:product_ident) { {:name => 'SLES', :version => '12', :arch => 'x86_64'} }
+
     before do
       api_response = double('api_response')
-      api_response.stub(:body => { 'sources' => { :foo => 'bar' }, :enabled => true, :norefresh => false })
+      api_response.stub(:body => { 'sources' => { :foo => 'bar' }, 'enabled' => [:foo], 'norefresh' => [:foo] })
       Api.any_instance.stub(:activate_product => api_response)
-      System.stub(:credentials => Credentials.new('meuser', 'mepassword'))
-      Zypper.stub(:base_product => ({ :name => 'SLE_BASE' }))
-      System.stub(:add_service)
       subject.stub(:basic_auth => 'secretsecret')
-
-    end
-
-    it 'selects product' do
-      Zypper.should_receive(:base_product).and_return(:name => 'SLE_BASE')
-      subject.activate_product(Zypper.base_product)
     end
 
     it 'gets login and password from system' do
       subject.should_receive(:basic_auth)
-      subject.activate_product(Zypper.base_product)
+      subject.activate_product(product_ident)
     end
 
     it 'calls underlying api with proper parameters' do
-      Api.any_instance.should_receive(:activate_product)
-        .with('secretsecret', Zypper.base_product, nil)
-      subject.activate_product(Zypper.base_product)
+      Api.any_instance.should_receive(:activate_product).with('secretsecret', product_ident, nil)
+      subject.activate_product(product_ident)
     end
 
     it 'allows to pass an optional parameter "email"' do
       email = 'email@domain.com'
-      Api.any_instance.should_receive(:activate_product)
-        .with('secretsecret', Zypper.base_product, email)
-      subject.activate_product(Zypper.base_product, email)
+      Api.any_instance.should_receive(:activate_product).with('secretsecret', product_ident, email)
+      subject.activate_product(product_ident, email)
+    end
+
+    it 'returns service object' do
+      service = subject.activate_product(product_ident)
+      service.sources.first.name.should eq :foo
+      service.enabled.should eq [:foo]
+    end
+
+  end
+
+  describe '#upgrade_product' do
+
+    let (:product_ident) { {:name => 'SLES', :version => '12', :arch => 'x86_64'} }
+
+    before do
+      api_response = double('api_response')
+      api_response.stub(:body => { 'sources' => { :foo => 'bar' }, 'enabled' => [:foo], 'norefresh' => [:foo] })
+      Api.any_instance.stub(:upgrade_product => api_response)
+      subject.stub(:basic_auth => 'secretsecret')
+    end
+
+    it 'gets login and password from system' do
+      subject.should_receive(:basic_auth)
+      subject.upgrade_product(product_ident)
+    end
+
+    it 'calls underlying api with proper parameters' do
+      Api.any_instance.should_receive(:upgrade_product).with('secretsecret', product_ident)
+      subject.upgrade_product(product_ident)
+    end
+
+    it 'returns service object' do
+      service = subject.upgrade_product(product_ident)
+      service.sources.first.name.should eq :foo
+      service.enabled.should eq [:foo]
     end
 
   end
