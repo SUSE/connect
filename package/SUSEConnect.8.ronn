@@ -53,9 +53,10 @@ Manage subscriptions at [SUSE Customer Center][scc]
   * `-h`, `--help`:
     show help message
 
-## DIAGNOSTICS
-  The following errors may be given on stderr:
-  
+## EXIT CODES
+  SUSEConnect sets the following exit codes:
+
+  * 0:  Registration successful
   * 64: Connection refused
   * 65: Access error, eg files not readable
   * 66: Parser error: Server JSON response was not parseable
