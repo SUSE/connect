@@ -5,7 +5,7 @@ MethodLength:
   Max: 15
 
 LineLength:
-  Max: 120
+  Max: 140
 
 SpaceBeforeBlockBraces:
   Enabled: true
@@ -37,6 +37,9 @@ FileName:
 
 ClassAndModuleChildren:
   Enabled: false
+
+GlobalVars:
+  AllowedVariables: ['$suse_connect_filesystem_root']
 
 AllCops:
   Exclude:

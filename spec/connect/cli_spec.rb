@@ -70,12 +70,6 @@ describe SUSE::Connect::Cli do
       cli.options[:token].should eq 'matoken'
     end
 
-    it 'sets insecure options' do
-      argv = %w{--insecure}
-      cli = subject.new(argv)
-      cli.options[:insecure].should be_true
-    end
-
     it 'sets url options' do
       argv = %w{--url test}
       cli = subject.new(argv)
@@ -107,9 +101,16 @@ describe SUSE::Connect::Cli do
     end
 
     it 'sets verbose options' do
-      argv = %w{-v}
+      argv = %w{--debug}
       cli = subject.new(argv)
-      cli.options[:verbose].should be_true
+      cli.options[:debug].should be_true
+    end
+
+    it 'sets root option' do
+      argv = %w{--root /path/to/root}
+      subject.new(argv)
+      $suse_connect_filesystem_root.should eq '/path/to/root'
+      $suse_connect_filesystem_root = ''
     end
 
   end

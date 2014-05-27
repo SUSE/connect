@@ -5,6 +5,21 @@ describe SUSE::Connect::Credentials do
 
   let(:credentials_file) { SUSE::Connect::Credentials::GLOBAL_CREDENTIALS_FILE }
 
+  describe '.system_credentials_file' do
+
+    it 'without root folder set' do
+      expect(Credentials.system_credentials_file).to eq Credentials::GLOBAL_CREDENTIALS_FILE
+    end
+
+    it 'with root folder set' do
+      $suse_connect_filesystem_root = '/path/to/root'
+      expected = File.join($suse_connect_filesystem_root, Credentials::GLOBAL_CREDENTIALS_FILE)
+      expect(Credentials.system_credentials_file).to eq expected
+      $suse_connect_filesystem_root = ''
+    end
+
+  end
+
   describe '.read' do
 
     it 'creates Credentials object from a credentials file' do
@@ -46,6 +61,13 @@ describe SUSE::Connect::Credentials do
         expect(File.size(credentials.file)).to be > 0
         expect(File.stat(credentials.file).mode).to eq 0100600
       end
+    end
+
+    it 'compute filename to write properly --root case' do
+      $suse_connect_filesystem_root = '/path/to/root'
+      credentials = Credentials.new('name', '1234', 'SLES')
+      credentials.filename.should start_with '/path/to/root/'
+      $suse_connect_filesystem_root = ''
     end
 
     it 'raises an error when file name is not set' do

@@ -23,20 +23,28 @@ module SUSE
         @file = file
       end
 
+      def self.system_credentials_file
+        File.join($suse_connect_filesystem_root, GLOBAL_CREDENTIALS_FILE)
+      end
+
       def self.read(file)
         raise MissingSccCredentialsFile unless File.exist?(file)
         content = File.read(file)
         user, passwd = parse(content)
         log.info("Reading credentials from #{file}")
         credentials = Credentials.new(user, passwd, file)
-        log.debug("Read credentials: #{credentials}")
+        log.debug("Read credentials: #{credentials.username} : #{credentials.password}")
         credentials
+      end
+
+      def filename
+        default_dir = File.join($suse_connect_filesystem_root, DEFAULT_CREDENTIALS_DIR)
+        Pathname.new(file).absolute? ? file : File.join(default_dir, file)
       end
 
       # Write credentials to a file
       def write
         raise 'Invalid filename' if file.nil? || file.empty?
-        filename = Pathname.new(file).absolute? ? file : File.join(DEFAULT_CREDENTIALS_DIR, file)
         dirname = File.dirname(filename)
         FileUtils.mkdir_p(dirname) unless File.exist?(dirname)
         log.info("Writing credentials to #{filename}")
