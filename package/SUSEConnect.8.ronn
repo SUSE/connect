@@ -92,6 +92,7 @@ Manage subscriptions at [SUSE Customer Center][scc]
 ## LINKS
 [SUSE Customer Center][scc]
 
+[SUSEConnect on GitHub][scc-github]
 
 ## SEE ALSO
 
