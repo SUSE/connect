@@ -1,0 +1,7 @@
+# Manpages in this project
+SUSEConnect(5) MANPAGE_CONFIG.md
+SUSEConnect(8) MANUAL.md
+
+# URLS used in markdown reference links
+yaml-spec http://www.yaml.org/spec/1.2/spec.html
+scc  https://scc.suse.com
