@@ -124,7 +124,7 @@ describe SUSE::Connect::Client do
 
   describe '#activate_product' do
 
-    let (:product_ident) { {:name => 'SLES', :version => '12', :arch => 'x86_64'} }
+    let(:product_ident) { { :name => 'SLES', :version => '12', :arch => 'x86_64' } }
 
     before do
       api_response = double('api_response')
@@ -159,7 +159,7 @@ describe SUSE::Connect::Client do
 
   describe '#upgrade_product' do
 
-    let (:product_ident) { {:name => 'SLES', :version => '12', :arch => 'x86_64'} }
+    let(:product_ident) { { :name => 'SLES', :version => '12', :arch => 'x86_64' } }
 
     before do
       api_response = double('api_response')

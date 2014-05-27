@@ -9,7 +9,7 @@ describe SUSE::Connect::YaST do
 
   describe '#announce_system' do
 
-    let (:params) { { :distro_target => 'sles12-x86_64' } }
+    let(:params) { { :distro_target => 'sles12-x86_64' } }
     before { client.stub :announce_system }
 
     it 'calls announce_system on an instance of Client' do
@@ -28,7 +28,7 @@ describe SUSE::Connect::YaST do
     end
 
     it 'forwards distro_target param to announce' do
-      client.should_receive( :announce_system ).with(params[:distro_target])
+      client.should_receive(:announce_system).with(params[:distro_target])
       subject.announce_system params
     end
 
@@ -36,7 +36,7 @@ describe SUSE::Connect::YaST do
 
   describe '#activate_product' do
 
-    let (:params) { { token: 'regcode', email: 'foo@bar.zer', product_ident: {:name => 'win95'} } }
+    let(:params) { { token: 'regcode', email: 'foo@bar.zer', product_ident: { :name => 'win95' } } }
     before { client.stub :activate_product }
 
     it 'calls activate_product on an instance of Client' do
@@ -63,7 +63,7 @@ describe SUSE::Connect::YaST do
 
   describe '#upgrade_product' do
 
-    let (:params) { { product_ident: {:name => 'win95'} } }
+    let(:params) { { product_ident: { :name => 'win95' } } }
     before { client.stub :upgrade_product }
 
     it 'calls upgrade_product on an instance of Client' do
@@ -90,7 +90,7 @@ describe SUSE::Connect::YaST do
 
   describe '#list_products' do
 
-    let (:params) { { product_ident: {:name => 'win95'} } }
+    let(:params) { { product_ident: { :name => 'win95' } } }
     before { client.stub :list_products }
 
     it 'calls list_products on an instance of Client' do
