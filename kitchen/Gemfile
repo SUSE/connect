@@ -3,7 +3,8 @@ source 'https://rubygems.org'
 gem 'rake'
 
 group :development do
-  gem 'berkshelf'
+  gem 'berkshelf', '1.4.0'
+  gem 'faraday', '0.8.8'
   gem 'knife-solo'
 end
 
@@ -12,4 +13,9 @@ group :test do
   gem 'rspec'
   gem 'strainer'
   gem 'debugger'
+end
+
+group :plugins do
+  gem 'vagrant-berkshelf', '1.2.0'
+  gem 'vagrant-openstack-plugin'
 end
