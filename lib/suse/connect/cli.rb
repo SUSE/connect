@@ -53,10 +53,10 @@ module SUSE
         @opts.on('-p', '--product [PRODUCT]', 'Activate PRODUCT. Defaults to the base SUSE Linux',
                  '  Enterprise product on this system.',
                  '  Product identifiers can be obtained with \'zypper products\'',
-                 '  Format: <name>-<version>-<architecture>') do |opt|
+                 '  Format: <internal name>-<version>-<architecture>') do |opt|
           check_if_param(opt, 'Please provide a product identifier')
           check_if_param((opt =~ /\S+-\S+-\S+/), 'Please provide the product identifier in this format: ' \
-            '<name>-<version>-<architecture>. For installed products you can find these values by calling: ' \
+            '<internal name>-<version>-<architecture>. For installed products you can find these values by calling: ' \
             '\'zypper products\'. ')
           @options[:product] = { :name => opt.split('-')[0], :version => opt.split('-')[1],
                                  :arch => opt.split('-')[2] }
