@@ -1,6 +1,6 @@
 # Manpages in this project
-SUSEConnect(5) MANPAGE_CONFIG.md
-SUSEConnect(8) MANUAL.md
+SUSEConnect(5) SUSEConnect.5.ronn
+SUSEConnect(8) SUSEConnect.8.ronn
 
 # URLS used in markdown reference links
 yaml-spec http://www.yaml.org/spec/1.2/spec.html
