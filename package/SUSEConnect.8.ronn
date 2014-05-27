@@ -18,7 +18,7 @@ extensions that have been installed after system installation from physical medi
 To register extensions, use the `--product <PRODUCT-IDENTIFIER>` option together 
 with the product identifier of the extension, obtained with `zypper products`
   
-Manage subscriptions at https://scc.suse.com
+Manage subscriptions at [SUSE Customer Center][scc]
 
 ## OPTIONS
   * `-p`, `--product <PRODUCT>`:
@@ -89,7 +89,8 @@ Manage subscriptions at https://scc.suse.com
   SUSE Linux Products GmbH <scc-feedback@suse.de>
 
 ## LINKS
-  https://scc.suse.com
+[SUSE Customer Center][scc]
+
 
 ## SEE ALSO
 
