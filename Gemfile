@@ -10,7 +10,7 @@ group :development do
   gem 'redcarpet'
   gem 'ronn'
   gem 'rake'
-  gem 'gem2rpm'
+  gem 'gem2rpm', '~> 0.10.1'
   gem 'gem-release'
 end
 
