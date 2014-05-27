@@ -19,6 +19,7 @@
 Name:           SUSEConnect
 Version:        <%= spec.version %>
 Release:        0
+Source:         %{mod_name}-%{version}.gem
 %define mod_name <%= spec.name %>
 %define mod_full_name %{mod_name}-%{version}
 <% unless spec.executables.empty?
