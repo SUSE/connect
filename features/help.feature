@@ -8,13 +8,13 @@ Feature: Help output
   Scenario: help should contain host parameter
     Then the output should contain:
       """
-      --url [URL]                  Connection base url (e.g. https://scc.suse.com).
+      --url [URL]
       """
 
   Scenario: help should contain token parameter
     Then the output should contain:
       """
-      -r, --regcode [REGCODE]          Registration code. The repositories of the subscription with this registration code will get activated on this system.
+      -r, --regcode [REGCODE]
       """
 
   # Common Options
@@ -22,23 +22,23 @@ Feature: Help output
   Scenario: help should contain help option
     Then the output should contain:
       """
-      --help                       Show this message.
+      --help
       """
 
   Scenario: help should contain dry mode option
     Then the output should contain:
       """
-      -d, --dry-mode                   Dry mode. Does not make any changes to the system.
+      -d, --dry-run
       """
 
   Scenario: help should contain version option
     Then the output should contain:
       """
-      --version                    Print version
+      --version
       """
 
   Scenario: help should contain verbose option
     Then the output should contain:
       """
-      -v, --verbose                    Run verbosely.
+      --debug
       """

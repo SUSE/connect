@@ -7,7 +7,7 @@ Then(/^output should inform us about requirement to run as root$/) do
 end
 
 Then(/^output should inform us about you need an argument if running with url parameter$/) do
-  assert_exact_output('Please provide url parameter', all_output.chomp)
+  assert_exact_output('Please provide registration server URL', all_output.chomp)
 end
 
 Then(/^outputs should not contain info about required url param$/) do
