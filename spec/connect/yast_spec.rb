@@ -4,7 +4,6 @@ describe SUSE::Connect::YaST do
 
   subject { SUSE::Connect::YaST }
 
-
   describe '#announce_system' do
 
     let(:params) { { :distro_target => 'sles12-x86_64' } }
