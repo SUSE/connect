@@ -159,7 +159,7 @@ describe SUSE::Connect::Api do
       payload = [
         '/connect/systems/products',
         :auth => 'Basic: encodedgibberish',
-        :params => { :product_ident => 'rodent' }
+        :params => { :product_id => 'rodent' }
       ]
       Connection.any_instance.should_receive(:get)
         .with(*payload)

@@ -82,13 +82,13 @@ module SUSE
       # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
       #
       def addons(auth, product)
-        payload = { :product_ident => product[:name] }
+        payload = { :product_id => product[:name] }
         @connection.get('/connect/systems/products', :auth => auth, :params => payload)
       end
 
       # Deregister/unregister a system
       #
-      # @param auth [String] authorizaztion string which will be injected in 'Authorization' header in request.
+      # @param auth [String] authorization string which will be injected in 'Authorization' header in request.
       #   In this case we expects Base64 encoded string with login and password
       #
       # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
