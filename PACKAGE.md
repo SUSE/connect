@@ -18,12 +18,14 @@ This gem can already be installed and used. To create a RPM from this gem you ne
 ```
 > cp suse-connect-*.gem package/
 > cd package
-> gem2rpm -l -o SUSEConnect.spec -t SUSEConnect.spec.erb suse-connect-*.gem
+> gem2rpm -l -s -o SUSEConnect.spec -t SUSEConnect.spec.erb suse-connect-*.gem
 ```
 
 To create the man page do:
 
-`> ronn --roff --manual 'SUSEConnect' --pipe ../README.md > SUSEConnect.1 && gzip SUSEConnect.1`
+`> ronn --roff --manual SUSEConnect --pipe SUSEConnect.8.ronn > SUSEConnect.8 && gzip -f SUSEConnect.8`
+`> ronn --roff --manual SUSEConnect --pipe SUSEConnect.5.ronn > SUSEConnect.5 && gzip -f SUSEConnect.5`
+
 
 To build the package:
 
