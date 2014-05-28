@@ -1,6 +1,6 @@
 git '/tmp/connect' do
   repository 'https://github.com/SUSE/connect.git'
-  reference 'review_140526_refactor_integration_test_setup'
+  reference 'master'
   action 'sync'
   user 'vagrant'
   group 'users'
