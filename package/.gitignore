@@ -6,5 +6,5 @@
 .osc/*.spec.erb
 .osc/ncc_scc_migrate.sh
 SUSEConnect.spec
-SUSEConnect.5.gz
-SUSEConnect.8.gz
+SUSEConnect.*.gz
+SUSEConnect-*.rpm
