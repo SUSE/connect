@@ -8,3 +8,4 @@ Gemfile.lock
 suse-connect-*.gem
 .vagrant/
 .kitchen/
+Vagrantfile
