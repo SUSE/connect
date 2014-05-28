@@ -1,8 +1,11 @@
 -------------------------------------------------------------------
-Mon May 19 08:04:03 UTC 2014 - wstephenson@suse.com
+Mon May 26 12:57:30 UTC 2014 - wstephenson@suse.com
 
 - Update to version 0.0.18
   - Rename --verbose CLI option to --debug
+  - Standardise and document error codes
+  - SUSEConnect(5) config file man page
+  - Move main manpage to section 8
 
 -------------------------------------------------------------------
 Fri May 16 12:08:17 UTC 2014 - wstephenson@suse.com
