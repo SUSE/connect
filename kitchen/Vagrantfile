@@ -7,8 +7,7 @@
 
 Vagrant.configure('2') do |config|
 
-  config.berkshelf.enabled = true
-  config.berkshelf.berksfile_path = 'Berksfile'
+  config.librarian_chef.cheffile_dir = '.'
 
   config.vm.define "jenkins_scc_connect_build_#{ENV['BUILD_NUMBER']}" do |config|
     config.vm.box = 'openstack'
@@ -31,6 +30,7 @@ Vagrant.configure('2') do |config|
 
     config.vm.provision :chef_solo do |chef|
       chef.log_level = :info
+      chef.cookbooks_path = 'cookbooks'
       chef.roles_path = 'roles'
       chef.add_role 'connect_test_node'
     end
