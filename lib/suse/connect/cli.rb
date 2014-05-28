@@ -23,18 +23,18 @@ module SUSE
         end
         Client.new(@options).register!
 
-      rescue ApiError => e
-        log.error "Error: SCC returned '#{e.message}' (#{e.code})"
-        exit 1
       rescue Errno::ECONNREFUSED
-        log.error 'Error: Connection refused by server'
-        exit 1
-      rescue JSON::ParserError
-        log.error 'Error: Cannot parse response from server'
-        exit 1
+        log.fatal "Error: Connection refused by server #{@options[:url] || 'https://scc.suse.com'}"
+        exit 64
       rescue Errno::EACCES => e
-        log.error "Error: Access error - #{e.message}"
-        exit 1
+        log.fatal "Error: Access error - #{e.message}"
+        exit 65
+      rescue JSON::ParserError
+        log.fatal 'Error: Cannot parse response from server'
+        exit 66
+      rescue ApiError => e
+        log.fatal "Error: SCC returned '#{e.message}' (#{e.code})"
+        exit 67
       end
 
       private
@@ -53,10 +53,10 @@ module SUSE
         @opts.on('-p', '--product [PRODUCT]', 'Activate PRODUCT. Defaults to the base SUSE Linux',
                  '  Enterprise product on this system.',
                  '  Product identifiers can be obtained with \'zypper products\'',
-                 '  Format: <name>-<version>-<architecture>') do |opt|
+                 '  Format: <internal name>-<version>-<architecture>') do |opt|
           check_if_param(opt, 'Please provide a product identifier')
           check_if_param((opt =~ /\S+-\S+-\S+/), 'Please provide the product identifier in this format: ' \
-            '<name>-<version>-<architecture>. For installed products you can find these values by calling: ' \
+            '<internal name>-<version>-<architecture>. For installed products you can find these values by calling: ' \
             '\'zypper products\'. ')
           @options[:product] = { :name => opt.split('-')[0], :version => opt.split('-')[1],
                                  :arch => opt.split('-')[2] }

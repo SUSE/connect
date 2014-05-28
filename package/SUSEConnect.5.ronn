@@ -1,0 +1,37 @@
+SUSEConnect(5) - SUSE Customer Center registration tool config file
+===================================================================
+
+## DESCRIPTION
+</etc/SUSEConnect> is the config file for the SUSE registration tool SUSEConnect.  This file allows the registration of the base product on the system.  NB: registration of extensions is not supported using this file. 
+
+## FORMAT
+The file is in [YAML][yaml-spec] format.
+
+Example:
+
+`---`
+
+`regcode: <regcode>`
+
+`url: https://scc.suse.com`
+
+`language: en`
+
+`insecure: false`
+
+Each line of the file specifies a single parameter.  The fields are as follows:
+
+  * regcode: (mandatory) Registration code to use for the base product on the system. Defaults to https://scc.suse.com
+  * url: (optional) URL of the registration server.  Corresponds to the --url argument to SUSEConnect
+  * language: (optional) Language code to use for error messages
+  * insecure: (optional) Do not verify SSL certificates when using https (default: false)
+
+ 
+## AUTHOR
+SUSE Linux Products GmbH <scc-feedback@suse.de>
+ 
+## LINKS
+[SUSE Customer Center][scc]
+
+## SEE ALSO
+SUSEConnect(8)

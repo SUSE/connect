@@ -156,8 +156,9 @@ ln -s %{_libdir}/ruby/gems/%{rb_ver}/gems/%{mod_full_name}/<%= file %> %buildroo
 <% end -%>
 <% unless spec.executables.empty? -%>
 
-install -D -m 644 %_sourcedir/SUSEConnect.1.gz %{buildroot}%_mandir/man1/SUSEConnect.1.gz
-ln -s SUSEConnect.1.gz %{buildroot}%_mandir/man1/SUSEConnect-<%= spec.version %>.1.gz
+install -D -m 644 %_sourcedir/SUSEConnect.5.gz %{buildroot}%_mandir/man5/SUSEConnect.5.gz
+install -D -m 644 %_sourcedir/SUSEConnect.8.gz %{buildroot}%_mandir/man8/SUSEConnect.8.gz
+ln -s SUSEConnect.8.gz %{buildroot}%_mandir/man8/SUSEConnect-<%= spec.version %>.8.gz
 
 
 %post
@@ -207,7 +208,8 @@ fi
 
 <% end -%>
 
-%doc %_mandir/man1/SUSEConnect*
+%doc %_mandir/man5/SUSEConnect*
+%doc %_mandir/man8/SUSEConnect*
 %doc %{_libdir}/ruby/gems/%{rb_ver}/gems/%{mod_full_name}/LICENSE
 %doc %{_libdir}/ruby/gems/%{rb_ver}/gems/%{mod_full_name}/LGPL_2.1
 %doc %{_libdir}/ruby/gems/%{rb_ver}/gems/%{mod_full_name}/README.md

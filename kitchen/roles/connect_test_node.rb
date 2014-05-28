@@ -7,5 +7,6 @@ run_list(
   'recipe[connect::packages]',
   'recipe[connect::rubygems]',
   'recipe[connect::suse_connect]',
+  'recipe[connect::integration_tests]',
   'recipe[connect::clean_up]'
 )
