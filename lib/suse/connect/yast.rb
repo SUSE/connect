@@ -3,9 +3,7 @@ module SUSE
 
     # YaST class provides methods emulating SCC's API.
     # YaST call this class from:
-    # https://github.com/yast/yast-registration/blob/master/src/clients/inst_scc.rb
-    # https://github.com/yast/yast-registration/blob/master/src/lib/registration/sw_mgmt.rb
-
+    # https://github.com/yast/yast-registration/blob/master/src/lib/registration/registration.rb
     class YaST
       class << self
 
