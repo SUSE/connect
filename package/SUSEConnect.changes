@@ -1,11 +1,14 @@
 -------------------------------------------------------------------
-Mon May 26 12:57:30 UTC 2014 - wstephenson@suse.com
+Wed May 28 12:44:26 UTC 2014 - wstephenson@suse.com
 
 - Update to version 0.0.18
   - Rename --verbose CLI option to --debug
   - Standardise and document error codes
   - SUSEConnect(5) config file man page
   - Move main manpage to section 8
+  - Add method to gem for product upgrades
+  - Defer call to zypper during initialization for YaST
+  - Add unit tests to disclose accidental calls to zypper
 
 -------------------------------------------------------------------
 Fri May 16 12:08:17 UTC 2014 - wstephenson@suse.com
@@ -13,6 +16,7 @@ Fri May 16 12:08:17 UTC 2014 - wstephenson@suse.com
 - Update to version 0.0.17
   - Introduce API versioning header for forward compatibility
   - Improve man page
+
 -------------------------------------------------------------------
 Thu May 15 10:14:53 UTC 2014 - wstephenson@suse.com
 
