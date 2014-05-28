@@ -24,7 +24,7 @@ module SUSE
         @options[:debug]    = !!opts[:verbose]
         @options[:language] = opts[:language] || config.language
         @options[:token]    = opts[:token] || config.regcode
-        @options[:product]  = opts[:product] || Zypper.base_product
+        @options[:product]  = opts[:product]
         @api                = Api.new(self)
         log.debug "Merged options: #{@options}"
       end
@@ -35,7 +35,8 @@ module SUSE
           login, password = announce_system
           Credentials.new(login, password, Credentials.system_credentials_file).write
         end
-        service = activate_product(@options[:product])
+        product = @options[:product] || Zypper.base_product
+        service = activate_product(product)
         System.add_service(service)
       end
 

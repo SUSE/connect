@@ -4,10 +4,6 @@ describe SUSE::Connect::Client do
 
   subject { SUSE::Connect::Client.new({}) }
 
-  before do
-    Zypper.stub(:base_product => {})
-  end
-
   describe '.new' do
 
     context :empty_opts do
