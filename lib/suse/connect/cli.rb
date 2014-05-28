@@ -1,8 +1,6 @@
 require 'optparse'
 require 'suse/connect'
 
-$suse_connect_filesystem_root = ''
-
 module SUSE
   module Connect
     # Command line interface for interacting with SUSEConnect
@@ -21,7 +19,7 @@ module SUSE
 
         unless @options[:token]
           puts @opts
-          exit
+          exit(1)
         end
         Client.new(@options).register!
 
@@ -55,10 +53,10 @@ module SUSE
         @opts.on('-p', '--product [PRODUCT]', 'Activate PRODUCT. Defaults to the base SUSE Linux',
                  '  Enterprise product on this system.',
                  '  Product identifiers can be obtained with \'zypper products\'',
-                 '  Format: <name>-<version>-<architecture>') do |opt|
+                 '  Format: <internal name>-<version>-<architecture>') do |opt|
           check_if_param(opt, 'Please provide a product identifier')
           check_if_param((opt =~ /\S+-\S+-\S+/), 'Please provide the product identifier in this format: ' \
-            '<name>-<version>-<architecture>. For installed products you can find these values by calling: ' \
+            '<internal name>-<version>-<architecture>. For installed products you can find these values by calling: ' \
             '\'zypper products\'. ')
           @options[:product] = { :name => opt.split('-')[0], :version => opt.split('-')[1],
                                  :arch => opt.split('-')[2] }
@@ -86,7 +84,8 @@ module SUSE
 
         @opts.on('--root [PATH]', 'Path to the root folder, uses the same parameter for zypper.') do |opt|
           check_if_param(opt, 'Please provide path parameter')
-          $suse_connect_filesystem_root = opt
+          @options[:filesystem_root] = opt
+          SUSE::Connect::System.filesystem_root = opt
         end
 
         @opts.on('--version', 'print program version') do

@@ -109,8 +109,8 @@ describe SUSE::Connect::Cli do
     it 'sets root option' do
       argv = %w{--root /path/to/root}
       subject.new(argv)
-      $suse_connect_filesystem_root.should eq '/path/to/root'
-      $suse_connect_filesystem_root = ''
+      SUSE::Connect::System.filesystem_root.should eq '/path/to/root'
+      SUSE::Connect::System.filesystem_root = nil
     end
 
   end

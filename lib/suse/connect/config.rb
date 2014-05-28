@@ -5,6 +5,7 @@ module SUSE
 
     # Class for handling SUSEConnect configuration
     class Config
+
       DEFAULT_CONFIG_FILE = '/etc/SUSEConnect'
 
       class << self
