@@ -1,0 +1,40 @@
+# Vagrant OpenStack Cloud Provider: https://github.com/cloudbau/vagrant-openstack-plugin
+
+### SETUP ###
+# vagrant plugin install vagrant-openstack-plugin
+# vagrant box add openstack_box veewee/boxes/openstack.box --provider=openstack --force
+# vagrant up --provider=openstack
+
+Vagrant.configure('2') do |config|
+
+  config.librarian_chef.cheffile_dir = '.'
+
+  config.vm.define "jenkins_scc_connect_build_#{ENV['BUILD_NUMBER']}" do |config|
+    config.vm.box = 'openstack'
+    config.vm.hostname = 'suse-connect-testing'
+
+    config.vm.provider :openstack do |os|
+      os.endpoint     = 'https://dashboardp2.cloud.suse.de:5000/v2.0/tokens'
+      os.username     = ENV['CLOUD_USER']
+      os.api_key      = ENV['CLOUD_PASS']
+
+      os.tenant = 'appliances'
+      os.flavor       = /m1.small/
+      os.image        = /scc-connect-testing-sles-beta6-ibs/
+      os.networks     = ['fixed']
+      os.floating_ip  = 'auto'
+
+      os.ssh.username = 'vagrant'
+      os.ssh.password = 'vagrant'
+    end
+
+    config.vm.provision :chef_solo do |chef|
+      chef.log_level = :info
+      chef.cookbooks_path = 'cookbooks'
+      chef.roles_path = 'roles'
+      chef.add_role 'connect_test_node'
+    end
+  end
+end
+
+

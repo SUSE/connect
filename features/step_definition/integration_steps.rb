@@ -1,11 +1,14 @@
 Given(/^I register a system with (valid|invalid) regcode$/) do |condition|
-  regcode = condition == 'valid' ? ENV['REGCODE'] : 'INVALID_REGCODE'
+  if condition == 'valid'
+    regcode = YAML.load_file('/root/.regcode')['code']
+  else
+    regcode = 'INVALID_REGCODE'
+  end
 
-  url = ENV['LOCAL_SERVER'] || 'https://barium.scc.suse.de --insecure'
-  connect_cmd = "SUSEConnect -r #{regcode} --url #{url}"
+  connect_cmd = "SUSEConnect -r #{regcode}"
   response = `#{connect_cmd}`
 
-  puts "API ERROR: #{response.inspect}" unless $?.exitstatus.zero? # rubocop:disable SpecialGlobalVars
+  raise "API ERROR: #{response.inspect}" unless $?.exitstatus.zero? # rubocop:disable SpecialGlobalVars
 end
 
 Then(/^SUSEConnect should create the '(.+)' file$/) do |file_name|

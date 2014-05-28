@@ -43,4 +43,6 @@ GlobalVars:
 
 AllCops:
   Exclude:
+    - kitchen/cookbooks/**/*
+    - kitchen/tmp/**/*
     - vendor/**
