@@ -40,4 +40,6 @@ ClassAndModuleChildren:
 
 AllCops:
   Exclude:
+    - kitchen/cookbooks/**/*
+    - kitchen/tmp/**/*
     - vendor/**
