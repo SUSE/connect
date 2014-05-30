@@ -19,7 +19,6 @@
 Name:           SUSEConnect
 Version:        <%= spec.version %>
 Release:        0
-Source:         %{mod_name}-%{version}.gem
 %define mod_name <%= spec.name %>
 %define mod_full_name %{mod_name}-%{version}
 <% unless spec.executables.empty?
@@ -32,6 +31,9 @@ Source:         %{mod_name}-%{version}.gem
 %define mod_branch -%{version}
 %define mod_weight <%= weight %>
 <% end -%>
+Source:         %{mod_name}-%{version}.gem
+Source1:        %{name}.5.gz
+Source2:        %{name}.8.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 BuildRequires:  ruby-macros >= 1
