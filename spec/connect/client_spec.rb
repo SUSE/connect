@@ -269,7 +269,7 @@ describe SUSE::Connect::Client do
 
     it 'calls underlying api and removes credentials file' do
       subject.api.should_receive(:deregister).with('Basic: encodedstring').and_return stubbed_response
-      subject.deregister!.should be true
+      subject.deregister!.should be_true
     end
   end
 

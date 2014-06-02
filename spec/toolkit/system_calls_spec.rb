@@ -13,7 +13,7 @@ describe SUSE::Toolkit::SystemCalls do
 
     it 'should make a system call' do
       Object.should_receive(:system).with('date').and_return(true)
-      subject.send(:call, 'date').should be true
+      subject.send(:call, 'date').should be_true
     end
 
     it 'should produce log output if call failed' do

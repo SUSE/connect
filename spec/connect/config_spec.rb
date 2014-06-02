@@ -15,7 +15,7 @@ describe SUSE::Connect::Config do
       subject.attribute_accessors :foo, :bar
 
       expect(subject.attributes).to include :foo, :bar
-      expect(subject.respond_to?('attributes')).to be true
+      expect(subject.respond_to?('attributes')).to be_true
     end
   end
 
@@ -59,7 +59,7 @@ describe SUSE::Connect::Config do
 
         settings = config.read
         expect(settings).to be_kind_of(Hash)
-        expect(settings.empty?).to be true
+        expect(settings.empty?).to be_true
       end
     end
 

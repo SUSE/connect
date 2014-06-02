@@ -79,7 +79,7 @@ describe SUSE::Connect::Cli do
     it 'sets insecure options' do
       argv = %w{-d}
       cli = subject.new(argv)
-      cli.options[:dry].should be true
+      cli.options[:dry].should be_true
     end
 
     it 'sets language options' do
@@ -103,7 +103,7 @@ describe SUSE::Connect::Cli do
     it 'sets verbose options' do
       argv = %w{--debug}
       cli = subject.new(argv)
-      cli.options[:debug].should be true
+      cli.options[:debug].should be_true
     end
 
     it 'sets root option' do
