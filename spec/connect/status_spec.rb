@@ -56,7 +56,7 @@ describe SUSE::Connect::Status do
 
     it 'uses clients response to collect info' do
       fake_client = double('client')
-      fake_client.stub_chain(:systems_subscriptions, :body, :map).and_return [1, 2, 3]
+      fake_client.stub_chain(:system_subscriptions, :body, :map).and_return [1, 2, 3]
       expect(subject.new(fake_client).send(:subscriptions_from_server)).to eq [1, 2, 3]
     end
 
@@ -66,7 +66,7 @@ describe SUSE::Connect::Status do
 
     it 'uses clients response to collect info' do
       fake_client = double('client')
-      fake_client.stub_chain(:systems_services, :body, :map).and_return [1, 2, 3]
+      fake_client.stub_chain(:system_services, :body, :map).and_return [1, 2, 3]
       expect(subject.new(fake_client).send(:products_from_services)).to eq [1, 2, 3]
     end
 

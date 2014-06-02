@@ -3,7 +3,7 @@ class SUSE::Connect::Product # rubocop:disable Documentation
 
   include SUSE::Connect::ComparableProduct
 
-  attr_reader :id, :short_name, :long_name, :description, :product_ident, :version, :arch, :free, :eula_url
+  attr_reader :short_name, :long_name, :description, :product_ident, :version, :arch, :free, :eula_url
 
   # Constructor
   def initialize(product)

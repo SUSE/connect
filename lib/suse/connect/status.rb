@@ -28,11 +28,11 @@ module SUSE
       private
 
       def subscriptions_from_server
-        @client.systems_subscriptions.body.map {|s| Subscription.new(s) }
+        @client.system_subscriptions.body.map {|s| Subscription.new(s) }
       end
 
       def products_from_services
-        @client.systems_services.body.map {|p| RegServerProduct.new(p['product']) }
+        @client.system_services.body.map {|p| RegServerProduct.new(p['product']) }
       end
 
       def products_from_zypper

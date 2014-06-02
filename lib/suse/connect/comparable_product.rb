@@ -1,4 +1,4 @@
-# Shared mixing for zypper product and server product
+# Shared mixin for zypper product and server product
 module SUSE::Connect::ComparableProduct
 
   def ==(other)

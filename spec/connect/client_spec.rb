@@ -287,8 +287,8 @@ describe SUSE::Connect::Client do
     end
 
     it 'calls underlying api and removes credentials file' do
-      allow(subject.api).to receive(:systems_services).with('Basic: encodedstring').and_return stubbed_response
-      expect(subject.systems_services).to be_true
+      allow(subject.api).to receive(:system_services).with('Basic: encodedstring').and_return stubbed_response
+      expect(subject.system_services).to be_true
     end
   end
 
@@ -306,8 +306,8 @@ describe SUSE::Connect::Client do
     end
 
     it 'calls underlying api and removes credentials file' do
-      expect(subject.api).to receive(:systems_subscriptions).with('Basic: encodedstring').and_return stubbed_response
-      expect(subject.systems_subscriptions).to be_true
+      expect(subject.api).to receive(:system_subscriptions).with('Basic: encodedstring').and_return stubbed_response
+      expect(subject.system_subscriptions).to be_true
     end
   end
 

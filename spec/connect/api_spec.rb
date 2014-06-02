@@ -81,12 +81,12 @@ describe SUSE::Connect::Api do
 
       it 'returns returns array of services as known by the system' do
         Connection.any_instance.should_receive(:get).with('/connect/systems/services', :auth => 'basic_auth_string').and_call_original
-        subject.new(client).systems_services('basic_auth_string')
+        subject.new(client).system_services('basic_auth_string')
       end
 
       it 'holds expected structure' do
         Connection.any_instance.should_receive(:get).with('/connect/systems/services', :auth => 'basic_auth_string').and_call_original
-        result = subject.new(client).systems_services('basic_auth_string').body
+        result = subject.new(client).system_services('basic_auth_string').body
         result.should be_kind_of Array
         result.first.keys.should eq %w{id name product}
       end
@@ -101,12 +101,12 @@ describe SUSE::Connect::Api do
 
       it 'returns returns array of subscriptions known by the system' do
         Connection.any_instance.should_receive(:get).with('/connect/systems/subscriptions', :auth => 'basic_auth_string').and_call_original
-        subject.new(client).systems_subscriptions('basic_auth_string')
+        subject.new(client).system_subscriptions('basic_auth_string')
       end
 
       it 'holds expected structure' do
         Connection.any_instance.should_receive(:get).with('/connect/systems/subscriptions', :auth => 'basic_auth_string').and_call_original
-        result = subject.new(client).systems_subscriptions('basic_auth_string').body
+        result = subject.new(client).system_subscriptions('basic_auth_string').body
         result.should be_kind_of Array
         attr_ary = %w{id regcode name type status starts_at expires_at}
         attr_ary += %w{system_limit systems_count virtual_count product_classes systems product_ids}

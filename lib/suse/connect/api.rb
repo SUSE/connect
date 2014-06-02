@@ -104,7 +104,7 @@ module SUSE
       #
       # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
       #
-      def systems_services(auth)
+      def system_services(auth)
         @connection.get('/connect/systems/services', :auth => auth)
       end
 
@@ -115,7 +115,7 @@ module SUSE
       #
       # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
       #
-      def systems_subscriptions(auth)
+      def system_subscriptions(auth)
         @connection.get('/connect/systems/subscriptions', :auth => auth)
       end
 
