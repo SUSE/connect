@@ -164,6 +164,23 @@ describe SUSE::Connect::Connection do
       result.code.should eq 200
     end
 
+    it 'sends USER-AGENT header with SUSEConnect package version' do
+      headers = {
+        'Accept' => 'application/json,application/vnd.scc.suse.com.v1+json',
+        'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+        'Content-Type' => 'application/json',
+        'User-Agent' => "SUSEConnect/#{SUSE::Connect::VERSION}"
+      }
+
+      stub_request(:post, 'https://example.com/api/v1/test')
+        .with(headers: headers)
+        .to_return(:status => 200, :body => '', :headers => {})
+
+      connection = subject.new('https://example.com')
+      result = connection.post('/api/v1/test')
+      result.code.should eq 200
+    end
+
     it 'converts response into proper hash' do
 
       stub_request(:post, 'https://example.com/api/v1/test')
