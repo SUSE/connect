@@ -1,10 +1,10 @@
 require 'spec_helper'
 require 'suse/connect/cli'
-require 'stringio'
 
 describe SUSE::Connect::Cli do
 
   subject { SUSE::Connect::Cli }
+
   let(:default_logger) { SUSE::Connect::GlobalLogger.instance.log }
   let(:string_logger) { ::Logger.new(StringIO.new) }
   let(:cli) { subject.new({}) }
@@ -48,6 +48,22 @@ describe SUSE::Connect::Cli do
       cli.execute!
     end
 
+    context :subcommand_status do
+
+      let(:cli) { subject.new(%w{--status}) }
+
+      before do
+        subject.any_instance.unstub(:exit)
+        Client.any_instance.stub_chain(:status, :print).and_return(:foobar)
+      end
+
+      it 'does not call register' do
+        expect_any_instance_of(Client).to_not receive(:register!)
+        expect { cli.execute! }.to raise_error SystemExit
+      end
+
+    end
+
   end
 
   describe '?extract_options' do
@@ -62,6 +78,12 @@ describe SUSE::Connect::Cli do
       argv = %w{--product sles-12-i386}
       cli = subject.new(argv)
       cli.options[:product].should eq(:name => 'sles', :version => '12', :arch => 'i386')
+    end
+
+    it 'sets token options' do
+      argv = %w{--regcode matoken}
+      cli = subject.new(argv)
+      cli.options[:token].should eq 'matoken'
     end
 
     it 'sets token options' do
@@ -111,6 +133,11 @@ describe SUSE::Connect::Cli do
       subject.new(argv)
       SUSE::Connect::System.filesystem_root.should eq '/path/to/root'
       SUSE::Connect::System.filesystem_root = nil
+    end
+
+    it 'requests status sub-command' do
+      argv = %w{--status}
+      expect(subject.new(argv).options[:status]).to be true
     end
 
   end

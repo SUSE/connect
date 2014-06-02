@@ -1,0 +1,86 @@
+[
+ {
+    "id": 4242,
+    "name": "SUSE_Linux_Enterprise_Server_12_x86_64",
+    "product": {
+      "id": 124242,
+      "name": "SUSE Linux Enterprise Server",
+      "zypper_name": "SLES",
+      "zypper_version": "12",
+      "release_type": null,
+      "arch": "x86_64",
+      "friendly_name": "SUSE Linux Enterprise Server 12 x86_64",
+      "product_class": null,
+      "cpe": "cpe:/o:suse:sles:12.0",
+      "free": false,
+      "description": "I am description",
+      "eula_url": "eula url",
+      "enabled_repositories": [1243, 1242],
+      "extensions": [
+        {
+          "id": 44442,
+          "name": "SUSE Linux Enterprise High Availability Extension",
+          "zypper_name": "sle-hae",
+          "zypper_version": "12",
+          "release_type": null,
+          "arch": "x86_64",
+          "friendly_name": "SUSE Linux Enterprise High Availability Extension 12 x86_64",
+          "product_class": null,
+          "cpe": "cpe:/o:suse:sle-hae:12.0",
+          "free": false,
+          "description": "SUSE Linux Enterprise High Availability Extension.",
+          "eula_url": "eula url",
+          "enabled_repositories": [1242, 1243],
+          "repositories": [
+            {
+              "id": 4,
+              "name": "SLE-HAE12-Pool",
+              "distro_target": "sle-12-x86_64",
+              "description": "SLE-HAE12-Pool for sle-12-x86_64",
+              "url": "mock url",
+              "enabled": true,
+              "autorefresh": false
+            },
+            {
+              "id": 5,
+              "name": "SLE-HAE12-Updates",
+              "distro_target": "sle-12-x86_64",
+              "description": "SLE-HAE12-Updates for sle-12-x86_64",
+              "url": "mock url",
+              "enabled": true,
+              "autorefresh": true
+            }
+          ]
+        }],
+      "repositories": [
+        {
+          "id": 1,
+          "name": "SLES12-Debuginfo-Updates",
+          "distro_target": "sle-12-x86_64",
+          "description": "SLES12-Debuginfo-Updates for sle-12-x86_64",
+          "url": "mock url",
+          "enabled": false,
+          "autorefresh": true
+        },
+        {
+          "id": 2,
+          "name": "SLES12-Pool",
+          "distro_target": "sle-12-x86_64",
+          "description": "SLES12-Pool for sle-12-x86_64",
+          "url": "mock url",
+          "enabled": true,
+          "autorefresh": false
+        },
+        {
+          "id": 3,
+          "name": "SLES12-Updates",
+          "distro_target": "sle-12-x86_64",
+          "description": "SLES12-Updates for sle-12-x86_64",
+          "url": "mock url",
+          "enabled": true,
+          "autorefresh": true
+        }
+      ]
+    }
+  }
+]
