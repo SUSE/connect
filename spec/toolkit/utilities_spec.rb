@@ -32,13 +32,15 @@ describe SUSE::Toolkit::Utilities do
     it 'raise if cannot get credentials' do
       Credentials.stub(:read).and_raise(Errno::ENOENT)
       expect { subject.send(:basic_auth) }
-      .to raise_error CannotBuildBasicAuth, 'cannot get proper username and password'
+      .to raise_error CannotBuildBasicAuth,
+                      "Cannot read username and password from #{SUSE::Connect::Credentials::GLOBAL_CREDENTIALS_FILE}"
     end
 
     it 'raise if nil credentials' do
       Credentials.stub(:read).and_return(Credentials.new(nil, nil))
       expect { subject.send(:basic_auth) }
-      .to raise_error CannotBuildBasicAuth, 'cannot get proper username and password'
+      .to raise_error CannotBuildBasicAuth,
+                      "Cannot read username and password from #{SUSE::Connect::Credentials::GLOBAL_CREDENTIALS_FILE}"
     end
 
   end
