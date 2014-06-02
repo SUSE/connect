@@ -47,6 +47,8 @@ module SUSE
         request['Content-Type']    = 'application/json'
         request['Accept']          = 'application/json,application/vnd.scc.suse.com.v1+json'
         request['Accept-Language'] = language
+        request['User-Agent']      = "SUSEConnect/#{SUSE::Connect::VERSION}"
+
         request.body               = params.to_json unless params.empty?
         response                   = @http.request(request)
         body                       = JSON.parse(response.body) if response.body
