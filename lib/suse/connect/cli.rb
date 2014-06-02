@@ -55,9 +55,10 @@ module SUSE
                  '  Format: <internal name>/<version>/<architecture>') do |opt|
 
           check_if_param(opt, 'Please provide a product identifier')
+          # rubocop:disable RegexpLiteral
           check_if_param((opt =~ /\S+\/\S+\/\S+/), 'Please provide the product identifier in this format: ' \
             '<internal name>/<version>/<architecture>. For installed products you can find these values by calling: ' \
-            '\'zypper products\'. ') # rubocop:disable RegexpLiteral
+            '\'zypper products\'. ')
           @options[:product] = { name: opt.split('/')[0], version: opt.split('/')[1], arch: opt.split('/')[2] }
         end
 
