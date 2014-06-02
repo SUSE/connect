@@ -59,7 +59,7 @@ describe SUSE::Connect::Cli do
     end
 
     it 'sets product options' do
-      argv = %w{--product sles-12-i386}
+      argv = %w{--product sles/12/i386}
       cli = subject.new(argv)
       cli.options[:product].should eq(:name => 'sles', :version => '12', :arch => 'i386')
     end

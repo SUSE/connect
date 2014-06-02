@@ -49,17 +49,16 @@ module SUSE
         @opts.separator ''
         @opts.separator 'Manage subscriptions at https://scc.suse.com'
         @opts.separator ''
-
         @opts.on('-p', '--product [PRODUCT]', 'Activate PRODUCT. Defaults to the base SUSE Linux',
                  '  Enterprise product on this system.',
                  '  Product identifiers can be obtained with \'zypper products\'',
-                 '  Format: <internal name>-<version>-<architecture>') do |opt|
+                 '  Format: <internal name>/<version>/<architecture>') do |opt|
+
           check_if_param(opt, 'Please provide a product identifier')
-          check_if_param((opt =~ /\S+-\S+-\S+/), 'Please provide the product identifier in this format: ' \
-            '<internal name>-<version>-<architecture>. For installed products you can find these values by calling: ' \
+          check_if_param((opt =~ /\S+\/\S+\/\S+/), 'Please provide the product identifier in this format: ' \
+            '<internal name>/<version>/<architecture>. For installed products you can find these values by calling: ' \
             '\'zypper products\'. ')
-          @options[:product] = { :name => opt.split('-')[0], :version => opt.split('-')[1],
-                                 :arch => opt.split('-')[2] }
+          @options[:product] = { name: opt.split('/')[0], version: opt.split('/')[1], arch: opt.split('/')[2] }
         end
 
         @opts.on('-r', '--regcode [REGCODE]', 'Subscription registration code for the',
