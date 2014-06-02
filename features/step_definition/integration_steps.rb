@@ -1,4 +1,4 @@
-Then /^I call SUSEConnect with '(.*)' arguments$/ do |args|
+Then(/^I call SUSEConnect with '(.*)' arguments$/) do |args|
   options = Hash[*args.gsub('--', '').split(' ')]
   if options['regcode'] == 'VALID'
     @regcode = ENV['REGCODE'] || YAML.load_file('/root/.regcode')['code']
