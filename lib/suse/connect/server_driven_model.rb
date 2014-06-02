@@ -1,3 +1,4 @@
+# Class is layer between server responds and inheriting classes E.g. RegServerSubscription
 class SUSE::Connect::ServerDrivenModel
 
   def initialize(json_response_hash)
@@ -8,7 +9,7 @@ class SUSE::Connect::ServerDrivenModel
       self.class.send(:class_eval) do
         attr_accessor attr.to_sym
       end
-      self.send("#{attr.to_sym}=", val)
+      send("#{attr.to_sym}=", val)
     end
   end
 

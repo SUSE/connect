@@ -1,12 +1,13 @@
+# Shared mixing for zypper product and server product
 module SUSE::Connect::ComparableProduct
 
-  def ==(other_product)
+  def ==(other)
 
-    return false unless other_product.is_a?(SUSE::Connect::RegServerProduct) ||
-        other_product.is_a?(SUSE::Connect::Product)
+    return false unless other.is_a?(SUSE::Connect::RegServerProduct) ||
+        other.is_a?(SUSE::Connect::Product)
 
     [:product_ident, :version, :arch].all? do |attr|
-      self.send(attr) == other_product.send(attr)
+      send(attr) == other.send(attr)
     end
 
   end

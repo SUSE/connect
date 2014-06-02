@@ -9,5 +9,4 @@ class SUSE::Connect::RegServerProduct < SUSE::Connect::ServerDrivenModel
     self.class.send(:alias_method, :version, :zypper_version) if self.respond_to?(:zypper_version)
   end
 
-
 end
