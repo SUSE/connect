@@ -12,13 +12,11 @@ module SUSE
         @file = file
 
         read.each_pair do |key, value|
-          if members.include?(key.to_sym)
-            self[key] = value
-          end
+          self[key] = value if members.include?(key.to_sym)
         end
 
         # default value if insecure is not specified
-        self[:insecure] = false if self.insecure.nil?
+        self[:insecure] = false if insecure.nil?
       end
 
       def write
@@ -31,15 +29,16 @@ module SUSE
         YAML.dump(to_hash_with_string_keys)
       end
 
-    private
+      private
+
       def to_hash_with_string_keys
         # OK, this code maybe look quite magic, but in fact it takes hash from
         # to_h and create new one with keys that is converted with to_s
-        Hash[to_h.map {|k,v| [k.to_s, v] }]
+        Hash[to_h.map {|k, v| [k.to_s, v] }]
       end
 
       def read
-        return {} unless File.exists?(@file)
+        return {} unless File.exist?(@file)
 
         YAML.load_file(@file) || {}
       end

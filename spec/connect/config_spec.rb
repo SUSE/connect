@@ -21,19 +21,19 @@ describe SUSE::Connect::Config do
       end
 
       it 'is empty if file does not exist' do
-        config = subject.new("/non-existing-file")
+        config = subject.new('/non-existing-file')
         expect(config.url).to be_nil
       end
     end
 
-    context "#write" do
+    context '#write' do
       it 'writes configuration settings to YAML file' do
         File.should_receive(:write).with(config_file, config.to_yaml).and_return(0)
         config.write
       end
     end
 
-    context "#to_yaml" do
+    context '#to_yaml' do
       it 'converts object attributes to yaml' do
         expect(YAML.load(config.to_yaml)).to_not be_empty
       end
