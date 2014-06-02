@@ -17,6 +17,12 @@ describe SUSE::Connect::Config do
       expect(subject.attributes).to include :foo, :bar
       expect(subject.respond_to?('attributes')).to be_true
     end
+
+    it '.serializable_attributes' do
+      subject.serializable_attributes :baz, :buz
+
+      expect(subject.serializable).to include :baz, :buz
+    end
   end
 
   context 'instance methods' do

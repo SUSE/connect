@@ -9,15 +9,21 @@ module SUSE
       DEFAULT_CONFIG_FILE = '/etc/SUSEConnect'
 
       class << self
-        attr_accessor :attributes
+        attr_accessor :attributes, :serializable
 
         def attribute_accessors(*attributes)
           self.attributes = attributes
           attr_accessor(*(attributes))
         end
+
+        def serializable_attributes(*attributes)
+          self.serializable = attributes
+        end
       end
 
       attribute_accessors :url, :regcode, :language, :insecure
+
+      serializable_attributes :url, :insecure
 
       def initialize(file = DEFAULT_CONFIG_FILE)
         @file = file
