@@ -33,12 +33,9 @@ module SUSE
 
     private
       def to_hash_with_string_keys
-        result = {}
-        members.each do |key|
-          result[key] = self[key]
-        end
-
-        result
+        # OK, this code maybe look quite magic, but in fact it takes hash from
+        # to_h and create new one with keys that is converted with to_s
+        Hash[to_h.map {|k,v| [k.to_s, v] }]
       end
 
       def read
