@@ -4,56 +4,48 @@ module SUSE
   module Connect
 
     # Class for handling SUSEConnect configuration
-    class Config
+    class Config < Struct.new(:url, :regcode, :language, :insecure)
 
       DEFAULT_CONFIG_FILE = '/etc/SUSEConnect'
-
-      class << self
-        attr_accessor :attributes
-
-        def attribute_accessors(*attributes)
-          self.attributes = attributes
-          attr_accessor(*(attributes))
-        end
-      end
-
-      attribute_accessors :url, :regcode, :language, :insecure
 
       def initialize(file = DEFAULT_CONFIG_FILE)
         @file = file
 
-        read.keys.each do |key|
-          if self.class.attributes.include?(key.to_sym)
-            instance_variable_set("@#{key}", read[key])
+        read.each_pair do |key, value|
+          if members.include?(key.to_sym)
+            self[key] = value
           end
         end
-      end
 
-      def read
-        if File.exist?(@file)
-          @settings ||= (YAML.load_file(@file) || {})
-        else
-          {}
-        end
+        # default value if insecure is not specified
+        self[:insecure] = false if self.insecure.nil?
       end
 
       def write
-        !File.write(@file, to_yml).zero?
+        File.write(@file, to_yaml)
       end
 
-      def to_yml
-        YAML.dump(to_hash)
+      def to_yaml
+        # use own hash with keys instead of `to_h` as string as resulting yaml
+        # looks better then with symbols
+        YAML.dump(to_hash_with_string_keys)
       end
 
-      def to_hash
-        hash = {}
-        instance_variables.each do |variable|
-          key = variable.to_s.gsub('@', '')
-          hash[key] = instance_variable_get variable if self.class.attributes.include?(key.to_sym)
+    private
+      def to_hash_with_string_keys
+        result = {}
+        members.each do |key|
+          result[key] = self[key]
         end
-        hash
+
+        result
       end
 
+      def read
+        return {} unless File.exists?(@file)
+
+        YAML.load_file(@file) || {}
+      end
     end
   end
 end
