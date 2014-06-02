@@ -41,10 +41,7 @@ module SUSE
 
       # Activates a product and writes credentials file if the system was not yet announced
       def register!
-        unless System.registered?
-          login, password = announce_system
-          Credentials.new(login, password, Credentials.system_credentials_file).write
-        end
+        announce_if_not_yet
         product = @options[:product] || Zypper.base_product
         service = activate_product(product)
         System.add_service(service)
@@ -96,6 +93,35 @@ module SUSE
         @config.write
       end
 
+      # @returns: body described in https://github.com/SUSE/connect/wiki/SCC-API-(Implemented)#response-12 and
+      # 200 status code
+      def systems_services
+        @api.systems_services(basic_auth)
+      end
+
+      # @returns: body described in https://github.com/SUSE/connect/wiki/SCC-API-(Implemented)#response-13 and
+      # 200 status code
+      def systems_subscriptions
+        @api.systems_subscriptions(basic_auth)
+      end
+
+      # @returns: print to $stdout status of current subscriptions
+      # 200 status code
+      def status
+        Status.new(self)
+      end
+
+      private
+
+      def announce_if_not_yet
+        unless System.registered?
+          login, password = announce_system
+          Credentials.new(login, password, Credentials.system_credentials_file).write
+        end
+      end
+
     end
+
   end
+
 end

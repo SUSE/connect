@@ -17,10 +17,17 @@ module SUSE
 
       def execute! # rubocop:disable MethodLength
 
+        # TODO: proper mechanics to separate sub-commands
+        if @options[:status]
+          Client.new(@options).status.print
+          exit(0)
+        end
+
         unless @options[:token]
           puts @opts
           exit(1)
         end
+
         Client.new(@options).register!
 
       rescue Errno::ECONNREFUSED
@@ -73,6 +80,10 @@ module SUSE
         @opts.on('--url [URL]', 'URL of registration server (e.g. https://scc.suse.com).') do |opt|
           check_if_param(opt, 'Please provide registration server URL')
           @options[:url] = opt
+        end
+
+        @opts.on('-s', '--status', 'get current system registration status') do |opt|
+          @options[:status] = true
         end
 
         @opts.separator ''
