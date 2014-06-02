@@ -103,7 +103,7 @@ describe SUSE::Connect::Cli do
     it 'sets verbose options' do
       argv = %w{--debug}
       cli = subject.new(argv)
-      cli.options[:debug].should be_true
+      cli.options[:debug].should be true
     end
 
     it 'sets root option' do

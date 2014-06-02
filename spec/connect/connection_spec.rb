@@ -47,7 +47,7 @@ describe SUSE::Connect::Connection do
         allow(secure_connection).to receive(:log).and_return(logger)
 
         # call the default callbak
-        expect(secure_connection.http.verify_callback.call(false, context)).to be_false
+        expect(secure_connection.http.verify_callback.call(false, context)).to be false
       end
 
     end
@@ -61,7 +61,7 @@ describe SUSE::Connect::Connection do
       end
 
       it 'set ssl to true by default' do
-        secure_connection.http.use_ssl?.should be_true
+        secure_connection.http.use_ssl?.should be true
       end
 
       it 'set insecure to false by default' do

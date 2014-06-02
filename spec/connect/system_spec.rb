@@ -109,17 +109,17 @@ describe SUSE::Connect::System do
 
     it 'returns false if credentials are nil' do
       subject.stub(:credentials => nil)
-      subject.registered?.should be_false
+      subject.registered?.should be false
     end
 
     it 'returns false if username not prefixed with SCC_' do
       subject.stub(:credentials => Credentials.new('John', 'B'))
-      subject.registered?.should be_false
+      subject.registered?.should be false
     end
 
     it 'returns true if credentials exist and username is prefixed with SCC_' do
       subject.stub(:credentials => Credentials.new('SCC_John', 'B'))
-      subject.registered?.should be_true
+      subject.registered?.should be true
     end
   end
 

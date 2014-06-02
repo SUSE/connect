@@ -59,7 +59,7 @@ describe SUSE::Connect::Config do
 
         settings = config.read
         expect(settings).to be_kind_of(Hash)
-        expect(settings.empty?).to be_true
+        expect(settings.empty?).to be true
       end
     end
 
