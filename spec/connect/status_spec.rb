@@ -22,7 +22,7 @@ describe SUSE::Connect::Status do
   describe '#installed_products' do
 
     it 'memoizes content by first call' do
-      allow_any_instance_of(Status).to receive(:products_from_zypper).and_return([1,2,:foo])
+      allow_any_instance_of(Status).to receive(:products_from_zypper).and_return([1, 2, :foo])
       status = subject.new(:foo)
       first_call_result = status.installed_products
       expect(first_call_result).to equal status.products_from_zypper
@@ -33,7 +33,7 @@ describe SUSE::Connect::Status do
   describe '#activated_products' do
 
     it 'memoizes content by first call' do
-      allow_any_instance_of(Status).to receive(:products_from_services).and_return([1,2,:foo])
+      allow_any_instance_of(Status).to receive(:products_from_services).and_return([1, 2, :foo])
       status = subject.new(:foo)
       first_call_result = status.activated_products
       expect(first_call_result).to equal status.activated_products
@@ -44,7 +44,7 @@ describe SUSE::Connect::Status do
   describe '#known_subscriptions' do
 
     it 'memoizes content by first call' do
-      allow_any_instance_of(Status).to receive(:subscriptions_from_server).and_return([1,2,:foo])
+      allow_any_instance_of(Status).to receive(:subscriptions_from_server).and_return([1, 2, :foo])
       status = subject.new(:foo)
       first_call_result = status.known_subscriptions
       expect(first_call_result).to equal status.known_subscriptions
@@ -56,8 +56,8 @@ describe SUSE::Connect::Status do
 
     it 'uses clients response to collect info' do
       fake_client = double('client')
-      fake_client.stub_chain(:systems_subscriptions, :body, :map).and_return [1,2,3]
-      expect(subject.new(fake_client).send(:subscriptions_from_server)).to eq [1,2,3]
+      fake_client.stub_chain(:systems_subscriptions, :body, :map).and_return [1, 2, 3]
+      expect(subject.new(fake_client).send(:subscriptions_from_server)).to eq [1, 2, 3]
     end
 
   end
@@ -66,8 +66,8 @@ describe SUSE::Connect::Status do
 
     it 'uses clients response to collect info' do
       fake_client = double('client')
-      fake_client.stub_chain(:systems_services, :body, :map).and_return [1,2,3]
-      expect(subject.new(fake_client).send(:products_from_services)).to eq [1,2,3]
+      fake_client.stub_chain(:systems_services, :body, :map).and_return [1, 2, 3]
+      expect(subject.new(fake_client).send(:products_from_services)).to eq [1, 2, 3]
     end
 
   end
@@ -75,8 +75,8 @@ describe SUSE::Connect::Status do
   describe '#products_from_zypper' do
 
     it 'uses zypper output to collect info' do
-      Zypper.stub_chain(:installed_products, :map).and_return [1,2,3]
-      expect(subject.new(:foo).send(:products_from_zypper)).to eq [1,2,3]
+      Zypper.stub_chain(:installed_products, :map).and_return [1, 2, 3]
+      expect(subject.new(:foo).send(:products_from_zypper)).to eq [1, 2, 3]
     end
 
   end

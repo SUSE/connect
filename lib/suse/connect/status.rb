@@ -28,15 +28,15 @@ module SUSE
       private
 
       def subscriptions_from_server
-        @client.systems_subscriptions.body.map{|s| Subscription.new(s) }
+        @client.systems_subscriptions.body.map {|s| Subscription.new(s) }
       end
 
       def products_from_services
-        @client.systems_services.body.map{|p| RegServerProduct.new(p['product']) }
+        @client.systems_services.body.map {|p| RegServerProduct.new(p['product']) }
       end
 
       def products_from_zypper
-        Zypper.installed_products.map {|p| Product.new(p, true)}
+        Zypper.installed_products.map {|p| Product.new(p, true) }
       end
 
     end

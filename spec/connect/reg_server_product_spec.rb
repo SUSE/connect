@@ -1,20 +1,19 @@
 require 'spec_helper'
 
-
 describe SUSE::Connect::RegServerProduct do
 
   subject do
     extension = {
-        'id' => 700,
-        'name' => 'SLEEK',
-        'long_name' => 'SUSE LINUX ENTERPRISE EXTENSION KDE',
-        'description' => 'SLEEK puts the modern yet familiar GUI back into SLE that you love',
-        'zypper_name' => 'SLEEK-12',
-        'zypper_version' => '12',
-        'arch' => 'x86_64',
-        'free' => true,
-        'eula_url' => 'https://nu.novell.com/SUSE:/Products:/SLE-12/images/' \
-        'repo/SLE-12-module-sleek-POOL-x86_64-Media.license/'
+      'id' => 700,
+      'name' => 'SLEEK',
+      'long_name' => 'SUSE LINUX ENTERPRISE EXTENSION KDE',
+      'description' => 'SLEEK puts the modern yet familiar GUI back into SLE that you love',
+      'zypper_name' => 'SLEEK-12',
+      'zypper_version' => '12',
+      'arch' => 'x86_64',
+      'free' => true,
+      'eula_url' => 'https://nu.novell.com/SUSE:/Products:/SLE-12/images/' \
+      'repo/SLE-12-module-sleek-POOL-x86_64-Media.license/'
     }
     described_class.new(extension)
   end

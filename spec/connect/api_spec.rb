@@ -88,7 +88,7 @@ describe SUSE::Connect::Api do
         Connection.any_instance.should_receive(:get).with('/connect/systems/services', :auth => 'basic_auth_string').and_call_original
         result = subject.new(client).systems_services('basic_auth_string').body
         result.should be_kind_of Array
-        result.first.keys.should eq %w(id name product)
+        result.first.keys.should eq %w{id name product}
       end
 
     end
@@ -108,7 +108,9 @@ describe SUSE::Connect::Api do
         Connection.any_instance.should_receive(:get).with('/connect/systems/subscriptions', :auth => 'basic_auth_string').and_call_original
         result = subject.new(client).systems_subscriptions('basic_auth_string').body
         result.should be_kind_of Array
-        result.first.keys.should eq %w(id regcode name type status starts_at expires_at system_limit systems_count virtual_count product_classes systems product_ids)
+        attr_ary = %w{id regcode name type status starts_at expires_at}
+        attr_ary += %w{system_limit systems_count virtual_count product_classes systems product_ids}
+        result.first.keys.should eq attr_ary
       end
 
     end
