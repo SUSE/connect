@@ -15,7 +15,7 @@ describe SUSE::Connect::Config do
       subject.attribute_accessors :foo, :bar
 
       expect(subject.attributes).to include :foo, :bar
-      expect(subject.respond_to?('attributes')).to be_true
+      expect(subject.respond_to?('attributes')).to be true
     end
   end
 

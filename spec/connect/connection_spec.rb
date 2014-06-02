@@ -22,7 +22,7 @@ describe SUSE::Connect::Connection do
     context :default_values do
 
       it 'set ssl to true by default' do
-        secure_connection.http.use_ssl?.should be_true
+        secure_connection.http.use_ssl?.should be true
       end
 
       it 'set insecure to false by default' do

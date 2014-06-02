@@ -79,7 +79,7 @@ describe SUSE::Connect::Cli do
     it 'sets insecure options' do
       argv = %w{-d}
       cli = subject.new(argv)
-      cli.options[:dry].should be_true
+      cli.options[:dry].should be true
     end
 
     it 'sets language options' do

@@ -99,7 +99,7 @@ describe SUSE::Connect::System do
       end
 
       it 'should remove credentials file' do
-        subject.remove_credentials.should be_true
+        subject.remove_credentials.should be true
       end
 
     end
