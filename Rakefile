@@ -4,6 +4,9 @@ require 'rspec/core/rake_task'
 
 task :default => [:spec, :rubocop]
 
+desc 'Run RSpec'
+RSpec::Core::RakeTask.new(:spec)
+
 desc 'Run console loaded with gem'
 task :console do
   require 'irb'
@@ -21,11 +24,8 @@ task :bump do
   sh 'gem bump --no-commit'
 end
 
-desc 'Run RSpec'
-RSpec::Core::RakeTask.new(:spec)
-
 desc 'Build locally (prepare for pushing to ibs)'
-task :build => [:default] do
+task :build do
 
   def gemfilename
     "suse-connect-#{SUSE::Connect::VERSION}.gem"
