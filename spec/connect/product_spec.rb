@@ -4,7 +4,6 @@ describe SUSE::Connect::Product do
 
   subject do
     extension = {
-      'id' => 700,
       'name' => 'SLEEK',
       'long_name' => 'SUSE LINUX ENTERPRISE EXTENSION KDE',
       'description' => 'SLEEK puts the modern yet familiar GUI back into SLE that you love',
@@ -51,10 +50,6 @@ describe SUSE::Connect::Product do
 
         it 'has attribute eula_url' do
           expect(subject.eula_url).not_to be_nil
-        end
-
-        it 'has attribute id' do
-          expect(subject.id).to eq 700
         end
 
       end

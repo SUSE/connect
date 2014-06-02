@@ -95,14 +95,14 @@ module SUSE
 
       # @returns: body described in https://github.com/SUSE/connect/wiki/SCC-API-(Implemented)#response-12 and
       # 200 status code
-      def systems_services
-        @api.systems_services(basic_auth)
+      def system_services
+        @api.system_services(basic_auth)
       end
 
       # @returns: body described in https://github.com/SUSE/connect/wiki/SCC-API-(Implemented)#response-13 and
       # 200 status code
-      def systems_subscriptions
-        @api.systems_subscriptions(basic_auth)
+      def system_subscriptions
+        @api.system_subscriptions(basic_auth)
       end
 
       # @returns: print to $stdout status of current subscriptions
