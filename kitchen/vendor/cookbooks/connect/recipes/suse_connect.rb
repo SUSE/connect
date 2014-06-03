@@ -46,7 +46,7 @@ execute 'gem2rpm -l -o SUSEConnect.spec -t SUSEConnect.spec.erb suse-connect-*.g
 end
 
 execute 'create man pages for SUSEConnect' do
-  command 'ronn --roff --manual SUSEConnect --pipe SUSEConnect.8.ronn > SUSEConnect.8 && gzip -f SUSEConnect.8 && ' +
+  command 'ronn --roff --manual SUSEConnect --pipe SUSEConnect.8.ronn > SUSEConnect.8 && gzip -f SUSEConnect.8 && ' \
           'ronn --roff --manual SUSEConnect --pipe SUSEConnect.5.ronn > SUSEConnect.5 && gzip -f SUSEConnect.5'
   cwd "#{node[:connect][:project]}/package"
   user 'vagrant'
