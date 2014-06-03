@@ -1,5 +1,4 @@
 require File.expand_path('../lib/suse/connect/version', __FILE__)
-require 'date'
 
 Gem::Specification.new do |gem|
 
