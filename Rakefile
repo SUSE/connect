@@ -31,7 +31,7 @@ task :build do
     "suse-connect-#{SUSE::Connect::VERSION}.gem"
   end
 
-  sh 'rm *gem' if Dir['*.gem'].any?
+  sh 'rm *.gem' if Dir['*.gem'].any?
   sh 'rm package/*.gem' if Dir['package/*.gem'].any?
   sh 'gem build suse-connect.gemspec'
   sh "mv #{gemfilename} package/"
