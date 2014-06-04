@@ -65,7 +65,7 @@ describe SUSE::Connect::Client do
 
     context :override_config_file_with_opts do
 
-      subject { Client.new({url: "smtserver"}) }
+      subject { Client.new( url: 'smtserver' ) }
 
       before do
         SUSE::Connect::Config.any_instance.stub(:read).and_return(
@@ -295,7 +295,7 @@ describe SUSE::Connect::Client do
     end
   end
 
-  describe "to config" do
+  describe '#write_config' do
     subject { Client.new({}) }
     it 'should call write_config on client' do
       subject.instance_variable_get(:@config).should_receive(:write)

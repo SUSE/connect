@@ -70,7 +70,7 @@ module SUSE
         #  - :insecure [Boolean]
         #  - :url [String]
         def write_config(params = {})
-          Client.new(params = {}).write_config
+          Client.new(params).write_config
         end
 
       end

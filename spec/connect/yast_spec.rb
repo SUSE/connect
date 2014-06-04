@@ -129,5 +129,4 @@ describe SUSE::Connect::YaST do
     end
   end
 
-
-  end
+end
