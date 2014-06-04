@@ -81,6 +81,11 @@ module SUSE
         end
       end
 
+      # Write the config file
+      def write_config
+        @config.write
+      end
+
     end
   end
 end

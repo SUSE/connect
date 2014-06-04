@@ -43,9 +43,9 @@ describe SUSE::Connect::Client do
 
       before do
         SUSE::Connect::Config.any_instance.stub(:read).and_return(
-          'regcode' => 'from_config',
-          'url' => 'localhost',
-          'language' => 'RU'
+            'regcode' => 'from_config',
+            'url' => 'localhost',
+            'language' => 'RU'
         )
       end
 
@@ -63,7 +63,8 @@ describe SUSE::Connect::Client do
 
     end
 
-  end
+
+ end
 
   describe '#announce_system' do
 
@@ -270,6 +271,15 @@ describe SUSE::Connect::Client do
     it 'calls underlying api and removes credentials file' do
       subject.api.should_receive(:deregister).with('Basic: encodedstring').and_return stubbed_response
       subject.deregister!.should be_true
+    end
+  end
+
+  describe "to config" do
+    subject { Client.new({}) }
+    it 'should call write_config on client' do
+      subject.instance_variable_get(:@config).should_receive(:write)
+      File.stub(:write => 42)
+      subject.write_config
     end
   end
 
