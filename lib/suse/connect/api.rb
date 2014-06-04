@@ -42,10 +42,8 @@ module SUSE
         @connection.post('/connect/subscriptions/systems', :auth => auth, :params => payload)
       end
 
-      # Activate a product, consuming an entitlement, and receive the updated
-      # list of services for the system. Find and return the correct list of all
-      # available services for this system's combination of subscription,
-      # installed product, and architecture.
+      # Activate a product, consuming an entitlement, and receive the service for this
+      # combination of subscription, installed product, and architecture.
       #
       # @param auth [String] authorization string which will be injected in 'Authorization' header in request.
       #   In this case we expects Base64 encoded string with login and password
@@ -67,6 +65,21 @@ module SUSE
           :email => email
         }
         @connection.post('/connect/systems/products', :auth => auth, :params => payload)
+      end
+
+      # Upgrade a product and receive the updated service for the system.
+      #
+      # @param auth [String] authorization string which will be injected in 'Authorization' header in request.
+      #   In this case we expects Base64 encoded string with login and password
+      # @param product_ident [Hash] product
+      def upgrade_product(auth, product_ident)
+        payload = {
+          :product_ident => product_ident[:name],
+          :product_version => product_ident[:version],
+          :arch => product_ident[:arch],
+          :release_type => product_ident[:release_type]
+        }
+        @connection.put('/connect/systems/products', :auth => auth, :params => payload)
       end
 
       # List all publicly available products. This includes a list of all repositories for each product.

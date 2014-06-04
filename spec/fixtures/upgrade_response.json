@@ -2,7 +2,7 @@
   "sources": {
     "SUSE_Linux_Enterprise_Server_12_x86_64": "https://scc.suse.com/access/services/1106?credentials=SUSE_Linux_Enterprise_Server_12_x86_64"
   },
-  "login": "SCC_26f0d6",
+  "login": "SCC_26f0d629a",
   "password": "xxx",
   "norefresh": ["SLES12-Pool"],
   "enabled": ["SLES12-Updates", "SLES12-Pool"],
