@@ -113,6 +113,39 @@ describe SUSE::Connect::Api do
 
   end
 
+  describe 'upgrade_product' do
+
+    let(:api_endpoint) { '/connect/systems/products' }
+    let(:basic_auth) { 'basic_auth_mock' }
+
+    let(:product) do
+      {
+        :name    => 'SLES',
+        :version => '12',
+        :arch    => 'x86_64'
+      }
+    end
+
+    let(:payload) do
+      {
+        :product_ident    => 'SLES',
+        :product_version  => '12',
+        :arch             => 'x86_64',
+        :release_type     => nil
+      }
+    end
+
+    it 'calls ConnectAPI with basic auth and params and receives a JSON in return' do
+      stub_upgrade_call
+      Connection.any_instance.should_receive(:put)
+      .with(api_endpoint, :auth => basic_auth, :params => payload)
+      .and_call_original
+      response = subject.new(client).upgrade_product(basic_auth, product)
+      response.body['sources'].keys.first.should include('SUSE')
+    end
+
+  end
+
   describe 'products' do
 
     before do

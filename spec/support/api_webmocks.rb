@@ -23,6 +23,20 @@ def stub_activate_call
     .to_return(:status => 200, :body => response_body, :headers => {})
 end
 
+def stub_upgrade_call
+  response_body = JSON.parse(File.read('spec/fixtures/upgrade_response.json')).to_json
+  headers       = { 'Authorization' => 'basic_auth_mock', 'Content-Type' => 'application/json' }
+  request_body  = {
+    :product_ident    => 'SLES',
+    :product_version  => '12',
+    :arch             => 'x86_64',
+    :release_type     => nil
+  }
+  stub_request(:put, 'https://example.com/connect/systems/products')
+  .with(:headers => headers, :body => request_body)
+  .to_return(:status => 200, :body => response_body, :headers => {})
+end
+
 def stub_products_call
   headers = { 'Content-Type' => 'application/json' }
   response_body = JSON.parse(File.read('spec/fixtures/products_response.json')).to_json
