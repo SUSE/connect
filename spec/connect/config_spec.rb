@@ -84,7 +84,7 @@ describe SUSE::Connect::Config do
       end
 
       it 'converts object attributes to yaml' do
-        YAML.should_receive(:dump).with(config.to_hash)
+        YAML.should_receive(:dump).with({"url"=>"https://scc.suse.com"})
         config.to_yml
       end
 

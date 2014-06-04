@@ -48,7 +48,7 @@ module SUSE
       end
 
       def to_yml
-        YAML.dump(to_hash)
+        YAML.dump(to_hash.select{ |key, value| self.class.serializable.include?(key.to_sym)})
       end
 
       def to_hash
