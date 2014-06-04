@@ -69,7 +69,6 @@ module SUSE
         # @param [Hash] params
         #  - :insecure [Boolean]
         #  - :url [String]
-        #  - :email [String]
         def write_config(params = {})
           Client.new(params = {}).write_config
         end
