@@ -40,7 +40,7 @@ module SUSE
         #
         def registered?
           creds = credentials
-          creds && creds.username && creds.username.include?('SCC_')
+          !!(creds && creds.username && creds.username.include?('SCC_'))
         end
 
         def remove_credentials
