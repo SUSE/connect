@@ -1,25 +1,31 @@
-Given(/^I register a system with (valid|invalid) regcode$/) do |condition|
-  if condition == 'valid'
-    regcode = YAML.load_file('/root/.regcode')['code']
+Then(/^I call SUSEConnect with '(.*)' arguments$/) do |args|
+  options = Hash[*args.gsub('--', '').split(' ')]
+  if options['regcode'] == 'VALID'
+    @regcode = ENV['REGCODE'] || YAML.load_file('/root/.regcode')['code']
   else
-    regcode = 'INVALID_REGCODE'
+    @regcode = 'INVALID_REGCODE'
   end
 
-  connect_cmd = "SUSEConnect -r #{regcode}"
-  response = `#{connect_cmd}`
+  @url = ENV['URL'] || SUSE::Connect::Client::DEFAULT_URL
 
-  raise "API ERROR: #{response.inspect}" unless $?.exitstatus.zero? # rubocop:disable SpecialGlobalVars
+  connect = "SUSEConnect --url #{@url}"
+  connect << " -r #{@regcode}" if options['regcode']
+  connect << " -l #{options['language']}" if options['language']
+  connect << " -p #{options['product']}" if options['product']
+
+  puts "Calling '#{connect}' ..."
+  step "I run `#{connect}`"
 end
 
-Then(/^SUSEConnect should create the '(.+)' file$/) do |file_name|
-  file_name = file_name.include?('SCCcredentials') ? file_name : service_name
+Then(/^SUSEConnect should create the '(.+)' file$/) do |name|
+  file_name = (name == 'service credentials') ? service_name : name
   file = "/etc/zypp/credentials.d/#{file_name}"
 
   step "a file named \"#{file}\" should exist"
 end
 
-And(/^(Service credentials|SCCcredentials) file should contain '(.+)' prefixed system guid$/) do |file_name, prefix|
-  file_name = file_name.include?('SCCcredentials') ? file_name : service_name
+And(/^'(.*)' file should contain '(.+)' prefixed system guid$/) do |name, prefix|
+  file_name = (name == 'Service credentials') ? service_name : name
   file = "/etc/zypp/credentials.d/#{file_name}"
 
   step "the file \"#{file}\" should contain \"#{prefix}\""
