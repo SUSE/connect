@@ -1,0 +1,23 @@
+[
+  {
+    "id": 31,
+    "regcode": "WHOOPWHOOP",
+    "name": "SUSE Linux Enterprise Server for x86, AMD64, Intel64 60 Day Subscription Evaluation",
+    "type": "evaluation",
+    "status": "ACTIVE",
+    "starts_at": "2012-07-21T00:00:00.000Z",
+    "expires_at": "2015-12-31T00:00:00.000Z",
+    "system_limit": 100,
+    "systems_count": 1,
+    "virtual_count": null,
+    "product_classes": ["7261", "SLES-IA", "SLES-PPC"],
+    "systems": [
+      {
+        "id": 1,
+        "login": "SCC_megusta",
+        "password": "megustapasswordo"
+      }
+    ],
+    "product_ids": [ 1,2,3 ]
+  }
+]

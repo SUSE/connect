@@ -15,8 +15,8 @@ require 'rspec'
 require 'ap'
 require 'webmock/rspec'
 require 'suse/connect'
-require 'support/api_webmocks'
-require 'support/credentials_mocks'
+
+Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f }
 
 RSpec.configure do |c|
   c.order = :random

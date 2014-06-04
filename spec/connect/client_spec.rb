@@ -273,4 +273,61 @@ describe SUSE::Connect::Client do
     end
   end
 
+  describe '#systems_services' do
+    let(:stubbed_response) do
+      OpenStruct.new(
+          :code => 204,
+          :body => nil,
+          :success => true
+      )
+    end
+
+    before do
+      subject.stub(:basic_auth => 'Basic: encodedstring')
+    end
+
+    it 'calls underlying api and removes credentials file' do
+      allow(subject.api).to receive(:system_services).with('Basic: encodedstring').and_return stubbed_response
+      expect(subject.system_services).to be_true
+    end
+  end
+
+  describe '#systems_subscriptions' do
+    let(:stubbed_response) do
+      OpenStruct.new(
+          :code => 204,
+          :body => nil,
+          :success => true
+      )
+    end
+
+    before do
+      subject.stub(:basic_auth => 'Basic: encodedstring')
+    end
+
+    it 'calls underlying api and removes credentials file' do
+      expect(subject.api).to receive(:system_subscriptions).with('Basic: encodedstring').and_return stubbed_response
+      expect(subject.system_subscriptions).to be_true
+    end
+  end
+
+  describe '#status' do
+    let(:stubbed_response) do
+      OpenStruct.new(
+          :code => 204,
+          :body => nil,
+          :success => true
+      )
+    end
+
+    before do
+      subject.stub(:basic_auth => 'Basic: encodedstring')
+    end
+
+    it 'calls underlying api and removes credentials file' do
+      expect(Status).to receive(:new).with(subject).and_return(true)
+      subject.status
+    end
+  end
+
 end

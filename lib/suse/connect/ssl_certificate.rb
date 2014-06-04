@@ -1,6 +1,4 @@
-
 require 'openssl'
-
 require 'suse/toolkit/system_calls'
 
 module SUSE

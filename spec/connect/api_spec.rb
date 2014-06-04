@@ -69,6 +69,54 @@ describe SUSE::Connect::Api do
 
   end
 
+  describe :systems do
+
+    before do
+      stub_systems_services_call
+    end
+
+    mock_dry_file
+
+    describe :services do
+
+      it 'returns returns array of services as known by the system' do
+        Connection.any_instance.should_receive(:get).with('/connect/systems/services', :auth => 'basic_auth_string').and_call_original
+        subject.new(client).system_services('basic_auth_string')
+      end
+
+      it 'holds expected structure' do
+        Connection.any_instance.should_receive(:get).with('/connect/systems/services', :auth => 'basic_auth_string').and_call_original
+        result = subject.new(client).system_services('basic_auth_string').body
+        result.should be_kind_of Array
+        result.first.keys.should eq %w{id name product}
+      end
+
+    end
+
+    describe :subscriptions do
+
+      before do
+        stub_systems_subscriptions_call
+      end
+
+      it 'returns returns array of subscriptions known by the system' do
+        Connection.any_instance.should_receive(:get).with('/connect/systems/subscriptions', :auth => 'basic_auth_string').and_call_original
+        subject.new(client).system_subscriptions('basic_auth_string')
+      end
+
+      it 'holds expected structure' do
+        Connection.any_instance.should_receive(:get).with('/connect/systems/subscriptions', :auth => 'basic_auth_string').and_call_original
+        result = subject.new(client).system_subscriptions('basic_auth_string').body
+        result.should be_kind_of Array
+        attr_ary = %w{id regcode name type status starts_at expires_at}
+        attr_ary += %w{system_limit systems_count virtual_count product_classes systems product_ids}
+        result.first.keys.should eq attr_ary
+      end
+
+    end
+
+  end
+
   describe 'activate_product' do
 
     let(:api_endpoint) { '/connect/systems/products' }
@@ -180,6 +228,7 @@ describe SUSE::Connect::Api do
   end
 
   describe 'deregister' do
+
     before do
       stub_deregister_call
     end
