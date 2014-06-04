@@ -63,8 +63,29 @@ describe SUSE::Connect::Client do
 
     end
 
+    context :override_config_file_with_opts do
 
- end
+      subject { Client.new({url: "smtserver"}) }
+
+      before do
+        SUSE::Connect::Config.any_instance.stub(:read).and_return(
+            'regcode' => 'from_config',
+            'url' => 'localhost',
+            'language' => 'RU'
+        )
+      end
+
+      it 'url should be from options, not configfile' do
+        expect(subject.url).to eq 'smtserver'
+      end
+
+      it 'should set url in config to that form opts' do
+        expect(subject.instance_variable_get(:@config).url).to eq 'smtserver'
+      end
+
+    end
+
+  end
 
   describe '#announce_system' do
 
