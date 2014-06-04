@@ -59,7 +59,7 @@ describe SUSE::Connect::Cli do
     end
 
     it 'sets product options' do
-      argv = %w{--product sles-12-i386}
+      argv = %w{--product sles/12/i386}
       cli = subject.new(argv)
       cli.options[:product].should eq(:name => 'sles', :version => '12', :arch => 'i386')
     end
@@ -79,7 +79,7 @@ describe SUSE::Connect::Cli do
     it 'sets insecure options' do
       argv = %w{-d}
       cli = subject.new(argv)
-      cli.options[:dry].should be_true
+      cli.options[:dry].should be true
     end
 
     it 'sets language options' do
@@ -103,7 +103,7 @@ describe SUSE::Connect::Cli do
     it 'sets verbose options' do
       argv = %w{--debug}
       cli = subject.new(argv)
-      cli.options[:debug].should be_true
+      cli.options[:debug].should be true
     end
 
     it 'sets root option' do

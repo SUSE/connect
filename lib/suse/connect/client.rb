@@ -19,8 +19,8 @@ module SUSE
 
         @options            = opts
         @url                = opts[:url] || @config.url || DEFAULT_URL
-        # !!: Set :insecure and :debug explicitly to boolean values.
-        @options[:insecure] = !!@config.insecure
+        @options[:insecure] = @config.insecure
+        # !!: Set :debug explicitly to boolean values.
         @options[:debug]    = !!opts[:verbose]
         @options[:language] = opts[:language] || @config.language
         @options[:token]    = opts[:token] || @config.regcode

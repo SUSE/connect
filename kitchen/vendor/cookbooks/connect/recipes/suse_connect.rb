@@ -13,6 +13,13 @@ execute 'sudo bundle install' do
   group 'users'
 end
 
+execute 'remove stale gems' do
+  command 'rm -f *.gem; rm -f package/*.gem'
+  cwd node[:connect][:project]
+  user 'vagrant'
+  group 'users'
+end
+
 execute 'build SUSEConnect gem' do
   command 'gem build suse-connect.gemspec'
   cwd node[:connect][:project]
@@ -38,9 +45,9 @@ execute 'gem2rpm -l -o SUSEConnect.spec -t SUSEConnect.spec.erb suse-connect-*.g
   user 'vagrant'
 end
 
-execute 'create man page for SUSEConnect' do
-  command 'ronn --roff --manual SUSEConnect --pipe ../README.md > SUSEConnect.1 && gzip SUSEConnect.1'
-  not_if { ::File.exist?('/tmp/connect/package/SUSEConnect.1.gz') }
+execute 'create man pages for SUSEConnect' do
+  command 'ronn --roff --manual SUSEConnect --pipe SUSEConnect.8.ronn > SUSEConnect.8 && gzip -f SUSEConnect.8 && ' \
+          'ronn --roff --manual SUSEConnect --pipe SUSEConnect.5.ronn > SUSEConnect.5 && gzip -f SUSEConnect.5'
   cwd "#{node[:connect][:project]}/package"
   user 'vagrant'
 end

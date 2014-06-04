@@ -17,11 +17,12 @@ module SUSE
         if username && password
           basic_encode(username, password)
         else
-          raise SUSE::Connect::CannotBuildBasicAuth, 'cannot get proper username and password'
+          raise
         end
 
       rescue
-        raise SUSE::Connect::CannotBuildBasicAuth, 'cannot get proper username and password'
+        raise SUSE::Connect::CannotBuildBasicAuth,
+              "Cannot read username and password from #{SUSE::Connect::Credentials::GLOBAL_CREDENTIALS_FILE}"
       end
 
     end
