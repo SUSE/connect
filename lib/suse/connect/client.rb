@@ -15,15 +15,15 @@ module SUSE
 
       def initialize(opts)
         # Read SUSConnect.yml config file
-        config = Config.new
+        @config = Config.new
 
         @options            = opts
-        @url                = opts[:url] || config.url || DEFAULT_URL
+        @url                = opts[:url] || @config.url || DEFAULT_URL
         # !!: Set :insecure and :debug explicitly to boolean values.
-        @options[:insecure] = !!config.insecure
+        @options[:insecure] = !!@config.insecure
         @options[:debug]    = !!opts[:verbose]
-        @options[:language] = opts[:language] || config.language
-        @options[:token]    = opts[:token] || config.regcode
+        @options[:language] = opts[:language] || @config.language
+        @options[:token]    = opts[:token] || @config.regcode
         @options[:product]  = opts[:product]
         @api                = Api.new(self)
         log.debug "Merged options: #{@options}"
