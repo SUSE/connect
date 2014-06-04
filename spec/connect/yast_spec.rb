@@ -120,4 +120,14 @@ describe SUSE::Connect::YaST do
 
   end
 
-end
+  describe '#write_config' do
+    let(:params) { { url: 'http://scc.foo.com' } }
+
+    it 'calls write_config on an instance of Client' do
+      Client.any_instance.should_receive(:write_config)
+      subject.write_config params
+    end
+  end
+
+
+  end
