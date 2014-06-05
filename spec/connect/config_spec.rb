@@ -51,6 +51,11 @@ describe SUSE::Connect::Config do
       it 'converts object attributes to yaml' do
         expect(YAML.load(config.to_yaml)).to_not be_empty
       end
+
+      it 'only converts serializable attributes to YAML' do
+        config.language  = 'FOO'
+        expect(config.send(:select_serializable_attributes)).to_not include 'language'
+      end
     end
   end
 end
