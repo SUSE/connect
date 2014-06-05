@@ -18,8 +18,22 @@ module SUSE
         @config = Config.new
 
         @options            = opts
-        @url                = (opts[:url] && @config.url = opts[:url]) || @config.url || DEFAULT_URL
-        @options[:insecure] = (opts[:insecure] && @config.url = opts[:insecure]) || @config.insecure
+
+        if (opts[:url])
+          @url = @config.url = opts[:url]
+        elsif @config.url
+          @url = @config.url
+        else
+          @url = DEFAULT_URL
+        end
+
+        if (opts[:insecure])
+          @options[:insecure] = @config.insecure = opts[:insecure]
+        else
+          @options[:insecure] = @config.insecure
+        end
+
+
         # !!: Set :debug explicitly to boolean values.
         @options[:debug]    = !!opts[:verbose]
         @options[:language] = opts[:language] || @config.language

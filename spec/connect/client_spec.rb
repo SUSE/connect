@@ -65,7 +65,7 @@ describe SUSE::Connect::Client do
 
     context :override_config_file_with_opts do
 
-      subject { Client.new( url: 'smtserver' ) }
+      subject { Client.new(url: 'smtserver') }
 
       before do
         SUSE::Connect::Config.any_instance.stub(:read).and_return(
