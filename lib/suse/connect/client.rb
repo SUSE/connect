@@ -18,7 +18,7 @@ module SUSE
 
         @options            = opts
         init_url(opts)
-        init_insecure(opts)
+        @config.insecure = opts[:insecure] if opts[:insecure]
 
         # !!: Set :debug explicitly to boolean values.
         @options[:debug]    = !!opts[:verbose]
@@ -36,12 +36,6 @@ module SUSE
           @url = @config.url
         else
           @url = DEFAULT_URL
-        end
-      end
-
-      def init_insecure(opts)
-        if opts[:insecure]
-          @config.insecure = opts[:insecure]
         end
       end
 
