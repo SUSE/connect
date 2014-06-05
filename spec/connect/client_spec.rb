@@ -30,6 +30,11 @@ describe SUSE::Connect::Client do
         parsed_uri.host.should eq 'dummy'
       end
 
+      it 'should set insecure flag from options if it was passed via constructor' do
+        client = Client.new(:insecure => true)
+        expect(client.options[:insecure]).to be_true
+      end
+
       it 'allows to pass arbitrary options' do
         client = Client.new(foo: 'bar')
         expect(client.options[:foo]).to eq 'bar'
