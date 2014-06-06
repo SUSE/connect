@@ -14,19 +14,29 @@ module SUSE
       attr_reader :options, :url, :api
 
       def initialize(opts)
-        # Read SUSConnect.yml config file
-        config = Config.new
+        @config = Config.new
 
         @options            = opts
-        @url                = opts[:url] || config.url || DEFAULT_URL
-        @options[:insecure] = config.insecure
+        init_url(opts)
+        @config.insecure = opts[:insecure] if opts[:insecure]
+
         # !!: Set :debug explicitly to boolean values.
         @options[:debug]    = !!opts[:verbose]
-        @options[:language] = opts[:language] || config.language
-        @options[:token]    = opts[:token] || config.regcode
+        @options[:language] = opts[:language] || @config.language
+        @options[:token]    = opts[:token] || @config.regcode
         @options[:product]  = opts[:product]
         @api                = Api.new(self)
         log.debug "Merged options: #{@options}"
+      end
+
+      def init_url(opts)
+        if opts[:url]
+          @url = @config.url = opts[:url]
+        elsif @config.url
+          @url = @config.url
+        else
+          @url = DEFAULT_URL
+        end
       end
 
       # Activates a product and writes credentials file if the system was not yet announced
@@ -79,6 +89,11 @@ module SUSE
         result.map do |product|
           SUSE::Connect::Product.new(product)
         end
+      end
+
+      # Write the config file
+      def write_config
+        @config.write
       end
 
     end

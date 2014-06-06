@@ -30,6 +30,11 @@ describe SUSE::Connect::Client do
         parsed_uri.host.should eq 'dummy'
       end
 
+      it 'should set insecure flag from options if it was passed via constructor' do
+        client = Client.new(:insecure => true)
+        expect(client.options[:insecure]).to be_true
+      end
+
       it 'allows to pass arbitrary options' do
         client = Client.new(foo: 'bar')
         expect(client.options[:foo]).to eq 'bar'
@@ -43,9 +48,9 @@ describe SUSE::Connect::Client do
 
       before do
         SUSE::Connect::Config.any_instance.stub(:read).and_return(
-          'regcode' => 'from_config',
-          'url' => 'localhost',
-          'language' => 'RU'
+            'regcode' => 'from_config',
+            'url' => 'localhost',
+            'language' => 'RU'
         )
       end
 
@@ -59,6 +64,28 @@ describe SUSE::Connect::Client do
 
       it 'should set language to one from config file' do
         expect(subject.options[:language]).to eq 'RU'
+      end
+
+    end
+
+    context :override_config_file_with_opts do
+
+      subject { Client.new(url: 'smtserver') }
+
+      before do
+        SUSE::Connect::Config.any_instance.stub(:read).and_return(
+            'regcode' => 'from_config',
+            'url' => 'localhost',
+            'language' => 'RU'
+        )
+      end
+
+      it 'url should be from options, not configfile' do
+        expect(subject.url).to eq 'smtserver'
+      end
+
+      it 'should set url in config to that form opts' do
+        expect(subject.instance_variable_get(:@config).url).to eq 'smtserver'
       end
 
     end
@@ -270,6 +297,15 @@ describe SUSE::Connect::Client do
     it 'calls underlying api and removes credentials file' do
       subject.api.should_receive(:deregister).with('Basic: encodedstring').and_return stubbed_response
       subject.deregister!.should be true
+    end
+  end
+
+  describe '#write_config' do
+    subject { Client.new({}) }
+    it 'should call write_config on client' do
+      subject.instance_variable_get(:@config).should_receive(:write)
+      File.stub(:write => 42)
+      subject.write_config
     end
   end
 

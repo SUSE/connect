@@ -8,6 +8,16 @@ module SUSE
 
       DEFAULT_CONFIG_FILE = '/etc/SUSEConnect'
 
+      class << self
+        attr_accessor :serializable
+
+        def serializable_attributes(*attributes)
+          self.serializable = attributes
+        end
+      end
+
+      serializable_attributes :url, :insecure
+
       def initialize(file = DEFAULT_CONFIG_FILE)
         @file = file
 
@@ -26,7 +36,11 @@ module SUSE
       def to_yaml
         # use own hash with keys instead of `to_h` as string as resulting yaml
         # looks better then with symbols
-        YAML.dump(to_hash_with_string_keys)
+        YAML.dump(select_serializable_attributes)
+      end
+
+      def select_serializable_attributes
+        to_hash_with_string_keys.select {|key, value| self.class.serializable.include?(key.to_sym) }
       end
 
       private

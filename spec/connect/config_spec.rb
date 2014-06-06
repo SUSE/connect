@@ -4,6 +4,20 @@ require 'rubygems'
 describe SUSE::Connect::Config do
   let(:config_file) { File.expand_path File.join(File.dirname(__FILE__), '../fixtures/SUSEConnect') }
 
+  context 'class methods' do
+    subject { SUSE::Connect::Config }
+
+    after do
+      subject.serializable_attributes :url, :insecure
+    end
+
+    it '.serializable_attributes' do
+      subject.serializable_attributes :baz, :buz
+
+      expect(subject.serializable).to include :baz, :buz
+    end
+  end
+
   context 'instance methods' do
     subject { SUSE::Connect::Config }
     let(:config) { subject.new(config_file) }
@@ -36,6 +50,11 @@ describe SUSE::Connect::Config do
     context '#to_yaml' do
       it 'converts object attributes to yaml' do
         expect(YAML.load(config.to_yaml)).to_not be_empty
+      end
+
+      it 'only converts serializable attributes to YAML' do
+        config.language  = 'FOO'
+        expect(config.send(:select_serializable_attributes)).to_not include 'language'
       end
     end
   end

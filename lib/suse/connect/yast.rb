@@ -63,6 +63,16 @@ module SUSE
           Client.new(params).list_products(params[:product_ident])
         end
 
+        # Writes the config file with the given parameters, overwriting any existing contents
+        # Only persistent connection parameters (url, insecure) are written by this method
+        # Regcode, language, debug etc are not
+        # @param [Hash] params
+        #  - :insecure [Boolean]
+        #  - :url [String]
+        def write_config(params = {})
+          Client.new(params).write_config
+        end
+
       end
     end
 
