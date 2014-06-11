@@ -142,13 +142,13 @@ describe SUSE::Connect::Api do
       }
     end
 
-    it 'calls ConnectAPI with basic auth and params and receives a JSON in return' do
+    it 'calls ConnectAPI with basic auth and params and receives a JSON in return (use proper webmock)' do
       stub_activate_call
       Connection.any_instance.should_receive(:post)
         .with(api_endpoint, :auth => basic_auth, :params => payload)
         .and_call_original
       response = subject.new(client).activate_product(basic_auth, product)
-      response.body['sources'].keys.first.should include('SUSE')
+      response.body['name'].should eq 'SUSE_Linux_Enterprise_Server_12_x86_64'
     end
 
     it 'allows to add an optional parameter "email"' do

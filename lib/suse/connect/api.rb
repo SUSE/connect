@@ -54,8 +54,6 @@ module SUSE
       #   sends an SCC invitation.
       #
       # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
-      #
-      # @todo TODO: introduce Product class
       def activate_product(auth, product_ident, email = nil)
         token = product_ident[:token] || @client.options[:token]
         payload = {

@@ -67,7 +67,7 @@ module SUSE
       # @returns: Service for this product
       def activate_product(product_ident, email = nil)
         result = @api.activate_product(basic_auth, product_ident, email).body
-        Service.new(result['sources'], result['enabled'], result['norefresh'])
+        Remote::Service.new(result)
       end
 
       # Upgrade a product
@@ -77,18 +77,18 @@ module SUSE
       # @returns: Service for this product
       def upgrade_product(product_ident)
         result = @api.upgrade_product(basic_auth, product_ident).body
-        Service.new(result['sources'], result['enabled'], result['norefresh'])
+        Remote::Service.new(result)
       end
 
       # @param product_ident [Hash] product to query extensions for
       def list_products(product_ident)
         result = @api.addons(basic_auth, product_ident).body
         result.map do |product|
-          SUSE::Connect::Product.new(product)
+          Remote::Product.new(product)
         end
       end
 
-      # Write the config file
+      # writes the config file
       def write_config
         @config.write
       end

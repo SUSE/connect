@@ -147,11 +147,11 @@ describe SUSE::Connect::Client do
 
   describe '#activate_product' do
 
-    let(:product_ident) { { :name => 'SLES', :version => '12', :arch => 'x86_64' } }
+    let(:product_ident) { { :identifier => 'SLES', :version => '12', :arch => 'x86_64' } }
 
     before do
       api_response = double('api_response')
-      api_response.stub(:body => { 'sources' => { :foo => 'bar' }, 'enabled' => [:foo], 'norefresh' => [:foo] })
+      api_response.stub(:body => { 'name' => 'kinkat', 'url' => 'kinkaturl', 'product' => {} })
       Api.any_instance.stub(:activate_product => api_response)
       subject.stub(:basic_auth => 'secretsecret')
     end
@@ -174,19 +174,19 @@ describe SUSE::Connect::Client do
 
     it 'returns service object' do
       service = subject.activate_product(product_ident)
-      service.sources.first.name.should eq :foo
-      service.enabled.should eq [:foo]
+      service.name.should eq 'kinkat'
+      service.url.should eq 'kinkaturl'
     end
 
   end
 
   describe '#upgrade_product' do
 
-    let(:product_ident) { { :name => 'SLES', :version => '12', :arch => 'x86_64' } }
+    let(:product_ident) { { :identifier => 'SLES', :version => '12', :arch => 'x86_64' } }
 
     before do
       api_response = double('api_response')
-      api_response.stub(:body => { 'sources' => { :foo => 'bar' }, 'enabled' => [:foo], 'norefresh' => [:foo] })
+      api_response.stub(:body => { 'name' => 'tongobongo', 'url' => 'tongobongourl', 'product' => {} })
       Api.any_instance.stub(:upgrade_product => api_response)
       subject.stub(:basic_auth => 'secretsecret')
     end
@@ -203,8 +203,8 @@ describe SUSE::Connect::Client do
 
     it 'returns service object' do
       service = subject.upgrade_product(product_ident)
-      service.sources.first.name.should eq :foo
-      service.enabled.should eq [:foo]
+      service.name.should eq 'tongobongo'
+      service.url.should eq 'tongobongourl'
     end
 
   end
@@ -259,7 +259,7 @@ describe SUSE::Connect::Client do
     let(:stubbed_response) do
       OpenStruct.new(
         :code => 200,
-        :body => [{ 'name' => 'short_name', 'zypper_name' => 'zypper_name' }],
+        :body => [{ 'name' => 'short_name', 'identifier' => 'text_identifier' }],
         :success => true
       )
     end
@@ -275,7 +275,7 @@ describe SUSE::Connect::Client do
 
     it 'returns array of extension products returned from api' do
       subject.api.should_receive(:addons).with('Basic: encodedstring', 'SLES').and_return stubbed_response
-      subject.list_products('SLES').first.should be_kind_of SUSE::Connect::Product
+      subject.list_products('SLES').first.should be_kind_of Remote::Product
     end
 
   end

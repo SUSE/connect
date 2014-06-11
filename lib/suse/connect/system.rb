@@ -48,29 +48,11 @@ module SUSE
         end
 
         def add_service(service)
-
-          raise ArgumentError, 'only Service accepted' unless service.is_a? Service
-
-          service.sources.each do |source|
-
-            Zypper.remove_service(source.name)
-            Zypper.add_service(source.name, source.url)
-            Zypper.enable_autorefresh_service(source.name)
-
-            service.enabled.each do |repo_name|
-              Zypper.enable_service_repository(source.name, repo_name)
-            end
-
-            Zypper.write_service_credentials(source.name)
-
-            service.norefresh.each do |repo_name|
-              Zypper.disable_repository_autorefresh(source.name, repo_name)
-            end
-
-          end
-
+          raise ArgumentError, 'only Remote::Service accepted' unless service.is_a? Remote::Service
+          Zypper.remove_service(service.name)
+          Zypper.add_service(service.url, service.name)
+          Zypper.write_service_credentials(service.name)
           Zypper.refresh_services
-
           service
         end
 

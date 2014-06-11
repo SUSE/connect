@@ -1,14 +1,24 @@
 {
-  "sources": {
-    "SUSE_Linux_Enterprise_Server_12_x86_64": "https://scc.suse.com/access/services/1106?credentials=SUSE_Linux_Enterprise_Server_12_x86_64"
-  },
-  "login": "SCC_26f0d6",
-  "password": "xxx",
-  "norefresh": ["SLES12-Pool"],
-  "enabled": ["SLES12-Updates", "SLES12-Pool"],
-  "subscription": {
-    "status": "ACTIVE",
-    "type": "FULL",
-    "expires_at": "2100-01-01T00:00:00.000Z"
+  "id": 42,
+  "name": "SUSE_Linux_Enterprise_Server_12_x86_64",
+  "url": "https://scc.suse.com/access/services/1106?credentials=SUSE_Linux_Enterprise_Server_12_x86_64",
+  "product": {
+    "id": 42,
+    "zypper_name": "SLES",
+    "zypper_version": "11",
+    "release": "GA",
+    "arch": "x86_64",
+    "friendly_name": "SUSE Linux Enterprise Server 11 x86_64",
+    "product_class": "7261",
+    "repos": [
+      {
+        "id": 1150,
+        "name": "SLES11-Pool",
+        "distro_target": "sle-11-x86_64",
+        "description": "dummy description [WIP]",
+        "url": "https://scc.suse.com/suse/x86_64/update/SLE-SERVER/11-POOL",
+        "tags": ["enabled", "autorefresh"]
+      }
+    ]
   }
 }

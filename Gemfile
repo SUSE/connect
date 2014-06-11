@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 group :test, :development do
+  gem 'debugger'
   gem 'yard'
   gem 'awesome_print'
 end
