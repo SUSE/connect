@@ -46,6 +46,7 @@ describe SUSE::Connect::Api do
     end
 
     context :hostname_detected do
+
       it 'sends a call with hostname' do
         Socket.stub(:gethostname => 'vargan')
         payload = ['/connect/subscriptions/systems', :auth => 'token', :params => {
@@ -54,9 +55,11 @@ describe SUSE::Connect::Api do
         Connection.any_instance.should_receive(:post).with(*payload).and_call_original
         subject.new(client).announce_system('token')
       end
+
     end
 
     context :no_hostname do
+
       it 'sends a call with ip' do
         System.stub(:hostname => '192.168.42.42')
         payload = ['/connect/subscriptions/systems', :auth => 'token', :params => {
@@ -65,6 +68,7 @@ describe SUSE::Connect::Api do
         Connection.any_instance.should_receive(:post).with(*payload).and_call_original
         subject.new(client).announce_system('token')
       end
+
     end
 
   end
@@ -122,23 +126,16 @@ describe SUSE::Connect::Api do
     let(:api_endpoint) { '/connect/systems/products' }
     let(:basic_auth) { 'basic_auth_mock' }
 
-    let(:product) do
-      {
-        :name    => 'SLES',
-        :version => '11-SP2',
-        :arch    => 'x86_64',
-        :token   => 'token-shmocken'
-      }
-    end
+    let(:product) { Remote::Product.new(:identifier => 'SLES', :version => '11-SP2', :arch => 'x86_64', :token => 'token-shmocken') }
 
     let(:payload) do
       {
-        :product_ident    => 'SLES',
-        :product_version  => '11-SP2',
-        :arch             => 'x86_64',
-        :release_type     => nil,
-        :token            => 'token-shmocken',
-        :email            => nil
+        :identifier   => 'SLES',
+        :version      => '11-SP2',
+        :arch         => 'x86_64',
+        :release_type => nil,
+        :token        => 'token-shmocken',
+        :email        => nil
       }
     end
 
@@ -166,20 +163,14 @@ describe SUSE::Connect::Api do
     let(:api_endpoint) { '/connect/systems/products' }
     let(:basic_auth) { 'basic_auth_mock' }
 
-    let(:product) do
-      {
-        :name    => 'SLES',
-        :version => '12',
-        :arch    => 'x86_64'
-      }
-    end
+    let(:product) { Remote::Product.new(:identifier => 'SLES', :version => '12', :arch => 'x86_64') }
 
     let(:payload) do
       {
-        :product_ident    => 'SLES',
-        :product_version  => '12',
-        :arch             => 'x86_64',
-        :release_type     => nil
+        :identifier   => 'SLES',
+        :version      => '12',
+        :arch         => 'x86_64',
+        :release_type => nil
       }
     end
 

@@ -66,7 +66,8 @@ module SUSE
           check_if_param((opt =~ /\S+\/\S+\/\S+/), 'Please provide the product identifier in this format: ' \
             '<internal name>/<version>/<architecture>. For installed products you can find these values by calling: ' \
             '\'zypper products\'. ')
-          @options[:product] = { name: opt.split('/')[0], version: opt.split('/')[1], arch: opt.split('/')[2] }
+          split = opt.split('/')
+          @options[:product] = Remote::Product.new(name: split[0], version: split[1], arch: split[2])
         end
 
         @opts.on('-r', '--regcode [REGCODE]', 'Subscription registration code for the',

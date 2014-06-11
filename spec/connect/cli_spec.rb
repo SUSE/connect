@@ -77,7 +77,7 @@ describe SUSE::Connect::Cli do
     it 'sets product options' do
       argv = %w{--product sles/12/i386}
       cli = subject.new(argv)
-      cli.options[:product].should eq(:name => 'sles', :version => '12', :arch => 'i386')
+      cli.options[:product].should eq Remote::Product.new(:name => 'sles', :version => '12', :arch => 'i386')
     end
 
     it 'sets token options' do

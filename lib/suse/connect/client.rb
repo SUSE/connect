@@ -18,10 +18,8 @@ module SUSE
 
         @options            = opts
         init_url(opts)
-        @config.insecure = opts[:insecure] if opts[:insecure]
-
-        # !!: Set :debug explicitly to boolean values.
-        @options[:debug]    = !!opts[:verbose]
+        @config.insecure    = opts[:insecure] if opts[:insecure]
+        @options[:debug]    = !!opts[:debug]
         @options[:language] = opts[:language] || @config.language
         @options[:token]    = opts[:token] || @config.regcode
         @options[:product]  = opts[:product]
@@ -63,10 +61,10 @@ module SUSE
 
       # Activate a product
       #
-      # @param product_ident [Hash] with product parameters
+      # @param product [SUSE::Connect::Zypper::Product]
       # @returns: Service for this product
-      def activate_product(product_ident, email = nil)
-        result = @api.activate_product(basic_auth, product_ident, email).body
+      def activate_product(product, email = nil)
+        result = @api.activate_product(basic_auth, product, email).body
         Remote::Service.new(result)
       end
 

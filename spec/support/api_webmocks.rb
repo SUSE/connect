@@ -11,12 +11,12 @@ def stub_activate_call
   response_body = JSON.parse(File.read('spec/fixtures/activate_response.json')).to_json
   headers       = { 'Authorization' => 'basic_auth_mock', 'Content-Type' => 'application/json' }
   request_body  = {
-    :product_ident    => 'SLES',
-    :product_version  => '11-SP2',
-    :arch             => 'x86_64',
-    :release_type     => nil,
-    :token            => 'token-shmocken',
-    :email            => nil
+    :identifier   => 'SLES',
+    :version      => '11-SP2',
+    :arch         => 'x86_64',
+    :release_type => nil,
+    :token        => 'token-shmocken',
+    :email        => nil
   }
   stub_request(:post, 'https://example.com/connect/systems/products')
     .with(:headers => headers, :body => request_body)
@@ -27,10 +27,10 @@ def stub_upgrade_call
   response_body = JSON.parse(File.read('spec/fixtures/upgrade_response.json')).to_json
   headers       = { 'Authorization' => 'basic_auth_mock', 'Content-Type' => 'application/json' }
   request_body  = {
-    :product_ident    => 'SLES',
-    :product_version  => '12',
-    :arch             => 'x86_64',
-    :release_type     => nil
+    :identifier   => 'SLES',
+    :version      => '12',
+    :arch         => 'x86_64',
+    :release_type => nil
   }
   stub_request(:put, 'https://example.com/connect/systems/products')
   .with(:headers => headers, :body => request_body)

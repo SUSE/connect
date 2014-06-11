@@ -49,20 +49,19 @@ module SUSE
       #
       # @param auth [String] authorization string which will be injected in 'Authorization' header in request.
       #   In this case we expects Base64 encoded string with login and password
-      # @param product_ident [Hash] product
+      # @param product [SUSE::Connect::Remote::Product] product to be activated
       # @param email [String] Adds the user to the respective organization or
       #   sends an SCC invitation.
       #
       # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
-      def activate_product(auth, product_ident, email = nil)
-        token = product_ident[:token] || @client.options[:token]
+      def activate_product(auth, product, email = nil)
         payload = {
-          :product_ident => product_ident[:name],
-          :product_version => product_ident[:version],
-          :arch => product_ident[:arch],
-          :release_type => product_ident[:release_type],
-          :token => token,
-          :email => email
+          :identifier   => product.identifier,
+          :version      => product.version,
+          :arch         => product.arch,
+          :release_type => product.release_type,
+          :token        => @client.options[:token],
+          :email        => email
         }
         @connection.post('/connect/systems/products', :auth => auth, :params => payload)
       end
@@ -71,13 +70,13 @@ module SUSE
       #
       # @param auth [String] authorization string which will be injected in 'Authorization' header in request.
       #   In this case we expects Base64 encoded string with login and password
-      # @param product_ident [Hash] product
-      def upgrade_product(auth, product_ident)
+      # @param product [SUSE::Connect::Remote::Product] product
+      def upgrade_product(auth, product)
         payload = {
-          :product_ident => product_ident[:name],
-          :product_version => product_ident[:version],
-          :arch => product_ident[:arch],
-          :release_type => product_ident[:release_type]
+          :identifier   => product.identifier,
+          :version      => product.version,
+          :arch         => product.arch,
+          :release_type => product.release_type
         }
         @connection.put('/connect/systems/products', :auth => auth, :params => payload)
       end
