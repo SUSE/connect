@@ -222,7 +222,7 @@ describe SUSE::Connect::Api do
         response.first['repos'].first[key].should_not be_nil
       end
 
-      %w{id zypper_name zypper_version release arch friendly_name product_class repos}.each do |key|
+      %w{id identifier version arch release_type friendly_name product_class repos}.each do |key|
         response.first[key].should_not be_nil
       end
 

@@ -4,9 +4,9 @@
   "url": "https://scc.suse.com/access/services/1106?credentials=SUSE_Linux_Enterprise_Server_12_x86_64",
   "product": {
     "id": 42,
-    "zypper_name": "SLES",
-    "zypper_version": "11",
-    "release": "GA",
+    "identifier": "SLES",
+    "version": "11",
+    "release_type": "GA",
     "arch": "x86_64",
     "friendly_name": "SUSE Linux Enterprise Server 11 x86_64",
     "product_class": "7261",

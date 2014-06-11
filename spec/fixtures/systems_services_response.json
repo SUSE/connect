@@ -5,8 +5,8 @@
     "product": {
       "id": 124242,
       "name": "SUSE Linux Enterprise Server",
-      "zypper_name": "SLES",
-      "zypper_version": "12",
+      "identifier": "SLES",
+      "version": "12",
       "release_type": null,
       "arch": "x86_64",
       "friendly_name": "SUSE Linux Enterprise Server 12 x86_64",
@@ -20,8 +20,8 @@
         {
           "id": 44442,
           "name": "SUSE Linux Enterprise High Availability Extension",
-          "zypper_name": "sle-hae",
-          "zypper_version": "12",
+          "identifier": "sle-hae",
+          "version": "12",
           "release_type": null,
           "arch": "x86_64",
           "friendly_name": "SUSE Linux Enterprise High Availability Extension 12 x86_64",
