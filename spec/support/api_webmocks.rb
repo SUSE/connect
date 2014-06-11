@@ -54,7 +54,7 @@ def stub_addons_call
 end
 
 def stub_deregister_call
-  headers = { 'Accept' => 'application/json,application/vnd.scc.suse.com.v1+json', \
+  headers = { 'Accept' => 'application/json,application/vnd.scc.suse.com.v2+json', \
               'Authorization' => 'Basic: encodedgibberish' }
   stub_request(:delete, 'https://example.com/connect/systems/')
     .with(:headers => headers)
@@ -64,7 +64,7 @@ end
 
 def stub_systems_services_call
   response_body = JSON.parse(File.read('spec/fixtures/systems_services_response.json')).to_json
-  headers = { 'Accept' => 'application/json,application/vnd.scc.suse.com.v1+json', \
+  headers = { 'Accept' => 'application/json,application/vnd.scc.suse.com.v2+json', \
               'Authorization' => 'basic_auth_string' }
   stub_request(:get, 'https://example.com/connect/systems/services')
   .with(:headers => headers)
@@ -73,7 +73,7 @@ end
 
 def stub_systems_subscriptions_call
   response_body = JSON.parse(File.read('spec/fixtures/systems_subscriptions_response.json')).to_json
-  headers = { 'Accept' => 'application/json,application/vnd.scc.suse.com.v1+json', \
+  headers = { 'Accept' => 'application/json,application/vnd.scc.suse.com.v2+json', \
               'Authorization' => 'basic_auth_string' }
   stub_request(:get, 'https://example.com/connect/systems/subscriptions')
   .with(:headers => headers)
