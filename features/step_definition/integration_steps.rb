@@ -7,7 +7,7 @@ end
 Then(/^I call SUSEConnect with '(.*)' arguments$/) do |args|
   options = Hash[*args.gsub('--', '').split(' ')]
 
-  step "Set regcode and url options"
+  step 'Set regcode and url options'
 
   @regcode = 'INVALID_REGCODE' unless options['regcode'] == 'VALID'
 
@@ -81,26 +81,26 @@ end
 Then(/^SUSEConnect library should be able to activate a free extension without regcode$/) do
   step 'Set regcode and url options'
 
-  client = SUSE::Connect::Client.new({url: @url})
-  service = client.activate_product({ name: 'sle-module-web-scripting', version: '12', arch: 'x86_64'})
+  client = SUSE::Connect::Client.new(url: @url)
+  service = client.activate_product(name: 'sle-module-web-scripting', version: '12', arch: 'x86_64')
   SUSE::Connect::System.add_service(service)
 end
 
-Then (/^SUSEConnect library should be able to retrieve the product information$/) do
+Then(/^SUSEConnect library should be able to retrieve the product information$/) do
   step 'Set regcode and url options'
 
   client = SUSE::Connect::Client.new(url: @url, regcode: @regcode)
-  products = client.list_products({ name: 'SLES', version: '12', arch: 'x86_64'}).map(&:short_name).sort
+  products = client.list_products(name: 'SLES', version: '12', arch: 'x86_64').map(&:short_name).sort
 
-  products.each{ |product| puts "- #{product}" }
+  products.each {|product| puts "- #{product}" }
 
   extensions = [
-    "SUSE Linux Enterprise High Availability Extension",
-    "SUSE Linux Enterprise Software Development Kit",
-    "Legacy Module",
-    "Advanced Systems Management Module",
-    "Web and Scripting Module",
-    "Public Cloud Module"
+    'SUSE Linux Enterprise High Availability Extension',
+    'SUSE Linux Enterprise Software Development Kit',
+    'Legacy Module',
+    'Advanced Systems Management Module',
+    'Web and Scripting Module',
+    'Public Cloud Module'
   ].sort
 
   expect(products).to eq(extensions)
