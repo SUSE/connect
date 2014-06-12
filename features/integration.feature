@@ -3,18 +3,29 @@ Feature: SUSEConnect full stack integration testing
   In order to deliver the best possible quality of SUSEConnect package we have to do a full stack integration testing
   This means we have to register a test machine against production server and examine all relevant data
 
-  Scenario: Successful system registration
+  ### SUSEConnect cmd checks ###
+  Scenario: System registration
     When I call SUSEConnect with '--regcode VALID' arguments
     Then the exit status should be 0
 
-    And SUSEConnect should create the 'SCCcredentials' file
-    And 'SCCcredentials' file should contain 'SCC' prefixed system guid
-    And SUSEConnect should create the 'service credentials' file
+    And a file named "/etc/zypp/credentials.d/SCCcredentials" should exist
+    And the file "/etc/zypp/credentials.d/SCCcredentials" should contain "SCC_"
 
-    And 'Service credentials' file should contain 'SCC' prefixed system guid
+    And a file named "/etc/zypp/credentials.d/SUSE_Linux_Enterprise_Server_12_x86_64" should exist
+    And the file "/etc/zypp/credentials.d/SUSE_Linux_Enterprise_Server_12_x86_64" should contain "SCC_"
 
-    Then SUSEConnect should add a new zypper service for base product
-    And SUSEConnect should add a new repositories for base product
+    And zypper should contain a service for base product
+    And zypper should contain a repositories for base product
+
+  Scenario: Extension activation with regcode
+    When I call SUSEConnect with '--regcode VALID --product sle-sdk/12/x86_64' arguments
+    Then the exit status should be 0
+
+    And a file named "/etc/zypp/credentials.d/SUSE_Linux_Enterprise_Software_Development_Kit_12_x86_64" should exist
+    And the file "/etc/zypp/credentials.d/SUSE_Linux_Enterprise_Software_Development_Kit_12_x86_64" should contain "SCC_"
+
+    And zypper should contain a service for extension product
+    And zypper should contain a repositories for extension product
 
   Scenario: API response language check
     When I call SUSEConnect with '--regcode INVALID --language de' arguments
@@ -22,13 +33,11 @@ Feature: SUSEConnect full stack integration testing
 
     And the output should contain "Keine Subscription mit diesem Registrierungscode gefunden"
 
-  Scenario: Extension activation with regcode
-    When I call SUSEConnect with '--regcode VALID --product sle-sdk/12/x86_64' arguments
-    Then the exit status should be 0
-
-    And SUSEConnect should create the 'SUSE_Linux_Enterprise_Software_Development_Kit_12_x86_64' file
-    And 'SUSE_Linux_Enterprise_Software_Development_Kit_12_x86_64' file should contain 'SCC' prefixed system guid
-
-  # SUSE::Connect library checks
+  ### SUSE::Connect library checks ###
   Scenario: API version check
     When SUSEConnect library should respect API headers
+
+  Scenario: System de-registration
+    When SUSEConnect library should be able to de-register the system
+    Then a file named "/etc/zypp/credentials.d/SCCcredentials" should not exist
+
