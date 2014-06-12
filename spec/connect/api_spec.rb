@@ -224,32 +224,32 @@ describe SUSE::Connect::Api do
   describe 'products' do
 
     before do
-      stub_addons_call
+      stub_show_product_call
     end
 
-    let(:product) { Remote::Product.new(:identifier => 'rodent') }
+    let(:product) { Remote::Product.new(:identifier => 'rodent', :version => 'good', :arch => 'z42', :release_type => 'foo') }
+    let(:query) { { :identifier => product.identifier, :version => product.version, :arch => product.arch, :release_type => 'foo' } }
 
     it 'is authenticated via basic auth' do
       payload = [
         '/connect/systems/products',
         :auth => 'Basic: encodedgibberish',
-        :params => { :product_id => 'rodent' }
+        :params => query
       ]
       Connection.any_instance.should_receive(:get)
         .with(*payload)
         .and_call_original
-      subject.new(client).addons('Basic: encodedgibberish', product)
+      subject.new(client).show_product('Basic: encodedgibberish', product)
     end
 
     it 'responds with proper status code' do
-
-      response = subject.new(client).addons('Basic: encodedgibberish', product)
+      response = subject.new(client).show_product('Basic: encodedgibberish', product)
       response.code.should eq 200
     end
 
     it 'returns array of extensions' do
-      body = subject.new(client).addons('Basic: encodedgibberish', product).body
-      body.should be_kind_of Array
+      body = subject.new(client).show_product('Basic: encodedgibberish', product).body
+      body.should be_kind_of Hash
     end
 
   end

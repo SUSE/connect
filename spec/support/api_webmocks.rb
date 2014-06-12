@@ -49,9 +49,9 @@ def stub_products_call
     .to_return(:status => 200, :body => response_body, :headers => {})
 end
 
-def stub_addons_call
+def stub_show_product_call
   headers = { 'Content-Type' => 'application/json' }
-  response_body = JSON.parse(File.read('spec/fixtures/addons_response.json')).to_json
+  response_body = JSON.parse(File.read('spec/fixtures/show_product_response.json')).to_json
   stub_request(:get, 'https://example.com/connect/systems/products')
     .with(:headers => headers)
     .to_return(:status => 200, :body => response_body, :headers => {})

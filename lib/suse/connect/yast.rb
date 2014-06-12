@@ -55,9 +55,9 @@ module SUSE
         #
         # @param product [Remote::Product] product to list extensions for
         #
-        # @return [Array <Product>] array of {Product}s
-        def list_products(product, client_params  = {})
-          Client.new(client_params).list_products(product)
+        # @return [Product] {Product}s from registration server with all extensions included
+        def show_product(product, client_params  = {})
+          Client.new(client_params).show_product(product)
         end
 
         # Writes the config file with the given parameters, overwriting any existing contents

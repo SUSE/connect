@@ -254,28 +254,30 @@ describe SUSE::Connect::Client do
 
   end
 
-  describe '#list_products' do
+  describe '#show_product' do
 
     let(:stubbed_response) do
       OpenStruct.new(
         :code => 200,
-        :body => [{ 'name' => 'short_name', 'identifier' => 'text_identifier' }],
+        :body => { 'name' => 'short_name', 'identifier' => 'text_identifier' },
         :success => true
       )
     end
+
+    let(:product) { Remote::Product.new(:identifier => 'text_identifier')  }
 
     before do
       subject.stub(:basic_auth => 'Basic: encodedstring')
     end
 
     it 'collects data from api response' do
-      subject.api.should_receive(:addons).with('Basic: encodedstring', 'SLES').and_return stubbed_response
-      subject.list_products('SLES')
+      subject.api.should_receive(:show_product).with('Basic: encodedstring', product).and_return stubbed_response
+      subject.show_product(product)
     end
 
     it 'returns array of extension products returned from api' do
-      subject.api.should_receive(:addons).with('Basic: encodedstring', 'SLES').and_return stubbed_response
-      subject.list_products('SLES').first.should be_kind_of Remote::Product
+      subject.api.should_receive(:show_product).with('Basic: encodedstring', product).and_return stubbed_response
+      subject.show_product(product).should be_kind_of Remote::Product
     end
 
   end

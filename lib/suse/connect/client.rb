@@ -79,11 +79,9 @@ module SUSE
       end
 
       # @param product [Remote::Product] product to query extensions for
-      def list_products(product)
-        result = @api.addons(basic_auth, product).body
-        result.map do |returned_product|
-          Remote::Product.new(returned_product)
-        end
+      def show_product(product)
+        result = @api.show_product(basic_auth, product).body
+        Remote::Product.new(result)
       end
 
       # writes the config file

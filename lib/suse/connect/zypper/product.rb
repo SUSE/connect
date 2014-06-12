@@ -12,6 +12,8 @@ class SUSE::Connect::Zypper::Product
     @arch          = @product_hash[:arch]
     @isbase        = %w{1 true yes}.include?(@product_hash[:isbase])
     @release_type  = determined_release_type
+    @summary       = @product_hash[:summary]
+    @release       = @product_hash[:release]
   end
 
   private

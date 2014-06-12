@@ -93,8 +93,13 @@ module SUSE
       #
       # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
       #
-      def addons(auth, product)
-        payload = { :product_id => product.identifier }
+      def show_product(auth, product)
+        payload = {
+          :identifier   => product.identifier,
+          :version      => product.version,
+          :arch         => product.arch,
+          :release_type => product.release_type
+        }
         @connection.get('/connect/systems/products', :auth => auth, :params => payload)
       end
 

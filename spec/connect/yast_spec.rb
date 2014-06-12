@@ -95,34 +95,34 @@ describe SUSE::Connect::YaST do
 
   end
 
-  describe '#list_products' do
+  describe '#show_product' do
 
     let(:product) { Remote::Product.new(identifier: 'tango') }
     let(:client_params) { { :foo => 'oink' } }
 
-    before { Client.any_instance.stub :list_products }
+    before { Client.any_instance.stub :show_product }
 
     it 'calls list_products on an instance of Client' do
-      Client.any_instance.should_receive(:list_products)
-      subject.list_products product
+      Client.any_instance.should_receive(:show_product)
+      subject.show_product product
     end
 
     it 'forwards all params to an instance of Client' do
       Client.should_receive(:new).with(client_params).and_call_original
-      Client.any_instance.should_receive(:list_products)
-      subject.list_products product, client_params
+      Client.any_instance.should_receive(:show_product)
+      subject.show_product product, client_params
     end
 
     it 'falls back to use an empty Hash as params if none are specified' do
       Client.should_receive(:new).with({}).and_call_original
-      Client.any_instance.should_receive(:list_products)
-      subject.list_products product
+      Client.any_instance.should_receive(:show_product)
+      subject.show_product product
     end
 
     it 'uses product as parameter for Client#list_products' do
       Client.should_receive(:new).with({}).and_call_original
-      Client.any_instance.should_receive(:list_products).with(product)
-      subject.list_products product
+      Client.any_instance.should_receive(:show_product).with(product)
+      subject.show_product product
     end
 
   end
