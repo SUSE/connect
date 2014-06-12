@@ -5,7 +5,7 @@ describe SUSE::Connect::System do
   let(:credentials_file) { Credentials::GLOBAL_CREDENTIALS_FILE }
 
   before(:each) do
-    Object.stub(:system => true)
+    allow_any_instance_of(Object).to receive(:system).and_return true
   end
 
   subject { SUSE::Connect::System }
@@ -131,65 +131,30 @@ describe SUSE::Connect::System do
     end
 
     let :mock_service do
-      sources = { 'name' => 'url', 'lastname' => 'furl' }
-      Service.new(sources, %w{ fehu uruz ansuz }, %w{ green coffee loki })
+      Remote::Service.new('name' => 'JiYoKo', 'url' => 'furl', 'product' => {})
     end
 
     it 'removes old service' do
-      Zypper.should_receive(:remove_service).with('name')
-      Zypper.should_receive(:remove_service).with('lastname')
+      Zypper.should_receive(:remove_service).with('JiYoKo')
       subject.add_service mock_service
     end
 
     it 'add each service from set' do
-      Zypper.should_receive(:add_service).with('name', URI('url'))
-      Zypper.should_receive(:add_service).with('lastname', URI('furl'))
-      subject.add_service mock_service
-    end
-
-    it 'enables all repos for this service' do
-      Zypper.should_receive(:enable_service_repository).with('name', 'fehu')
-      Zypper.should_receive(:enable_service_repository).with('name', 'uruz')
-      Zypper.should_receive(:enable_service_repository).with('name', 'ansuz')
-
-      Zypper.should_receive(:enable_service_repository).with('lastname', 'fehu')
-      Zypper.should_receive(:enable_service_repository).with('lastname', 'uruz')
-      Zypper.should_receive(:enable_service_repository).with('lastname', 'ansuz')
-
-      subject.add_service mock_service
-    end
-
-    it 'enables service repository for each of enabled' do
-      Zypper.should_receive(:add_service).with('name', URI('url'))
-      Zypper.should_receive(:add_service).with('lastname', URI('furl'))
+      Zypper.should_receive(:add_service).with('furl', 'JiYoKo')
       subject.add_service mock_service
     end
 
     it 'writes credentials file in corresponding file in credentials.d' do
-      Zypper.should_receive(:write_service_credentials).with('name')
-      Zypper.should_receive(:write_service_credentials).with('lastname')
+      Zypper.should_receive(:write_service_credentials).with('JiYoKo')
       subject.add_service mock_service
     end
 
-    it 'raise if non-Service object passed' do
-      expect { subject.add_service('setup') }.to raise_error ArgumentError, 'only Service accepted'
+    it 'raise if non-Remote::Service object passed' do
+      expect { subject.add_service('setup') }.to raise_error ArgumentError, 'only Remote::Service accepted'
     end
 
     it 'refresh services' do
       Zypper.should_receive(:refresh_services).exactly(1).times
-      subject.add_service mock_service
-    end
-
-    it 'set provided repo names to norefresh for each service' do
-
-      Zypper.should_receive(:disable_repository_autorefresh).with('name', 'green')
-      Zypper.should_receive(:disable_repository_autorefresh).with('name', 'coffee')
-      Zypper.should_receive(:disable_repository_autorefresh).with('name', 'loki')
-
-      Zypper.should_receive(:disable_repository_autorefresh).with('lastname', 'green')
-      Zypper.should_receive(:disable_repository_autorefresh).with('lastname', 'coffee')
-      Zypper.should_receive(:disable_repository_autorefresh).with('lastname', 'loki')
-
       subject.add_service mock_service
     end
 

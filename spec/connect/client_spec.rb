@@ -147,11 +147,11 @@ describe SUSE::Connect::Client do
 
   describe '#activate_product' do
 
-    let(:product_ident) { { :name => 'SLES', :version => '12', :arch => 'x86_64' } }
+    let(:product_ident) { { :identifier => 'SLES', :version => '12', :arch => 'x86_64' } }
 
     before do
       api_response = double('api_response')
-      api_response.stub(:body => { 'sources' => { :foo => 'bar' }, 'enabled' => [:foo], 'norefresh' => [:foo] })
+      api_response.stub(:body => { 'name' => 'kinkat', 'url' => 'kinkaturl', 'product' => {} })
       Api.any_instance.stub(:activate_product => api_response)
       subject.stub(:basic_auth => 'secretsecret')
     end
@@ -174,19 +174,19 @@ describe SUSE::Connect::Client do
 
     it 'returns service object' do
       service = subject.activate_product(product_ident)
-      service.sources.first.name.should eq :foo
-      service.enabled.should eq [:foo]
+      service.name.should eq 'kinkat'
+      service.url.should eq 'kinkaturl'
     end
 
   end
 
   describe '#upgrade_product' do
 
-    let(:product_ident) { { :name => 'SLES', :version => '12', :arch => 'x86_64' } }
+    let(:product_ident) { { :identifier => 'SLES', :version => '12', :arch => 'x86_64' } }
 
     before do
       api_response = double('api_response')
-      api_response.stub(:body => { 'sources' => { :foo => 'bar' }, 'enabled' => [:foo], 'norefresh' => [:foo] })
+      api_response.stub(:body => { 'name' => 'tongobongo', 'url' => 'tongobongourl', 'product' => {} })
       Api.any_instance.stub(:upgrade_product => api_response)
       subject.stub(:basic_auth => 'secretsecret')
     end
@@ -203,8 +203,8 @@ describe SUSE::Connect::Client do
 
     it 'returns service object' do
       service = subject.upgrade_product(product_ident)
-      service.sources.first.name.should eq :foo
-      service.enabled.should eq [:foo]
+      service.name.should eq 'tongobongo'
+      service.url.should eq 'tongobongourl'
     end
 
   end
@@ -254,28 +254,30 @@ describe SUSE::Connect::Client do
 
   end
 
-  describe '#list_products' do
+  describe '#show_product' do
 
     let(:stubbed_response) do
       OpenStruct.new(
         :code => 200,
-        :body => [{ 'name' => 'short_name', 'zypper_name' => 'zypper_name' }],
+        :body => { 'name' => 'short_name', 'identifier' => 'text_identifier' },
         :success => true
       )
     end
+
+    let(:product) { Remote::Product.new(:identifier => 'text_identifier')  }
 
     before do
       subject.stub(:basic_auth => 'Basic: encodedstring')
     end
 
     it 'collects data from api response' do
-      subject.api.should_receive(:addons).with('Basic: encodedstring', 'SLES').and_return stubbed_response
-      subject.list_products('SLES')
+      subject.api.should_receive(:show_product).with('Basic: encodedstring', product).and_return stubbed_response
+      subject.show_product(product)
     end
 
     it 'returns array of extension products returned from api' do
-      subject.api.should_receive(:addons).with('Basic: encodedstring', 'SLES').and_return stubbed_response
-      subject.list_products('SLES').first.should be_kind_of SUSE::Connect::Product
+      subject.api.should_receive(:show_product).with('Basic: encodedstring', product).and_return stubbed_response
+      subject.show_product(product).should be_kind_of Remote::Product
     end
 
   end
@@ -306,6 +308,63 @@ describe SUSE::Connect::Client do
       subject.instance_variable_get(:@config).should_receive(:write)
       File.stub(:write => 42)
       subject.write_config
+    end
+  end
+
+  describe '#systems_services' do
+    let(:stubbed_response) do
+      OpenStruct.new(
+          :code => 204,
+          :body => nil,
+          :success => true
+      )
+    end
+
+    before do
+      subject.stub(:basic_auth => 'Basic: encodedstring')
+    end
+
+    it 'calls underlying api and removes credentials file' do
+      allow(subject.api).to receive(:system_services).with('Basic: encodedstring').and_return stubbed_response
+      expect(subject.system_services).to be_true
+    end
+  end
+
+  describe '#systems_subscriptions' do
+    let(:stubbed_response) do
+      OpenStruct.new(
+          :code => 204,
+          :body => nil,
+          :success => true
+      )
+    end
+
+    before do
+      subject.stub(:basic_auth => 'Basic: encodedstring')
+    end
+
+    it 'calls underlying api and removes credentials file' do
+      expect(subject.api).to receive(:system_subscriptions).with('Basic: encodedstring').and_return stubbed_response
+      expect(subject.system_subscriptions).to be_true
+    end
+  end
+
+  describe '#status' do
+    let(:stubbed_response) do
+      OpenStruct.new(
+          :code => 204,
+          :body => nil,
+          :success => true
+      )
+    end
+
+    before do
+      subject.stub(:basic_auth => 'Basic: encodedstring')
+    end
+
+    it 'calls underlying api and removes credentials file' do
+      expect(Status).to receive(:new).with(subject).and_return(true)
+      subject.status
     end
   end
 

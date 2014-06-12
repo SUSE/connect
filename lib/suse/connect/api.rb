@@ -10,7 +10,7 @@ module SUSE
     # (including children) in return. The Connect API is located at https://scc.suse.com/connect.
     class Api
       # Set desired API version and forward it in accept headers (see connection.rb#json_request)
-      VERSION = 'v1'
+      VERSION = 'v2'
 
       # Returns a new instance of SUSE::Connect::Api
       #
@@ -49,22 +49,19 @@ module SUSE
       #
       # @param auth [String] authorization string which will be injected in 'Authorization' header in request.
       #   In this case we expects Base64 encoded string with login and password
-      # @param product_ident [Hash] product
+      # @param product [SUSE::Connect::Remote::Product] product to be activated
       # @param email [String] Adds the user to the respective organization or
       #   sends an SCC invitation.
       #
       # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
-      #
-      # @todo TODO: introduce Product class
-      def activate_product(auth, product_ident, email = nil)
-        token = product_ident[:token] || @client.options[:token]
+      def activate_product(auth, product, email = nil)
         payload = {
-          :product_ident => product_ident[:name],
-          :product_version => product_ident[:version],
-          :arch => product_ident[:arch],
-          :release_type => product_ident[:release_type],
-          :token => token,
-          :email => email
+          :identifier   => product.identifier,
+          :version      => product.version,
+          :arch         => product.arch,
+          :release_type => product.release_type,
+          :token        => @client.options[:token],
+          :email        => email
         }
         @connection.post('/connect/systems/products', :auth => auth, :params => payload)
       end
@@ -73,13 +70,13 @@ module SUSE
       #
       # @param auth [String] authorization string which will be injected in 'Authorization' header in request.
       #   In this case we expects Base64 encoded string with login and password
-      # @param product_ident [Hash] product
-      def upgrade_product(auth, product_ident)
+      # @param product [SUSE::Connect::Remote::Product] product
+      def upgrade_product(auth, product)
         payload = {
-          :product_ident => product_ident[:name],
-          :product_version => product_ident[:version],
-          :arch => product_ident[:arch],
-          :release_type => product_ident[:release_type]
+          :identifier   => product.identifier,
+          :version      => product.version,
+          :arch         => product.arch,
+          :release_type => product.release_type
         }
         @connection.put('/connect/systems/products', :auth => auth, :params => payload)
       end
@@ -96,8 +93,13 @@ module SUSE
       #
       # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
       #
-      def addons(auth, product)
-        payload = { :product_id => product[:name] }
+      def show_product(auth, product)
+        payload = {
+          :identifier   => product.identifier,
+          :version      => product.version,
+          :arch         => product.arch,
+          :release_type => product.release_type
+        }
         @connection.get('/connect/systems/products', :auth => auth, :params => payload)
       end
 
@@ -111,6 +113,29 @@ module SUSE
       def deregister(auth)
         @connection.delete('/connect/systems/', :auth => auth)
       end
+
+      # Gets a list of services known by the system with system credentials
+      #
+      # @param auth [String] authorization string which will be injected in 'Authorization' header in request.
+      #   In this case we expects Base64 encoded string with login and password
+      #
+      # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
+      #
+      def system_services(auth)
+        @connection.get('/connect/systems/services', :auth => auth)
+      end
+
+      # Gets a list of subscriptions known by system authenticated with system credentials
+      #
+      # @param auth [String] authorizaztion string which will be injected in 'Authorization' header in request.
+      #   In this case we expects Base64 encoded string with login and password
+      #
+      # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
+      #
+      def system_subscriptions(auth)
+        @connection.get('/connect/systems/subscriptions', :auth => auth)
+      end
+
     end
   end
 end

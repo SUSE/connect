@@ -1,9 +1,10 @@
 def service_name
-  base_product = SUSE::Connect::Zypper.base_product
-  if base_product[:name] == 'openSUSE'
-    @service_name ||= "#{base_product[:name]}_#{base_product[:version]}_#{base_product[:arch]}"
+  product = SUSE::Connect::Zypper.base_product
+  if product.identifier == 'openSUSE'
+    @service_name ||= "#{product.identifier}_#{product.version}_#{product.arch}"
   else
-    @service_name ||= "#{base_product[:summary].gsub(' ', '_')}_#{base_product[:arch]}"
+    identifier = product.instance_variable_get(:@summary).gsub(' ', '_')
+    @service_name ||= "#{identifier}_#{product.arch}"
   end
 end
 

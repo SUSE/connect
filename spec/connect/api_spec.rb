@@ -46,6 +46,7 @@ describe SUSE::Connect::Api do
     end
 
     context :hostname_detected do
+
       it 'sends a call with hostname' do
         Socket.stub(:gethostname => 'vargan')
         payload = ['/connect/subscriptions/systems', :auth => 'token', :params => {
@@ -54,9 +55,11 @@ describe SUSE::Connect::Api do
         Connection.any_instance.should_receive(:post).with(*payload).and_call_original
         subject.new(client).announce_system('token')
       end
+
     end
 
     context :no_hostname do
+
       it 'sends a call with ip' do
         System.stub(:hostname => '192.168.42.42')
         payload = ['/connect/subscriptions/systems', :auth => 'token', :params => {
@@ -65,6 +68,55 @@ describe SUSE::Connect::Api do
         Connection.any_instance.should_receive(:post).with(*payload).and_call_original
         subject.new(client).announce_system('token')
       end
+
+    end
+
+  end
+
+  describe :systems do
+
+    before do
+      stub_systems_services_call
+    end
+
+    mock_dry_file
+
+    describe :services do
+
+      it 'returns returns array of services as known by the system' do
+        Connection.any_instance.should_receive(:get).with('/connect/systems/services', :auth => 'basic_auth_string').and_call_original
+        subject.new(client).system_services('basic_auth_string')
+      end
+
+      it 'holds expected structure' do
+        Connection.any_instance.should_receive(:get).with('/connect/systems/services', :auth => 'basic_auth_string').and_call_original
+        result = subject.new(client).system_services('basic_auth_string').body
+        result.should be_kind_of Array
+        result.first.keys.should eq %w{id name product}
+      end
+
+    end
+
+    describe :subscriptions do
+
+      before do
+        stub_systems_subscriptions_call
+      end
+
+      it 'returns returns array of subscriptions known by the system' do
+        Connection.any_instance.should_receive(:get).with('/connect/systems/subscriptions', :auth => 'basic_auth_string').and_call_original
+        subject.new(client).system_subscriptions('basic_auth_string')
+      end
+
+      it 'holds expected structure' do
+        Connection.any_instance.should_receive(:get).with('/connect/systems/subscriptions', :auth => 'basic_auth_string').and_call_original
+        result = subject.new(client).system_subscriptions('basic_auth_string').body
+        result.should be_kind_of Array
+        attr_ary = %w{id regcode name type status starts_at expires_at}
+        attr_ary += %w{system_limit systems_count virtual_count product_classes systems product_ids}
+        result.first.keys.should eq attr_ary
+      end
+
     end
 
   end
@@ -74,33 +126,26 @@ describe SUSE::Connect::Api do
     let(:api_endpoint) { '/connect/systems/products' }
     let(:basic_auth) { 'basic_auth_mock' }
 
-    let(:product) do
-      {
-        :name    => 'SLES',
-        :version => '11-SP2',
-        :arch    => 'x86_64',
-        :token   => 'token-shmocken'
-      }
-    end
+    let(:product) { Remote::Product.new(:identifier => 'SLES', :version => '11-SP2', :arch => 'x86_64', :token => 'token-shmocken') }
 
     let(:payload) do
       {
-        :product_ident    => 'SLES',
-        :product_version  => '11-SP2',
-        :arch             => 'x86_64',
-        :release_type     => nil,
-        :token            => 'token-shmocken',
-        :email            => nil
+        :identifier   => 'SLES',
+        :version      => '11-SP2',
+        :arch         => 'x86_64',
+        :release_type => nil,
+        :token        => 'token-shmocken',
+        :email        => nil
       }
     end
 
-    it 'calls ConnectAPI with basic auth and params and receives a JSON in return' do
+    it 'calls ConnectAPI with basic auth and params and receives a JSON in return (use proper webmock)' do
       stub_activate_call
       Connection.any_instance.should_receive(:post)
         .with(api_endpoint, :auth => basic_auth, :params => payload)
         .and_call_original
       response = subject.new(client).activate_product(basic_auth, product)
-      response.body['sources'].keys.first.should include('SUSE')
+      response.body['name'].should eq 'SUSE_Linux_Enterprise_Server_12_x86_64'
     end
 
     it 'allows to add an optional parameter "email"' do
@@ -118,20 +163,14 @@ describe SUSE::Connect::Api do
     let(:api_endpoint) { '/connect/systems/products' }
     let(:basic_auth) { 'basic_auth_mock' }
 
-    let(:product) do
-      {
-        :name    => 'SLES',
-        :version => '12',
-        :arch    => 'x86_64'
-      }
-    end
+    let(:product) { Remote::Product.new(:identifier => 'SLES', :version => '12', :arch => 'x86_64') }
 
     let(:payload) do
       {
-        :product_ident    => 'SLES',
-        :product_version  => '12',
-        :arch             => 'x86_64',
-        :release_type     => nil
+        :identifier   => 'SLES',
+        :version      => '12',
+        :arch         => 'x86_64',
+        :release_type => nil
       }
     end
 
@@ -174,7 +213,7 @@ describe SUSE::Connect::Api do
         response.first['repos'].first[key].should_not be_nil
       end
 
-      %w{id zypper_name zypper_version release arch friendly_name product_class repos}.each do |key|
+      %w{id identifier version arch release_type friendly_name product_class repos}.each do |key|
         response.first[key].should_not be_nil
       end
 
@@ -185,34 +224,38 @@ describe SUSE::Connect::Api do
   describe 'products' do
 
     before do
-      stub_addons_call
+      stub_show_product_call
     end
+
+    let(:product) { Remote::Product.new(:identifier => 'rodent', :version => 'good', :arch => 'z42', :release_type => 'foo') }
+    let(:query) { { :identifier => product.identifier, :version => product.version, :arch => product.arch, :release_type => 'foo' } }
 
     it 'is authenticated via basic auth' do
       payload = [
         '/connect/systems/products',
         :auth => 'Basic: encodedgibberish',
-        :params => { :product_id => 'rodent' }
+        :params => query
       ]
       Connection.any_instance.should_receive(:get)
         .with(*payload)
         .and_call_original
-      subject.new(client).addons('Basic: encodedgibberish', :name => 'rodent')
+      subject.new(client).show_product('Basic: encodedgibberish', product)
     end
 
     it 'responds with proper status code' do
-      response = subject.new(client).addons('Basic: encodedgibberish', :name => 'rodent')
+      response = subject.new(client).show_product('Basic: encodedgibberish', product)
       response.code.should eq 200
     end
 
     it 'returns array of extensions' do
-      body = subject.new(client).addons('Basic: encodedgibberish', :name => 'rodent').body
-      body.should be_kind_of Array
+      body = subject.new(client).show_product('Basic: encodedgibberish', product).body
+      body.should be_kind_of Hash
     end
 
   end
 
   describe 'deregister' do
+
     before do
       stub_deregister_call
     end

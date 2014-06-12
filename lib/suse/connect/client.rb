@@ -18,10 +18,8 @@ module SUSE
 
         @options            = opts
         init_url(opts)
-        @config.insecure = opts[:insecure] if opts[:insecure]
-
-        # !!: Set :debug explicitly to boolean values.
-        @options[:debug]    = !!opts[:verbose]
+        @config.insecure    = opts[:insecure] if opts[:insecure]
+        @options[:debug]    = !!opts[:debug]
         @options[:language] = opts[:language] || @config.language
         @options[:token]    = opts[:token] || @config.regcode
         @options[:product]  = opts[:product]
@@ -41,10 +39,7 @@ module SUSE
 
       # Activates a product and writes credentials file if the system was not yet announced
       def register!
-        unless System.registered?
-          login, password = announce_system
-          Credentials.new(login, password, Credentials.system_credentials_file).write
-        end
+        announce_if_not_yet
         product = @options[:product] || Zypper.base_product
         service = activate_product(product)
         System.add_service(service)
@@ -66,36 +61,63 @@ module SUSE
 
       # Activate a product
       #
-      # @param product_ident [Hash] with product parameters
+      # @param product [SUSE::Connect::Zypper::Product]
       # @returns: Service for this product
-      def activate_product(product_ident, email = nil)
-        result = @api.activate_product(basic_auth, product_ident, email).body
-        Service.new(result['sources'], result['enabled'], result['norefresh'])
+      def activate_product(product, email = nil)
+        result = @api.activate_product(basic_auth, product, email).body
+        Remote::Service.new(result)
       end
 
       # Upgrade a product
       # System upgrade (eg SLES11 -> SLES12) without regcode
       #
-      # @param product_ident [Hash] with product parameters
+      # @param product [Remote::Product] desired product to be upgraded
       # @returns: Service for this product
-      def upgrade_product(product_ident)
-        result = @api.upgrade_product(basic_auth, product_ident).body
-        Service.new(result['sources'], result['enabled'], result['norefresh'])
+      def upgrade_product(product)
+        result = @api.upgrade_product(basic_auth, product).body
+        Remote::Service.new(result)
       end
 
-      # @param product_ident [Hash] product to query extensions for
-      def list_products(product_ident)
-        result = @api.addons(basic_auth, product_ident).body
-        result.map do |product|
-          SUSE::Connect::Product.new(product)
-        end
+      # @param product [Remote::Product] product to query extensions for
+      def show_product(product)
+        result = @api.show_product(basic_auth, product).body
+        Remote::Product.new(result)
       end
 
-      # Write the config file
+      # writes the config file
       def write_config
         @config.write
       end
 
+      # @returns: body described in https://github.com/SUSE/connect/wiki/SCC-API-(Implemented)#response-12 and
+      # 200 status code
+      def system_services
+        @api.system_services(basic_auth)
+      end
+
+      # @returns: body described in https://github.com/SUSE/connect/wiki/SCC-API-(Implemented)#response-13 and
+      # 200 status code
+      def system_subscriptions
+        @api.system_subscriptions(basic_auth)
+      end
+
+      # @returns: print to $stdout status of current subscriptions
+      # 200 status code
+      def status
+        Status.new(self)
+      end
+
+      private
+
+      def announce_if_not_yet
+        unless System.registered?
+          login, password = announce_system
+          Credentials.new(login, password, Credentials.system_credentials_file).write
+        end
+      end
+
     end
+
   end
+
 end

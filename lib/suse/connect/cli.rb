@@ -17,10 +17,17 @@ module SUSE
 
       def execute! # rubocop:disable MethodLength
 
+        # TODO: proper mechanics to separate sub-commands
+        if @options[:status]
+          Client.new(@options).status.print
+          exit(0)
+        end
+
         unless @options[:token]
           puts @opts
           exit(1)
         end
+
         Client.new(@options).register!
 
       rescue Errno::ECONNREFUSED
@@ -59,7 +66,8 @@ module SUSE
           check_if_param((opt =~ /\S+\/\S+\/\S+/), 'Please provide the product identifier in this format: ' \
             '<internal name>/<version>/<architecture>. For installed products you can find these values by calling: ' \
             '\'zypper products\'. ')
-          @options[:product] = { name: opt.split('/')[0], version: opt.split('/')[1], arch: opt.split('/')[2] }
+          identifier, version, arch = opt.split('/')
+          @options[:product] = Remote::Product.new(identifier: identifier, version: version, arch: arch)
         end
 
         @opts.on('-r', '--regcode [REGCODE]', 'Subscription registration code for the',
@@ -73,6 +81,10 @@ module SUSE
         @opts.on('--url [URL]', 'URL of registration server (e.g. https://scc.suse.com).') do |opt|
           check_if_param(opt, 'Please provide registration server URL')
           @options[:url] = opt
+        end
+
+        @opts.on('-s', '--status', 'get current system registration status') do |opt|
+          @options[:status] = true
         end
 
         @opts.separator ''

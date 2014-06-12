@@ -1,6 +1,6 @@
 Then(/^Set regcode and url options$/) do
   @regcode = ENV['REGCODE'] || YAML.load_file('/root/.regcode')['code']
-  @url = ENV['URL'] || 'https://barium.scc.suse.de'
+  @url = ENV['URL'] || SUSE::Connect::Client::DEFAULT_URL
 end
 
 ### SUSEConnect cmd steps
@@ -81,26 +81,28 @@ end
 Then(/^SUSEConnect library should be able to activate a free extension without regcode$/) do
   step 'Set regcode and url options'
 
-  client = SUSE::Connect::Client.new(url: @url)
-  service = client.activate_product(name: 'sle-module-web-scripting', version: '12', arch: 'x86_64')
+  product = SUSE::Connect::Remote::Product.new(identifier: 'sle-module-web-scripting', version: '12', arch: 'x86_64')
+  client = SUSE::Connect::Client.new(url: @url, debug: true)
+  service = client.activate_product(product)
   SUSE::Connect::System.add_service(service)
 end
 
 Then(/^SUSEConnect library should be able to retrieve the product information$/) do
   step 'Set regcode and url options'
 
+  remote_product = SUSE::Connect::Remote::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64')
   client = SUSE::Connect::Client.new(url: @url, regcode: @regcode)
-  products = client.list_products(name: 'SLES', version: '12', arch: 'x86_64').map(&:short_name).sort
+  products = client.show_product(remote_product).extensions.map(&:friendly_name).sort
 
   products.each {|product| puts "- #{product}" }
 
   extensions = [
-    'SUSE Linux Enterprise High Availability Extension',
-    'SUSE Linux Enterprise Software Development Kit',
-    'Legacy Module',
-    'Advanced Systems Management Module',
-    'Web and Scripting Module',
-    'Public Cloud Module'
+    'SUSE Linux Enterprise High Availability Extension 12 x86_64',
+    'SUSE Linux Enterprise Software Development Kit 12 x86_64',
+    'Legacy Module 12 x86_64',
+    'Advanced Systems Management Module 12 x86_64',
+    'Web and Scripting Module 12 x86_64',
+    'Public Cloud Module 12 x86_64'
   ].sort
 
   expect(products).to eq(extensions)
