@@ -165,7 +165,7 @@ describe SUSE::Connect::Connection do
 
     it 'sends USER-AGENT header with SUSEConnect package version' do
       headers = {
-        'Accept' => 'application/json,application/vnd.scc.suse.com.v2+json',
+        'Accept' => api_header_version,
         'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
         'Content-Type' => 'application/json',
         'User-Agent' => "SUSEConnect/#{SUSE::Connect::VERSION}"
