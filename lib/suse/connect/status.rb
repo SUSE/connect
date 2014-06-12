@@ -10,7 +10,6 @@ module SUSE
 
       def initialize(client)
         @client = client
-        self
       end
 
       def installed_products
