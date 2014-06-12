@@ -9,6 +9,8 @@ module SUSE
     # (GET, PUT/PATCH, POST, or DELETE) to an endpoint, and you'll get back a JSON representation of the resource(s)
     # (including children) in return. The Connect API is located at https://scc.suse.com/connect.
     class Api
+      # Set desired API version and forward it in accept headers (see connection.rb#json_request)
+      VERSION = 'v1'
 
       # Returns a new instance of SUSE::Connect::Api
       #
@@ -17,11 +19,11 @@ module SUSE
       def initialize(client)
         @client     = client
         @connection = Connection.new(
-            client.url,
-            :language => client.options[:language],
-            :insecure => client.options[:insecure],
-            :verify_callback => client.options[:verify_callback],
-            :debug => client.options[:debug]
+          client.url,
+          :language => client.options[:language],
+          :insecure => client.options[:insecure],
+          :verify_callback => client.options[:verify_callback],
+          :debug => client.options[:debug]
         )
       end
 
@@ -29,7 +31,7 @@ module SUSE
       # @note https://github.com/SUSE/connect/wiki/SCC-API-(Implemented)#wiki-announce-system
       #
       # @param auth [String] authorization string which will be injected in 'Authorization' header in request.
-      #   In this case we expect Token authentication where token is a registration code.
+      # In this case we expect Token authentication where token is a registration code e.g. 'Token token=<REGCODE>'
       # @return [OpenStruct] responding to #body(response from SCC), #code(natural HTTP response code) and #success.
       #
       def announce_system(auth, distro_target = nil)

@@ -34,7 +34,12 @@ module SUSE
         define_method name_for_method do |path, auth: nil, params: {} |
           @auth = auth
           response = json_request(name_for_method.downcase.to_sym, path, params)
-          raise(ApiError, response) unless response.success
+
+          unless response.success
+            error = ApiError.new(response)
+            raise(error, error.message)
+          end
+
           response
         end
       end
@@ -45,17 +50,19 @@ module SUSE
         request                    = VERB_TO_CLASS[method].new(path)
         request['Authorization']   = auth
         request['Content-Type']    = 'application/json'
-        request['Accept']          = 'application/json,application/vnd.scc.suse.com.v1+json'
+        request['Accept']          = "application/json,application/vnd.scc.suse.com.#{SUSE::Connect::Api::VERSION}+json"
         request['Accept-Language'] = language
         request['User-Agent']      = "SUSEConnect/#{SUSE::Connect::VERSION}"
 
         request.body               = params.to_json unless params.empty?
         response                   = @http.request(request)
         body                       = JSON.parse(response.body) if response.body
+
         OpenStruct.new(
-          :code => response.code.to_i,
-          :body => body,
-          :success => response.is_a?(Net::HTTPSuccess)
+          code: response.code.to_i,
+          headers: response.to_hash,
+          body: body,
+          success: response.is_a?(Net::HTTPSuccess)
         )
       end
 

@@ -29,4 +29,6 @@ Feature: SUSEConnect full stack integration testing
     And SUSEConnect should create the 'SUSE_Linux_Enterprise_Software_Development_Kit_12_x86_64' file
     And 'SUSE_Linux_Enterprise_Software_Development_Kit_12_x86_64' file should contain 'SCC' prefixed system guid
 
-
+  # SUSE::Connect library checks
+  Scenario: API version check
+    When SUSEConnect library should respect API headers
