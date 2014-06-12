@@ -31,7 +31,7 @@ module SUSE
       # @note https://github.com/SUSE/connect/wiki/SCC-API-(Implemented)#wiki-announce-system
       #
       # @param auth [String] authorization string which will be injected in 'Authorization' header in request.
-      #   In this case we expect Token authentication where token is a registration code.
+      # In this case we expect Token authentication where token is a registration code e.g. 'Token token=<REGCODE>'
       # @return [OpenStruct] responding to #body(response from SCC), #code(natural HTTP response code) and #success.
       #
       def announce_system(auth, distro_target = nil)
