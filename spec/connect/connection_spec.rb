@@ -122,7 +122,6 @@ describe SUSE::Connect::Connection do
       end
 
     end
-
   end
 
   describe '#post' do
@@ -189,6 +188,19 @@ describe SUSE::Connect::Connection do
 
       result = connection.post('/api/v1/test', :auth => 'Token token=zulu')
       result.body.should eq('keyyo' => 'vallue')
+      result.code.should eq 200
+    end
+
+    it 'response includes API response headers' do
+      api_version = SUSE::Connect::Api::VERSION
+
+      stub_request(:post, 'https://example.com/api/v1/test')
+      .with(:body => '', :headers => { 'Authorization' => 'Token token=zulu' })
+      .to_return(:status => 200, :body => '{}', :headers => { 'scc-api-version' => api_version })
+
+      connection = subject.new('https://example.com')
+      result = connection.post('/api/v1/test', :auth => 'Token token=zulu')
+      result.headers['scc-api-version'].first.should eq api_version
       result.code.should eq 200
     end
 
