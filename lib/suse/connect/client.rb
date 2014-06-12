@@ -71,16 +71,16 @@ module SUSE
       # Upgrade a product
       # System upgrade (eg SLES11 -> SLES12) without regcode
       #
-      # @param product_ident [Hash] with product parameters
+      # @param product [Remote::Product] desired product to be upgraded
       # @returns: Service for this product
-      def upgrade_product(product_ident)
-        result = @api.upgrade_product(basic_auth, product_ident).body
+      def upgrade_product(product)
+        result = @api.upgrade_product(basic_auth, product).body
         Remote::Service.new(result)
       end
 
-      # @param product_ident [Hash] product to query extensions for
-      def list_products(product_ident)
-        result = @api.addons(basic_auth, product_ident).body
+      # @param product [Remote::Product] product to query extensions for
+      def list_products(product)
+        result = @api.addons(basic_auth, product).body
         result.map do |product|
           Remote::Product.new(product)
         end

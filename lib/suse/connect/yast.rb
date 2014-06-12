@@ -12,13 +12,12 @@ module SUSE
         # Additionally, distro_target should be set to avoid calls to Zypper.
         # Returns the system credentials from SCC.
         #
-        # @param [Hash] params
-        #   * :token [String] registration code/token
-        #   * :distro_target [String]
+        # @param [Hash] client_params parameters to instantiate {Client}
+        # @param [String] distro_target desired distro target
         #
         # @return [Array <String>] SCC / system credentials - login and password tuple
-        def announce_system(params = {})
-          Client.new(params).announce_system(params[:distro_target])
+        def announce_system(client_params = {}, distro_target = nil)
+          Client.new(client_params).announce_system(distro_target)
         end
 
         # Activates a product on SCC / the registration server.
@@ -26,14 +25,13 @@ module SUSE
         # Requires a token / regcode except for free products/extensions.
         # Returns a service object for the activated product.
         #
-        # @param [Hash] params
-        #  - :token [String]
-        #  - :product_ident [Hash] containing: :name, :version, :arch
-        #  - :email [String]
+        # @param [Remote::Product] product with identifier, arch and version defined
+        # @param [Hash] client_params parameters to instantiate {Client}
+        # @param [String] email email to which this activation should be connected to
         #
         # @return [Service] Service
-        def activate_product(params = {})
-          Client.new(params).activate_product(params[:product_ident], params[:email])
+        def activate_product(product, client_params = {}, email = nil)
+          Client.new(client_params).activate_product(product, email)
         end
 
         # Upgrades a product on SCC / the registration server.
@@ -42,12 +40,12 @@ module SUSE
         # product was registered with, or be a free product.
         # Returns a service object for the new activated product.
         #
-        # @param [Hash] params
-        #  - :product_ident [Hash] containing: :name, :version, :arch
+        # @param [Remote::Product] product with identifier, arch and version defined
+        # @param [Hash] client_params parameters to instantiate {Client}
         #
         # @return [Service] Service
-        def upgrade_product(params = {})
-          Client.new(params).upgrade_product(params[:product_ident])
+        def upgrade_product(product, client_params = {})
+          Client.new(client_params).upgrade_product(product)
         end
 
         # Lists all available products for a system.
@@ -55,22 +53,21 @@ module SUSE
         # products for the system that are extensions to the specified product.
         # Gets the list from SCC and returns them.
         #
-        # @param [Hash] params
-        #  * :product_ident [String]
+        # @param product [Remote::Product] product to list extensions for
         #
         # @return [Array <Product>] array of {Product}s
-        def list_products(params = {})
-          Client.new(params).list_products(params[:product_ident])
+        def list_products(product, client_params  = {})
+          Client.new(client_params).list_products(product)
         end
 
         # Writes the config file with the given parameters, overwriting any existing contents
         # Only persistent connection parameters (url, insecure) are written by this method
         # Regcode, language, debug etc are not
-        # @param [Hash] params
+        # @param [Hash] client_params
         #  - :insecure [Boolean]
         #  - :url [String]
-        def write_config(params = {})
-          Client.new(params).write_config
+        def write_config(client_params = {})
+          Client.new(client_params).write_config
         end
 
       end
