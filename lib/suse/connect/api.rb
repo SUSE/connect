@@ -109,9 +109,9 @@ module SUSE
         @connection.delete('/connect/systems/', :auth => auth)
       end
 
-      # Gets a list of services known by system with system credentials
+      # Gets a list of services known by the system with system credentials
       #
-      # @param auth [String] authorizaztion string which will be injected in 'Authorization' header in request.
+      # @param auth [String] authorization string which will be injected in 'Authorization' header in request.
       #   In this case we expects Base64 encoded string with login and password
       #
       # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
