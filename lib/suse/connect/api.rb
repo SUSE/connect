@@ -17,11 +17,11 @@ module SUSE
       def initialize(client)
         @client     = client
         @connection = Connection.new(
-            client.url,
-            :language => client.options[:language],
-            :insecure => client.options[:insecure],
-            :verify_callback => client.options[:verify_callback],
-            :debug => client.options[:debug]
+          client.url,
+          :language => client.options[:language],
+          :insecure => client.options[:insecure],
+          :verify_callback => client.options[:verify_callback],
+          :debug => client.options[:debug]
         )
       end
 
