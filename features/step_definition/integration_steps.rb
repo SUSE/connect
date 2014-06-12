@@ -90,9 +90,9 @@ end
 Then(/^SUSEConnect library should be able to retrieve the product information$/) do
   step 'Set regcode and url options'
 
-  product = SUSE::Connect::Remote::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64')
+  remote_product = SUSE::Connect::Remote::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64')
   client = SUSE::Connect::Client.new(url: @url, regcode: @regcode)
-  products = client.show_product(product).extensions.map(&:friendly_name).sort
+  products = client.show_product(remote_product).extensions.map(&:friendly_name).sort
 
   products.each {|product| puts "- #{product}" }
 
