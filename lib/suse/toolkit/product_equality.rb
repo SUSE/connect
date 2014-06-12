@@ -4,8 +4,7 @@ module SUSE::Toolkit::ProductEquality
 
   def ==(other)
 
-    return false unless other.is_a?(SUSE::Connect::Remote::Product) ||
-        other.is_a?(SUSE::Connect::Zypper::Product)
+    return false unless other.is_a?(SUSE::Toolkit::ProductEquality)
 
     [:identifier, :version, :arch].all? do |attr|
       send(attr) == other.send(attr)
