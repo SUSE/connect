@@ -18,19 +18,19 @@ class SUSE::Connect::Zypper::Product
 
   def determined_release_type
 
-    release_type = @product_hash[:flavor]
-
-    if @product_hash.key?(:registerrelease) && !@product_hash[:registerrelease].empty?
-      release_type = @product_hash[:registerrelease]
-    end
-
     oem_file = File.join(SUSE::Connect::Zypper::OEM_PATH, @product_hash[:productline] || '')
 
     if File.exist?(oem_file)
       line = File.readlines(oem_file).first
-      release_type = line.chomp if line
+      return line.chomp if line
     end
-    release_type
+
+    if @product_hash.key?(:registerrelease) && !@product_hash[:registerrelease].empty?
+      return @product_hash[:registerrelease]
+    end
+
+    @product_hash[:flavor]
+
   end
 
 end
