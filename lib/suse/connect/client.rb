@@ -81,8 +81,8 @@ module SUSE
       # @param product [Remote::Product] product to query extensions for
       def list_products(product)
         result = @api.addons(basic_auth, product).body
-        result.map do |product|
-          Remote::Product.new(product)
+        result.map do |returned_product|
+          Remote::Product.new(returned_product)
         end
       end
 

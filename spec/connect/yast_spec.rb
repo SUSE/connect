@@ -16,13 +16,13 @@ describe SUSE::Connect::YaST do
 
     it 'passes distro_target parameter to announce' do
       Client.any_instance.should_receive(:announce_system).with(params.last)
-      subject.announce_system *params
+      subject.announce_system(*params)
     end
 
     it 'forwards all params to an instance of Client' do
       Client.should_receive(:new).with(params.first).and_call_original
       Client.any_instance.should_receive(:announce_system)
-      subject.announce_system *params
+      subject.announce_system(*params)
     end
 
     it 'falls back to use an empty Hash as params if none are specified' do
@@ -35,7 +35,7 @@ describe SUSE::Connect::YaST do
 
   describe '#activate_product' do
 
-    let(:client_params) { { token: 'regcode'} }
+    let(:client_params) { { token: 'regcode' } }
     let(:product) { Remote::Product.new(identifier: 'win95') }
     let(:email) { 'foo@bar.zer' }
 
@@ -49,7 +49,7 @@ describe SUSE::Connect::YaST do
     it 'forwards all params to an instance of Client' do
       Client.should_receive(:new).with(client_params).and_call_original
       Client.any_instance.should_receive(:activate_product)
-      subject.activate_product *[product, client_params, email]
+      subject.activate_product(*[product, client_params, email])
     end
 
     it 'falls back to use an empty Hash as params if none are specified' do
@@ -61,7 +61,7 @@ describe SUSE::Connect::YaST do
     it 'uses product_ident and email as parameter for Client#activate_product' do
       Client.should_receive(:new).with(client_params).and_call_original
       Client.any_instance.should_receive(:activate_product).with(product, email)
-      subject.activate_product *[product, client_params, email]
+      subject.activate_product(*[product, client_params, email])
     end
 
   end
