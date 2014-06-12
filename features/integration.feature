@@ -24,8 +24,8 @@ Feature: SUSEConnect full stack integration testing
     And a file named "/etc/zypp/credentials.d/SUSE_Linux_Enterprise_Software_Development_Kit_12_x86_64" should exist
     And the file "/etc/zypp/credentials.d/SUSE_Linux_Enterprise_Software_Development_Kit_12_x86_64" should contain "SCC_"
 
-    And zypper should contain a service for extension product
-    And zypper should contain a repositories for extension product
+    And zypper should contain a service for sdk product
+    And zypper should contain a repositories for sdk product
 
   Scenario: API response language check
     When I call SUSEConnect with '--regcode INVALID --language de' arguments
@@ -34,9 +34,18 @@ Feature: SUSEConnect full stack integration testing
     And the output should contain "Keine Subscription mit diesem Registrierungscode gefunden"
 
   ### SUSE::Connect library checks ###
+  Scenario: Free extension activation
+    When SUSEConnect library should be able to activate a free extension without regcode
+    Then zypper should contain a service for wsm product
+    And zypper should contain a repositories for wsm product
+
+  Scenario: Product information (extensions)
+    When SUSEConnect library should be able to retrieve the product information
+
   Scenario: API version check
     When SUSEConnect library should respect API headers
 
+  # De-register the system at the end of the feature
   Scenario: System de-registration
     When SUSEConnect library should be able to de-register the system
     Then a file named "/etc/zypp/credentials.d/SCCcredentials" should not exist
