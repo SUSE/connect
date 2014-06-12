@@ -28,7 +28,7 @@ module SUSE
         end
 
         def base_product
-          base = installed_products.select {|product| product.isbase }.first
+          base = installed_products.find(&:isbase)
           if base
             base
           else
