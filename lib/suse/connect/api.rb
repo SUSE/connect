@@ -10,7 +10,7 @@ module SUSE
     # (including children) in return. The Connect API is located at https://scc.suse.com/connect.
     class Api
       # Set desired API version and forward it in accept headers (see connection.rb#json_request)
-      VERSION = 'v1'
+      VERSION = 'v2'
 
       # Returns a new instance of SUSE::Connect::Api
       #

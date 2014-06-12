@@ -1,6 +1,7 @@
 $LOAD_PATH << 'lib'
 require 'suse/connect'
 require 'rspec/core/rake_task'
+require 'date'
 
 task :default => [:spec, :rubocop]
 
