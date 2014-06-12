@@ -7,7 +7,7 @@ Then(/^SUSEConnect library should respect API headers$/) do
   step 'Set mandatory client options'
 
   client = SUSE::Connect::Client.new(regcode: @regcode)
-  response = SUSE::Connect::Api.new(client).announce_system('Token token=E9DB3A42DF2288')
+  response = SUSE::Connect::Api.new(client).announce_system("Token token=#{@regcode}")
 
   expect(response.headers['scc-api-version'].first).to eq(SUSE::Connect::Api::VERSION)
 end
