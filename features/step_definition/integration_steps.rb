@@ -1,12 +1,15 @@
+Then(/^Set regcode and url options$/) do
+  @regcode = ENV['REGCODE'] || YAML.load_file('/root/.regcode')['code']
+  @url = ENV['URL'] || 'https://barium.scc.suse.de'
+end
+
+### SUSEConnect cmd steps
 Then(/^I call SUSEConnect with '(.*)' arguments$/) do |args|
   options = Hash[*args.gsub('--', '').split(' ')]
-  if options['regcode'] == 'VALID'
-    @regcode = ENV['REGCODE'] || YAML.load_file('/root/.regcode')['code']
-  else
-    @regcode = 'INVALID_REGCODE'
-  end
 
-  @url = ENV['URL'] || SUSE::Connect::Client::DEFAULT_URL
+  step 'Set regcode and url options'
+
+  @regcode = 'INVALID_REGCODE' unless options['regcode'] == 'VALID'
 
   connect = "SUSEConnect --url #{@url}"
   connect << " -r #{@regcode}" if options['regcode']
@@ -17,28 +20,88 @@ Then(/^I call SUSEConnect with '(.*)' arguments$/) do |args|
   step "I run `#{connect}`"
 end
 
-Then(/^SUSEConnect should create the '(.+)' file$/) do |name|
-  file_name = (name == 'service credentials') ? service_name : name
-  file = "/etc/zypp/credentials.d/#{file_name}"
+Then(/^zypper should contain a service for (base|sdk|wsm) product$/) do |product|
+  if product == 'base'
+    service = service_name
+  elsif product == 'sdk'
+    service = 'SUSE_Linux_Enterprise_Software_Development_Kit_12_x86_64'
+  else
+    service = 'Web_and_Scripting_Module_12_x86_64'
+  end
 
-  step "a file named \"#{file}\" should exist"
-end
-
-And(/^'(.*)' file should contain '(.+)' prefixed system guid$/) do |name, prefix|
-  file_name = (name == 'Service credentials') ? service_name : name
-  file = "/etc/zypp/credentials.d/#{file_name}"
-
-  step "the file \"#{file}\" should contain \"#{prefix}\""
-end
-
-Then(/^SUSEConnect should add a new zypper service for base product$/) do
   step 'I run `zypper ls`'
-  step "the output should contain \"#{service_name}\""
+  puts "zypper ls output should contain \"#{service}\""
+  step "the output should contain \"#{service}\""
   step 'the exit status should be 0'
 end
 
-Then(/^SUSEConnect should add a new repositories for base product$/) do
+Then(/^zypper should contain a repositories for (base|sdk|wsm) product$/) do |product|
+  if product == 'base'
+    repositories = [
+      'SUSE_Linux_Enterprise_Server_12_x86_64:SLES12-Pool',
+      'SUSE_Linux_Enterprise_Server_12_x86_64:SLES12-Updates',
+      'SUSE_Linux_Enterprise_Server_12_x86_64:SLES12-Debuginfo-Updates'
+    ]
+  elsif product == 'sdk'
+    repositories = [
+      'SUSE_Linux_Enterprise_Software_Development_Kit_12_x86_64:SLE-SDK12-Pool',
+      'SUSE_Linux_Enterprise_Software_Development_Kit_12_x86_64:SLE-SDK12-Updates'
+    ]
+  else
+    repositories = [
+      'Web_and_Scripting_Module_12_x86_64:SLE-MODULE-WEB-SCRIPTING12-Pool'
+    ]
+  end
+
   step 'I run `zypper lr`'
-  step "the output should contain \"#{service_name}\""
-  step 'the exit status should be 0'
+
+  repositories.each do |repo|
+    puts "zypper lr output should contain \"#{repo}\""
+    step "the output should contain \"#{repo}\""
+  end
+end
+
+### SUSEConnect library steps
+Then(/^SUSEConnect library should respect API headers$/) do
+  step 'Set regcode and url options'
+
+  client = SUSE::Connect::Client.new(url: @url, regcode: @regcode)
+  response = SUSE::Connect::Api.new(client).announce_system("Token token=#{@regcode}")
+
+  expect(response.headers['scc-api-version'].first).to eq(SUSE::Connect::Api::VERSION)
+end
+
+Then(/^SUSEConnect library should be able to de-register the system$/) do
+  step 'Set regcode and url options'
+
+  client = SUSE::Connect::Client.new(url: @url, regcode: @regcode)
+  client.deregister!
+end
+
+Then(/^SUSEConnect library should be able to activate a free extension without regcode$/) do
+  step 'Set regcode and url options'
+
+  client = SUSE::Connect::Client.new(url: @url)
+  service = client.activate_product(name: 'sle-module-web-scripting', version: '12', arch: 'x86_64')
+  SUSE::Connect::System.add_service(service)
+end
+
+Then(/^SUSEConnect library should be able to retrieve the product information$/) do
+  step 'Set regcode and url options'
+
+  client = SUSE::Connect::Client.new(url: @url, regcode: @regcode)
+  products = client.list_products(name: 'SLES', version: '12', arch: 'x86_64').map(&:short_name).sort
+
+  products.each {|product| puts "- #{product}" }
+
+  extensions = [
+    'SUSE Linux Enterprise High Availability Extension',
+    'SUSE Linux Enterprise Software Development Kit',
+    'Legacy Module',
+    'Advanced Systems Management Module',
+    'Web and Scripting Module',
+    'Public Cloud Module'
+  ].sort
+
+  expect(products).to eq(extensions)
 end
