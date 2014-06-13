@@ -77,20 +77,20 @@ describe SUSE::Connect::Zypper do
   describe '.add_service' do
 
     it 'calls zypper with proper arguments' do
-      parameters = "zypper --quiet --non-interactive addservice -t ris http://example.com 'branding'"
+      parameters = "zypper --quiet --non-interactive addservice -t ris http://example.com 'branding' > /dev/null"
       expect(subject).to receive(:system).with(parameters).and_return(true)
       subject.add_service('http://example.com', 'branding')
     end
 
     it 'escapes shell parameters' do
-      parameters = "zypper --quiet --non-interactive addservice -t ris http://example.com\\;id 'branding'"
+      parameters = "zypper --quiet --non-interactive addservice -t ris http://example.com\\;id 'branding' > /dev/null"
       expect(subject).to receive(:system).with(parameters).and_return(true)
       subject.add_service('http://example.com;id', 'branding')
     end
 
     it 'calls zypper with proper arguments --root case' do
       parameters = "zypper --root '/path/to/root' --quiet --non-interactive addservice " \
-                   "-t ris http://example.com 'branding'"
+                   "-t ris http://example.com 'branding' > /dev/null"
       expect(subject).to receive(:system).with(parameters).and_return(true)
       SUSE::Connect::System.filesystem_root = '/path/to/root'
       subject.add_service('http://example.com', 'branding')
@@ -101,13 +101,13 @@ describe SUSE::Connect::Zypper do
   describe '.remove_service' do
 
     it 'calls zypper with proper arguments' do
-      parameters = "zypper --quiet --non-interactive removeservice 'branding'"
+      parameters = "zypper --quiet --non-interactive removeservice 'branding' > /dev/null"
       expect(subject).to receive(:system).with(parameters).and_return(true)
       subject.remove_service('branding')
     end
 
     it 'calls zypper with proper arguments --root case' do
-      parameters = "zypper --root '/path/to/root' --quiet --non-interactive removeservice 'branding'"
+      parameters = "zypper --root '/path/to/root' --quiet --non-interactive removeservice 'branding' > /dev/null"
       expect(subject).to receive(:system).with(parameters).and_return(true)
       SUSE::Connect::System.filesystem_root = '/path/to/root'
       subject.remove_service('branding')
@@ -118,13 +118,13 @@ describe SUSE::Connect::Zypper do
   describe '.refresh' do
 
     it 'calls zypper with proper arguments' do
-      expect(subject).to receive(:system).with('zypper refresh').and_return(true)
+      expect(subject).to receive(:system).with('zypper refresh > /dev/null').and_return(true)
       subject.refresh
     end
 
     it 'calls zypper with proper arguments --root case' do
       SUSE::Connect::System.filesystem_root = '/path/to/root'
-      subject.should_receive(:system).with("zypper --root '/path/to/root' refresh").and_return(true)
+      subject.should_receive(:system).with("zypper --root '/path/to/root' refresh > /dev/null").and_return(true)
       subject.refresh
     end
 
