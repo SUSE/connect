@@ -11,6 +11,7 @@ describe SUSE::Connect::Zypper do
   end
 
   subject { SUSE::Connect::Zypper }
+  let(:status) { double("Process Status", :exitstatus => 0)}
 
   describe '.installed_products' do
 
@@ -20,8 +21,8 @@ describe SUSE::Connect::Zypper do
         let(:xml) { File.read('spec/fixtures/product_valid_sle11sp3.xml') }
 
         before do
-          params = '--no-refresh --quiet --xmlout --non-interactive products -i'
-          subject.should_receive(:call_zypper).with(:with_output, params).and_return(xml)
+          args = 'zypper --xmlout --non-interactive products -i'
+          Open3.should_receive(:capture3).with(args).and_return([xml, '', status])
         end
 
         it 'returns valid list of products based on proper XML' do
@@ -49,8 +50,8 @@ describe SUSE::Connect::Zypper do
         let(:xml) { File.read('spec/fixtures/product_valid_sle12sp0.xml') }
 
         before do
-          params = '--no-refresh --quiet --xmlout --non-interactive products -i'
-          subject.should_receive(:call_zypper).with(:with_output, params).and_return(xml)
+          args = 'zypper --xmlout --non-interactive products -i'
+          Open3.should_receive(:capture3).with(args).and_return([xml, '', status])
         end
 
         it 'returns valid name' do
@@ -77,22 +78,23 @@ describe SUSE::Connect::Zypper do
   describe '.add_service' do
 
     it 'calls zypper with proper arguments' do
-      parameters = "zypper --quiet --non-interactive addservice -t ris http://example.com 'branding'"
-      expect(subject).to receive(:system).with(parameters).and_return(true)
+      args = "zypper --non-interactive addservice -t ris http://example.com 'branding'"
+      expect(Open3).to receive(:capture3).with(args).and_return(['', '', status])
       subject.add_service('http://example.com', 'branding')
     end
 
     it 'escapes shell parameters' do
-      parameters = "zypper --quiet --non-interactive addservice -t ris http://example.com\\;id 'branding'"
-      expect(subject).to receive(:system).with(parameters).and_return(true)
+      args = "zypper --non-interactive addservice -t ris http://example.com\\;id 'branding'"
+      expect(Open3).to receive(:capture3).with(args).and_return(['', '', status])
       subject.add_service('http://example.com;id', 'branding')
     end
 
     it 'calls zypper with proper arguments --root case' do
-      parameters = "zypper --root '/path/to/root' --quiet --non-interactive addservice " \
-                   "-t ris http://example.com 'branding'"
-      expect(subject).to receive(:system).with(parameters).and_return(true)
       SUSE::Connect::System.filesystem_root = '/path/to/root'
+
+      args = "zypper --root '/path/to/root' --non-interactive addservice -t ris http://example.com 'branding'"
+      expect(Open3).to receive(:capture3).with(args).and_return(['', '', status])
+
       subject.add_service('http://example.com', 'branding')
     end
 
@@ -101,15 +103,18 @@ describe SUSE::Connect::Zypper do
   describe '.remove_service' do
 
     it 'calls zypper with proper arguments' do
-      parameters = "zypper --quiet --non-interactive removeservice 'branding'"
-      expect(subject).to receive(:system).with(parameters).and_return(true)
+      args = "zypper --non-interactive removeservice 'branding'"
+      expect(Open3).to receive(:capture3).with(args).and_return(['', '', status])
+
       subject.remove_service('branding')
     end
 
     it 'calls zypper with proper arguments --root case' do
-      parameters = "zypper --root '/path/to/root' --quiet --non-interactive removeservice 'branding'"
-      expect(subject).to receive(:system).with(parameters).and_return(true)
       SUSE::Connect::System.filesystem_root = '/path/to/root'
+
+      args = "zypper --root '/path/to/root' --non-interactive removeservice 'branding'"
+      expect(Open3).to receive(:capture3).with(args).and_return(['', '', status])
+
       subject.remove_service('branding')
     end
 
@@ -118,13 +123,14 @@ describe SUSE::Connect::Zypper do
   describe '.refresh' do
 
     it 'calls zypper with proper arguments' do
-      expect(subject).to receive(:system).with('zypper refresh').and_return(true)
+      expect(Open3).to receive(:capture3).with('zypper refresh').and_return(['', '', status])
       subject.refresh
     end
 
     it 'calls zypper with proper arguments --root case' do
       SUSE::Connect::System.filesystem_root = '/path/to/root'
-      subject.should_receive(:system).with("zypper --root '/path/to/root' refresh").and_return(true)
+
+      expect(Open3).to receive(:capture3).with("zypper --root '/path/to/root' refresh").and_return(['', '', status])
       subject.refresh
     end
 
@@ -193,12 +199,14 @@ describe SUSE::Connect::Zypper do
 
   describe '.distro_target' do
     it 'return zypper targetos output' do
-      subject.should_receive(:'`').with('zypper targetos').and_return('openSUSE-13.1-x86_64')
+      Open3.should_receive(:capture3).with('zypper targetos').and_return(['openSUSE-13.1-x86_64', '', status])
       Zypper.distro_target.should eq 'openSUSE-13.1-x86_64'
     end
 
     it 'return zypper targetos output --root case' do
-      subject.should_receive(:'`').with("zypper --root '/path/to/root' targetos").and_return('openSUSE-13.1-x86_64')
+      args = "zypper --root '/path/to/root' targetos"
+      Open3.should_receive(:capture3).with(args).and_return(['openSUSE-13.1-x86_64', '', status])
+
       SUSE::Connect::System.filesystem_root = '/path/to/root'
       Zypper.distro_target.should eq 'openSUSE-13.1-x86_64'
     end
