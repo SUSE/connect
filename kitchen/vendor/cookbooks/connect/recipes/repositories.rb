@@ -9,3 +9,7 @@ end
 execute 'add_osc_repo' do
   command 'zypper --non-interactive ar http://download.opensuse.org/repositories/openSUSE:/Tools/SLE_11_SP3/ OSC'
 end
+
+execute 'add_suse_ca-certs_repo' do
+  command 'zypper --non-interactive ar --refresh http://download.suse.de/ibs/SUSE:/CA/SLE-11/SUSE:CA.repo SUSE-CA-CERTS'
+end

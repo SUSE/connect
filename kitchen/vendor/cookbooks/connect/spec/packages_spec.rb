@@ -20,6 +20,7 @@ describe 'connect::packages' do
     stub_command('rpm -q osc').and_return(false)
     stub_command('rpm -q build').and_return(false)
     stub_command('rpm -q ruby-devel').and_return(false)
+    stub_command('rpm -q ca-certificates-suse').and_return(false)
   end
 
   it 'should install all required packages' do
