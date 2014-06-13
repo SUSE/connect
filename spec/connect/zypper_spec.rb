@@ -136,6 +136,22 @@ describe SUSE::Connect::Zypper do
 
   end
 
+  describe '.refresh_services' do
+
+    it 'calls zypper with proper arguments' do
+      expect(Open3).to receive(:capture3).with('zypper refresh-services -r').and_return(['', '', status])
+      subject.refresh_services
+    end
+
+    it 'calls zypper with proper arguments' do
+      SUSE::Connect::System.filesystem_root = '/path/to/root'
+
+      expect(Open3).to receive(:capture3).with("zypper --root '/path/to/root' refresh-services -r").and_return(['', '', status])
+      subject.refresh_services
+    end
+
+  end
+
   describe '.base_product' do
 
     let :parsed_products do
