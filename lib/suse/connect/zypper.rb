@@ -79,7 +79,7 @@ module SUSE
         end
 
         # NOTE: Always calls zypper in a silent mode unless quite=false option is set
-        def call(args, quiet=true)
+        def call(args, quiet = true)
           cmd  = "zypper #{root_arg}#{args}"
           execute(cmd, quiet)
         end

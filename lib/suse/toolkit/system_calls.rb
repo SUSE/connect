@@ -6,7 +6,7 @@ module SUSE
     module SystemCalls
       include Connect::Logger
 
-      def execute(cmd, quiet=true)
+      def execute(cmd, quiet = true)
         log.debug("Executing: '#{cmd}' Quiet: #{quiet}")
 
         output, error, status = Open3.capture3(cmd) {|stdin, stdout, stderr, wait_thr| stdout.read }

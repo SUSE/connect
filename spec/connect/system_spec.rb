@@ -143,7 +143,7 @@ describe SUSE::Connect::System do
     end
 
     it 'raises an ArgumentError exception' do
-      expect {subject.add_service 'Service'}.to raise_error(ArgumentError, 'only Remote::Service accepted')
+      expect { subject.add_service 'Service' }.to raise_error(ArgumentError, 'only Remote::Service accepted')
     end
   end
 

@@ -11,7 +11,7 @@ describe SUSE::Connect::Zypper do
   end
 
   subject { SUSE::Connect::Zypper }
-  let(:status) { double("Process Status", :exitstatus => 0)}
+  let(:status) { double('Process Status', :exitstatus => 0) }
 
   describe '.installed_products' do
 
