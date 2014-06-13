@@ -1,8 +1,0 @@
-# Manpages in this project
-SUSEConnect(5) SUSEConnect.5.ronn
-SUSEConnect(8) SUSEConnect.8.ronn
-
-# URLS used in markdown reference links
-yaml-spec http://www.yaml.org/spec/1.2/spec.html
-scc  https://scc.suse.com
-scc-github https://github.com/SUSE/connect
