@@ -79,15 +79,14 @@ module SUSE
           "--root '#{SUSE::Connect::System.filesystem_root}' " if SUSE::Connect::System.filesystem_root
         end
 
-        def call_zypper(silent, args)
+        def call_zypper(verbosity, args)
           cmd  = "zypper #{root_arg}#{args}"
-          zypper_out = nil
-          if silent == :with_output
-            zypper_out = call_with_output(cmd)
+
+          if verbosity == :silently
+            call("#{cmd} > /dev/null")
           else
-            call(cmd)
+            call_with_output(cmd)
           end
-          zypper_out
         end
 
       end
