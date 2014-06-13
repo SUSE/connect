@@ -134,30 +134,17 @@ describe SUSE::Connect::System do
       Remote::Service.new('name' => 'JiYoKo', 'url' => 'furl', 'product' => {})
     end
 
-    it 'removes old service' do
+    it 'adds zypper service to the system' do
       Zypper.should_receive(:remove_service).with('JiYoKo')
-      subject.add_service mock_service
-    end
-
-    it 'add each service from set' do
       Zypper.should_receive(:add_service).with('furl', 'JiYoKo')
-      subject.add_service mock_service
-    end
-
-    it 'writes credentials file in corresponding file in credentials.d' do
       Zypper.should_receive(:write_service_credentials).with('JiYoKo')
-      subject.add_service mock_service
-    end
-
-    it 'raise if non-Remote::Service object passed' do
-      expect { subject.add_service('setup') }.to raise_error ArgumentError, 'only Remote::Service accepted'
-    end
-
-    it 'refresh services' do
       Zypper.should_receive(:refresh_services).exactly(1).times
       subject.add_service mock_service
     end
 
+    it 'raises an ArgumentError exception' do
+      expect { subject.add_service 'Service' }.to raise_error(ArgumentError, 'only Remote::Service accepted')
+    end
   end
 
   describe '.hostname' do
