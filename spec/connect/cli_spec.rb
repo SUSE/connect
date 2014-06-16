@@ -48,18 +48,15 @@ describe SUSE::Connect::Cli do
       cli.execute!
     end
 
-    context :subcommand_status do
+    context 'status subcommand' do
 
       let(:cli) { subject.new(%w{--status}) }
 
-      before do
-        subject.any_instance.unstub(:exit)
-        Client.any_instance.stub_chain(:status, :print).and_return(:foobar)
-      end
-
-      it 'does not call register' do
+      it 'calls Client.status.print' do
+        expect_any_instance_of(Client).to receive(:status).and_return(Status.new(''))
         expect_any_instance_of(Client).to_not receive(:register!)
-        expect { cli.execute! }.to raise_error SystemExit
+        expect_any_instance_of(Status).to receive(:print)
+        cli.execute!
       end
 
     end
@@ -142,7 +139,7 @@ describe SUSE::Connect::Cli do
 
   end
 
-  describe 'errors on invalid options' do
+  describe 'errors on invalid options format' do
 
     it 'error on invalid product options format' do
       string_logger.should_receive(:error) do |msg|
