@@ -92,6 +92,12 @@ describe SUSE::Connect::Cli do
       cli.options[:token].should eq 'matoken'
     end
 
+    it 'sets email options' do
+      argv = %w{--email me@hotmail.com}
+      cli = subject.new(argv)
+      cli.options[:email].should eq 'me@hotmail.com'
+    end
+
     it 'sets url options' do
       argv = %w{--url test}
       cli = subject.new(argv)
