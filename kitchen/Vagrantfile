@@ -5,11 +5,13 @@
 # vagrant box add openstack_box veewee/boxes/openstack.box --provider=openstack --force
 # vagrant up --provider=openstack
 
-Vagrant.configure('2') do |config|
 
+@vm_name = ENV['VM_NAME'] || "jenkins_scc_connect_build_#{ENV['BUILD_NUMBER']}"
+
+Vagrant.configure('2') do |config|
   config.librarian_chef.cheffile_dir = '.'
 
-  config.vm.define "jenkins_scc_connect_build_#{ENV['BUILD_NUMBER']}" do |config|
+  config.vm.define @vm_name do |config|
     config.vm.box = 'openstack'
     config.vm.hostname = 'suse-connect-testing'
 
