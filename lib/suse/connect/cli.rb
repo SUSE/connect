@@ -4,7 +4,7 @@ require 'suse/connect'
 module SUSE
   module Connect
     # Command line interface for interacting with SUSEConnect
-    class Cli
+    class Cli  # rubocop:disable ClassLength
       include Logger
 
       attr_reader :options
@@ -76,6 +76,11 @@ module SUSE
                  '  and enables software repositories for that product') do |opt|
           check_if_param(opt, 'Please provide a registration code parameter')
           @options[:token] = opt
+        end
+
+        @opts.on('-e', '--email <email>', 'email address for product registration') do |opt|
+          check_if_param(opt, 'Please provide an email address')
+          @options[:email] = opt
         end
 
         @opts.on('--url [URL]', 'URL of registration server (e.g. https://scc.suse.com).') do |opt|
