@@ -86,12 +86,6 @@ describe SUSE::Connect::Cli do
       cli.options[:token].should eq 'matoken'
     end
 
-    it 'sets token options' do
-      argv = %w{--regcode matoken}
-      cli = subject.new(argv)
-      cli.options[:token].should eq 'matoken'
-    end
-
     it 'sets email options' do
       argv = %w{--email me@hotmail.com}
       cli = subject.new(argv)
