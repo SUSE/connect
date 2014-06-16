@@ -30,13 +30,13 @@ describe SUSE::Connect::Cli do
       cli.execute!
     end
 
-    it 'should produce log output if ApiError encountered' do
+    it 'should produce log output if connection refused' do
       string_logger.should_receive(:fatal).with('Error: Connection refused by server https://scc.suse.com')
       Client.any_instance.stub(:register!).and_raise Errno::ECONNREFUSED
       cli.execute!
     end
 
-    it 'should produce log output if ApiError encountered' do
+    it 'should produce log output if json parse error encountered' do
       string_logger.should_receive(:fatal).with('Error: Cannot parse response from server')
       Client.any_instance.stub(:register!).and_raise JSON::ParserError
       cli.execute!
