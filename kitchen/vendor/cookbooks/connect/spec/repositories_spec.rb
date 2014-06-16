@@ -26,7 +26,7 @@ describe 'connect::repositories' do
 
   it 'adds SUSE CA certificates repository' do
     expect(chef_run).to run_execute('add_suse_ca-certs_repo').with(
-      command: 'zypper --non-interactive ar --refresh http://download.suse.de/ibs/SUSE:/CA/SLE-11/SUSE:CA.repo SUSE-CA-CERTS'
+      command: 'zypper --non-interactive ar --refresh http://download.suse.de/ibs/SUSE:/CA/SLE-11/SUSE:CA SUSE-CA-CERTS'
     )
   end
 end

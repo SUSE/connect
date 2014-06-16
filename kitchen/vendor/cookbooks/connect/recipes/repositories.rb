@@ -11,5 +11,5 @@ execute 'add_osc_repo' do
 end
 
 execute 'add_suse_ca-certs_repo' do
-  command 'zypper --non-interactive ar --refresh http://download.suse.de/ibs/SUSE:/CA/SLE-11/SUSE:CA.repo SUSE-CA-CERTS'
+  command 'zypper --non-interactive ar --refresh http://download.suse.de/ibs/SUSE:/CA/SLE-11/SUSE:CA SUSE-CA-CERTS'
 end
