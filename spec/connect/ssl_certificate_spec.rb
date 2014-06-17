@@ -56,7 +56,7 @@ describe SUSE::Connect::SSLCertificate do
                           cert.to_pem
                       )
 
-      allow(Open3).to receive(:capture3).with('/usr/sbin/update-ca-certificates').and_return(['', '', double(:exitstatus => 0)])
+      expect(Open3).to receive(:capture3).with('/usr/sbin/update-ca-certificates').and_return(['', '', double(:exitstatus => 0)])
 
       SUSE::Connect::SSLCertificate.import(cert)
     end
