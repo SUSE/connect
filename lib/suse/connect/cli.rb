@@ -18,8 +18,11 @@ module SUSE
       def execute! # rubocop:disable MethodLength
         # check for parameter dependencies
         unless @options[:status]
-          if (@options[:url].nil? && @options[:token].nil?)
-            log.error "Please set the token parameter to register against SCC, or the url parameter to register against SMT"
+          if @options[:url].nil? && @options[:token].nil?
+            log.error 'Please set the token parameter to register against SCC, or the url parameter to register against SMT'
+            exit(1)
+          elsif @options[:token] && @options[:instance_data_file]
+            log.error 'Please use either --token or --instance-data'
             exit(1)
           else
             Client.new(@options).register!
@@ -74,6 +77,12 @@ module SUSE
                  '  and enables software repositories for that product') do |opt|
           check_if_param(opt, 'Please provide a registration code parameter')
           @options[:token] = opt
+        end
+
+        @opts.on('--instance-data  [path to file]', 'Path to the XML file holding the public key and instance data',
+          '  for cloud registration with SMT') do |opt|
+          check_if_param(opt, 'Please provide the path to your instance data file')
+          @options[:instance_data_file] = opt
         end
 
         @opts.on('-e', '--email <email>', 'email address for product registration') do |opt|

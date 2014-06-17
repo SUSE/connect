@@ -64,8 +64,15 @@ describe SUSE::Connect::Cli do
       end
 
       it 'requires either --token or --url (regcode-less SMT registration)' do
-        string_logger.should_receive(:error).
-          with('Please set the token parameter to register against SCC, or the url parameter to register against SMT')
+        string_logger.should_receive(:error)
+          .with('Please set the token parameter to register against SCC, or the url parameter to register against SMT')
+        cli.execute!
+      end
+
+      it '--instance-data is mutually exclusive with --token' do
+        cli = subject.new(%w{-r 123 --instance-data /tmp/test})
+        string_logger.should_receive(:error)
+          .with('Please use either --token or --instance-data')
         cli.execute!
       end
 
