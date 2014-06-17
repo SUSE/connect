@@ -22,30 +22,53 @@ describe SUSE::Connect::Cli do
 
   describe '#execute!' do
 
-    it 'should produce log output if ApiError encountered' do
-      string_logger.should_receive(:fatal).with("Error: SCC returned 'test' (222)")
-      response = Net::HTTPResponse.new('1.1', 222, 'Test')
-      expect(response).to receive(:body).and_return('localized_error' => 'test')
-      Client.any_instance.stub(:register!).and_raise ApiError.new(response)
-      cli.execute!
+    context 'server errors' do
+
+      let(:cli) { subject.new(%w{-r 123}) }
+
+      it 'should produce log output if ApiError encountered' do
+        string_logger.should_receive(:fatal).with("Error: SCC returned 'test' (222)")
+        response = Net::HTTPResponse.new('1.1', 222, 'Test')
+        expect(response).to receive(:body).and_return('localized_error' => 'test')
+        Client.any_instance.stub(:register!).and_raise ApiError.new(response)
+        cli.execute!
+      end
+
+      it 'should produce log output if connection refused' do
+        string_logger.should_receive(:fatal).with('Error: Connection refused by server https://scc.suse.com')
+        Client.any_instance.stub(:register!).and_raise Errno::ECONNREFUSED
+        cli.execute!
+      end
+
+      it 'should produce log output if json parse error encountered' do
+        string_logger.should_receive(:fatal).with('Error: Cannot parse response from server')
+        Client.any_instance.stub(:register!).and_raise JSON::ParserError
+        cli.execute!
+      end
+
+      it 'should produce log output if EACCES encountered' do
+        string_logger.should_receive(:fatal).with('Error: Access error - Permission denied')
+        Client.any_instance.stub(:register!).and_raise Errno::EACCES
+        cli.execute!
+      end
+
     end
 
-    it 'should produce log output if connection refused' do
-      string_logger.should_receive(:fatal).with('Error: Connection refused by server https://scc.suse.com')
-      Client.any_instance.stub(:register!).and_raise Errno::ECONNREFUSED
-      cli.execute!
-    end
+    context 'parameter dependencies' do
 
-    it 'should produce log output if json parse error encountered' do
-      string_logger.should_receive(:fatal).with('Error: Cannot parse response from server')
-      Client.any_instance.stub(:register!).and_raise JSON::ParserError
-      cli.execute!
-    end
+      it 'requires no other parameters on --status' do
+        cli = subject.new(%w{--status})
+        expect_any_instance_of(Client).to receive(:status).and_return(Status.new(''))
+        expect_any_instance_of(Status).to receive(:print)
+        cli.execute!
+      end
 
-    it 'should produce log output if EACCES encountered' do
-      string_logger.should_receive(:fatal).with('Error: Access error - Permission denied')
-      Client.any_instance.stub(:register!).and_raise Errno::EACCES
-      cli.execute!
+      it 'requires either --token or --url (regcode-less SMT registration)' do
+        string_logger.should_receive(:error).
+          with('Please set the token parameter to register against SCC, or the url parameter to register against SMT')
+        cli.execute!
+      end
+
     end
 
     context 'status subcommand' do
@@ -142,9 +165,7 @@ describe SUSE::Connect::Cli do
   describe 'errors on invalid options format' do
 
     it 'error on invalid product options format' do
-      string_logger.should_receive(:error) do |msg|
-        msg =~ /Please provide the product identifier in this format:/
-      end
+      string_logger.should_receive(:error).with(/Please provide the product identifier in this format/)
       argv = %w{--product sles}
       subject.new(argv)
     end

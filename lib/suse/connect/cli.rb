@@ -16,19 +16,17 @@ module SUSE
       end
 
       def execute! # rubocop:disable MethodLength
-
-        # TODO: proper mechanics to separate sub-commands
-        if @options[:status]
+        # check for parameter dependencies
+        unless @options[:status]
+          if (@options[:url].nil? && @options[:token].nil?)
+            log.error "Please set the token parameter to register against SCC, or the url parameter to register against SMT"
+            exit(1)
+          else
+            Client.new(@options).register!
+          end
+        else
           Client.new(@options).status.print
-          exit(0)
         end
-
-        unless @options[:token]
-          puts @opts
-          exit(1)
-        end
-
-        Client.new(@options).register!
 
       rescue Errno::ECONNREFUSED
         log.fatal "Error: Connection refused by server #{@options[:url] || 'https://scc.suse.com'}"
