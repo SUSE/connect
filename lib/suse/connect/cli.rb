@@ -4,7 +4,7 @@ require 'suse/connect'
 module SUSE
   module Connect
     # Command line interface for interacting with SUSEConnect
-    class Cli
+    class Cli # rubocop:disable ClassLength
       include Logger
 
       attr_reader :options
@@ -17,15 +17,15 @@ module SUSE
 
       def execute! # rubocop:disable MethodLength
         # check for parameter dependencies
-        unless @options[:status]
-          if (@options[:url].nil? && @options[:token].nil?)
-            log.error "Please set the token parameter to register against SCC, or the url parameter to register against SMT"
+        if @options[:status]
+          Client.new(@options).status.print
+        else
+          if @options[:url].nil? && @options[:token].nil?
+            log.error 'Please set the token parameter to register against SCC, or the url parameter to register against SMT'
             exit(1)
           else
             Client.new(@options).register!
           end
-        else
-          Client.new(@options).status.print
         end
 
       rescue Errno::ECONNREFUSED

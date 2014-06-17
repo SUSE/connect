@@ -185,7 +185,6 @@ describe SUSE::Connect::Api do
 
   end
 
-
   describe 'system products' do
 
     before do
