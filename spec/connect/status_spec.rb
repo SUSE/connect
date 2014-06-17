@@ -21,7 +21,7 @@ describe SUSE::Connect::Status do
 
   describe '#installed_products' do
 
-    it 'memoizes content by first call' do
+    it 'memorizes content by first call' do
       allow_any_instance_of(Status).to receive(:products_from_zypper).and_return([1, 2, :foo])
       status = subject.new(:foo)
       first_call_result = status.installed_products
@@ -32,7 +32,7 @@ describe SUSE::Connect::Status do
 
   describe '#activated_products' do
 
-    it 'memoizes content by first call' do
+    it 'memorizes content by first call' do
       allow_any_instance_of(Status).to receive(:products_from_services).and_return([1, 2, :foo])
       status = subject.new(:foo)
       first_call_result = status.activated_products
@@ -43,7 +43,7 @@ describe SUSE::Connect::Status do
 
   describe '#known_subscriptions' do
 
-    it 'memoizes content by first call' do
+    it 'memorizes content by first call' do
       allow_any_instance_of(Status).to receive(:subscriptions_from_server).and_return([1, 2, :foo])
       status = subject.new(:foo)
       first_call_result = status.known_subscriptions

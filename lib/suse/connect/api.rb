@@ -81,15 +81,7 @@ module SUSE
         @connection.put('/connect/systems/products', :auth => auth, :params => payload)
       end
 
-      # List all publicly available products. This includes a list of all repositories for each product.
-      #
-      # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
-      #
-      def products
-        @connection.get('/connect/products', :auth => nil)
-      end
-
-      # List all addons available for the given system
+      # Show details of an (activated) product including repositories and available extensions
       #
       # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
       #
