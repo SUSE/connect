@@ -70,6 +70,24 @@ module SUSE
           Client.new(client_params).write_config
         end
 
+        # Adds given certificate to trusted
+        # @param certificate [OpenSSL::X509::Certificate]
+        def import_certificate(certificate)
+          SUSE::Connect::SSLCertificate.import(certificate)
+        end
+
+        # Provides SHA-1 fingerprint of given certificate
+        # @param certificate [OpenSSL::X509::Certificate]
+        def cert_sha1_fingerprint(certificate)
+          SUSE::Connect::SSLCertificate.sha1_fingerprint(certificate)
+        end
+
+        # Provides SHA-256 fingerprint of given certificate
+        # @param certificate [OpenSSL::X509::Certificate]
+        def cert_sha256_fingerprint(certificate)
+          SUSE::Connect::SSLCertificate.sha256_fingerprint(certificate)
+        end
+
       end
     end
 
