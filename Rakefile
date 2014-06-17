@@ -11,6 +11,7 @@ RSpec::Core::RakeTask.new(:spec)
 desc 'Run console loaded with gem'
 task :console do
   require 'irb'
+  require 'irb/completion'
   ARGV.clear
   IRB.start
 end
