@@ -23,11 +23,6 @@ describe SUSE::Toolkit::Hwinfo do
       allow(Open3).to receive(:capture3).with('lscpu').and_return([lscpu, '', success])
     end
 
-    it 'returns system hostname' do
-      allow(Open3).to receive(:capture3).with('hostname').and_return(['hostname', '', success])
-      expect(subject.hostname).to eql 'hostname'
-    end
-
     it 'returns system cpus count' do
       expect(subject.cpus).to eql 8
     end

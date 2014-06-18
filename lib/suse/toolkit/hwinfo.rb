@@ -5,10 +5,6 @@ module SUSE
     module Hwinfo
       include SUSE::Toolkit::SystemCalls
 
-      def hostname
-        execute('hostname', false)
-      end
-
       def cpus
         output['CPU(s)'].to_i
       end
