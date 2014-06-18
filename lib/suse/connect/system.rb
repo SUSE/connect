@@ -67,7 +67,7 @@ module SUSE
         end
 
         def x86?
-          ['x86', 'x86_64'].include? execute('uname -i', false)
+          %w{x86, x86_64}.include? execute('uname -i', false)
         end
 
       end
