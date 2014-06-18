@@ -147,9 +147,7 @@ mkdir -p %{buildroot}%{_sbindir}
 <% end -%>
 <% spec.executables.each do |executable| -%>
 mv %{buildroot}%{_bindir}/<%= executable %>{,%{mod_branch}}
-
 mv %{buildroot}%{_bindir}/<%= executable %>%{mod_branch} %{buildroot}%{_sbindir}/<%= executable %>%{mod_branch}
-
 touch %{buildroot}%{_sysconfdir}/alternatives/<%= executable %>
 ln -s %{_sysconfdir}/alternatives/<%= executable %> %{buildroot}%{_sbindir}/<%= executable %>
 <% end -%>
