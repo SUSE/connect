@@ -7,6 +7,10 @@ module SUSE
 
         attr_accessor :filesystem_root
 
+        def prefix_path path
+          filesystem_root ? File.join(filesystem_root, path) : path
+        end
+
         def hwinfo
           info = {
             :cpu_type => `uname -p`,

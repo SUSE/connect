@@ -113,8 +113,18 @@ describe SUSE::Connect::Client do
 
       it 'passes the optional parameter "distro_target" to the API' do
         optional_target = 'optional_target'
-        Api.any_instance.should_receive(:announce_system).with(true, optional_target)
+        Api.any_instance.should_receive(:announce_system).with(true, optional_target, nil)
         subject.announce_system(optional_target)
+      end
+
+      it 'reads instance_data_file and passes content the API' do
+        instance_file_path = 'spec/fixtures/instance_data.xml'
+        Api.any_instance.should_receive(:announce_system).with(true, nil, File.read(instance_file_path))
+        subject.announce_system(nil, instance_file_path)
+      end
+
+      it 'fails on unavailable instance_data_file' do
+        expect { subject.announce_system(nil, '/test') }.to raise_error( FileError )
       end
 
     end

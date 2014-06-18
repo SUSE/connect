@@ -50,7 +50,7 @@ describe SUSE::Connect::Api do
       it 'sends a call with hostname' do
         Socket.stub(:gethostname => 'vargan')
         payload = ['/connect/subscriptions/systems', :auth => 'token', :params => {
-          :hostname => 'vargan', :distro_target => 'HHH' }
+          :hostname => 'vargan', :distro_target => 'HHH', :instance_data=>nil }
         ]
         Connection.any_instance.should_receive(:post).with(*payload).and_call_original
         subject.new(client).announce_system('token')
@@ -63,7 +63,7 @@ describe SUSE::Connect::Api do
       it 'sends a call with ip' do
         System.stub(:hostname => '192.168.42.42')
         payload = ['/connect/subscriptions/systems', :auth => 'token', :params => {
-          :hostname => '192.168.42.42', :distro_target => 'HHH' }
+          :hostname => '192.168.42.42', :distro_target => 'HHH', :instance_data=>nil }
         ]
         Connection.any_instance.should_receive(:post).with(*payload).and_call_original
         subject.new(client).announce_system('token')

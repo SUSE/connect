@@ -54,8 +54,14 @@ module SUSE
       # Announce system via SCC/Registration Proxy
       #
       # @returns: [Array] login, password tuple. Those credentials are given by SCC/Registration Proxy
-      def announce_system(distro_target = nil)
-        response = @api.announce_system(token_auth(@options[:token]), distro_target)
+      def announce_system(distro_target = nil, instance_data_file = nil)
+        if instance_data_file
+          file_path = SUSE::Connect::System.prefix_path( instance_data_file )
+          log.debug "Reading instance data from: #{file_path}"
+          raise FileError unless File.file?(file_path) && File.readable?(file_path)
+          instance_data = File.read(file_path)
+        end
+        response = @api.announce_system(token_auth(@options[:token]), distro_target, instance_data)
         [response.body['login'], response.body['password']]
       end
 
@@ -111,7 +117,7 @@ module SUSE
 
       def announce_if_not_yet
         unless System.registered?
-          login, password = announce_system
+          login, password = announce_system( nil, @options[:instance_data_file])
           Credentials.new(login, password, Credentials.system_credentials_file).write
         end
       end
