@@ -1,25 +1,22 @@
+require 'suse/toolkit/hwinfo'
+
 module SUSE
   module Connect
     # System class allowing to interact with underlying system
     class System
-
       class << self
+        include SUSE::Toolkit::Hwinfo
 
         attr_accessor :filesystem_root
 
         def hwinfo
           info = {
-            :cpu_type => `uname -p`,
-            :cpu_count => `grep "processor" /proc/cpuinfo | wc -l`,
-            :platform_type => `uname -i`,
-            :hostname => `hostname`
+            hostname: hostname,
+            cpus: cpus,
+            sockets: sockets,
+            hypervisor: hypervisor,
+            arch: arch
           }
-
-          info.values.each(&:chomp!)
-          dmidecode = `dmidecode`
-          virt_zoo = ['vmware', 'virtual machine', 'qemu', 'domu']
-          info[:virtualized] = (virt_zoo).any? {|ident| dmidecode.downcase.include? ident } if dmidecode
-          info
         end
 
         # returns username and password from SCC_CREDENTIALS_FILE
