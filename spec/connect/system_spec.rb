@@ -11,44 +11,23 @@ describe SUSE::Connect::System do
   subject { SUSE::Connect::System }
 
   describe '.hwinfo' do
+    let(:lscpu) { File.read(File.join(fixtures_dir, 'lscpu_phys.txt')) }
 
-    before do
-      Object.should_receive(:'`').with('uname -p').and_return "PowerPC 440\n"
-      Object.should_receive(:'`').with('grep "processor" /proc/cpuinfo | wc -l').and_return "250000\n"
-      Object.should_receive(:'`').with('uname -i').and_return "x86_64\n"
-      Object.should_receive(:'`').with('hostname').and_return "blue_gene\n"
+    before :each do
+      allow(subject).to receive(:execute).with('lscpu', false).and_return(lscpu)
     end
 
-    context :physical do
+    it 'should collect basic hwinfo' do
+      Socket.stub(:gethostname => 'blue_gene')
 
-      it 'should collect basic hwinfo' do
-        Object.should_receive(:'`').with('dmidecode').and_return "ahoy\n"
-        subject.hwinfo.should eq(
-                                   :cpu_type       => 'PowerPC 440',
-                                   :cpu_count      => '250000',
-                                   :platform_type  => 'x86_64',
-                                   :hostname       => 'blue_gene',
-                                   :virtualized    => false
-                                 )
-
-      end
+      expect(subject.hwinfo).to eq(
+        :hostname   => 'blue_gene',
+        :cpus       => 8,
+        :sockets    => 1,
+        :hypervisor => nil,
+        :arch       => 'x86_64',
+      )
     end
-
-    context :virtualized do
-
-      it 'should report that system is virtualized' do
-        Object.should_receive(:'`').with('dmidecode').and_return "qemu\n"
-        subject.hwinfo.should eq(
-                                   :cpu_type       => 'PowerPC 440',
-                                   :cpu_count      => '250000',
-                                   :platform_type  => 'x86_64',
-                                   :hostname       => 'blue_gene',
-                                   :virtualized    => true
-                                 )
-      end
-
-    end
-
   end
 
   describe '.credentials' do
