@@ -45,6 +45,14 @@ describe SUSE::Connect::Api do
       subject.new(client).announce_system('token', 'optional_target')
     end
 
+    it 'sets instance data in payload' do
+      Connection.any_instance.should_receive(:post)
+        .with('/connect/subscriptions/systems',
+              :auth => 'token', :params => { :hostname => 'guybrush', :distro_target => 'HHH', :instance_data => '<test>' })
+        .and_call_original
+      subject.new(client).announce_system('token', nil, '<test>')
+    end
+
     context :hostname_detected do
 
       it 'sends a call with hostname' do
@@ -60,8 +68,9 @@ describe SUSE::Connect::Api do
 
     context :no_hostname do
 
-      it 'sends a call with ip' do
-        System.stub(:hostname => '192.168.42.42')
+      it 'sends a call with ip when hostname is nil' do
+        Socket.stub(:gethostname => nil)
+        Socket.stub(:ip_address_list => [Addrinfo.ip('192.168.42.42')])
         payload = ['/connect/subscriptions/systems', :auth => 'token', :params => {
           :hostname => '192.168.42.42', :distro_target => 'HHH', :instance_data => nil }
         ]
