@@ -10,23 +10,34 @@ describe SUSE::Connect::System do
 
   subject { SUSE::Connect::System }
 
+  describe '.x86?' do
+    it 'checks whether the system architecture is x86 or x86_64' do
+      expect(subject.x86?).to eql true
+    end
+  end
+
   describe '.hwinfo' do
     let(:lscpu) { File.read(File.join(fixtures_dir, 'lscpu_phys.txt')) }
 
     before :each do
+      allow(Socket).to receive(:gethostname).and_return('blue_gene')
+      allow(subject).to receive('x86?').and_return(true)
       allow(subject).to receive(:execute).with('lscpu', false).and_return(lscpu)
     end
 
-    it 'should collect basic hwinfo' do
-      Socket.stub(:gethostname => 'blue_gene')
-
+    it 'collects basic hwinfo for x86/x86_64 systems ' do
       expect(subject.hwinfo).to eq(
-        :hostname   => 'blue_gene',
-        :cpus       => 8,
-        :sockets    => 1,
-        :hypervisor => nil,
-        :arch       => 'x86_64'
+        hostname:   'blue_gene',
+        cpus:        8,
+        sockets:     1,
+        hypervisor:  nil,
+        arch:        'x86_64'
       )
+    end
+
+    it 'returns only hostname for other architectures' do
+      allow(subject).to receive('x86?').and_return(false)
+      expect(subject.hwinfo).to eq(hostname: 'blue_gene')
     end
   end
 

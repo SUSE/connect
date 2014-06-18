@@ -10,13 +10,17 @@ module SUSE
         attr_accessor :filesystem_root
 
         def hwinfo
-          {
-            hostname: hostname,
-            cpus: cpus,
-            sockets: sockets,
-            hypervisor: hypervisor,
-            arch: arch
-          }
+          if x86?
+            {
+              hostname: hostname,
+              cpus: cpus,
+              sockets: sockets,
+              hypervisor: hypervisor,
+              arch: arch
+            }
+          else
+            { hostname: hostname }
+          end
         end
 
         # returns username and password from SCC_CREDENTIALS_FILE
@@ -60,6 +64,10 @@ module SUSE
           else
             Socket.ip_address_list.find {|intf| intf.ipv4_private? }.ip_address
           end
+        end
+
+        def x86?
+          ['x86', 'x86_64'].include? execute('uname -i', false)
         end
 
       end
