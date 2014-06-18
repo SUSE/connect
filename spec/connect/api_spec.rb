@@ -24,19 +24,39 @@ describe SUSE::Connect::Api do
   end
 
   describe 'announce_system' do
+    let(:payload) do
+      [
+        '/connect/subscriptions/systems',
+        auth: 'token',
+        params: {
+          hostname: 'connect',
+          hwinfo: 'hwinfo',
+          distro_target: 'HHH'
+        }
+      ]
+    end
 
     before do
       stub_announce_call
+      Socket.stub(:gethostname => 'connect')
+      System.stub(:hwinfo => 'hwinfo')
       Zypper.stub(:write_base_credentials => true)
       Zypper.stub(:distro_target => 'HHH')
     end
 
     mock_dry_file
 
-    it 'sends a call with token to api' do
-      Zypper.stub(:lookup_product_release => 'HHH')
-      Connection.any_instance.should_receive(:post).and_call_original
+    it 'sends a call with proper payload to api' do
+      Connection.any_instance.should_receive(:post).with(*payload).and_call_original
       subject.new(client).announce_system('token')
+    end
+
+    it 'sends a call with passed on distro_target parameter' do
+      args = payload.clone
+      args.last[:params][:distro_target] = 'aaaaaaaa'
+
+      Connection.any_instance.should_receive(:post).with(*args).and_call_original
+      subject.new(client).announce_system('token', 'aaaaaaaa')
     end
 
     it 'won\'t access Zypper if the optional parameter "distro_target" is set' do
@@ -48,7 +68,8 @@ describe SUSE::Connect::Api do
     it 'sets instance data in payload' do
       Connection.any_instance.should_receive(:post)
         .with('/connect/subscriptions/systems',
-              :auth => 'token', :params => { :hostname => 'guybrush', :distro_target => 'HHH', :instance_data => '<test>' })
+              :auth => 'token',
+              :params => { :hostname => 'connect', :hwinfo => 'hwinfo', :distro_target => 'HHH', :instance_data => '<test>' })
         .and_call_original
       subject.new(client).announce_system('token', nil, '<test>')
     end
@@ -56,9 +77,8 @@ describe SUSE::Connect::Api do
     context :hostname_detected do
 
       it 'sends a call with hostname' do
-        Socket.stub(:gethostname => 'vargan')
         payload = ['/connect/subscriptions/systems', :auth => 'token', :params => {
-          :hostname => 'vargan', :distro_target => 'HHH', :instance_data => nil }
+          :hostname => 'connect', :hwinfo => 'hwinfo', :distro_target => 'HHH' }
         ]
         Connection.any_instance.should_receive(:post).with(*payload).and_call_original
         subject.new(client).announce_system('token')
@@ -72,7 +92,7 @@ describe SUSE::Connect::Api do
         Socket.stub(:gethostname => nil)
         Socket.stub(:ip_address_list => [Addrinfo.ip('192.168.42.42')])
         payload = ['/connect/subscriptions/systems', :auth => 'token', :params => {
-          :hostname => '192.168.42.42', :distro_target => 'HHH', :instance_data => nil }
+          :hostname => '192.168.42.42', :hwinfo => 'hwinfo', :distro_target => 'HHH' }
         ]
         Connection.any_instance.should_receive(:post).with(*payload).and_call_original
         subject.new(client).announce_system('token')

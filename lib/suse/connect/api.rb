@@ -37,11 +37,10 @@ module SUSE
       def announce_system(auth, distro_target = nil, instance_data = nil)
         payload = {
           :hostname      => System.hostname,
-          # TODO: Catch any exceptions Zypper might raise, if YaST has already
-          # locked it. Return an understandable Error message to the user.
-          :distro_target => distro_target || Zypper.distro_target,
-          :instance_data => instance_data
+          :hwinfo        => System.hwinfo,
+          :distro_target => distro_target || Zypper.distro_target
         }
+        payload[:instance_data] = instance_data if instance_data
         @connection.post('/connect/subscriptions/systems', :auth => auth, :params => payload)
       end
 

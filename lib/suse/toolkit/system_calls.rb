@@ -16,6 +16,10 @@ module SUSE
         else
           log.error("command '#{cmd}' failed")
 
+          # NOTE: zypper with formatter option will return output instead of error
+          # e.g. command 'zypper --xmlout --non-interactive products -i' failed
+          error = error.empty? ? output : error
+
           if cmd.include? 'zypper'
             raise Connect::ZypperError, error
           else

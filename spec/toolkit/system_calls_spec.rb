@@ -53,6 +53,13 @@ describe SUSE::Toolkit::SystemCalls do
       SUSE::Connect::GlobalLogger.instance.log.should_receive(:error)
       expect { execute('zypper unknown') }.to raise_error(SUSE::Connect::ZypperError, error_message)
     end
+
+    it 'should raise ZypperError with proper message if call returns bad exit status and error message is empty' do
+      subject.should_receive(:capture3).with('zypper --xmlout products -i').and_return(['error message', '', failure])
+
+      SUSE::Connect::GlobalLogger.instance.log.should_receive(:error)
+      expect { execute('zypper --xmlout products -i') }.to raise_error(SUSE::Connect::ZypperError, 'error message')
+    end
   end
 
 end

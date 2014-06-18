@@ -136,4 +136,31 @@ describe SUSE::Connect::YaST do
     end
   end
 
+  describe '#import_certificate' do
+
+    it 'calls import certificate method from SSLCertificate class' do
+      expect(SSLCertificate).to receive(:import).with(:foo)
+      subject.import_certificate(:foo)
+    end
+
+  end
+
+  describe '#cert_sha1_fingerprint' do
+
+    it 'calls cert_sha1_fingerprint method from SSLCertificate class' do
+      expect(SSLCertificate).to receive(:sha1_fingerprint).with(:foo)
+      subject.cert_sha1_fingerprint(:foo)
+    end
+
+  end
+
+  describe '#cert_sha256_fingerprint' do
+
+    it 'calls cert_sha256_fingerprint method from SSLCertificate class' do
+      expect(SSLCertificate).to receive(:sha256_fingerprint).with(:foo)
+      subject.cert_sha256_fingerprint(:foo)
+    end
+
+  end
+
 end
