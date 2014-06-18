@@ -7,7 +7,6 @@ default[:connect][:packages] = {
   'git' => true,
   'osc' => true,
   'build' => true,
-  'ca-certificates-suse' => true,
   'ruby-devel' => true
 }
 
