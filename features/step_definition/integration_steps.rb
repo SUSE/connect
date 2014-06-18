@@ -101,6 +101,7 @@ Then(/^SUSEConnect library should be able to retrieve the product information$/)
     'SUSE Linux Enterprise Software Development Kit 12 x86_64',
     'Legacy Module 12 x86_64',
     'Advanced Systems Management Module 12 x86_64',
+    'SUSE Linux Enterprise Workstation Extension 12 x86_64',
     'Web and Scripting Module 12 x86_64',
     'Public Cloud Module 12 x86_64'
   ].sort
