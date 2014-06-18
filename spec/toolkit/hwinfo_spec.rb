@@ -9,6 +9,11 @@ describe SUSE::Toolkit::Hwinfo do
 
   subject { DummyReceiver.new }
   let(:success) { double('Process Status', :exitstatus => 0) }
+  let(:lscpu) { File.read(File.join(fixtures_dir, 'lscpu_phys.txt')) }
+
+  before :each do
+    allow(Open3).to receive(:capture3).with('lscpu').and_return([lscpu, '', success])
+  end
 
   it 'parses output of lscpu and returns hash' do
     expect(subject.send(:output)).to be_kind_of Hash
@@ -18,12 +23,6 @@ describe SUSE::Toolkit::Hwinfo do
   end
 
   context 'physical' do
-    let(:lscpu) { File.read(File.join(fixtures_dir, 'lscpu_phys.txt')) }
-
-    before :each do
-      allow(Open3).to receive(:capture3).with('lscpu').and_return([lscpu, '', success])
-    end
-
     it 'returns system cpus count' do
       expect(subject.cpus).to eql 8
     end
