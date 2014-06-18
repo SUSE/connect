@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Tue Jun 17 14:12:50 UTC 2014 - achernikov@suse.de
+
+- Update to version 0.1.2
+ - Fixed certificate import issue bcn#883006
+ - Abstract certificate interaction into YaST module layer
+
+-------------------------------------------------------------------
 Fri Jun 13 14:33:58 UTC 2014 - achernikov@suse.de
 
 - Update to version 0.1.1
