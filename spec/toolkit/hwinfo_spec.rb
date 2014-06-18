@@ -1,5 +1,6 @@
 require 'spec_helper'
 
+# rubocop :(
 class DummyReceiver
   include SUSE::Toolkit::Hwinfo
 end

@@ -24,17 +24,17 @@ describe SUSE::Connect::Api do
   end
 
   describe 'announce_system' do
-    let(:payload) {
+    let(:payload) do
       [
-        '/connect/subscriptions/systems', 
-        auth: 'token', 
-        params: { 
+        '/connect/subscriptions/systems',
+        auth: 'token',
+        params: {
           hostname: 'connect',
           hwinfo: 'hwinfo',
           distro_target: 'HHH'
         }
       ]
-    }
+    end
 
     before do
       stub_announce_call

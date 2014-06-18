@@ -25,7 +25,7 @@ describe SUSE::Connect::System do
         :cpus       => 8,
         :sockets    => 1,
         :hypervisor => nil,
-        :arch       => 'x86_64',
+        :arch       => 'x86_64'
       )
     end
   end

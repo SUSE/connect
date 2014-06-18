@@ -10,7 +10,7 @@ module SUSE
         attr_accessor :filesystem_root
 
         def hwinfo
-          info = {
+          {
             hostname: hostname,
             cpus: cpus,
             sockets: sockets,
