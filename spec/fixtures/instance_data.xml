@@ -1,0 +1,34 @@
+<signature>OKd3VFOq6E6t7NjW8Wi3+XiQPVye7PjgGnX3H/D1mM9EjYjesxMQF0dOboTf55OxHp25UZQPPYDu
+5V2GotwJJWfT33wZMReW7nZbuYJrfJCWPnt7vPVT5e99fkkhhwvwu1jWFDWyBB/sVhHvR472teY7
+nJjK9z6N7i/Wj9vXvx0=</signature>
+<pkcs7>MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAaCAJIAEggG+ewog
+ICJpbnN0YW5jZUlkIiA6ICJpLWRkNGU4ODhlIiwKICAiYmlsbGluZ1Byb2R1Y3RzIiA6IFsgImJw
+LTZjYTU0MDA1IiBdLAogICJpbWFnZUlkIiA6ICJhbWktZTgwODQ5ODEiLAogICJhcmNoaXRlY3R1
+cmUiIDogIng4Nl82NCIsCiAgInBlbmRpbmdUaW1lIiA6ICIyMDE0LTA2LTE2VDE1OjU0OjI2WiIs
+CiAgImluc3RhbmNlVHlwZSIgOiAidDEubWljcm8iLAogICJhY2NvdW50SWQiIDogIjYyMjA0Mzcy
+NzIxMSIsCiAgImtlcm5lxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxCJyYW1kaXNrSWQiIDogbnVs
+bCwKICAicmVnaW9uIiA6ICJ1cy1lYXN0LTEiLAogICJ2ZXJzaW9uIiA6ICIyMDEwLTA4LTMxIiwK
+ICAiYXZhaWxhYmlsaXR5Wm9uZSIgOiAidXMtZWFzdC0xZCIsCiAgImRldnBheVByb2R1Y3RDb2Rl
+cyIgOiBudWxsLAogICJwcml2YXRlSXAiIDogIjEwLjE4NS4yMTguNzQiCn0AAAAAAAAxggEXMIIB
+EwIBATBpMFwxCzAJBgNVBAYTAlVTMRkwFwYDVQQIExBXYXNoaW5ndG9uIFN0YXRlMRAwDgYDVQQH
+EwdTZWF0dGxlMSAwHgYDVQQKExdBbWF6b24gV2ViIFNlcnZpY2VzIExMQwIJAJa6SNnlXhpnMAkG
+BSsOAwIaBQCgXTAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0xNDA2
+MTYxNTU0MzFaMCMGCSqGSIb3DQEJBDEWBBR2cpay7qR80nQx2jH9xxffcjA85TAJBgcqhkjOOAQD
+BC4wLAIUZqCG+YNoAtEpHYP114iV5rlROt8CFD4lpgTg+3PK2Q6x70WB9a0l+yCTAAAAAAAA</pkcs7>
+<document>{
+  "instanceId" : "i-dd4e898e",
+  "billingProducts" : [ "bp-6ca54105" ],
+  "imageId" : "ami-e8085981",
+  "architecture" : "x86_64",
+  "pendingTime" : "2014-06-16T15:54:26Z",
+  "instanceType" : "t1.micro",
+  "accountId" : "622044444411",
+  "kernelId" : "aki-825aa7eb",
+  "ramdiskId" : null,
+  "region" : "us-east-1",
+  "version" : "2010-08-31",
+  "availabilityZone" : "us-east-1d",
+  "devpayProductCodes" : null,
+  "privateIp" : "10.185.200.74"
+}</document>
+

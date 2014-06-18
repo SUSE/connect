@@ -81,4 +81,13 @@ describe SUSE::Connect::Status do
 
   end
 
+  describe '#print' do
+
+    it 'prints the system status' do
+      PP.stub(:pp).and_return '123'
+      expect(subject.new(:foo).send(:print)).to eq '123'
+    end
+
+  end
+
 end

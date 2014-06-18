@@ -15,9 +15,11 @@ module SUSE
         extract_options
       end
 
-      def execute! # rubocop:disable MethodLength
+      def execute! # rubocop:disable MethodLength, CyclomaticComplexity
         # check for parameter dependencies
-        unless @options[:status]
+        if @options[:status]
+          Client.new(@options).status.print
+        else
           if @options[:url].nil? && @options[:token].nil?
             log.error 'Please set the token parameter to register against SCC, or the url parameter to register against SMT'
             exit(1)
@@ -27,8 +29,6 @@ module SUSE
           else
             Client.new(@options).register!
           end
-        else
-          Client.new(@options).status.print
         end
 
       rescue Errno::ECONNREFUSED
@@ -80,7 +80,7 @@ module SUSE
         end
 
         @opts.on('--instance-data  [path to file]', 'Path to the XML file holding the public key and instance data',
-          '  for cloud registration with SMT') do |opt|
+                 '  for cloud registration with SMT') do |opt|
           check_if_param(opt, 'Please provide the path to your instance data file')
           @options[:instance_data_file] = opt
         end

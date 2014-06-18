@@ -7,7 +7,7 @@ module SUSE
 
         attr_accessor :filesystem_root
 
-        def prefix_path path
+        def prefix_path(path)
           filesystem_root ? File.join(filesystem_root, path) : path
         end
 

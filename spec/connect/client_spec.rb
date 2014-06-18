@@ -124,7 +124,7 @@ describe SUSE::Connect::Client do
       end
 
       it 'fails on unavailable instance_data_file' do
-        expect { subject.announce_system(nil, '/test') }.to raise_error( FileError )
+        expect { subject.announce_system(nil, '/test') }.to raise_error(FileError)
       end
 
     end
