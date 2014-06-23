@@ -20,7 +20,10 @@ module SUSE
         if @options[:status]
           Client.new(@options).status.print
         else
-          if @options[:url].nil? && @options[:token].nil?
+          if @options[:instance_data_file] && !@options[:url]
+            log.error 'Please use --instance-data only in combination with --url pointing to your SMT server'
+            exit(1)
+          elsif @options[:url].nil? && @options[:token].nil?
             log.error 'Please set the token parameter to register against SCC, or the url parameter to register against SMT'
             exit(1)
           elsif @options[:token] && @options[:instance_data_file]

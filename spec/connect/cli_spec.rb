@@ -69,8 +69,15 @@ describe SUSE::Connect::Cli do
         cli.execute!
       end
 
+      it '--instance-data requires --url' do
+        cli = subject.new(%w{--instance-data /tmp/test})
+        string_logger.should_receive(:error)
+          .with('Please use --instance-data only in combination with --url pointing to your SMT server')
+        cli.execute!
+      end
+
       it '--instance-data is mutually exclusive with --token' do
-        cli = subject.new(%w{-r 123 --instance-data /tmp/test})
+        cli = subject.new(%w{-r 123 --instance-data /tmp/test --url test})
         string_logger.should_receive(:error)
           .with('Please use either --token or --instance-data')
         cli.execute!
