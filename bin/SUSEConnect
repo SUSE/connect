@@ -4,6 +4,7 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 require 'suse/connect/cli'
 
 cli = SUSE::Connect::Cli.new(ARGV.dup)
+abort 'Must run as root' unless Process.uid == 0
 begin
   cli.execute!
 rescue => e
