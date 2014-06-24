@@ -24,11 +24,7 @@ module SUSE
       end
 
       def self.system_credentials_file
-        if SUSE::Connect::System.filesystem_root
-          File.join(SUSE::Connect::System.filesystem_root, GLOBAL_CREDENTIALS_FILE)
-        else
-          GLOBAL_CREDENTIALS_FILE
-        end
+        SUSE::Connect::System.prefix_path(GLOBAL_CREDENTIALS_FILE)
       end
 
       def self.read(file)
@@ -42,11 +38,7 @@ module SUSE
       end
 
       def filename
-        if SUSE::Connect::System.filesystem_root
-          default_dir = File.join(SUSE::Connect::System.filesystem_root, DEFAULT_CREDENTIALS_DIR)
-        else
-          default_dir = DEFAULT_CREDENTIALS_DIR
-        end
+        default_dir = SUSE::Connect::System.prefix_path(DEFAULT_CREDENTIALS_DIR)
         Pathname.new(file).absolute? ? file : File.join(default_dir, file)
       end
 
