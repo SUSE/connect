@@ -76,6 +76,11 @@ module SUSE
           @options[:token] = opt
         end
 
+        @opts.on('-e', '--email <email>', 'email address for product registration') do |opt|
+          check_if_param(opt, 'Please provide an email address')
+          @options[:email] = opt
+        end
+
         @opts.on('--url [URL]', 'URL of registration server (e.g. https://scc.suse.com).') do |opt|
           check_if_param(opt, 'Please provide registration server URL')
           @options[:url] = opt

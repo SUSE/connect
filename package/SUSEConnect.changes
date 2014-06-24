@@ -1,4 +1,33 @@
 -------------------------------------------------------------------
+Tue Jun 17 14:12:50 UTC 2014 - achernikov@suse.de
+
+- Update to version 0.1.2
+ - Fixed certificate import issue bcn#883006
+ - Abstract certificate interaction into YaST module layer
+
+-------------------------------------------------------------------
+Fri Jun 13 14:33:58 UTC 2014 - achernikov@suse.de
+
+- Update to version 0.1.1
+ - Zypper now is Module (ex-class) holding the same functionality
+ - Autorefresh and Enabled flags are respected by libzypp from now
+   on, therefore we don't need them. Removed from activate/upgrade
+   calls
+ - activate/upgrade call does not contain subscription status
+   anymore
+ - activate/upgrade call does not contain per service credentials
+ - activate/upgrade call is now object, not array
+ - extensions call replaced with product show
+ - YaST module adapted to recent underlying changes in connect
+ - Connect::Client has list_products method renamed to show_product
+ - SUSE::Connect::Remote::Product SUSE::Connect::Zypper::Product
+   classes introduced to hold specific to origin logic
+ - Zypper commands now using Open3 to properly operate on system
+   commands 
+ - YaST module now requires Remote::Product object with 
+   identifier, version, arch for most operations
+
+-------------------------------------------------------------------
 Fri Jun  6 08:10:13 UTC 2014 - wstephenson@suse.com
 
 - Update to version 0.0.20

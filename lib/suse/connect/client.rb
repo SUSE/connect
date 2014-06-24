@@ -41,7 +41,7 @@ module SUSE
       def register!
         announce_if_not_yet
         product = @options[:product] || Zypper.base_product
-        service = activate_product(product)
+        service = activate_product(product, @options[:email])
         System.add_service(service)
       end
 

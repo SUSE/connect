@@ -39,7 +39,7 @@ module SUSE
 
         # update the symlinks
         log.info "Executing #{UPDATE_CERTIFICATES}..."
-        call_with_output(UPDATE_CERTIFICATES)
+        execute(UPDATE_CERTIFICATES)
       end
 
       # @param digest_class [Class] target digest class (e.g. OpenSSL::Digest::SHA1)
@@ -48,6 +48,7 @@ module SUSE
       def self.format_digest(digest_class, cert)
         digest_class.new(cert.to_der).to_s.upcase.scan(/../).join(':')
       end
+
     end
 
   end
