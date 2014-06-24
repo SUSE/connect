@@ -15,20 +15,24 @@ module SUSE
         extract_options
       end
 
-      def execute! # rubocop:disable MethodLength
-
-        # TODO: proper mechanics to separate sub-commands
+      def execute! # rubocop:disable MethodLength, CyclomaticComplexity
+        # check for parameter dependencies
         if @options[:status]
           Client.new(@options).status.print
-          exit(0)
+        else
+          if @options[:instance_data_file] && !@options[:url]
+            log.error 'Please use --instance-data only in combination with --url pointing to your SMT server'
+            exit(1)
+          elsif @options[:url].nil? && @options[:token].nil?
+            log.error 'Please set the token parameter to register against SCC, or the url parameter to register against SMT'
+            exit(1)
+          elsif @options[:token] && @options[:instance_data_file]
+            log.error 'Please use either --token or --instance-data'
+            exit(1)
+          else
+            Client.new(@options).register!
+          end
         end
-
-        unless @options[:token]
-          puts @opts
-          exit(1)
-        end
-
-        Client.new(@options).register!
 
       rescue Errno::ECONNREFUSED
         log.fatal "Error: Connection refused by server #{@options[:url] || 'https://scc.suse.com'}"
@@ -76,6 +80,12 @@ module SUSE
                  '  and enables software repositories for that product') do |opt|
           check_if_param(opt, 'Please provide a registration code parameter')
           @options[:token] = opt
+        end
+
+        @opts.on('--instance-data  [path to file]', 'Path to the XML file holding the public key and instance data',
+                 '  for cloud registration with SMT') do |opt|
+          check_if_param(opt, 'Please provide the path to your instance data file')
+          @options[:instance_data_file] = opt
         end
 
         @opts.on('-e', '--email <email>', 'email address for product registration') do |opt|

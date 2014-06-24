@@ -24,6 +24,10 @@ module SUSE
         @known_subscriptions ||= subscriptions_from_server
       end
 
+      def print
+        PP.pp(self)
+      end
+
       private
 
       def subscriptions_from_server

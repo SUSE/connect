@@ -2,6 +2,7 @@ module SUSE
   module Connect
     class MalformedSccCredentialsFile < StandardError; end
     class MissingSccCredentialsFile < StandardError; end
+    class FileError < StandardError; end
     class CannotBuildBasicAuth < StandardError; end
     class CannotBuildTokenAuth < StandardError; end
     class TokenNotPresent < StandardError; end

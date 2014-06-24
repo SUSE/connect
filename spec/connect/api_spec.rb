@@ -38,8 +38,7 @@ describe SUSE::Connect::Api do
 
     before do
       stub_announce_call
-
-      System.stub(:hostname => 'connect')
+      Socket.stub(:gethostname => 'connect')
       System.stub(:hwinfo => 'hwinfo')
       Zypper.stub(:write_base_credentials => true)
       Zypper.stub(:distro_target => 'HHH')
@@ -65,6 +64,42 @@ describe SUSE::Connect::Api do
       Connection.any_instance.should_receive(:post).and_call_original
       subject.new(client).announce_system('token', 'optional_target')
     end
+
+    it 'sets instance data in payload' do
+      Connection.any_instance.should_receive(:post)
+        .with('/connect/subscriptions/systems',
+              :auth => 'token',
+              :params => { :hostname => 'connect', :hwinfo => 'hwinfo', :distro_target => 'HHH', :instance_data => '<test>' })
+        .and_call_original
+      subject.new(client).announce_system('token', nil, '<test>')
+    end
+
+    context :hostname_detected do
+
+      it 'sends a call with hostname' do
+        payload = ['/connect/subscriptions/systems', :auth => 'token', :params => {
+          :hostname => 'connect', :hwinfo => 'hwinfo', :distro_target => 'HHH' }
+        ]
+        Connection.any_instance.should_receive(:post).with(*payload).and_call_original
+        subject.new(client).announce_system('token')
+      end
+
+    end
+
+    context :no_hostname do
+
+      it 'sends a call with ip when hostname is nil' do
+        Socket.stub(:gethostname => nil)
+        Socket.stub(:ip_address_list => [Addrinfo.ip('192.168.42.42')])
+        payload = ['/connect/subscriptions/systems', :auth => 'token', :params => {
+          :hostname => '192.168.42.42', :hwinfo => 'hwinfo', :distro_target => 'HHH' }
+        ]
+        Connection.any_instance.should_receive(:post).with(*payload).and_call_original
+        subject.new(client).announce_system('token')
+      end
+
+    end
+
   end
 
   describe :systems do
@@ -179,43 +214,7 @@ describe SUSE::Connect::Api do
 
   end
 
-  describe 'products' do
-
-    before do
-      stub_products_call
-    end
-
-    it 'is public' do
-      Connection.any_instance.should_receive(:get).with('/connect/products', :auth => nil).and_call_original
-      subject.new(client).products
-    end
-
-    it 'respond with proper status code' do
-      subject.new(client).products.code.should eq 200
-    end
-
-    it 'returns array of products' do
-      subject.new(client).products.body.should respond_to(:first)
-    end
-
-    it 'conforms with predefined structure' do
-      response = subject.new(client).products.body
-      # TODO: reuse structure checker from upstream
-      response.first['repos'].should be_kind_of Array
-
-      %w{id name distro_target description url tags}.each do |key|
-        response.first['repos'].first[key].should_not be_nil
-      end
-
-      %w{id identifier version arch release_type friendly_name product_class repos}.each do |key|
-        response.first[key].should_not be_nil
-      end
-
-    end
-
-  end
-
-  describe 'products' do
+  describe 'system products' do
 
     before do
       stub_show_product_call

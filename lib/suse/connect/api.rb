@@ -34,12 +34,13 @@ module SUSE
       # In this case we expect Token authentication where token is a registration code e.g. 'Token token=<REGCODE>'
       # @return [OpenStruct] responding to #body(response from SCC), #code(natural HTTP response code) and #success.
       #
-      def announce_system(auth, distro_target = nil)
+      def announce_system(auth, distro_target = nil, instance_data = nil)
         payload = {
-          hostname:  System.hostname,
-          hwinfo:    System.hwinfo,
-          distro_target: distro_target || Zypper.distro_target
+          :hostname      => System.hostname,
+          :hwinfo        => System.hwinfo,
+          :distro_target => distro_target || Zypper.distro_target
         }
+        payload[:instance_data] = instance_data if instance_data
         @connection.post('/connect/subscriptions/systems', :auth => auth, :params => payload)
       end
 
@@ -80,15 +81,7 @@ module SUSE
         @connection.put('/connect/systems/products', :auth => auth, :params => payload)
       end
 
-      # List all publicly available products. This includes a list of all repositories for each product.
-      #
-      # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
-      #
-      def products
-        @connection.get('/connect/products', :auth => nil)
-      end
-
-      # List all addons available for the given system
+      # Show details of an (activated) product including repositories and available extensions
       #
       # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
       #
