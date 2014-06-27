@@ -130,12 +130,6 @@ describe SUSE::Connect::Cli do
       cli.options[:url].should eq 'test'
     end
 
-    it 'sets insecure options' do
-      argv = %w{-d}
-      cli = subject.new(argv)
-      cli.options[:dry].should be true
-    end
-
     it 'sets language options' do
       argv = %w{-l de}
       cli = subject.new(argv)

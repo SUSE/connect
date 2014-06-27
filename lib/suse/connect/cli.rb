@@ -106,10 +106,6 @@ module SUSE
         @opts.separator ''
         @opts.separator 'Common options:'
 
-        @opts.on('-d', '--dry-run', 'only print what would be done') do |opt|
-          @options[:dry] = opt
-        end
-
         @opts.on('--root [PATH]', 'Path to the root folder, uses the same parameter for zypper.') do |opt|
           check_if_param(opt, 'Please provide path parameter')
           @options[:filesystem_root] = opt
