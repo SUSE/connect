@@ -9,24 +9,22 @@ module SUSE
 
       class << self
 
-        def client=(client)
-          @@client = client
-        end
+        attr_writer :client
 
         def client
-          @@client ||= Client.new({})
+          @client ||= Client.new({})
         end
 
         def activated_products
-          @@activated_products ||= products_from_activations
+          @activated_products ||= products_from_activations
         end
 
         def installed_products
-          @@installed_products ||= products_from_zypper
+          @installed_products ||= products_from_zypper
         end
 
         def known_activations
-          @@known_activations ||= activations_from_server
+          @known_activations ||= activations_from_server
         end
 
         def print_product_statuses
@@ -50,11 +48,11 @@ module SUSE
         end
 
         def product_statuses
-          installed_products.map{|p| Zypper::ProductStatus.new(p)}
+          installed_products.map {|p| Zypper::ProductStatus.new(p) }
         end
 
         def system_activations
-          @@system_activations ||= client.system_activations.body
+          @system_activations ||= client.system_activations.body
         end
 
       end

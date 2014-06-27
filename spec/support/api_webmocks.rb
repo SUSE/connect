@@ -92,4 +92,3 @@ def stub_systems_activations_call
   .with(:headers => headers)
   .to_return(:status => 200, :body => response_body, :headers => {})
 end
-

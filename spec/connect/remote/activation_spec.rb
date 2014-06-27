@@ -9,7 +9,7 @@ describe SUSE::Connect::Remote::Activation do
     let(:activation) { described_class.new(JSON.parse(File.read('spec/fixtures/activations_response.json')).last) }
 
     it 'contains id' do
-      expect(activation.id).to eq 124232
+      expect(activation.id).to eq 124_232
     end
 
     it 'contains regcode' do
@@ -33,7 +33,7 @@ describe SUSE::Connect::Remote::Activation do
     end
 
     it 'contains system_id' do
-      expect(activation.system_id).to eq 34242
+      expect(activation.system_id).to eq 34_242
     end
 
     it 'contains service' do
