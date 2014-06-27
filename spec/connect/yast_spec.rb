@@ -163,4 +163,13 @@ describe SUSE::Connect::YaST do
 
   end
 
+  describe '#status' do
+
+    it 'assigns new client to status with passed hash' do
+      expect(Client).to receive(:new).with(:foo => :bar)
+      subject.status(:foo => :bar)
+    end
+
+  end
+
 end

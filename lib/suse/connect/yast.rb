@@ -88,6 +88,14 @@ module SUSE
           SUSE::Connect::SSLCertificate.sha256_fingerprint(certificate)
         end
 
+        # Provides access to current system status in terms of activated products
+        # @param [Hash] client_params parameters to instantiate {Client}
+        def status(client_params)
+          client = Client.new(client_params)
+          Status.client = client
+          Status
+        end
+
       end
     end
 
