@@ -107,10 +107,17 @@ module SUSE
         @api.system_subscriptions(basic_auth)
       end
 
+      # @returns: body described in https://github.com/SUSE/connect/wiki/SCC-API-(Implemented)#response-14 and
+      # 200 status code
+      def system_activations
+        @api.system_activations(basic_auth)
+      end
+
       # @returns: print to $stdout status of current subscriptions
       # 200 status code
       def status
-        Status.new(self)
+        Status.client = self
+        Status.print_product_statuses
       end
 
       private

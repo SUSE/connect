@@ -83,3 +83,13 @@ def stub_systems_subscriptions_call
   .with(:headers => headers)
   .to_return(:status => 200, :body => response_body, :headers => {})
 end
+
+def stub_systems_activations_call
+  response_body = JSON.parse(File.read('spec/fixtures/activations_response.json')).to_json
+  headers = { 'Accept' => api_header_version, \
+              'Authorization' => 'basic_auth_string' }
+  stub_request(:get, 'https://example.com/connect/systems/activations')
+  .with(:headers => headers)
+  .to_return(:status => 200, :body => response_body, :headers => {})
+end
+

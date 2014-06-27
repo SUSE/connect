@@ -1,0 +1,74 @@
+[
+  {
+    "id": 42,
+    "regcode": null,
+    "type": null,
+    "status": null,
+    "starts_at": null,
+    "expires_at": null,
+    "system_id": 4252,
+    "service": {
+      "id": 1722,
+      "name": "Web_and_Scripting_Module_12_x86_64",
+      "url": "Web_and_Scripting_Module_12_x86_64",
+      "product": {
+        "id": 1153,
+        "name": "Web and Scripting Module",
+        "identifier": "sle-module-web-scripting",
+        "version": "12",
+        "release_type": null,
+        "arch": "x86_64",
+        "friendly_name": "Web and Scripting Module 12 x86_64",
+        "product_class": null,
+        "cpe": "cpe:/o:suse:sle-module-web-scripting:12.0",
+        "free": true,
+        "description": "The SUSE Linux Enterprise Web and Scripting Module delivers a comprehensive suite of scripting languages, frameworks, and related tools helping developers and systems administrators accelerate the creation of stable, modern web applications, including: PHP, Ruby on Rails, Python version 3. Access to the Web and Scripting Module is included in your SUSE Linux Enterprise Server subscription. The module has a different lifecycle than SUSE Linux Enterprise Server itself; please check the Release Notes for further details.",
+        "eula_url": "https://nu.novell.com/SUSE:/Products:/SLE-12/images/repo/SLE-12-module-web-scripting-POOL-x86_64-Media1.license/",
+        "enabled_repositories": [1494],
+        "repositories": [
+          {
+            "id": 1494,
+            "name": "SLE-MODULE-WEB-SCRIPTING12-Pool",
+            "distro_target": "sle-12-x86_64",
+            "description": "SLE-MODULE-WEB-SCRIPTING12-Pool for sle-12-x86_64",
+            "url": "SLE-12-module-web-scripting-POOL-x86_64-Media1",
+            "enabled": true,
+            "autorefresh": false
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": 124232,
+    "regcode": "Babboom",
+    "type": "evaluation",
+    "status": "ACTIVE",
+    "starts_at": "2012-07-21T00:00:00.000Z",
+    "expires_at": "2015-12-31T00:00:00.000Z",
+    "system_id": 34242,
+    "service": {
+      "id": 1106,
+      "name": "SUSE_Linux_Enterprise_Server_12_x86_64",
+      "url": "SUSE_Linux_Enterprise_Server_12_x86_64",
+      "product": {
+        "id": 42,
+        "identifier": "SLES",
+        "version": "11",
+        "release_type": "GA",
+        "arch": "x86_64",
+        "friendly_name": "SUSE Linux Enterprise Server 11 x86_64",
+        "product_class": "7261",
+        "repos": [
+          {
+            "id": 1150,
+            "name": "SLES11-Pool",
+            "distro_target": "sle-11-x86_64",
+            "description": "dummy description [WIP]",
+            "url": "https://scc.suse.com/suse/x86_64/update/SLE-SERVER/11-POOL"
+          }
+        ]
+      }
+    }
+  }
+]

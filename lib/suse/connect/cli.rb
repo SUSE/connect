@@ -32,6 +32,7 @@ module SUSE
           else
             Client.new(@options).register!
           end
+
         end
 
       rescue Errno::ECONNREFUSED

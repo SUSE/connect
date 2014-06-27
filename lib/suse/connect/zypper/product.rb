@@ -3,7 +3,7 @@ class SUSE::Connect::Zypper::Product
 
   include SUSE::Toolkit::ProductEquality
 
-  attr_reader :identifier, :version, :arch, :isbase, :release_type
+  attr_reader :identifier, :version, :arch, :isbase, :release_type, :summary
 
   def initialize(product_hash)
     @product_hash  = product_hash

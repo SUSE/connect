@@ -128,6 +128,17 @@ module SUSE
         @connection.get('/connect/systems/subscriptions', :auth => auth)
       end
 
+      # Gets a list of activations known by system authenticated with system credentials
+      #
+      # @param auth [String] authorizaztion string which will be injected in 'Authorization' header in request.
+      #   In this case we expects Base64 encoded string with login and password
+      #
+      # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
+      #
+      def system_activations(auth)
+        @connection.get('/connect/systems/activations', :auth => auth)
+      end
+
     end
   end
 end

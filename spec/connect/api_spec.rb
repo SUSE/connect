@@ -148,6 +148,27 @@ describe SUSE::Connect::Api do
 
     end
 
+    describe :activations do
+
+      before do
+        stub_systems_activations_call
+      end
+
+      it 'returns returns array of subscriptions known by the system' do
+        Connection.any_instance.should_receive(:get).with('/connect/systems/activations', :auth => 'basic_auth_string').and_call_original
+        subject.new(client).system_activations('basic_auth_string')
+      end
+
+      it 'holds expected structure' do
+        Connection.any_instance.should_receive(:get).with('/connect/systems/activations', :auth => 'basic_auth_string').and_call_original
+        result = subject.new(client).system_activations('basic_auth_string').body
+        result.should be_kind_of Array
+        attr_ary = %w{id regcode type status starts_at expires_at system_id service}
+        expect(result.first.keys).to eq attr_ary
+      end
+
+    end
+
   end
 
   describe 'activate_product' do

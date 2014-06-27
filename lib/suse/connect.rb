@@ -15,6 +15,7 @@ module SUSE
     require 'suse/connect/ssl_certificate'
     require 'suse/connect/status'
     require 'suse/connect/zypper'
+    require 'suse/connect/zypper/product_status'
 
     # Holding all the object classes received from registration server
     module Remote
@@ -22,6 +23,7 @@ module SUSE
       require 'suse/connect/remote/product'
       require 'suse/connect/remote/service'
       require 'suse/connect/remote/subscription'
+      require 'suse/connect/remote/activation'
     end
 
     # Zypper module holding extracted functionality and classes
