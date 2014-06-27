@@ -18,7 +18,7 @@ module SUSE
       def execute! # rubocop:disable MethodLength, CyclomaticComplexity
         # check for parameter dependencies
         if @options[:status]
-          Client.new(@options).status.print_product_statuses
+          Status.print_product_statuses
         else
           if @options[:instance_data_file] && !@options[:url]
             log.error 'Please use --instance-data only in combination with --url pointing to your SMT server'

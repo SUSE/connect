@@ -113,13 +113,6 @@ module SUSE
         @api.system_activations(basic_auth)
       end
 
-      # @returns: print to $stdout status of current subscriptions
-      # 200 status code
-      def status
-        Status.client = self
-        Status.print_product_statuses
-      end
-
       private
 
       def announce_if_not_yet

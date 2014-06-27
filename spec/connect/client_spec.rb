@@ -378,23 +378,4 @@ describe SUSE::Connect::Client do
     end
   end
 
-  describe '#status' do
-    let(:stubbed_response) do
-      OpenStruct.new(
-          :code => 204,
-          :body => nil,
-          :success => true
-      )
-    end
-
-    before do
-      subject.stub(:basic_auth => 'Basic: encodedstring')
-    end
-
-    it 'calls underlying api and removes credentials file' do
-      expect(Status).to receive(:print_product_statuses).and_return(true)
-      subject.status
-    end
-  end
-
 end
