@@ -22,7 +22,7 @@ Vagrant.configure('2') do |config|
 
       os.tenant = 'appliances'
       os.flavor       = /m1.small/
-      os.image        = /scc-connect-testing-sles-beta6-ibs/
+      os.image        = /sles12-build0497/
       os.networks     = ['fixed']
       os.floating_ip  = 'auto'
 
