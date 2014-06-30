@@ -127,6 +127,33 @@ describe SUSE::Connect::YaST do
 
   end
 
+  describe '#system_activated?' do
+    let(:product) { Remote::Product.new(identifier: 'tango') }
+    let(:client_params) { { :foo => 'oink' } }
+
+    before { Client.any_instance.stub :show_product }
+
+    it 'checks if the systems base product is already activated' do
+      expect(System).to receive(:activated?).and_return(true)
+      subject.system_activated?
+    end
+  end
+
+  describe '#product_activated?' do
+    let(:product) { Remote::Product.new(identifier: 'tango') }
+
+    it 'returns false if system is not announced' do
+      expect(System).to receive(:announced?).and_return(false)
+      subject.product_activated? product
+    end
+
+    it 'checks if the given product is already activated in SCC' do
+      expect(System).to receive(:announced?).and_return(true)
+      expect(Status).to receive(:activated_products).and_return([product])
+      subject.product_activated? product
+    end
+  end
+
   describe '#write_config' do
     let(:params) { { url: 'http://scc.foo.com' } }
 
