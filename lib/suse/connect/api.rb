@@ -48,7 +48,7 @@ module SUSE
       # combination of subscription, installed product, and architecture.
       #
       # @param auth [String] authorization string which will be injected in 'Authorization' header in request.
-      #   In this case we expects Base64 encoded string with login and password
+      #   In this case we expect Base64 encoded string with login and password
       # @param product [SUSE::Connect::Remote::Product] product to be activated
       # @param email [String] Adds the user to the respective organization or
       #   sends an SCC invitation.
@@ -69,7 +69,7 @@ module SUSE
       # Upgrade a product and receive the updated service for the system.
       #
       # @param auth [String] authorization string which will be injected in 'Authorization' header in request.
-      #   In this case we expects Base64 encoded string with login and password
+      #   In this case we expect Base64 encoded string with login and password
       # @param product [SUSE::Connect::Remote::Product] product
       def upgrade_product(auth, product)
         payload = {
@@ -98,7 +98,7 @@ module SUSE
       # Deregister/unregister a system
       #
       # @param auth [String] authorization string which will be injected in 'Authorization' header in request.
-      #   In this case we expects Base64 encoded string with login and password
+      #   In this case we expect Base64 encoded string with login and password
       #
       # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
       #
@@ -109,7 +109,7 @@ module SUSE
       # Gets a list of services known by the system with system credentials
       #
       # @param auth [String] authorization string which will be injected in 'Authorization' header in request.
-      #   In this case we expects Base64 encoded string with login and password
+      #   In this case we expect Base64 encoded string with login and password
       #
       # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
       #
@@ -119,8 +119,8 @@ module SUSE
 
       # Gets a list of subscriptions known by system authenticated with system credentials
       #
-      # @param auth [String] authorizaztion string which will be injected in 'Authorization' header in request.
-      #   In this case we expects Base64 encoded string with login and password
+      # @param auth [String] authorization string which will be injected in 'Authorization' header in request.
+      #   In this case we expect Base64 encoded string with login and password
       #
       # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
       #
@@ -130,8 +130,8 @@ module SUSE
 
       # Gets a list of activations known by system authenticated with system credentials
       #
-      # @param auth [String] authorizaztion string which will be injected in 'Authorization' header in request.
-      #   In this case we expects Base64 encoded string with login and password
+      # @param auth [String] authorization string which will be injected in 'Authorization' header in request.
+      #   In this case we expect Base64 encoded string with login and password
       #
       # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
       #

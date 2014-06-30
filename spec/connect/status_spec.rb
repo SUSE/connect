@@ -80,7 +80,7 @@ describe SUSE::Connect::Status do
       described_class.print_product_statuses
     end
 
-    it 'outputs the result of parsing erb with bingings' do
+    it 'outputs the result of parsing erb with bindings' do
       allow(File).to receive(:read).and_return('blaherbfile')
       expect(described_class).to receive(:puts).with('parsed erb output')
       mock_erb = double('mock_erb')
