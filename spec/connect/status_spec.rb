@@ -4,88 +4,137 @@ describe SUSE::Connect::Status do
 
   subject { described_class }
 
-  describe '.initialize' do
+  before do
+    reset_class_variables Status
+  end
 
-    it 'sets client accessor' do
-      allow_any_instance_of(Status).to receive(:activated_products).and_return(:baz)
-      status = subject.new(:foo)
-      expect(status.send(:client)).to eq :foo
+  describe '.client' do
+
+    it 'sets client class variable' do
+      allow(Client).to receive(:new).and_return(:baz)
+      expect(described_class.client).to eq :baz
     end
 
-    it 'returns self' do
-      allow_any_instance_of(Status).to receive(:activated_products).and_return(:baz)
-      expect(subject.new(:foo)).to be_kind_of Status
+    it 'memoizes client class variable to avoid reinstantiation' do
+      expect(described_class.client).to be subject.client
     end
 
   end
 
-  describe '#installed_products' do
+  describe '.activated_products' do
 
-    it 'memoizes content by first call' do
-      allow_any_instance_of(Status).to receive(:products_from_zypper).and_return([1, 2, :foo])
-      status = subject.new(:foo)
-      first_call_result = status.installed_products
-      expect(first_call_result).to equal status.products_from_zypper
+    it 'memoizes activated_products by the first call' do
+      allow(Status).to receive(:products_from_activations).and_return(:foobazbar)
+      expect(Status.activated_products).to be Status.activated_products
+    end
+
+    it 'calls products_from_services from Status class' do
+      expect(Status).to receive(:products_from_activations)
+      Status.activated_products
     end
 
   end
 
-  describe '#activated_products' do
+  describe '.installed_products' do
 
-    it 'memoizes content by first call' do
-      allow_any_instance_of(Status).to receive(:products_from_services).and_return([1, 2, :foo])
-      status = subject.new(:foo)
-      first_call_result = status.activated_products
-      expect(first_call_result).to equal status.activated_products
+    it 'memoizes installed_products by the first call' do
+      allow(Status).to receive(:products_from_zypper).and_return(:barbarbaz)
+      expect(Status.installed_products).to be Status.installed_products
+    end
+
+    it 'calls products_from_zypper from Status class' do
+      expect(Status).to receive(:products_from_activations)
+      Status.activated_products
     end
 
   end
 
-  describe '#known_subscriptions' do
+  describe '.known_activations' do
 
-    it 'memoizes content by first call' do
-      allow_any_instance_of(Status).to receive(:subscriptions_from_server).and_return([1, 2, :foo])
-      status = subject.new(:foo)
-      first_call_result = status.known_subscriptions
-      expect(first_call_result).to equal status.known_subscriptions
+    it 'memoizes known_activations by the first call' do
+      allow(Status).to receive(:activations_from_server).and_return(:superdo)
+      expect(Status.known_activations).to be Status.known_activations
+    end
+
+    it 'calls products_from_zypper from Status class' do
+      expect(Status).to receive(:activations_from_server)
+      Status.known_activations
     end
 
   end
 
-  describe '#subscriptions_from_server' do
+  describe '.print_product_statuses' do
 
-    it 'uses clients response to collect info' do
-      fake_client = double('client')
-      fake_client.stub_chain(:system_subscriptions, :body, :map).and_return [1, 2, 3]
-      expect(subject.new(fake_client).send(:subscriptions_from_server)).to eq [1, 2, 3]
+    it 'reads template from erb file' do
+      expect(File).to receive(:read).with(include('templates/text_status.erb')).and_return '111'
+      allow(described_class).to receive(:puts)
+      described_class.print_product_statuses
+    end
+
+    it 'builds proper erb entity' do
+      allow(File).to receive(:read).and_return('blaherbfile')
+      allow(described_class).to receive(:puts)
+      mock_erb = double('mock_erb')
+      allow(mock_erb).to receive(:result)
+      expect(ERB).to receive(:new).with('blaherbfile', 0, '-<>').and_return mock_erb
+      described_class.print_product_statuses
+    end
+
+    it 'outputs the result of parsing erb with bindings' do
+      allow(File).to receive(:read).and_return('blaherbfile')
+      expect(described_class).to receive(:puts).with('parsed erb output')
+      mock_erb = double('mock_erb')
+      allow(mock_erb).to receive(:result).and_return('parsed erb output')
+      allow(ERB).to receive(:new).with('blaherbfile', 0, '-<>').and_return mock_erb
+      described_class.print_product_statuses
     end
 
   end
 
-  describe '#products_from_services' do
+  describe 'private' do
 
-    it 'uses clients response to collect info' do
-      fake_client = double('client')
-      fake_client.stub_chain(:system_services, :body, :map).and_return [1, 2, 3]
-      expect(subject.new(fake_client).send(:products_from_services)).to eq [1, 2, 3]
+    describe '?product_statuses' do
+
+      it 'wrapping each installed product into Zypper::ProductStatus' do
+        allow(described_class).to receive(:installed_products).and_return([:f, :a, :b])
+        expect(Zypper::ProductStatus).to receive(:new).with(:f)
+        expect(Zypper::ProductStatus).to receive(:new).with(:a)
+        expect(Zypper::ProductStatus).to receive(:new).with(:b)
+        described_class.send(:product_statuses)
+      end
+
     end
 
-  end
+    describe '?products_from_zypper' do
 
-  describe '#products_from_zypper' do
+      it 'uses zypper output to collect info' do
+        Zypper.stub_chain(:installed_products).and_return [1, 2, 3]
+        expect(subject.send(:products_from_zypper)).to eq [1, 2, 3]
+      end
 
-    it 'uses zypper output to collect info' do
-      Zypper.stub_chain(:installed_products, :map).and_return [1, 2, 3]
-      expect(subject.new(:foo).send(:products_from_zypper)).to eq [1, 2, 3]
     end
 
-  end
+    describe '?products_from_activations' do
 
-  describe '#print' do
+      it 'uses clients response to collect info' do
+        fake_client = double('client')
+        allow(Client).to receive(:new).and_return(fake_client)
+        fake_client.stub_chain(:system_activations, :body, :map).and_return [1, 2, 3]
+        expect(subject.send(:products_from_activations)).to eq [1, 2, 3]
+      end
 
-    it 'prints the system status' do
-      PP.stub(:pp).and_return '123'
-      expect(subject.new(:foo).send(:print)).to eq '123'
+    end
+
+    describe '?activations_from_server' do
+
+      it 'mapping system_activations response to Remote::Activations' do
+        described_class.stub(:system_activations).and_return [1, 2, 3]
+        expect(Remote::Activation).to receive(:new).with(1)
+        expect(Remote::Activation).to receive(:new).with(2)
+        expect(Remote::Activation).to receive(:new).with(3)
+        described_class.send(:activations_from_server)
+      end
+
     end
 
   end

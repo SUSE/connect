@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Mon Jun 30 11:39:35 UTC 2014 - achernikov@suse.de
+
+- Updated to version 0.2.0 which from now on by minor version will 
+  represent api version which package implemented
+ - added status call allowing to get registration status from the
+   system
+
+-------------------------------------------------------------------
 Tue Jun 17 14:12:50 UTC 2014 - achernikov@suse.de
 
 - Update to version 0.1.2

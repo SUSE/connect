@@ -18,7 +18,7 @@ module SUSE
       def execute! # rubocop:disable MethodLength, CyclomaticComplexity
         # check for parameter dependencies
         if @options[:status]
-          Client.new(@options).status.print
+          Status.print_product_statuses
         else
           if @options[:instance_data_file] && !@options[:url]
             log.error 'Please use --instance-data only in combination with --url pointing to your SMT server'
@@ -32,6 +32,7 @@ module SUSE
           else
             Client.new(@options).register!
           end
+
         end
 
       rescue Errno::ECONNREFUSED
@@ -104,10 +105,6 @@ module SUSE
 
         @opts.separator ''
         @opts.separator 'Common options:'
-
-        @opts.on('-d', '--dry-run', 'only print what would be done') do |opt|
-          @options[:dry] = opt
-        end
 
         @opts.on('--root [PATH]', 'Path to the root folder, uses the same parameter for zypper.') do |opt|
           check_if_param(opt, 'Please provide path parameter')

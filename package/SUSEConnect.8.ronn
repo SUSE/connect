@@ -21,6 +21,7 @@ with the product identifier of the extension, obtained with `zypper products`
 Manage subscriptions at [SUSE Customer Center][scc]
 
 ## OPTIONS
+
   * `-p`, `--product <PRODUCT>`:
     Activate PRODUCT. Defaults to the base SUSE Linux Enterprise product
     on this system. Product identifiers can be obtained with 'zypper products'.
@@ -31,14 +32,21 @@ Manage subscriptions at [SUSE Customer Center][scc]
     Relates that product to the specified subscription and enables software
     repositories for that product.
 
-  * `-k`, `--insecure`:
-    Skip SSL verification (insecure)
+  * `--instance-data <path to file>`:
+    Path to the XML file holding the public key and instance data
+    for cloud registration with SMT`
+
+  * `-e`, `--email <email>`:
+    email address for product registration
 
   * `--url <URL>`:
     URL of registration server (e.g. https://scc.suse.com).
 
-  * `-d`, `--dry-run`:
-    Only print what would be done
+  * `-s`, `--status`:
+    Print current registration status of all products installed
+
+  * `--root [PATH]`:
+    Path to the root folder, uses the same parameter for zypper.
 
   * `--version`:
     Print program version

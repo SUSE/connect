@@ -1,45 +1,63 @@
-require 'pp'
+require 'time'
+require 'erb'
 
 module SUSE
   module Connect
     # System Status object which intention is to provide information about state of currently installed products
     # and subscriptions as known by registration server
+    # At first it collects all installed on the system products, then hit API of registration server and
+    # get all the `activations` from it. Then just compare installed products with list of activations
+    # which in turn holds information about activated product.
     class Status
 
-      attr_reader :client
+      class << self
 
-      def initialize(client)
-        @client = client
-      end
+        attr_writer :client
 
-      def installed_products
-        @installed_products ||= products_from_zypper
-      end
+        def client
+          @client ||= Client.new({})
+        end
 
-      def activated_products
-        @activated_products ||= products_from_services
-      end
+        def activated_products
+          @activated_products ||= products_from_activations
+        end
 
-      def known_subscriptions
-        @known_subscriptions ||= subscriptions_from_server
-      end
+        def installed_products
+          @installed_products ||= products_from_zypper
+        end
 
-      def print
-        PP.pp(self)
-      end
+        def known_activations
+          @known_activations ||= activations_from_server
+        end
 
-      private
+        def print_product_statuses
+          file = File.read File.join(File.dirname(__FILE__), 'templates/text_status.erb')
+          template = ERB.new(file, 0, '-<>')
+          puts template.result(binding)
+        end
 
-      def subscriptions_from_server
-        @client.system_subscriptions.body.map {|s| Subscription.new(s) }
-      end
+        private
 
-      def products_from_services
-        @client.system_services.body.map {|p| RegServerProduct.new(p['product']) }
-      end
+        def activations_from_server
+          system_activations.map {|s| Remote::Activation.new(s) }
+        end
 
-      def products_from_zypper
-        Zypper.installed_products.map {|p| Product.new(p, true) }
+        def products_from_activations
+          system_activations.map {|p| Remote::Product.new(p['service']['product']) }
+        end
+
+        def products_from_zypper
+          Zypper.installed_products
+        end
+
+        def product_statuses
+          installed_products.map {|p| Zypper::ProductStatus.new(p) }
+        end
+
+        def system_activations
+          @system_activations ||= client.system_activations.body
+        end
+
       end
 
     end

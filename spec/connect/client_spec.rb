@@ -359,10 +359,11 @@ describe SUSE::Connect::Client do
     end
   end
 
-  describe '#status' do
+  describe '#systems_activations' do
+
     let(:stubbed_response) do
       OpenStruct.new(
-          :code => 204,
+          :code => 200,
           :body => nil,
           :success => true
       )
@@ -372,10 +373,11 @@ describe SUSE::Connect::Client do
       subject.stub(:basic_auth => 'Basic: encodedstring')
     end
 
-    it 'calls underlying api and removes credentials file' do
-      expect(Status).to receive(:new).with(subject).and_return(true)
-      subject.status
+    it 'calls underlying api with system_activations call' do
+      expect(subject.api).to receive(:system_activations).with('Basic: encodedstring').and_return stubbed_response
+      subject.system_activations
     end
+
   end
 
 end

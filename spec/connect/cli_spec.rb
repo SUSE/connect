@@ -58,8 +58,7 @@ describe SUSE::Connect::Cli do
 
       it 'requires no other parameters on --status' do
         cli = subject.new(%w{--status})
-        expect_any_instance_of(Client).to receive(:status).and_return(Status.new(''))
-        expect_any_instance_of(Status).to receive(:print)
+        expect(Status).to receive(:print_product_statuses)
         cli.execute!
       end
 
@@ -90,9 +89,8 @@ describe SUSE::Connect::Cli do
       let(:cli) { subject.new(%w{--status}) }
 
       it 'calls Client.status.print' do
-        expect_any_instance_of(Client).to receive(:status).and_return(Status.new(''))
         expect_any_instance_of(Client).to_not receive(:register!)
-        expect_any_instance_of(Status).to receive(:print)
+        expect(Status).to receive(:print_product_statuses)
         cli.execute!
       end
 
@@ -130,12 +128,6 @@ describe SUSE::Connect::Cli do
       argv = %w{--url test}
       cli = subject.new(argv)
       cli.options[:url].should eq 'test'
-    end
-
-    it 'sets insecure options' do
-      argv = %w{-d}
-      cli = subject.new(argv)
-      cli.options[:dry].should be true
     end
 
     it 'sets language options' do
