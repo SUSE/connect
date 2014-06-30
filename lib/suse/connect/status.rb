@@ -5,6 +5,9 @@ module SUSE
   module Connect
     # System Status object which intention is to provide information about state of currently installed products
     # and subscriptions as known by registration server
+    # At first it collects all installed on the system products, then hit API of registration server and
+    # get all the `activations` from it. Then just compare installed products with list of activations
+    # which in turn holds information about activated product.
     class Status
 
       class << self
