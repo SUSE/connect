@@ -44,6 +44,15 @@ module SUSE
           !!credentials
         end
 
+        # Checks if system activations includes base product
+        def activated?
+          announced? && Status.activated_products.include?(Zypper.base_product)
+        end
+
+        def registered?
+          announced? && activated?
+        end
+
         def remove_credentials
           File.delete Credentials.system_credentials_file if announced?
         end

@@ -108,6 +108,52 @@ describe SUSE::Connect::System do
     end
   end
 
+  describe '.activated?' do
+
+    it 'returns false if sytem is not announced' do
+      subject.stub(:announced? => false)
+      subject.activated?.should be false
+    end
+
+    it 'returns false if sytem is announced but not activated' do
+      subject.stub(announced?: true)
+      Zypper.stub(:base_product)
+      expect(SUSE::Connect::Status).to receive(:activated_products).and_return([])
+      subject.activated?.should be false
+    end
+
+    it 'returns true if sytem is announced and activated' do
+      subject.stub(announced?: true)
+      product = Zypper::Product.new name: 'OpenSUSE'
+
+      expect(Zypper).to receive(:base_product).and_return(product)
+      expect(SUSE::Connect::Status).to receive(:activated_products).and_return([product])
+      subject.activated?.should be true
+    end
+  end
+
+  describe '.registered?' do
+
+    it 'returns false if sytem is not announced' do
+      subject.stub(:announced? => false)
+      subject.registered?.should be false
+    end
+
+    it 'returns false if sytem is announced but not activated' do
+      subject.stub(announced?: true)
+      subject.stub(activated?: false)
+
+      subject.registered?.should be false
+    end
+
+    it 'returns true if sytem is announced and activated' do
+      subject.stub(announced?: true)
+      subject.stub(activated?: true)
+
+      subject.registered?.should be true
+    end
+  end
+
   describe '.add_service' do
 
     before(:each) do
