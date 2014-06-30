@@ -116,7 +116,7 @@ module SUSE
       private
 
       def announce_if_not_yet
-        unless System.registered?
+        unless System.announced?
           login, password = announce_system(nil, @options[:instance_data_file])
           Credentials.new(login, password, Credentials.system_credentials_file).write
         end

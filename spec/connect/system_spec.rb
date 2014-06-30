@@ -84,7 +84,7 @@ describe SUSE::Connect::System do
     context :remove_credentials do
 
       before(:each) do
-        subject.should_receive(:registered?).and_return(true)
+        subject.should_receive(:announced?).and_return(true)
         File.should_receive(:delete).with(credentials_file).and_return(true)
       end
 
@@ -95,21 +95,16 @@ describe SUSE::Connect::System do
     end
   end
 
-  describe '.registered?' do
+  describe '.announced?' do
 
     it 'returns false if credentials are nil' do
       subject.stub(:credentials => nil)
-      subject.registered?.should be false
-    end
-
-    it 'returns false if username not prefixed with SCC_' do
-      subject.stub(:credentials => Credentials.new('John', 'B'))
-      subject.registered?.should be false
+      subject.announced?.should be false
     end
 
     it 'returns true if credentials exist and username is prefixed with SCC_' do
       subject.stub(:credentials => Credentials.new('SCC_John', 'B'))
-      subject.registered?.should be true
+      subject.announced?.should be true
     end
   end
 

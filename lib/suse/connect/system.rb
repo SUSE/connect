@@ -40,16 +40,12 @@ module SUSE
           end
         end
 
-        # detect if this system is registered against SCC
-        # == Returns:
-        #
-        def registered?
-          creds = credentials
-          !!(creds && creds.username && creds.username.include?('SCC_'))
+        def announced?
+          !!credentials
         end
 
         def remove_credentials
-          File.delete Credentials.system_credentials_file if registered?
+          File.delete Credentials.system_credentials_file if announced?
         end
 
         def add_service(service)
