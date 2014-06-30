@@ -32,11 +32,21 @@ Manage subscriptions at [SUSE Customer Center][scc]
     Relates that product to the specified subscription and enables software
     repositories for that product.
 
-  * `-s`, `--status`:
-      Print current registration status of all products installed
+  * `--instance-data <path to file>`:
+    Path to the XML file holding the public key and instance data
+    for cloud registration with SMT`
+
+  * `-e`, `--email <email>`:
+    email address for product registration
 
   * `--url <URL>`:
     URL of registration server (e.g. https://scc.suse.com).
+
+  * `-s`, `--status`:
+    Print current registration status of all products installed
+
+  * `--root [PATH]`:
+    Path to the root folder, uses the same parameter for zypper.
 
   * `--version`:
     Print program version
