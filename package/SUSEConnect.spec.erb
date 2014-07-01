@@ -143,11 +143,13 @@ Test::Unit or RSpec files, useful for developers.
 <% end -%>
 <% unless spec.executables.empty? -%>
 mkdir -p %{buildroot}%{_sysconfdir}/alternatives
+mkdir -p %{buildroot}%{_sbindir}
 <% end -%>
 <% spec.executables.each do |executable| -%>
 mv %{buildroot}%{_bindir}/<%= executable %>{,%{mod_branch}}
+mv %{buildroot}%{_bindir}/<%= executable %>%{mod_branch} %{buildroot}%{_sbindir}/<%= executable %>%{mod_branch}
 touch %{buildroot}%{_sysconfdir}/alternatives/<%= executable %>
-ln -s %{_sysconfdir}/alternatives/<%= executable %> %{buildroot}%{_bindir}/<%= executable %>
+ln -s %{_sysconfdir}/alternatives/<%= executable %> %{buildroot}%{_sbindir}/<%= executable %>
 <% end -%>
 
 <% unless docdirfiles.empty? -%>
@@ -166,7 +168,7 @@ ln -s SUSEConnect.8.gz %{buildroot}%_mandir/man8/SUSEConnect-<%= spec.version %>
 %post
 <% spec.executables.each do |executable| -%>
 /usr/sbin/update-alternatives --install \
-    %{_bindir}/<%= executable %> <%= executable %> %{_bindir}/<%= executable %>%{mod_branch} %{mod_weight}
+    %{_sbindir}/<%= executable %> <%= executable %> %{_sbindir}/<%= executable %>%{mod_branch} %{mod_weight}
 <% end -%>
 
 if [ -s /etc/zypp/credentials.d/NCCcredentials ]; then
@@ -181,7 +183,7 @@ fi
 %preun
 <% spec.executables.each do |executable| -%>
 if [ "$1" = 0 ] ; then
-    /usr/sbin/update-alternatives --remove <%= executable %> %{_bindir}/<%= executable %>%{mod_branch}
+    /usr/sbin/update-alternatives --remove <%= executable %> %{_sbindir}/<%= executable %>%{mod_branch}
 fi
 <% end -%>
 <% end -%>
@@ -192,8 +194,8 @@ fi
 %{_docdir}/%{name}
 <% end -%>
 <% spec.executables.each do |executable| -%>
-%{_bindir}/<%= executable %>%{mod_branch}
-%{_bindir}/<%= executable %>
+%{_sbindir}/<%= executable %>%{mod_branch}
+%{_sbindir}/<%= executable %>
 %ghost %{_sysconfdir}/alternatives/<%= executable %>
 <% end -%>
 %{_libdir}/ruby/gems/%{rb_ver}/cache/%{mod_full_name}.gem
