@@ -32,16 +32,13 @@ To build the package:
 `> osc -A https://api.suse.de build SLE_12 x86_64 --no-verify`
 
 To submit the package:
-
-`> cd package
-`> (optional in .bashrc) alias iosc="osc -A https://api.suse.de"
-
-`> iosc status / osc -A 'https://api.suse.de'
-
-`> check for new commits flagged with 'M'
-
-`> iosc commit / osc -A 'https://api.suse.de' commit 
-
+```
+> cd package
+> (optional in .bashrc) alias iosc="osc -A https://api.suse.de"
+> iosc status / osc -A 'https://api.suse.de'
+> check for new commits flagged with 'M'
+> iosc commit / osc -A 'https://api.suse.de' commit 
+```
 
 
 
