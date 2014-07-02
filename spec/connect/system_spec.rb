@@ -132,28 +132,6 @@ describe SUSE::Connect::System do
     end
   end
 
-  describe '.registered?' do
-
-    it 'returns false if sytem is not announced' do
-      subject.stub(:announced? => false)
-      subject.registered?.should be false
-    end
-
-    it 'returns false if sytem is announced but not activated' do
-      subject.stub(announced?: true)
-      subject.stub(activated?: false)
-
-      subject.registered?.should be false
-    end
-
-    it 'returns true if sytem is announced and activated' do
-      subject.stub(announced?: true)
-      subject.stub(activated?: true)
-
-      subject.registered?.should be true
-    end
-  end
-
   describe '.add_service' do
 
     before(:each) do
