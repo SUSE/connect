@@ -232,32 +232,32 @@ describe SUSE::Connect::Client do
     end
 
     it 'should call announce if system not registered' do
-      System.stub(:registered? => false)
+      System.stub(:credentials? => false)
       subject.should_receive(:announce_system)
       subject.register!
     end
 
     it 'should not call announce on api if system registered' do
-      System.stub(:registered? => true)
+      System.stub(:credentials? => true)
       subject.should_not_receive(:announce_system)
       subject.register!
     end
 
     it 'should call activate_product on api' do
-      System.stub(:registered? => true)
+      System.stub(:credentials? => true)
       subject.should_receive(:activate_product)
       subject.register!
     end
 
     it 'writes credentials file' do
-      System.stub(:registered? => false)
+      System.stub(:credentials? => false)
       subject.stub(:announce_system => %w{ lg pw })
       Credentials.should_receive(:new).with('lg', 'pw', Credentials::GLOBAL_CREDENTIALS_FILE).and_call_original
       subject.register!
     end
 
     it 'adds service after product activation' do
-      System.stub(:registered? => true)
+      System.stub(:credentials? => true)
       System.should_receive(:add_service)
       subject.register!
     end

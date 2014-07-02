@@ -40,16 +40,17 @@ module SUSE
           end
         end
 
-        # detect if this system is registered against SCC
-        # == Returns:
-        #
-        def registered?
-          creds = credentials
-          !!(creds && creds.username && creds.username.include?('SCC_'))
+        def credentials?
+          !!credentials
+        end
+
+        # Checks if system activations includes base product
+        def activated_base_product?
+          credentials? && Status.activated_products.include?(Zypper.base_product)
         end
 
         def remove_credentials
-          File.delete Credentials.system_credentials_file if registered?
+          File.delete Credentials.system_credentials_file if credentials?
         end
 
         def add_service(service)
