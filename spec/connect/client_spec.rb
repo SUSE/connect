@@ -385,17 +385,6 @@ describe SUSE::Connect::Client do
 
     let(:stubbed_response) { 'Registered SLES 12 s390'}
 
-
-    before do
-      Zypper.stub(:base_product => { :name => 'SLE_BASE' })
-      System.stub(:add_service => true)
-      Zypper.stub(:write_base_credentials)
-      Credentials.any_instance.stub(:write)
-      subject.stub(:activate_product)
-      subject.class.any_instance.stub(:basic_auth => true)
-      subject.class.any_instance.stub(:token_auth => true)
-    end
-
     it 'prints message on successful register' do
       expect(subject).to receive(:success_message).and_return stubbed_response
       subject.success_message
