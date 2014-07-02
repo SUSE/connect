@@ -383,7 +383,7 @@ describe SUSE::Connect::Client do
 
   describe '#success_message' do
 
-    let(:stubbed_response) { 'Registered SLES 12 s390'}
+    let(:stubbed_response) { 'Registered SLES 12 s390' }
 
     it 'prints message on successful register' do
       expect(subject).to receive(:success_message).and_return stubbed_response
