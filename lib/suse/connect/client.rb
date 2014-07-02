@@ -43,6 +43,14 @@ module SUSE
         product = @options[:product] || Zypper.base_product
         service = activate_product(product, @options[:email])
         System.add_service(service)
+        success_message
+      end
+
+      def success_message
+        puts "Registered #{@options[:product][:identifier]} #{@options[:product][:version]} #{@options[:product][:arch]}"
+        puts "Using EMail: #{@options[:email]}" unless  @options[:email].nil?
+        puts "Rooted at: #{@options[:filesystem_root]}" unless @options[:filesystem_root].nil?
+        puts "To server: #{@options[:url]}" unless @options[:url].nil?
       end
 
       # @returns: Empty body and 204 status code
