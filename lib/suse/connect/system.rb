@@ -45,7 +45,7 @@ module SUSE
         end
 
         # Checks if system activations includes base product
-        def activated?
+        def activated_base_product?
           announced? && Status.activated_products.include?(Zypper.base_product)
         end
 

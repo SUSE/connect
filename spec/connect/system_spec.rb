@@ -108,18 +108,18 @@ describe SUSE::Connect::System do
     end
   end
 
-  describe '.activated?' do
+  describe '.activated_base_product?' do
 
     it 'returns false if sytem is not announced' do
       subject.stub(:announced? => false)
-      subject.activated?.should be false
+      subject.activated_base_product?.should be false
     end
 
     it 'returns false if sytem is announced but not activated' do
       subject.stub(announced?: true)
       Zypper.stub(:base_product)
       expect(SUSE::Connect::Status).to receive(:activated_products).and_return([])
-      subject.activated?.should be false
+      subject.activated_base_product?.should be false
     end
 
     it 'returns true if sytem is announced and activated' do
@@ -128,7 +128,7 @@ describe SUSE::Connect::System do
 
       expect(Zypper).to receive(:base_product).and_return(product)
       expect(SUSE::Connect::Status).to receive(:activated_products).and_return([product])
-      subject.activated?.should be true
+      subject.activated_base_product?.should be true
     end
   end
 
