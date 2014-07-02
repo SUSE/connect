@@ -60,13 +60,6 @@ module SUSE
           Client.new(client_params).show_product(product)
         end
 
-        # Checks if the systems base product is already activated
-        #
-        # @return Boolean
-        def system_activated?
-          SUSE::Connect::System.activated?
-        end
-
         # Checks if the given product is already activated in SCC
         # @param product [Remote::Product] product
         #

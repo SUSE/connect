@@ -127,18 +127,6 @@ describe SUSE::Connect::YaST do
 
   end
 
-  describe '#system_activated?' do
-    let(:product) { Remote::Product.new(identifier: 'tango') }
-    let(:client_params) { { :foo => 'oink' } }
-
-    before { Client.any_instance.stub :show_product }
-
-    it 'checks if the systems base product is already activated' do
-      expect(System).to receive(:activated?).and_return(true)
-      subject.system_activated?
-    end
-  end
-
   describe '#product_activated?' do
     let(:product) { Remote::Product.new(identifier: 'tango') }
 
