@@ -65,7 +65,7 @@ module SUSE
         #
         # @return Boolean
         def product_activated?(product)
-          if SUSE::Connect::System.announced?
+          if SUSE::Connect::System.credentials?
             SUSE::Connect::Status.activated_products.include?(product)
           end
         end

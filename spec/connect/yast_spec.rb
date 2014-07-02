@@ -130,13 +130,13 @@ describe SUSE::Connect::YaST do
   describe '#product_activated?' do
     let(:product) { Remote::Product.new(identifier: 'tango') }
 
-    it 'returns false if system is not announced' do
-      expect(System).to receive(:announced?).and_return(false)
+    it 'returns false if no credentials' do
+      expect(System).to receive(:credentials?).and_return(false)
       subject.product_activated? product
     end
 
     it 'checks if the given product is already activated in SCC' do
-      expect(System).to receive(:announced?).and_return(true)
+      expect(System).to receive(:credentials?).and_return(true)
       expect(Status).to receive(:activated_products).and_return([product])
       subject.product_activated? product
     end
