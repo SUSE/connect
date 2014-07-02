@@ -381,13 +381,18 @@ describe SUSE::Connect::Client do
 
   end
 
-  describe '#success_message' do
+  describe '#print_success_message' do
 
-    let(:stubbed_response) { 'Registered SLES 12 s390' }
+    let(:product) { SUSE::Connect::Zypper::Product.new name: 'SLES', version: 12, arch: 's390' }
+
+    subject { Client.new(url: 'http://dummy:42', email: 'asd@asd.de', product: product, filesystem_root: '/') }
 
     it 'prints message on successful register' do
-      expect(subject).to receive(:success_message).and_return stubbed_response
-      subject.success_message
+      expect($stdout).to receive(:puts).with('Registered SLES 12 s390')
+      expect($stdout).to receive(:puts).with('To server: http://dummy:42')
+      expect($stdout).to receive(:puts).with('Using EMail: asd@asd.de')
+      expect($stdout).to receive(:puts).with('Rooted at: /')
+      subject.print_success_message
     end
   end
 

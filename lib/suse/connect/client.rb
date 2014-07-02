@@ -46,8 +46,8 @@ module SUSE
         success_message
       end
 
-      def success_message
-        puts "Registered #{@options[:product][:identifier]} #{@options[:product][:version]} #{@options[:product][:arch]}"
+      def print_success_message
+        puts "Registered #{@options[:product].identifier} #{@options[:product].version} #{@options[:product].arch}"
         puts "Rooted at: #{@options[:filesystem_root]}" unless @options[:filesystem_root].nil?
         puts "To server: #{@options[:url]}" unless @options[:url].nil?
         puts "Using EMail: #{@options[:email]}" unless  @options[:email].nil?
