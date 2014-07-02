@@ -51,7 +51,6 @@ module SUSE
         puts "Rooted at: #{@options[:filesystem_root]}" unless @options[:filesystem_root].nil?
         puts "To server: #{@options[:url]}" unless @options[:url].nil?
         puts "Using EMail: #{@options[:email]}" unless  @options[:email].nil?
-
       end
 
       # @returns: Empty body and 204 status code
