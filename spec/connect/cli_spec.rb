@@ -52,6 +52,12 @@ describe SUSE::Connect::Cli do
         cli.execute!
       end
 
+      it 'should produce log output for any other exception' do
+        string_logger.should_receive(:fatal).with("SUSEConnect error: 'Boom'")
+        Client.any_instance.stub(:register!).and_raise 'Boom'
+        cli.execute!
+      end
+
     end
 
     context 'parameter dependencies' do

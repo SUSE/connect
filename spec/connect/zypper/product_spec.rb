@@ -6,11 +6,6 @@ describe SUSE::Connect::Zypper::Product do
 
   describe '.initialize' do
 
-    it 'stores passed argument in product_hash instance variable' do
-      passed = { :name => 'foo' }
-      expect(subject.new(passed).instance_variable_get('@product_hash')).to eq passed
-    end
-
     it 'set identifier from name key' do
       expect(subject.new(:name => 'foo').identifier).to eq 'foo'
     end
@@ -64,23 +59,10 @@ describe SUSE::Connect::Zypper::Product do
 
     describe 'release type' do
 
-      context :flavor_present do
-
-        it 'set release_type based on precendce logic of several keys of passed product' do
-          expect(subject.new(:flavor => 'floppy').release_type).to eq 'floppy'
-        end
-
-      end
-
       context :registerrelease_present do
 
         it 'set release_type based on registerrelease_present' do
           expect(subject.new(:registerrelease => 'OEMBBC').release_type).to eq 'OEMBBC'
-        end
-
-        it 'set release_type back to flavor if registerrelease is empty' do
-          product_hash = { :flavor => 'floppy', :registerrelease => '' }
-          expect(subject.new(product_hash).release_type).to eq 'floppy'
         end
 
       end
