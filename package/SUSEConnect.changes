@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu Jul  3 13:05:08 UTC 2014 - jschmid@suse.com
+
+- Added message on successful registration
+- moved packaging path from bin to sbin
+- added root check[security]
+
+-------------------------------------------------------------------
 Mon Jun 30 11:39:35 UTC 2014 - achernikov@suse.de
 
 - Updated to version 0.2.0 which from now on by minor version will 
