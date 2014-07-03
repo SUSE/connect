@@ -43,6 +43,14 @@ module SUSE
         product = @options[:product] || Zypper.base_product
         service = activate_product(product, @options[:email])
         System.add_service(service)
+        success_message
+      end
+
+      def print_success_message
+        puts "Registered #{@options[:product].identifier} #{@options[:product].version} #{@options[:product].arch}"
+        puts "Rooted at: #{@options[:filesystem_root]}" unless @options[:filesystem_root].nil?
+        puts "To server: #{@options[:url]}" unless @options[:url].nil?
+        puts "Using EMail: #{@options[:email]}" unless  @options[:email].nil?
       end
 
       # @returns: Empty body and 204 status code
@@ -116,7 +124,7 @@ module SUSE
       private
 
       def announce_if_not_yet
-        unless System.registered?
+        unless System.credentials?
           login, password = announce_system(nil, @options[:instance_data_file])
           Credentials.new(login, password, Credentials.system_credentials_file).write
         end

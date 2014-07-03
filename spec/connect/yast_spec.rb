@@ -127,6 +127,21 @@ describe SUSE::Connect::YaST do
 
   end
 
+  describe '#product_activated?' do
+    let(:product) { Remote::Product.new(identifier: 'tango') }
+
+    it 'returns false if no credentials' do
+      expect(System).to receive(:credentials?).and_return(false)
+      subject.product_activated? product
+    end
+
+    it 'checks if the given product is already activated in SCC' do
+      expect(System).to receive(:credentials?).and_return(true)
+      expect(Status).to receive(:activated_products).and_return([product])
+      subject.product_activated? product
+    end
+  end
+
   describe '#write_config' do
     let(:params) { { url: 'http://scc.foo.com' } }
 

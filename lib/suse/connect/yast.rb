@@ -60,6 +60,16 @@ module SUSE
           Client.new(client_params).show_product(product)
         end
 
+        # Checks if the given product is already activated in SCC
+        # @param product [Remote::Product] product
+        #
+        # @return Boolean
+        def product_activated?(product)
+          if SUSE::Connect::System.credentials?
+            SUSE::Connect::Status.activated_products.include?(product)
+          end
+        end
+
         # Writes the config file with the given parameters, overwriting any existing contents
         # Only persistent connection parameters (url, insecure) are written by this method
         # Regcode, language, debug etc are not
