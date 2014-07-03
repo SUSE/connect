@@ -222,13 +222,12 @@ describe SUSE::Connect::Client do
   describe '#register!' do
 
     before do
-      Zypper.stub(:base_product => Zypper::Product.new({ :name => 'SLE_BASE' }))
+      Zypper.stub(:base_product => Zypper::Product.new(:name => 'SLE_BASE'))
       System.stub(:add_service => true)
       Zypper.stub(:write_base_credentials)
       Credentials.any_instance.stub(:write)
       subject.stub(:activate_product)
     end
-
 
     it 'should call announce if system not registered' do
       System.stub(:credentials? => false)
@@ -264,7 +263,7 @@ describe SUSE::Connect::Client do
     it 'prints message on successful register' do
       System.stub(:credentials? => true)
       System.stub(:add_service)
-      product = Zypper::Product.new( name: 'SLES', version: 12, arch: 's390' )
+      product = Zypper::Product.new(name: 'SLES', version: 12, arch: 's390')
       client = Client.new(url: 'http://dummy:42', email: 'asd@asd.de', product: product, filesystem_root: '/test')
       client.stub(:activate_product)
 
