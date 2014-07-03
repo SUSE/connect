@@ -222,14 +222,13 @@ describe SUSE::Connect::Client do
   describe '#register!' do
 
     before do
-      Zypper.stub(:base_product => { :name => 'SLE_BASE' })
+      Zypper.stub(:base_product => Zypper::Product.new({ :name => 'SLE_BASE' }))
       System.stub(:add_service => true)
       Zypper.stub(:write_base_credentials)
       Credentials.any_instance.stub(:write)
       subject.stub(:activate_product)
-      subject.class.any_instance.stub(:basic_auth => true)
-      subject.class.any_instance.stub(:token_auth => true)
     end
+
 
     it 'should call announce if system not registered' do
       System.stub(:credentials? => false)
@@ -260,6 +259,20 @@ describe SUSE::Connect::Client do
       System.stub(:credentials? => true)
       System.should_receive(:add_service)
       subject.register!
+    end
+
+    it 'prints message on successful register' do
+      System.stub(:credentials? => true)
+      System.stub(:add_service)
+      product = Zypper::Product.new( name: 'SLES', version: 12, arch: 's390' )
+      client = Client.new(url: 'http://dummy:42', email: 'asd@asd.de', product: product, filesystem_root: '/test')
+      client.stub(:activate_product)
+
+      SUSE::Connect::DefaultLogger.any_instance.should_receive(:info).with('Registered SLES 12 s390')
+      SUSE::Connect::DefaultLogger.any_instance.should_receive(:info).with('To server: http://dummy:42')
+      SUSE::Connect::DefaultLogger.any_instance.should_receive(:info).with('Using E-Mail: asd@asd.de')
+      SUSE::Connect::DefaultLogger.any_instance.should_receive(:info).with('Rooted at: /test')
+      client.register!
     end
 
   end
@@ -378,21 +391,6 @@ describe SUSE::Connect::Client do
       subject.system_activations
     end
 
-  end
-
-  describe '#print_success_message' do
-
-    let(:product) { SUSE::Connect::Zypper::Product.new name: 'SLES', version: 12, arch: 's390' }
-
-    subject { Client.new(url: 'http://dummy:42', email: 'asd@asd.de', product: product, filesystem_root: '/') }
-
-    it 'prints message on successful register' do
-      expect($stdout).to receive(:puts).with('Registered SLES 12 s390')
-      expect($stdout).to receive(:puts).with('To server: http://dummy:42')
-      expect($stdout).to receive(:puts).with('Using EMail: asd@asd.de')
-      expect($stdout).to receive(:puts).with('Rooted at: /')
-      subject.print_success_message
-    end
   end
 
 end
