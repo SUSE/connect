@@ -5,8 +5,8 @@ Veewee::Session.declare(
   :disk_size   => '20480',
   :disk_format => 'VDI',
   :hostiocache => 'off',
-  :iso_file => 'SLE-12-Server-DVD-x86_64-Build0497-Media1.iso',
-  :iso_src  => 'http://download.suse.de/ibs/SUSE:/SLE-12:/GA/images/iso/SLE-12-Server-DVD-x86_64-Build0497-Media1.iso',
+  :iso_file => 'SLE-12-Server-DVD-x86_64-Build0505-Media1.iso',
+  :iso_src  => 'http://download.suse.de/ibs/SUSE:/SLE-12:/GA/images/iso/SLE-12-Server-DVD-x86_64-Build0505-Media1.iso',
   :iso_download_timeout => '1000',
   :boot_wait         => '10',
   :boot_cmd_sequence => [
