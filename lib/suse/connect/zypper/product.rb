@@ -15,10 +15,9 @@ class SUSE::Connect::Zypper::Product
     @release       = product_hash[:release]
   end
 
-
   private
 
-  def determine_release_type( product_hash )
+  def determine_release_type(product_hash)
     oem_file = File.join(SUSE::Connect::Zypper::OEM_PATH, product_hash[:productline] || '')
     if File.exist?(oem_file)
       line = File.readlines(oem_file).first

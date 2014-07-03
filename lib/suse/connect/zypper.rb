@@ -27,7 +27,7 @@ module SUSE
 
         def base_product
           base = installed_products.find(&:isbase)
-          base or raise CannotDetectBaseProduct
+          base || raise(CannotDetectBaseProduct)
         end
 
         def distro_target
