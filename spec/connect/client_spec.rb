@@ -229,6 +229,7 @@ describe SUSE::Connect::Client do
       subject.stub(:activate_product)
       subject.class.any_instance.stub(:basic_auth => true)
       subject.class.any_instance.stub(:token_auth => true)
+      subject.stub(:success_message)
     end
 
     it 'should call announce if system not registered' do
@@ -378,6 +379,21 @@ describe SUSE::Connect::Client do
       subject.system_activations
     end
 
+  end
+
+  describe '#print_success_message' do
+
+    let(:product) { SUSE::Connect::Zypper::Product.new name: 'SLES', version: 12, arch: 's390' }
+
+    subject { Client.new(url: 'http://dummy:42', email: 'asd@asd.de', product: product, filesystem_root: '/') }
+
+    it 'prints message on successful register' do
+      expect($stdout).to receive(:puts).with('Registered SLES 12 s390')
+      expect($stdout).to receive(:puts).with('To server: http://dummy:42')
+      expect($stdout).to receive(:puts).with('Using EMail: asd@asd.de')
+      expect($stdout).to receive(:puts).with('Rooted at: /')
+      subject.print_success_message
+    end
   end
 
 end
