@@ -229,7 +229,6 @@ describe SUSE::Connect::Client do
       subject.stub(:activate_product)
       subject.class.any_instance.stub(:basic_auth => true)
       subject.class.any_instance.stub(:token_auth => true)
-      subject.stub(:success_message)
     end
 
     it 'should call announce if system not registered' do
