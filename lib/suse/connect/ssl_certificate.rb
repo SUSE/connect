@@ -33,12 +33,12 @@ module SUSE
       # @see https://github.com/openSUSE/ca-certificates
       # @param cert [OpenSSL::X509::Certificate] the certificate
       def self.import(cert)
-        log.info "Writing a SSL certificate to #{SERVER_CERT_FILE} file..."
+        log.debug "Writing a SSL certificate to #{SERVER_CERT_FILE} file..."
         log.warn 'The certificate file already exists, rewriting...' if File.exist?(SERVER_CERT_FILE)
         File.write(SERVER_CERT_FILE, cert.to_pem)
 
         # update the symlinks
-        log.info "Executing #{UPDATE_CERTIFICATES}..."
+        log.debug "Executing #{UPDATE_CERTIFICATES}..."
         execute(UPDATE_CERTIFICATES)
       end
 

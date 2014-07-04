@@ -3,6 +3,8 @@ require 'spec_helper'
 describe SUSE::Connect::Client do
 
   subject { SUSE::Connect::Client.new({}) }
+  let(:default_logger) { SUSE::Connect::GlobalLogger.instance.log }
+  let(:string_logger) { ::Logger.new(StringIO.new) }
 
   describe '.new' do
 
@@ -32,7 +34,7 @@ describe SUSE::Connect::Client do
 
       it 'should set insecure flag from options if it was passed via constructor' do
         client = Client.new(:insecure => true)
-        expect(client.options[:insecure]).to be_true
+        expect(client.options[:insecure]).to be true
       end
 
       it 'allows to pass arbitrary options' do
@@ -222,14 +224,11 @@ describe SUSE::Connect::Client do
   describe '#register!' do
 
     before do
-      Zypper.stub(:base_product => { :name => 'SLE_BASE' })
+      Zypper.stub(:base_product => Zypper::Product.new(:name => 'SLE_BASE'))
       System.stub(:add_service => true)
       Zypper.stub(:write_base_credentials)
       Credentials.any_instance.stub(:write)
       subject.stub(:activate_product)
-      subject.class.any_instance.stub(:basic_auth => true)
-      subject.class.any_instance.stub(:token_auth => true)
-      subject.stub(:success_message)
     end
 
     it 'should call announce if system not registered' do
@@ -261,6 +260,22 @@ describe SUSE::Connect::Client do
       System.stub(:credentials? => true)
       System.should_receive(:add_service)
       subject.register!
+    end
+
+    it 'prints message on successful register' do
+      product = Zypper::Product.new(name: 'SLES', version: 12, arch: 's390')
+      client = Client.new(url: 'http://dummy:42', email: 'asd@asd.de', product: product, filesystem_root: '/test')
+      client.stub(:announce_if_not_yet)
+      client.stub(:activate_product)
+      Zypper.stub(:base_product => product)
+      SUSE::Connect::GlobalLogger.instance.log = string_logger
+
+      string_logger.should_receive(:info).with('Registered SLES 12 s390')
+      string_logger.should_receive(:info).with('To server: http://dummy:42')
+      string_logger.should_receive(:info).with('Using E-Mail: asd@asd.de')
+      string_logger.should_receive(:info).with('Rooted at: /test')
+      client.register!
+      SUSE::Connect::GlobalLogger.instance.log = default_logger
     end
 
   end
@@ -337,7 +352,7 @@ describe SUSE::Connect::Client do
 
     it 'calls underlying api and removes credentials file' do
       allow(subject.api).to receive(:system_services).with('Basic: encodedstring').and_return stubbed_response
-      expect(subject.system_services).to be_true
+      expect(subject.system_services).to eq stubbed_response
     end
   end
 
@@ -356,7 +371,7 @@ describe SUSE::Connect::Client do
 
     it 'calls underlying api and removes credentials file' do
       expect(subject.api).to receive(:system_subscriptions).with('Basic: encodedstring').and_return stubbed_response
-      expect(subject.system_subscriptions).to be_true
+      expect(subject.system_subscriptions).to eq stubbed_response
     end
   end
 
@@ -379,21 +394,6 @@ describe SUSE::Connect::Client do
       subject.system_activations
     end
 
-  end
-
-  describe '#print_success_message' do
-
-    let(:product) { SUSE::Connect::Zypper::Product.new name: 'SLES', version: 12, arch: 's390' }
-
-    subject { Client.new(url: 'http://dummy:42', email: 'asd@asd.de', product: product, filesystem_root: '/') }
-
-    it 'prints message on successful register' do
-      expect($stdout).to receive(:puts).with('Registered SLES 12 s390')
-      expect($stdout).to receive(:puts).with('To server: http://dummy:42')
-      expect($stdout).to receive(:puts).with('Using EMail: asd@asd.de')
-      expect($stdout).to receive(:puts).with('Rooted at: /')
-      subject.print_success_message
-    end
   end
 
 end

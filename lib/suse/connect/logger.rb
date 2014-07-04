@@ -9,7 +9,7 @@ module SUSE
 
       def initialize(*args)
         super(*args)
-        self.level = ::Logger::WARN
+        self.level = ::Logger::INFO
         # by default log only the message
         self.formatter = proc do |severity, datetime, progname, msg|
           "#{msg}\n"
