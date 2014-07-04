@@ -134,7 +134,7 @@ module SUSE
 
         @opts.set_summary_width(24)
         @opts.parse(@argv)
-        log.info("cmd options: '#{@options}'")
+        log.debug("cmd options: '#{@options}'")
 
       end
 

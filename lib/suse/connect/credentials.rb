@@ -31,7 +31,7 @@ module SUSE
         raise MissingSccCredentialsFile unless File.exist?(file)
         content = File.read(file)
         user, passwd = parse(content)
-        log.info("Reading credentials from #{file}")
+        log.debug("Reading credentials from #{file}")
         credentials = Credentials.new(user, passwd, file)
         log.debug("Read credentials: #{credentials.username} : #{credentials.password}")
         credentials
@@ -47,7 +47,7 @@ module SUSE
         raise 'Invalid filename' if file.nil? || file.empty?
         dirname = File.dirname(filename)
         FileUtils.mkdir_p(dirname) unless File.exist?(dirname)
-        log.info("Writing credentials to #{filename}")
+        log.debug("Writing credentials to #{filename}")
         log.debug("Credentials to write: #{self}")
         File.write(filename, serialize, :perm => 0600)
       end

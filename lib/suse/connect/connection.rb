@@ -70,7 +70,7 @@ module SUSE
       # or the default if not set
       def verify_callback=(callback)
         if callback
-          log.info "Using custom verify_callback: #{callback.source_location.map(&:to_s).join(':')}"
+          log.debug "Using custom verify_callback: #{callback.source_location.map(&:to_s).join(':')}"
           http.verify_callback = callback
         else
           # log some error details which are not included in the SSL exception
