@@ -47,6 +47,9 @@ module SUSE
       rescue ApiError => e
         log.fatal "Error: SCC returned '#{e.message}' (#{e.code})"
         exit 67
+      rescue => e
+        log.fatal "SUSEConnect error: '#{e.message}'"
+        exit 68
       end
 
       private
