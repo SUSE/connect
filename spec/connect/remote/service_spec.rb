@@ -21,7 +21,7 @@ describe SUSE::Connect::Remote::Service do
     end
 
     it 'contains product' do
-      expect(service.product).to_not be_empty
+      expect(service.product).to_not be_nil
     end
 
   end

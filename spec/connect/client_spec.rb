@@ -32,7 +32,7 @@ describe SUSE::Connect::Client do
 
       it 'should set insecure flag from options if it was passed via constructor' do
         client = Client.new(:insecure => true)
-        expect(client.options[:insecure]).to be_true
+        expect(client.options[:insecure]).to be true
       end
 
       it 'allows to pass arbitrary options' do
@@ -348,7 +348,7 @@ describe SUSE::Connect::Client do
 
     it 'calls underlying api and removes credentials file' do
       allow(subject.api).to receive(:system_services).with('Basic: encodedstring').and_return stubbed_response
-      expect(subject.system_services).to be_true
+      expect(subject.system_services).to be true
     end
   end
 
@@ -367,7 +367,7 @@ describe SUSE::Connect::Client do
 
     it 'calls underlying api and removes credentials file' do
       expect(subject.api).to receive(:system_subscriptions).with('Basic: encodedstring').and_return stubbed_response
-      expect(subject.system_subscriptions).to be_true
+      expect(subject.system_subscriptions).to be true
     end
   end
 
