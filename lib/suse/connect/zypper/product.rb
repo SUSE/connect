@@ -12,7 +12,6 @@ class SUSE::Connect::Zypper::Product
     @isbase        = %w{1 true yes}.include?(product_hash[:isbase])
     @release_type  = determine_release_type product_hash
     @summary       = product_hash[:summary]
-    @release       = product_hash[:release]
   end
 
   private
