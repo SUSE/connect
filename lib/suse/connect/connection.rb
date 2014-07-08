@@ -23,6 +23,7 @@ module SUSE
         http             = Net::HTTP.new(uri.host, uri.port)
         http.use_ssl     = uri.is_a? URI::HTTPS
         http.verify_mode = insecure ? OpenSSL::SSL::VERIFY_NONE : OpenSSL::SSL::VERIFY_PEER
+        http.read_timeout = 60
 
         @http            = http
         @http.set_debug_output(STDERR) if debug
