@@ -21,6 +21,7 @@ describe SUSE::Connect::System do
 
     before :each do
       allow(Socket).to receive(:gethostname).and_return('blue_gene')
+      allow(subject).to receive(:uuid).and_return('randomcrypticstring')
       allow(subject).to receive('x86?').and_return(true)
       allow(subject).to receive(:execute).with('lscpu', false).and_return(lscpu)
     end
@@ -31,7 +32,8 @@ describe SUSE::Connect::System do
         cpus:        8,
         sockets:     1,
         hypervisor:  nil,
-        arch:        'x86_64'
+        arch:        'x86_64',
+        uuid: 'randomcrypticstring'
       )
     end
 

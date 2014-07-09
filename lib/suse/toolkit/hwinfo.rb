@@ -22,8 +22,8 @@ module SUSE::Toolkit::Hwinfo
   end
 
   def uuid
-    output = execute('dmidecode -s system-uuid', false)
-    output == 'Not Settable' ? nil : output
+    uuid_output = execute('dmidecode -s system-uuid', false)
+    uuid_output == 'Not Settable' ? nil : uuid_output
   end
 
   private
