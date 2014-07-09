@@ -179,9 +179,9 @@ if [ -s /etc/zypp/credentials.d/NCCcredentials ] && [ ! -e /etc/zypp/credentials
 fi
 
 if [ -s /etc/suseRegister.conf ]; then
-    reg_server=$(sed -n "s/^url[ ]*=[ ]\(.*\)/\1/p" /etc/suseRegister.conf)
+    reg_server=$(sed -n "s/^[[:space:]]*url[[:space:]]*=[[:space:]]*\(https\?:\/\/[^\/]*\).*/\1/p" /etc/suseRegister.conf)
     # if we have a custom regserver and no SCC config yet, write it
-    if [ -n "$reg_server" ] && [ "$reg_server" != "https://secure-www.novell.com/center/regsvc/" ] && [ ! -e /etc/SUSEConnect ]; then
+    if [ -n "$reg_server" ] && [ "$reg_server" != "https://secure-www.novell.com" ] && [ ! -e /etc/SUSEConnect ]; then
         echo "Imported /etc/suseRegister.conf registration server url to /etc/SUSEConnect"
         echo "url: $reg_server" > /etc/SUSEConnect
     fi
