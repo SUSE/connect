@@ -2,6 +2,7 @@ require 'suse/toolkit/system_calls'
 
 # Collects system hardware information
 module SUSE::Toolkit::Hwinfo
+
   include SUSE::Toolkit::SystemCalls
 
   def cpus
@@ -18,6 +19,11 @@ module SUSE::Toolkit::Hwinfo
 
   def arch
     output['Architecture']
+  end
+
+  def uuid
+    output = execute('dmidecode -s system-uuid', false)
+    output == 'Not Settable' ? nil : output
   end
 
   private

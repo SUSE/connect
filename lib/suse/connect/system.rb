@@ -75,6 +75,10 @@ module SUSE
           %w{x86, x86_64}.include? execute('uname -i', false)
         end
 
+        def uuid
+
+        end
+
       end
     end
   end

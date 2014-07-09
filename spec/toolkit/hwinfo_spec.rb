@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-# rubocop :(
+# rubocop:disable Documentation
 class DummyReceiver
   include SUSE::Toolkit::Hwinfo
 end
@@ -8,6 +8,7 @@ end
 describe SUSE::Toolkit::Hwinfo do
 
   subject { DummyReceiver.new }
+
   let(:success) { double('Process Status', :exitstatus => 0) }
   let(:lscpu) { File.read(File.join(fixtures_dir, 'lscpu_phys.txt')) }
 
@@ -55,4 +56,21 @@ describe SUSE::Toolkit::Hwinfo do
       end
     end
   end
+
+  describe '.uuid' do
+
+    it 'extracts uuid from dmidecode' do
+      mock_uuid = '4C4C4544-0059-4810-8034-C2C04F335931'
+      allow(subject).to receive(:execute).with('dmidecode -s system-uuid', false).and_return(mock_uuid)
+      expect(subject.uuid).to eq '4C4C4544-0059-4810-8034-C2C04F335931'
+    end
+
+    it 'return nil if uuid from dmidecode is Not Settable' do
+      mock_uuid = 'Not Settable'
+      allow(subject).to receive(:execute).with('dmidecode -s system-uuid', false).and_return(mock_uuid)
+      expect(subject.uuid).to be nil
+    end
+
+  end
+
 end
