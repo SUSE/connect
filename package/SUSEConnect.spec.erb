@@ -171,13 +171,20 @@ ln -s SUSEConnect.8.gz %{buildroot}%_mandir/man8/SUSEConnect-<%= spec.version %>
     %{_sbindir}/<%= executable %> <%= executable %> %{_sbindir}/<%= executable %>%{mod_branch} %{mod_weight}
 <% end -%>
 
-if [ -s /etc/zypp/credentials.d/NCCcredentials ]; then
-    # setting this to be able to run the script from within a zypper transaction
-    export ZYPP_READONLY_HACK=true
-    # TODO implement migration scenario in SUSEConnect and SCC API
-    # TODO the idea is to call product activate with token=auto
-    #echo "Migrating system from NCC to SCC"
-    #SUSEConnect --ncc
+# setting this to be able to run the script from within a zypper transaction
+# export ZYPP_READONLY_HACK=true
+if [ -s /etc/zypp/credentials.d/NCCcredentials ] && [ ! -e /etc/zypp/credentials.d/SCCcredentials ]; then
+    echo "Imported NCC system credentials to /etc/zypp/credentials.d/SCCcredentials"
+    cp /etc/zypp/credentials.d/NCCcredentials /etc/zypp/credentials.d/SCCcredentials
+fi
+
+if [ -s /etc/suseRegister.conf ]; then
+    reg_server=$(sed -n "s/^url[ ]*=[ ]\(.*\)/\1/p" /etc/suseRegister.conf)
+    # if we have a custom regserver and no SCC config yet, write it
+    if [ -n "$reg_server" ] && [ "$reg_server" != "https://secure-www.novell.com/center/regsvc/" ] && [ ! -e /etc/SUSEConnect ]; then
+        echo "Imported /etc/suseRegister.conf registration server url to /etc/SUSEConnect"
+        echo "url: $reg_server" > /etc/SUSEConnect
+    fi
 fi
 
 %preun
