@@ -1,4 +1,18 @@
 -------------------------------------------------------------------
+Thu Jul 10 11:33:37 UTC 2014 - achernikov@suse.de
+
+- Update to version 0.2.4 
+ - change the way we collect arch info. Former way `lscpu`, now
+   `uname -i`
+
+-------------------------------------------------------------------
+Thu Jul 10 11:32:31 UTC 2014 - achernikov@suse.de
+
+- Update to version 0.2.3
+ - Collect UUID on x86 platforms and send it to registration server
+   as a part of hwinfo hash 
+
+-------------------------------------------------------------------
 Mon Jul  7 15:05:16 UTC 2014 - achernikov@suse.de
 
 - Update to version 0.2.2
