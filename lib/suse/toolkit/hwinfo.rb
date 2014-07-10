@@ -22,11 +22,21 @@ module SUSE::Toolkit::Hwinfo
   end
 
   def uuid
-    uuid_output = execute('dmidecode -s system-uuid', false)
-    uuid_output == 'Not Settable' ? nil : uuid_output
+    if respond_to?("#{arch}_uuid", true)
+      send "#{arch}_uuid"
+    else
+      log.debug("Not implemented. Unable to determine UUID for #{arch}. Set to nil")
+      nil
+    end
   end
 
   private
+
+  # simple arch abstraction - as means to determine uuid can vary.
+  def x86_64_uuid
+    uuid_output = execute('dmidecode -s system-uuid', false)
+    uuid_output == 'Not Settable' ? nil : uuid_output
+  end
 
   def output
     @output ||= execute('lscpu', false).split("\n").reduce({}) do |hash, line|

@@ -59,16 +59,37 @@ describe SUSE::Toolkit::Hwinfo do
 
   describe '.uuid' do
 
-    it 'extracts uuid from dmidecode' do
-      mock_uuid = '4C4C4544-0059-4810-8034-C2C04F335931'
-      allow(subject).to receive(:execute).with('dmidecode -s system-uuid', false).and_return(mock_uuid)
-      expect(subject.uuid).to eq '4C4C4544-0059-4810-8034-C2C04F335931'
+    context :x86_64_arch do
+
+      it 'extracts uuid from dmidecode' do
+        mock_uuid = '4C4C4544-0059-4810-8034-C2C04F335931'
+        allow(subject).to receive(:execute).with('dmidecode -s system-uuid', false).and_return(mock_uuid)
+        allow(subject).to receive(:arch).and_return('x86_64')
+        expect(subject.uuid).to eq '4C4C4544-0059-4810-8034-C2C04F335931'
+      end
+
+      it 'return nil if uuid from dmidecode is Not Settable' do
+        mock_uuid = 'Not Settable'
+        allow(subject).to receive(:arch).and_return('x86_64')
+        allow(subject).to receive(:execute).with('dmidecode -s system-uuid', false).and_return(mock_uuid)
+        expect(subject.uuid).to be nil
+      end
+
     end
 
-    it 'return nil if uuid from dmidecode is Not Settable' do
-      mock_uuid = 'Not Settable'
-      allow(subject).to receive(:execute).with('dmidecode -s system-uuid', false).and_return(mock_uuid)
-      expect(subject.uuid).to be nil
+    context :arch_with_no_uuid_implementation do
+
+      it 'set uuid to nil' do
+        allow(subject).to receive(:arch).and_return('megusta')
+        expect(subject.uuid).to be nil
+      end
+
+      it 'produces debug log message' do
+        allow(subject).to receive(:arch).and_return('carbon')
+        expect(subject.log).to receive(:debug).with('Not implemented. Unable to determine UUID for carbon. Set to nil')
+        subject.uuid
+      end
+
     end
 
   end
