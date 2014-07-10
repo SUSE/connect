@@ -24,6 +24,7 @@ describe SUSE::Connect::System do
       allow(subject).to receive(:uuid).and_return('randomcrypticstring')
       allow(subject).to receive('x86?').and_return(true)
       allow(subject).to receive(:execute).with('lscpu', false).and_return(lscpu)
+      allow(subject).to receive(:execute).with('uname -i', false).and_return 'blob'
     end
 
     it 'collects basic hwinfo for x86/x86_64 systems ' do
@@ -32,14 +33,14 @@ describe SUSE::Connect::System do
         cpus:        8,
         sockets:     1,
         hypervisor:  nil,
-        arch:        'x86_64',
+        arch:        'blob',
         uuid: 'randomcrypticstring'
       )
     end
 
     it 'returns only hostname for other architectures' do
       allow(subject).to receive('x86?').and_return(false)
-      expect(subject.hwinfo).to eq(hostname: 'blue_gene')
+      expect(subject.hwinfo).to eq(hostname: 'blue_gene', arch: 'blob')
     end
   end
 

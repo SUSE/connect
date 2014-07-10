@@ -33,7 +33,8 @@ describe SUSE::Toolkit::Hwinfo do
     end
 
     it 'returns system architecture' do
-      expect(subject.arch).to eql 'x86_64'
+      allow(subject).to receive(:execute).with('uname -i', false).and_return 'blob'
+      expect(subject.arch).to eql 'blob'
     end
 
     describe '.hypervisor' do

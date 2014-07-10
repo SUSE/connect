@@ -18,7 +18,7 @@ module SUSE::Toolkit::Hwinfo
   end
 
   def arch
-    output['Architecture']
+    execute('uname -i', false)
   end
 
   def uuid

@@ -25,7 +25,10 @@ module SUSE
               uuid: uuid
             }
           else
-            { hostname: hostname }
+            {
+              hostname: hostname,
+              arch: arch
+            }
           end
         end
 
@@ -74,7 +77,7 @@ module SUSE
         end
 
         def x86?
-          %w{x86, x86_64}.include? execute('uname -i', false)
+          %w{x86, x86_64}.include? arch
         end
 
       end
