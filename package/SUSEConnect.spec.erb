@@ -171,8 +171,6 @@ ln -s SUSEConnect.8.gz %{buildroot}%_mandir/man8/SUSEConnect-<%= spec.version %>
     %{_sbindir}/<%= executable %> <%= executable %> %{_sbindir}/<%= executable %>%{mod_branch} %{mod_weight}
 <% end -%>
 
-# setting this to be able to run the script from within a zypper transaction
-# export ZYPP_READONLY_HACK=true
 if [ -s /etc/zypp/credentials.d/NCCcredentials ] && [ ! -e /etc/zypp/credentials.d/SCCcredentials ]; then
     echo "Imported NCC system credentials to /etc/zypp/credentials.d/SCCcredentials"
     cp /etc/zypp/credentials.d/NCCcredentials /etc/zypp/credentials.d/SCCcredentials
