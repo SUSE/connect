@@ -40,12 +40,8 @@ BuildRequires:  ruby-macros >= 1
 
 Requires: coreutils, util-linux, net-tools, hwinfo, zypper, ca-certificates-mozilla
 Conflicts: suseRegister
-%ifnarch ppc ppc64 ppc64le s390 s390x
-%if 0%{?suse_version} == 0 || %suse_version >= 1210
+%ifarch x86_64
 PreReq: dmidecode
-%else
-PreReq: pmtools
-%endif
 %endif
 
 <% for req in spec.required_ruby_version -%>

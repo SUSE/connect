@@ -5,6 +5,7 @@ module SUSE
     # System class allowing to interact with underlying system
     class System
       class << self
+
         include SUSE::Toolkit::Hwinfo
 
         attr_accessor :filesystem_root
@@ -20,7 +21,8 @@ module SUSE
               cpus: cpus,
               sockets: sockets,
               hypervisor: hypervisor,
-              arch: arch
+              arch: arch,
+              uuid: uuid
             }
           else
             { hostname: hostname }
