@@ -131,6 +131,26 @@ describe SUSE::Connect::Client do
 
     end
 
+    describe '#update_system' do
+
+      context :direct_connection do
+
+        subject { SUSE::Connect::Client.new({}) }
+
+        before do
+          subject.stub(:system_auth => 'auth')
+          Api.any_instance.stub(:update_system)
+        end
+
+        it 'calls underlying api' do
+          Api.any_instance.should_receive(:update_system).with('auth')
+          subject.update_system
+        end
+
+      end
+    end
+
+
     context :registration_proxy_connection do
 
       subject { SUSE::Connect::Client.new(:url => 'http://smt.local') }
