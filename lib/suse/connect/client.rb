@@ -39,7 +39,7 @@ module SUSE
 
       # Announces the system, activates the product on SCC and adds the service to the system
       def register!
-        announce_if_not_yet
+        announce_or_update
         product = @options[:product] || Zypper.base_product
         service = activate_product(product, @options[:email])
         System.add_service(service)
@@ -122,9 +122,12 @@ module SUSE
 
       private
 
-      # Announces the system to the server, receiving and storing its credentials
-      def announce_if_not_yet
-        unless System.credentials?
+      # Announces the system to the server, receiving and storing its credentials.
+      # When already announced, sends the current hardware details to the server
+      def announce_or_update
+        if System.credentials?
+          update_system
+        else
           login, password = announce_system(nil, @options[:instance_data_file])
           Credentials.new(login, password, Credentials.system_credentials_file).write
         end

@@ -249,6 +249,7 @@ describe SUSE::Connect::Client do
       Zypper.stub(:write_base_credentials)
       Credentials.any_instance.stub(:write)
       subject.stub(:activate_product)
+      subject.stub(:update_system)
     end
 
     it 'should call announce if system not registered' do
@@ -257,9 +258,10 @@ describe SUSE::Connect::Client do
       subject.register!
     end
 
-    it 'should not call announce on api if system registered' do
+    it 'should not call announce but update on api if system registered' do
       System.stub(:credentials? => true)
       subject.should_not_receive(:announce_system)
+      subject.should_receive(:update_system)
       subject.register!
     end
 
@@ -285,7 +287,7 @@ describe SUSE::Connect::Client do
     it 'prints message on successful register' do
       product = Zypper::Product.new(name: 'SLES', version: 12, arch: 's390')
       client = Client.new(url: 'http://dummy:42', email: 'asd@asd.de', product: product, filesystem_root: '/test')
-      client.stub(:announce_if_not_yet)
+      client.stub(:announce_or_update)
       client.stub(:activate_product)
       Zypper.stub(:base_product => product)
       SUSE::Connect::GlobalLogger.instance.log = string_logger
