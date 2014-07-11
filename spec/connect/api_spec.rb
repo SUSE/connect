@@ -276,7 +276,7 @@ describe SUSE::Connect::Api do
 
     it 'is authenticated via basic auth' do
       payload = [
-        '/connect/systems/',
+        '/connect/systems',
         :auth => 'Basic: encodedgibberish'
       ]
 
@@ -294,6 +294,35 @@ describe SUSE::Connect::Api do
 
     it 'returns empty body' do
       body = subject.new(client).deregister('Basic: encodedgibberish').body
+      body.should be_nil
+    end
+  end
+
+
+  describe 'update' do
+
+    before do
+      stub_update_call
+      System.stub(:hostname => 'connect')
+      System.stub(:hwinfo => 'hwinfo')
+    end
+
+    it 'is authenticated via basic auth' do
+      payload = [
+        '/connect/systems',
+        :auth => 'Basic: encodedgibberish', :params=>{:hostname=>"connect", :hwinfo=>"hwinfo"}
+      ]
+      Connection.any_instance.should_receive(:put).with(*payload).and_call_original
+      subject.new(client).update_system('Basic: encodedgibberish')
+    end
+
+    it 'responds with proper status code' do
+      response = subject.new(client).update_system('Basic: encodedgibberish')
+      response.code.should eq 204
+    end
+
+    it 'returns empty body' do
+      body = subject.new(client).update_system('Basic: encodedgibberish').body
       body.should be_nil
     end
   end
