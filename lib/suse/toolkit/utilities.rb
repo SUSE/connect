@@ -9,7 +9,7 @@ module SUSE
         "Token token=#{token}"
       end
 
-      def basic_auth
+      def system_auth
         system_credentials = SUSE::Connect::Credentials.read(SUSE::Connect::Credentials.system_credentials_file)
         username = system_credentials.username
         password = system_credentials.password

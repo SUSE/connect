@@ -165,11 +165,11 @@ describe SUSE::Connect::Client do
       api_response = double('api_response')
       api_response.stub(:body => { 'name' => 'kinkat', 'url' => 'kinkaturl', 'product' => {} })
       Api.any_instance.stub(:activate_product => api_response)
-      subject.stub(:basic_auth => 'secretsecret')
+      subject.stub(:system_auth => 'secretsecret')
     end
 
     it 'gets login and password from system' do
-      subject.should_receive(:basic_auth)
+      subject.should_receive(:system_auth)
       subject.activate_product(product_ident)
     end
 
@@ -200,11 +200,11 @@ describe SUSE::Connect::Client do
       api_response = double('api_response')
       api_response.stub(:body => { 'name' => 'tongobongo', 'url' => 'tongobongourl', 'product' => {} })
       Api.any_instance.stub(:upgrade_product => api_response)
-      subject.stub(:basic_auth => 'secretsecret')
+      subject.stub(:system_auth => 'secretsecret')
     end
 
     it 'gets login and password from system' do
-      subject.should_receive(:basic_auth)
+      subject.should_receive(:system_auth)
       subject.upgrade_product(product_ident)
     end
 
@@ -293,7 +293,7 @@ describe SUSE::Connect::Client do
     let(:product) { Remote::Product.new(:identifier => 'text_identifier')  }
 
     before do
-      subject.stub(:basic_auth => 'Basic: encodedstring')
+      subject.stub(:system_auth => 'Basic: encodedstring')
     end
 
     it 'collects data from api response' do
@@ -319,7 +319,7 @@ describe SUSE::Connect::Client do
 
     before do
       System.should_receive(:remove_credentials).and_return(true)
-      subject.stub(:basic_auth => 'Basic: encodedstring')
+      subject.stub(:system_auth => 'Basic: encodedstring')
     end
 
     it 'calls underlying api and removes credentials file' do
@@ -347,7 +347,7 @@ describe SUSE::Connect::Client do
     end
 
     before do
-      subject.stub(:basic_auth => 'Basic: encodedstring')
+      subject.stub(:system_auth => 'Basic: encodedstring')
     end
 
     it 'calls underlying api and removes credentials file' do
@@ -366,7 +366,7 @@ describe SUSE::Connect::Client do
     end
 
     before do
-      subject.stub(:basic_auth => 'Basic: encodedstring')
+      subject.stub(:system_auth => 'Basic: encodedstring')
     end
 
     it 'calls underlying api and removes credentials file' do
@@ -386,7 +386,7 @@ describe SUSE::Connect::Client do
     end
 
     before do
-      subject.stub(:basic_auth => 'Basic: encodedstring')
+      subject.stub(:system_auth => 'Basic: encodedstring')
     end
 
     it 'calls underlying api with system_activations call' do

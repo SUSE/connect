@@ -174,7 +174,7 @@ describe SUSE::Connect::Api do
   describe 'activate_product' do
 
     let(:api_endpoint) { '/connect/systems/products' }
-    let(:basic_auth) { 'basic_auth_mock' }
+    let(:system_auth) { 'basic_auth_mock' }
 
     let(:product) { Remote::Product.new(:identifier => 'SLES', :version => '11-SP2', :arch => 'x86_64', :token => 'token-shmocken') }
 
@@ -192,9 +192,9 @@ describe SUSE::Connect::Api do
     it 'calls ConnectAPI with basic auth and params and receives a JSON in return (use proper webmock)' do
       stub_activate_call
       Connection.any_instance.should_receive(:post)
-        .with(api_endpoint, :auth => basic_auth, :params => payload)
+        .with(api_endpoint, :auth => system_auth, :params => payload)
         .and_call_original
-      response = subject.new(client).activate_product(basic_auth, product)
+      response = subject.new(client).activate_product(system_auth, product)
       response.body['name'].should eq 'SUSE_Linux_Enterprise_Server_12_x86_64'
     end
 
@@ -202,8 +202,8 @@ describe SUSE::Connect::Api do
       email = 'email@domain.com'
       payload[:email] = email
       Connection.any_instance.should_receive(:post)
-        .with(api_endpoint, :auth => basic_auth, :params => payload)
-      subject.new(client).activate_product(basic_auth, product, email)
+        .with(api_endpoint, :auth => system_auth, :params => payload)
+      subject.new(client).activate_product(system_auth, product, email)
     end
 
   end
@@ -211,7 +211,7 @@ describe SUSE::Connect::Api do
   describe 'upgrade_product' do
 
     let(:api_endpoint) { '/connect/systems/products' }
-    let(:basic_auth) { 'basic_auth_mock' }
+    let(:system_auth) { 'basic_auth_mock' }
 
     let(:product) { Remote::Product.new(:identifier => 'SLES', :version => '12', :arch => 'x86_64') }
 
@@ -227,9 +227,9 @@ describe SUSE::Connect::Api do
     it 'calls ConnectAPI with basic auth and params and receives a JSON in return' do
       stub_upgrade_call
       Connection.any_instance.should_receive(:put)
-      .with(api_endpoint, :auth => basic_auth, :params => payload)
+      .with(api_endpoint, :auth => system_auth, :params => payload)
       .and_call_original
-      response = subject.new(client).upgrade_product(basic_auth, product)
+      response = subject.new(client).upgrade_product(system_auth, product)
       response.body['sources'].keys.first.should include('SUSE')
     end
 
