@@ -20,6 +20,15 @@ module SUSE
           Client.new(client_params).announce_system(distro_target)
         end
 
+        # Updates the systems hardware info on the server
+        # @param [Hash] client_params parameters to instantiate {Client}
+        # @param [String] distro_target desired distro target
+        #
+        # @return [Array <String>] SCC / system credentials - login and password tuple
+        def update_system(client_params = {})
+          Client.new(client_params).update_system
+        end
+
         # Activates a product on SCC / the registration server.
         # Expects product_ident parameter to be a hash identifying the product.
         # Requires a token / regcode except for free products/extensions.
@@ -56,7 +65,7 @@ module SUSE
         # @param product [Remote::Product] product to list extensions for
         #
         # @return [Product] {Product}s from registration server with all extensions included
-        def show_product(product, client_params  = {})
+        def show_product(product, client_params = {})
           Client.new(client_params).show_product(product)
         end
 

@@ -13,7 +13,7 @@ module SUSE
 
       attr_reader :options, :url, :api
 
-      def initialize(opts)
+      def initialize(opts={})
         @config = Config.new
 
         @options            = opts
@@ -37,7 +37,7 @@ module SUSE
         end
       end
 
-      # Activates a product and writes credentials file if the system was not yet announced
+      # Announces the system, activates the product on SCC and adds the service to the system
       def register!
         announce_if_not_yet
         product = @options[:product] || Zypper.base_product
@@ -122,6 +122,7 @@ module SUSE
 
       private
 
+      # Announces the system to the server, receiving and storing its credentials
       def announce_if_not_yet
         unless System.credentials?
           login, password = announce_system(nil, @options[:instance_data_file])
