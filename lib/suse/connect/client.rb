@@ -13,7 +13,7 @@ module SUSE
 
       attr_reader :options, :url, :api
 
-      def initialize(opts)
+      def initialize(opts = {})
         @config = Config.new
 
         @options            = opts
@@ -37,9 +37,9 @@ module SUSE
         end
       end
 
-      # Activates a product and writes credentials file if the system was not yet announced
+      # Announces the system, activates the product on SCC and adds the service to the system
       def register!
-        announce_if_not_yet
+        announce_or_update
         product = @options[:product] || Zypper.base_product
         service = activate_product(product, @options[:email])
         System.add_service(service)
@@ -48,7 +48,7 @@ module SUSE
 
       # @returns: Empty body and 204 status code
       def deregister!
-        @api.deregister(basic_auth)
+        @api.deregister(system_auth)
         System.remove_credentials
       end
 
@@ -66,12 +66,18 @@ module SUSE
         [response.body['login'], response.body['password']]
       end
 
+      # Re-send the system's hardware details on SCC
+      #
+      def update_system
+        @api.update_system(system_auth)
+      end
+
       # Activate a product
       #
       # @param product [SUSE::Connect::Zypper::Product]
       # @returns: Service for this product
       def activate_product(product, email = nil)
-        result = @api.activate_product(basic_auth, product, email).body
+        result = @api.activate_product(system_auth, product, email).body
         Remote::Service.new(result)
       end
 
@@ -81,17 +87,17 @@ module SUSE
       # @param product [Remote::Product] desired product to be upgraded
       # @returns: Service for this product
       def upgrade_product(product)
-        result = @api.upgrade_product(basic_auth, product).body
+        result = @api.upgrade_product(system_auth, product).body
         Remote::Service.new(result)
       end
 
       # @param product [Remote::Product] product to query extensions for
       def show_product(product)
-        result = @api.show_product(basic_auth, product).body
+        result = @api.show_product(system_auth, product).body
         Remote::Product.new(result)
       end
 
-      # writes the config file
+      # writes the config file to disk with the currently active config options
       def write_config
         @config.write
       end
@@ -99,25 +105,29 @@ module SUSE
       # @returns: body described in https://github.com/SUSE/connect/wiki/SCC-API-(Implemented)#response-12 and
       # 200 status code
       def system_services
-        @api.system_services(basic_auth)
+        @api.system_services(system_auth)
       end
 
       # @returns: body described in https://github.com/SUSE/connect/wiki/SCC-API-(Implemented)#response-13 and
       # 200 status code
       def system_subscriptions
-        @api.system_subscriptions(basic_auth)
+        @api.system_subscriptions(system_auth)
       end
 
       # @returns: body described in https://github.com/SUSE/connect/wiki/SCC-API-(Implemented)#response-14 and
       # 200 status code
       def system_activations
-        @api.system_activations(basic_auth)
+        @api.system_activations(system_auth)
       end
 
       private
 
-      def announce_if_not_yet
-        unless System.credentials?
+      # Announces the system to the server, receiving and storing its credentials.
+      # When already announced, sends the current hardware details to the server
+      def announce_or_update
+        if System.credentials?
+          update_system
+        else
           login, password = announce_system(nil, @options[:instance_data_file])
           Credentials.new(login, password, Credentials.system_credentials_file).write
         end

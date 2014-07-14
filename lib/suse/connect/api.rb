@@ -44,6 +44,21 @@ module SUSE
         @connection.post('/connect/subscriptions/systems', :auth => auth, :params => payload)
       end
 
+      # Re-send the system's hardware info to SCC.
+      # @note https://github.com/SUSE/connect/wiki/SCC-API-%28Implemented%29#update-system
+      #
+      # @param auth [String] authorization string which will be injected in 'Authorization' header in request.
+      #   In this case we expect Base64 encoded string with login and password
+      # @return [OpenStruct] responding to #body(response from SCC), #code(natural HTTP response code) and #success.
+      #
+      def update_system(auth)
+        payload = {
+          :hostname      => System.hostname,
+          :hwinfo        => System.hwinfo
+        }
+        @connection.put('/connect/systems', :auth => auth, :params => payload)
+      end
+
       # Activate a product, consuming an entitlement, and receive the service for this
       # combination of subscription, installed product, and architecture.
       #
@@ -103,7 +118,7 @@ module SUSE
       # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
       #
       def deregister(auth)
-        @connection.delete('/connect/systems/', :auth => auth)
+        @connection.delete('/connect/systems', :auth => auth)
       end
 
       # Gets a list of services known by the system with system credentials

@@ -33,6 +33,17 @@ describe SUSE::Connect::YaST do
 
   end
 
+  describe '#update_system' do
+
+    before { Client.any_instance.stub :update_system }
+
+    it 'calls update_system on an instance of Client' do
+      Client.any_instance.should_receive(:update_system)
+      subject.update_system
+    end
+
+  end
+
   describe '#activate_product' do
 
     let(:client_params) { { token: 'regcode' } }

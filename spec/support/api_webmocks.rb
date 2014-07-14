@@ -60,9 +60,18 @@ end
 def stub_deregister_call
   headers = { 'Accept' => api_header_version, \
               'Authorization' => 'Basic: encodedgibberish' }
-  stub_request(:delete, 'https://example.com/connect/systems/')
+  stub_request(:delete, 'https://example.com/connect/systems')
     .with(:headers => headers)
     .to_return(:status => 204, :body => '', :headers => {})
+
+end
+
+def stub_update_call
+  headers = { 'Accept' => api_header_version, \
+              'Authorization' => 'Basic: encodedgibberish' }
+  stub_request(:put, 'https://example.com/connect/systems')
+  .with(:headers => headers)
+  .to_return(:status => 204, :body => '', :headers => {})
 
 end
 
