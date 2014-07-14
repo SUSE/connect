@@ -192,4 +192,14 @@ describe SUSE::Connect::Cli do
     end
   end
 
+  describe 'reads environment variables' do
+    it 'sets language header based on LANG' do
+      # is ENV global?
+      ENV['LANG'] = 'de'
+      cli = subject.new([])
+      expect(cli.options[:language]).to eq 'de'
+    end
+
+  end
+
 end
