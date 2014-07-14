@@ -136,12 +136,6 @@ describe SUSE::Connect::Cli do
       cli.options[:url].should eq 'test'
     end
 
-    it 'sets language options' do
-      argv = %w{-l de}
-      cli = subject.new(argv)
-      cli.options[:language].should eq 'de'
-    end
-
     it 'puts version on version flag' do
       argv = %w{--version}
       subject.any_instance.should_receive(:puts).with(VERSION)
