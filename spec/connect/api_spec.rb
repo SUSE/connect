@@ -298,7 +298,6 @@ describe SUSE::Connect::Api do
     end
   end
 
-
   describe 'update' do
 
     before do
@@ -310,7 +309,7 @@ describe SUSE::Connect::Api do
     it 'is authenticated via basic auth' do
       payload = [
         '/connect/systems',
-        :auth => 'Basic: encodedgibberish', :params=>{:hostname=>"connect", :hwinfo=>"hwinfo"}
+        :auth => 'Basic: encodedgibberish', :params => { :hostname => 'connect', :hwinfo => 'hwinfo' }
       ]
       Connection.any_instance.should_receive(:put).with(*payload).and_call_original
       subject.new(client).update_system('Basic: encodedgibberish')

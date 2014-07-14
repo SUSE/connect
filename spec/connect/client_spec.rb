@@ -150,7 +150,6 @@ describe SUSE::Connect::Client do
       end
     end
 
-
     context :registration_proxy_connection do
 
       subject { SUSE::Connect::Client.new(:url => 'http://smt.local') }

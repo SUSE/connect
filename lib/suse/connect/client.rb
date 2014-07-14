@@ -13,7 +13,7 @@ module SUSE
 
       attr_reader :options, :url, :api
 
-      def initialize(opts={})
+      def initialize(opts = {})
         @config = Config.new
 
         @options            = opts
