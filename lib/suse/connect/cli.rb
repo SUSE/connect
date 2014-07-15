@@ -138,7 +138,9 @@ module SUSE
       end
 
       def extract_environment
-        @options[:language] = ENV['LANG'] unless ENV['LANG'].nil?
+        if ENV['LANG']
+          @options[:language] = ENV['LANG']
+        end
       end
 
       def check_if_param(opt, message)
