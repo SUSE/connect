@@ -53,40 +53,67 @@ describe SUSE::Connect::Status do
 
     it 'memoizes known_activations by the first call' do
       allow(Status).to receive(:activations_from_server).and_return(:superdo)
-      expect(Status.known_activations).to be Status.known_activations
+      expect(Status.activations).to be Status.activations
     end
 
     it 'calls products_from_zypper from Status class' do
       expect(Status).to receive(:activations_from_server)
-      Status.known_activations
+      Status.activations
     end
 
   end
 
   describe '.print_product_statuses' do
 
-    it 'reads template from erb file' do
-      expect(File).to receive(:read).with(include('templates/text_status.erb')).and_return '111'
-      allow(described_class).to receive(:puts)
-      described_class.print_product_statuses
+    describe 'text format' do
+
+      it 'reads template from erb file' do
+        expect(File).to receive(:read).with(include('templates/product_statuses.text.erb')).and_return '111'
+        allow(described_class).to receive(:puts)
+        described_class.print_product_statuses
+      end
+
+      it 'builds proper erb entity' do
+        allow(File).to receive(:read).and_return('blaherbfile')
+        allow(described_class).to receive(:puts)
+        mock_erb = double('mock_erb')
+        allow(mock_erb).to receive(:result)
+        expect(ERB).to receive(:new).with('blaherbfile', 0, '-<>').and_return mock_erb
+        described_class.print_product_statuses
+      end
+
+      it 'outputs the result of parsing erb with bindings' do
+        allow(File).to receive(:read).and_return('blaherbfile')
+        expect(described_class).to receive(:puts).with('parsed erb output')
+        mock_erb = double('mock_erb')
+        allow(mock_erb).to receive(:result).and_return('parsed erb output')
+        allow(ERB).to receive(:new).with('blaherbfile', 0, '-<>').and_return mock_erb
+        described_class.print_product_statuses
+      end
+
     end
 
-    it 'builds proper erb entity' do
-      allow(File).to receive(:read).and_return('blaherbfile')
-      allow(described_class).to receive(:puts)
-      mock_erb = double('mock_erb')
-      allow(mock_erb).to receive(:result)
-      expect(ERB).to receive(:new).with('blaherbfile', 0, '-<>').and_return mock_erb
-      described_class.print_product_statuses
+    describe 'json format' do
+
+      it 'outputs the system status in json format' do
+        status = Zypper::ProductStatus.new(Zypper::Product.new({}))
+        status.stub(:registration_status) { 'test' }
+        status.stub(:remote_product) { true }
+        status.stub_chain(:remote_product, :free).and_return(false)
+        activation = SUSE::Connect::Remote::Activation.new('service' => { 'product' => {} })
+        status.stub(:related_activation).and_return(activation)
+
+        expect(described_class).to receive(:product_statuses).and_return [status]
+        status_output = described_class.print_product_statuses(:json)
+        expect(status_output).to be_instance_of String
+        puts status_output
+        expect(JSON.parse(status_output).first['status']).to eq 'test'
+      end
+
     end
 
-    it 'outputs the result of parsing erb with bindings' do
-      allow(File).to receive(:read).and_return('blaherbfile')
-      expect(described_class).to receive(:puts).with('parsed erb output')
-      mock_erb = double('mock_erb')
-      allow(mock_erb).to receive(:result).and_return('parsed erb output')
-      allow(ERB).to receive(:new).with('blaherbfile', 0, '-<>').and_return mock_erb
-      described_class.print_product_statuses
+    it 'errors out on unsupported format' do
+      expect { described_class.print_product_statuses(:xml) }.to raise_error
     end
 
   end

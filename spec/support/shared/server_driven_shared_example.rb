@@ -15,7 +15,7 @@ RSpec.shared_examples 'server driven model' do
     end
 
     it 'raises error if not hash passed to initializer' do
-      expect { subject.new(:foo) }.to raise_error ArgumentError, 'Only Hash instance accepted'
+      expect { subject.new(:foo) }.to raise_error ArgumentError, /Only Hash instance accepted/
     end
 
   end

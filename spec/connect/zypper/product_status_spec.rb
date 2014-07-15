@@ -68,7 +68,7 @@ describe SUSE::Connect::Zypper::ProductStatus do
       activation = double('activation')
       remote_product = Remote::Product.new(:identifier => :foo, :version => 42, :arch => :wax)
       activation.stub_chain(:service, :product).and_return remote_product
-      allow(SUSE::Connect::Status).to receive(:known_activations).and_return [activation]
+      allow(SUSE::Connect::Status).to receive(:activations).and_return [activation]
       allow(subject).to receive(:remote_product).and_return remote_product
       expect(subject.related_activation).to eq activation
     end
