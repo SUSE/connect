@@ -5,8 +5,10 @@ describe SUSE::Toolkit::CurlrcDotfile do
 
   let(:curlrc_location) { File.join(Etc.getpwuid.dir, described_class::CURLRC_LOCATION) }
   let(:fixture_curlrc) { File.readlines('spec/fixtures/curlrc_example.dotfile') }
-  let(:proper_line_with_credentials) { %Q{--proxy-user "meuser:mepassord"\n} }
-  let(:garbled_line_with_credentials) { %Q{--proxy-user meusermepassord"\n} }
+  let(:proper_line_with_credentials) do %Q(--proxy-user "meuser:mepassord"
+) end
+  let(:garbled_line_with_credentials) do %Q(--proxy-user meusermepassord"
+) end
 
   subject { described_class.new }
 
@@ -60,7 +62,6 @@ describe SUSE::Toolkit::CurlrcDotfile do
 
   end
 
-
   describe '#username' do
 
     context 'string with credentials is matching' do
@@ -88,7 +89,6 @@ describe SUSE::Toolkit::CurlrcDotfile do
     end
 
   end
-
 
   describe '#line_with_credentials' do
 

@@ -21,6 +21,10 @@ module SUSE
       def initialize(endpoint, language: nil, insecure: false, debug: false, verify_callback: nil)
         uri              = URI.parse(endpoint)
         http             = Net::HTTP.new(uri.host, uri.port)
+        if http.proxy?
+          http.proxy_user = SUSE::Toolkit::CurlrcDotfile.new.username
+          http.proxy_pass = SUSE::Toolkit::CurlrcDotfile.new.password
+        end
         http.use_ssl     = uri.is_a? URI::HTTPS
         http.verify_mode = insecure ? OpenSSL::SSL::VERIFY_NONE : OpenSSL::SSL::VERIFY_PEER
         http.read_timeout = 60
