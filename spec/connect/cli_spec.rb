@@ -52,12 +52,6 @@ describe SUSE::Connect::Cli do
         cli.execute!
       end
 
-      it 'should produce log output for any other exception' do
-        string_logger.should_receive(:fatal).with("SUSEConnect error: 'Boom'")
-        Client.any_instance.stub(:register!).and_raise 'Boom'
-        cli.execute!
-      end
-
     end
 
     context 'parameter dependencies' do
@@ -92,11 +86,17 @@ describe SUSE::Connect::Cli do
 
     context 'status subcommand' do
 
-      let(:cli) { subject.new(%w{--status}) }
-
-      it 'calls Client.status.print' do
+      it '--status calls json_product_status' do
+        cli = subject.new(%w{--status})
         expect_any_instance_of(Client).to_not receive(:register!)
-        expect(Status).to receive(:print_product_statuses)
+        expect(Status).to receive(:json_product_status)
+        cli.execute!
+      end
+
+      it '--status-text calls text_product_status' do
+        cli = subject.new(%w{--status-text})
+        expect_any_instance_of(Client).to_not receive(:register!)
+        expect(Status).to receive(:text_product_status)
         cli.execute!
       end
 

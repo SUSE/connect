@@ -1,7 +1,8 @@
 Installed Products:
 ------------------------------------------
 <% product_statuses.each do |product_status| %>
-  <%= product_status.installed_product.summary %> <%= product_status.installed_product.arch %>
+  <%= product_status.installed_product.summary %>
+  (<%= product_status.installed_product.identifier %>/<%= product_status.installed_product.version %>/<%= product_status.installed_product.arch %>)
 
   <%= product_status.registration_status %>
   <% unless product_status.remote_product && product_status.remote_product.free -%>

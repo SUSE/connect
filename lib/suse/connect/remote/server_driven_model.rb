@@ -4,7 +4,9 @@ require 'ostruct'
 class SUSE::Connect::Remote::ServerDrivenModel < OpenStruct
 
   def initialize(json_response_hash)
-    raise ArgumentError, 'Only Hash instance accepted' unless json_response_hash.is_a?(Hash)
+    unless json_response_hash.kind_of?(Hash)
+      raise ArgumentError, "#{self.class.name}: Only Hash instance accepted, got #{json_response_hash.class}"
+    end
     super
   end
 

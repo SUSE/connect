@@ -18,7 +18,9 @@ module SUSE
       def execute! # rubocop:disable MethodLength, CyclomaticComplexity
         # check for parameter dependencies
         if @options[:status]
-          Status.print_product_statuses
+          Status.print_product_statuses(:json)
+        elsif @options[:status_text]
+          Status.print_product_statuses(:text)
         else
           if @options[:instance_data_file] && !@options[:url]
             log.error 'Please use --instance-data only in combination with --url pointing to your SMT server'
@@ -47,9 +49,6 @@ module SUSE
       rescue ApiError => e
         log.fatal "Error: SCC returned '#{e.message}' (#{e.code})"
         exit 67
-      rescue => e
-        log.fatal "SUSEConnect error: '#{e.message}'"
-        exit 68
       end
 
       private
@@ -102,8 +101,12 @@ module SUSE
           @options[:url] = opt
         end
 
-        @opts.on('-s', '--status', 'get current system registration status') do |opt|
+        @opts.on('-s', '--status', 'get current system registration status in json format') do |opt|
           @options[:status] = true
+        end
+
+        @opts.on('--status-text', 'get current system registration status in text format') do |opt|
+          @options[:status_text] = true
         end
 
         @opts.separator ''

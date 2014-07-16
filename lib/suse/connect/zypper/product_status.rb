@@ -13,13 +13,14 @@ class SUSE::Connect::Zypper::ProductStatus
     registered? ? REGISTRATION_STATUS_MESSAGES.first : REGISTRATION_STATUS_MESSAGES.last
   end
 
+  # Checks if the installed product is activated on the registration server
   def registered?
     !!remote_product
   end
 
   def related_activation
     return nil unless remote_product
-    SUSE::Connect::Status.known_activations.find do |activation|
+    SUSE::Connect::Status.activations.find do |activation|
       activation.service.product == remote_product
     end
   end
