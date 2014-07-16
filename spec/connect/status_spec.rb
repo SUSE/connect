@@ -144,6 +144,7 @@ describe SUSE::Connect::Status do
       it 'uses clients response to collect info' do
         fake_client = double('client')
         allow(Client).to receive(:new).and_return(fake_client)
+        SUSE::Connect::System.stub(:credentials?) { true }
         fake_client.stub_chain(:system_activations, :body, :map).and_return [1, 2, 3]
         expect(subject.send(:products_from_activations)).to eq [1, 2, 3]
       end

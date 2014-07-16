@@ -91,6 +91,7 @@ module SUSE
         end
 
         def system_activations
+          return [] unless SUSE::Connect::System.credentials?
           @system_activations ||= client.system_activations.body
         end
 
