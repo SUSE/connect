@@ -33,4 +33,9 @@ module SUSE
     end
 
   end
+  # Toolkit module holds useful tools to operate of various aspects of system data and collect needed info
+  module Toolkit
+    require 'suse/toolkit/curlrc_dotfile'
+  end
+
 end
