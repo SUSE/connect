@@ -104,10 +104,8 @@ describe SUSE::Connect::Status do
         status.stub(:related_activation).and_return(activation)
 
         expect(described_class).to receive(:product_statuses).and_return [status]
-        status_output = described_class.print_product_statuses(:json)
-        expect(status_output).to be_instance_of String
-        puts status_output
-        expect(JSON.parse(status_output).first['status']).to eq 'test'
+        expect(described_class).to receive(:puts)
+        described_class.print_product_statuses(:json)
       end
 
     end

@@ -32,24 +32,25 @@ module SUSE
         def print_product_statuses(format = :text)
           case format
           when :text
-            print_text_product_status
+            status_output = text_product_status
           when :json
-            print_json_product_status
+            status_output = json_product_status
           else
             raise "Unsupported output format '#{format}'"
           end
+          puts status_output
         end
 
         private
 
-        def print_text_product_status
+        def text_product_status
           file = File.read File.join(File.dirname(__FILE__), 'templates/product_statuses.text.erb')
           template = ERB.new(file, 0, '-<>')
-          puts template.result(binding)
+          template.result(binding)
         end
 
         # rubocop:disable MethodLength
-        def print_json_product_status
+        def json_product_status
           statuses = product_statuses.map do |product_status|
             status = {}
             status[:identifier] = product_status.installed_product.identifier
