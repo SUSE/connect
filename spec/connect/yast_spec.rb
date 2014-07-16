@@ -143,14 +143,25 @@ describe SUSE::Connect::YaST do
 
     it 'returns false if no credentials' do
       expect(System).to receive(:credentials?).and_return(false)
-      subject.product_activated? product
+      expect(subject.product_activated?(product)).to be_false
     end
 
     it 'checks if the given product is already activated in SCC' do
       expect(System).to receive(:credentials?).and_return(true)
       expect(Status).to receive(:activated_products).and_return([product])
-      subject.product_activated? product
+      expect(subject.product_activated?(product)).to be_true
     end
+
+    it 'allows to pass a Hash with params to instantiate the client' do
+      expect(System).to receive(:credentials?).and_return(true)
+      client = double 'status'
+      params_hash = { foo: 'bar' }
+      expect(Client).to receive(:new).with(params_hash).and_return(client)
+      expect(Status).to receive(:client=).with(client)
+      expect(Status).to receive(:activated_products).and_return([product])
+      expect(subject.product_activated?(product, params_hash)).to be_true
+    end
+
   end
 
   describe '#write_config' do

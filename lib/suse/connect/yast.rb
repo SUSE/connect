@@ -63,6 +63,7 @@ module SUSE
         # Gets the list from SCC and returns them.
         #
         # @param product [Remote::Product] product to list extensions for
+        # @param [Hash] client_params parameters to instantiate {Client}
         #
         # @return [Product] {Product}s from registration server with all extensions included
         def show_product(product, client_params = {})
@@ -71,12 +72,12 @@ module SUSE
 
         # Checks if the given product is already activated in SCC
         # @param product [Remote::Product] product
+        # @param [Hash] client_params parameters to instantiate {Client}
         #
         # @return Boolean
-        def product_activated?(product)
-          if SUSE::Connect::System.credentials?
-            SUSE::Connect::Status.activated_products.include?(product)
-          end
+        def product_activated?(product, client_params = {})
+          return false unless SUSE::Connect::System.credentials?
+          status(client_params).activated_products.include?(product)
         end
 
         # Writes the config file with the given parameters, overwriting any existing contents
