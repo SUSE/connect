@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Jul 16 13:34:40 UTC 2014 - achernikov@suse.de
+
+- Update to version 0.2.6
+  - close bnc#885957 (use proxy credentials from .curlrc file) 
+
+-------------------------------------------------------------------
 Wed Jul 16 11:42:51 UTC 2014 - tschmidt@suse.com
 
 - Add machine readable output (json format) to status call
