@@ -1,0 +1,5 @@
+
+# Changed by YaST2 module proxy 07/15/14
+--proxy-user "meuser:mepassord"
+--proxy "http://127.0.0.1:3128"
+--proxy-digest

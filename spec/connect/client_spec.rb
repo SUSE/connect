@@ -51,13 +51,13 @@ describe SUSE::Connect::Client do
       before do
         SUSE::Connect::Config.any_instance.stub(:read).and_return(
             'regcode' => 'from_config',
-            'url' => 'localhost',
+            'url' => 'https://localsmt.domain.local',
             'language' => 'RU'
         )
       end
 
       it 'should set url to the config URL' do
-        expect(subject.url).to eq 'localhost'
+        expect(subject.url).to eq 'https://localsmt.domain.local'
       end
 
       it 'should set token to one from config file' do
@@ -72,7 +72,7 @@ describe SUSE::Connect::Client do
 
     context :override_config_file_with_opts do
 
-      subject { Client.new(url: 'smtserver') }
+      subject { Client.new(url: 'https://localsmt.domain.local') }
 
       before do
         SUSE::Connect::Config.any_instance.stub(:read).and_return(
@@ -83,11 +83,11 @@ describe SUSE::Connect::Client do
       end
 
       it 'url should be from options, not configfile' do
-        expect(subject.url).to eq 'smtserver'
+        expect(subject.url).to eq 'https://localsmt.domain.local'
       end
 
       it 'should set url in config to that form opts' do
-        expect(subject.instance_variable_get(:@config).url).to eq 'smtserver'
+        expect(subject.instance_variable_get(:@config).url).to eq 'https://localsmt.domain.local'
       end
 
     end

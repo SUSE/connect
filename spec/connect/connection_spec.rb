@@ -19,6 +19,24 @@ describe SUSE::Connect::Connection do
       secure_connection.http.address.should eq 'example.com'
     end
 
+    context :proxy_detected do
+
+      before do
+        allow_any_instance_of(Net::HTTP).to receive(:proxy?).and_return(true)
+        allow_any_instance_of(SUSE::Toolkit::CurlrcDotfile).to receive(:username).and_return('robot')
+        allow_any_instance_of(SUSE::Toolkit::CurlrcDotfile).to receive(:password).and_return('gobot')
+      end
+
+      it 'sets proxy_user to curlrc extracted username' do
+        expect(subject.new('https://example.com').http.proxy_user).to eq 'robot'
+      end
+
+      it 'sets proxy_pass to curlrc extracted password' do
+        expect(subject.new('https://example.com').http.proxy_pass).to eq 'gobot'
+      end
+
+    end
+
     context :default_values do
 
       it 'set ssl to true by default' do
@@ -79,7 +97,7 @@ describe SUSE::Connect::Connection do
   describe '?json_request' do
 
     let :connection do
-      subject.new('leg')
+      subject.new('https://leg')
     end
 
     before do
