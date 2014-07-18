@@ -136,12 +136,6 @@ describe SUSE::Connect::Cli do
       cli.options[:url].should eq 'test'
     end
 
-    it 'sets language options' do
-      argv = %w{-l de}
-      cli = subject.new(argv)
-      cli.options[:language].should eq 'de'
-    end
-
     it 'puts version on version flag' do
       argv = %w{--version}
       subject.any_instance.should_receive(:puts).with(VERSION)
@@ -190,6 +184,16 @@ describe SUSE::Connect::Cli do
       string_logger.should_receive(:error).with('Kaboom')
       subject.new({}).send(:check_if_param, nil, 'Kaboom')
     end
+  end
+
+  describe 'reads environment variables' do
+    it 'sets language header based on LANG' do
+      # is ENV global?
+      ENV['LANG'] = 'de'
+      cli = subject.new([])
+      expect(cli.options[:language]).to eq 'de'
+    end
+
   end
 
 end

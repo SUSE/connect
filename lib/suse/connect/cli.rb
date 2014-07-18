@@ -13,6 +13,7 @@ module SUSE
         @options = {}
         @argv = argv
         extract_options
+        extract_environment
       end
 
       def execute! # rubocop:disable MethodLength, CyclomaticComplexity
@@ -128,11 +129,6 @@ module SUSE
           SUSE::Connect::GlobalLogger.instance.log.level = ::Logger::DEBUG if opt
         end
 
-        @opts.on('-l [LANG]', '--language [LANG]', 'translate error messages into one of LANG which is a',
-                 '  comma-separated list of ISO 639-1 codes') do |opt|
-          @options[:language] = opt
-        end
-
         @opts.on_tail('-h', '--help', 'show this message') do
           puts @opts
           exit
@@ -142,6 +138,10 @@ module SUSE
         @opts.parse(@argv)
         log.debug("cmd options: '#{@options}'")
 
+      end
+
+      def extract_environment
+        @options[:language] = ENV['LANG'] if ENV['LANG']
       end
 
       def check_if_param(opt, message)
