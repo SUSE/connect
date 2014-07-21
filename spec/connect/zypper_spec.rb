@@ -228,4 +228,10 @@ describe SUSE::Connect::Zypper do
     end
   end
 
+  describe 'error handling' do
+    it 'returns an error when libzypp is locked' do
+      pending
+    end
+  end
+
 end
