@@ -4,7 +4,7 @@ Then(/^Set regcode and url options$/) do
 end
 
 ### SUSEConnect cmd steps
-Then(/^I call SUSEConnect with '(.*)' arguments$/) do |args|
+Then(/^I call SUSEConnect with '(.*)' arguments$ and '(.*)' environment /) do |args, env|
   options = Hash[*args.gsub('--', '').split(' ')]
 
   step 'Set regcode and url options'
@@ -13,11 +13,10 @@ Then(/^I call SUSEConnect with '(.*)' arguments$/) do |args|
 
   connect = "SUSEConnect --url #{@url}"
   connect << " -r #{@regcode}" if options['regcode']
-  connect << " -l #{options['language']}" if options['language']
   connect << " -p #{options['product']}" if options['product']
 
-  puts "Calling '#{connect}' ..."
-  step "I run `#{connect}`"
+  puts "Calling '#{env} #{connect}' ..."
+  step "I run `#{env} #{connect}`"
 end
 
 Then(/^zypper should contain a service for (base|sdk|wsm) product$/) do |product|
