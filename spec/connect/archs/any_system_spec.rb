@@ -1,6 +1,12 @@
 require 'spec_helper'
 
-describe SUSE::Connect::System do
+class AnySystem
+  class << self
+    include SUSE::Connect::Archs::Any
+  end
+end
+
+describe AnySystem do
 
   subject { described_class }
 
