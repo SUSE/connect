@@ -1,6 +1,6 @@
 git '/tmp/connect' do
   repository 'https://github.com/SUSE/connect.git'
-  reference 'master'
+  reference 'review_140718_fix_failing_language_integration_test'
   action 'sync'
   user 'vagrant'
   group 'users'
