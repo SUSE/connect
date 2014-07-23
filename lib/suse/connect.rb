@@ -7,7 +7,7 @@ module SUSE
     require 'suse/connect/errors'
 
     module Archs
-      require 'suse/connect/archs/any'
+      require 'suse/connect/archs/generic'
       require 'suse/connect/archs/x86'
       # require 'suse/connect/archs/s390x'
       # require 'suse/connect/archs/ppc'

@@ -7,6 +7,7 @@ shared_examples_for SUSE::Connect::Archs::X86 do
 
     before :each do
       allow(Open3).to receive(:capture3).with('lscpu').and_return([lscpu, '', success])
+      subject.instance_variable_set('@output', nil)
     end
 
     it 'parses output of lscpu and returns hash' do
@@ -41,7 +42,6 @@ shared_examples_for SUSE::Connect::Archs::X86 do
 
       describe '.hypervisor' do
         it 'returns hypervisor vendor' do
-          subject.instance_variable_set('@output', nil)
           expect(subject.hypervisor).to eql 'KVM'
         end
       end

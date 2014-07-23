@@ -1,4 +1,4 @@
-shared_examples_for SUSE::Connect::Archs::Any do
+shared_examples_for SUSE::Connect::Archs::Generic do
 
   let(:credentials_file) { Credentials::GLOBAL_CREDENTIALS_FILE }
 

@@ -1,3 +1,4 @@
+# Specific to X86 arch methods
 module SUSE::Connect::Archs::X86
 
   def hwinfo
