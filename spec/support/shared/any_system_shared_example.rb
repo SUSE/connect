@@ -1,17 +1,10 @@
-shared_examples_for SUSE::Connect::Archs::Generic do
+shared_examples_for SUSE::Connect::Archs::Generic do |unknown_system|
 
   let(:credentials_file) { Credentials::GLOBAL_CREDENTIALS_FILE }
 
   before(:each) do
     allow_any_instance_of(Object).to receive(:system).and_return true
   end
-
-  # describe '.x86?' do
-  #   it 'checks whether the system architecture is x86 or x86_64' do
-  #     allow(subject).to receive(:execute).with('uname -i', false).and_return 'x86_64'
-  #     expect(subject.x86?).to eql true
-  #   end
-  # end
 
   it 'returns system architecture' do
     allow(subject).to receive(:execute).with('uname -i', false).and_return 'blob'
@@ -168,6 +161,6 @@ shared_examples_for SUSE::Connect::Archs::Generic do
       expect(subject.hwinfo).to eq(hostname: 'blue_gene', arch: 'blob')
     end
 
-  end
+  end if unknown_system
 
 end

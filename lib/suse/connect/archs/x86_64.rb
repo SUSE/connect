@@ -1,5 +1,5 @@
-# Specific to X86 arch methods
-module SUSE::Connect::Archs::X86
+# Specific to X8664 arch methods
+module SUSE::Connect::Archs::X86_64
 
   def hwinfo
     {

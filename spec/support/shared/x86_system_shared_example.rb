@@ -1,4 +1,4 @@
-shared_examples_for SUSE::Connect::Archs::X86 do
+shared_examples_for SUSE::Connect::Archs::X86_64 do
 
   describe '.hwinfo' do
 
@@ -48,21 +48,20 @@ shared_examples_for SUSE::Connect::Archs::X86 do
     end
 
     before :each do
-      allow(Socket).to receive(:gethostname).and_return('blue_gene')
       allow(subject).to receive(:uuid).and_return('randomcrypticstring')
-      allow(subject).to receive('x86?').and_return(true)
       allow(subject).to receive(:execute).with('lscpu', false).and_return(lscpu)
-      allow(subject).to receive(:execute).with('uname -i', false).and_return 'blob'
     end
 
     it 'collects basic hwinfo for x86/x86_64 systems ' do
+      allow(subject).to receive(:hostname).and_return('blue_gene')
+      allow(subject).to receive(:arch).and_return('blob')
       expect(subject.hwinfo).to eq(
                                     hostname:   'blue_gene',
                                     cpus:        8,
                                     sockets:     1,
                                     hypervisor:  nil,
                                     arch:        'blob',
-                                    uuid: 'randomcrypticstring'
+                                    uuid:        'randomcrypticstring'
                                 )
     end
 

@@ -1,5 +1,4 @@
-require 'suse/toolkit/system_calls'
-
+# shared between all the system functionality
 module SUSE::Connect::Archs::Generic
 
   attr_accessor :filesystem_root
