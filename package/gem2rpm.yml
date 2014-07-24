@@ -73,6 +73,7 @@
   - '%{name}.5.gz'
   - '%{name}.8.gz'
 :license: LGPL-2.1
+:disable_docs: true      
 :preamble: |-
   %define rb_build_versions %{rb_default_ruby}
   PreReq:         rubygem(%{rb_default_ruby_abi}:%{mod_name})
