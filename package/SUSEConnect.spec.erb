@@ -36,13 +36,7 @@ Source1:        %{name}.5.gz
 Source2:        %{name}.8.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
-BuildRequires:  ruby-macros >= 1
-
-Requires: coreutils, util-linux, net-tools, hwinfo, zypper, ca-certificates-mozilla
-Conflicts: suseRegister
-%ifarch x86_64
-PreReq: dmidecode
-%endif
+BuildRequires:  ruby-macros >= 5
 
 <% for req in spec.required_ruby_version -%>
 <% unless req.empty? -%>
