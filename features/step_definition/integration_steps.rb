@@ -3,10 +3,6 @@ Then(/^Set regcode and url options$/) do
   @url = ENV['URL'] || SUSE::Connect::Client::DEFAULT_URL
 end
 
-When /^I set env variable "(\w+)" to "([^"]*)"$/ do |var, value|
-  ENV[var] = value
-end
-
 ### SUSEConnect cmd steps
 Then(/^I call SUSEConnect with '(.*)' arguments$/) do |args|
   options = Hash[*args.gsub('--', '').split(' ')]
