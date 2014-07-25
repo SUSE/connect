@@ -5,7 +5,7 @@ Feature: SUSEConnect full stack integration testing
 
   ### SUSEConnect cmd checks ###
   Scenario: System registration
-    I call SUSEConnect with '--regcode VALID' arguments
+    When I call SUSEConnect with '--regcode VALID' arguments
     Then the exit status should be 0
 
     And a file named "/etc/zypp/credentials.d/SCCcredentials" should exist
