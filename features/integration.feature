@@ -5,7 +5,7 @@ Feature: SUSEConnect full stack integration testing
 
   ### SUSEConnect cmd checks ###
   Scenario: System registration
-    When I call SUSEConnect with '--regcode VALID' arguments
+    When I call SUSEConnect with '--regcode VALID' arguments and '' environment
     Then the exit status should be 0
 
     And a file named "/etc/zypp/credentials.d/SCCcredentials" should exist
@@ -18,7 +18,7 @@ Feature: SUSEConnect full stack integration testing
     And zypper should contain a repositories for base product
 
   Scenario: Extension activation with regcode
-    When I call SUSEConnect with '--regcode VALID --product sle-sdk/12/x86_64' arguments
+    When I call SUSEConnect with '--regcode VALID --product sle-sdk/12/x86_64' arguments and '' environment
     Then the exit status should be 0
 
     And a file named "/etc/zypp/credentials.d/SUSE_Linux_Enterprise_Software_Development_Kit_12_x86_64" should exist
@@ -28,7 +28,7 @@ Feature: SUSEConnect full stack integration testing
     And zypper should contain a repositories for sdk product
 
   Scenario: API response language check
-    When I call SUSEConnect with '--regcode INVALID --language de' arguments
+    When I call SUSEConnect with '--regcode INVALID --language de' arguments and 'LANG=de' environment
     Then the exit status should be 67
 
     And the output should contain "Keine Subscription mit diesem Registrierungscode gefunden"

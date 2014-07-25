@@ -4,7 +4,7 @@ Then(/^Set regcode and url options$/) do
 end
 
 ### SUSEConnect cmd steps
-Then(/^I call SUSEConnect with '(.*)' arguments$ and '(.*)' environment /) do |args, env|
+Then(/^I call SUSEConnect with '(.*)' arguments and '(.*)' environment$/) do |args, env|
   options = Hash[*args.gsub('--', '').split(' ')]
 
   step 'Set regcode and url options'
