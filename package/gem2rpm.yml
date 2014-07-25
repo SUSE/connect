@@ -86,6 +86,8 @@
   install -D -m 644 %_sourcedir/SUSEConnect.5.gz %{buildroot}%_mandir/man5/SUSEConnect.5.gz
   install -D -m 644 %_sourcedir/SUSEConnect.8.gz %{buildroot}%_mandir/man8/SUSEConnect.8.gz
   ln -s SUSEConnect.8.gz %{buildroot}%_mandir/man8/SUSEConnect-%{version}.8.gz
+  mkdir %{buildroot}%{_sbindir}
+  ln -s %{_bindir}/SUSEConnect %{buildroot}%{_sbindir}/SUSEConnect
 :scripts: |-
   %post
   if [ -s /etc/zypp/credentials.d/NCCcredentials ] && [ ! -e /etc/zypp/credentials.d/SCCcredentials ]; then
@@ -104,3 +106,4 @@
 :filelist: |-
   %_mandir/man5/SUSEConnect*
   %_mandir/man8/SUSEConnect*
+  %{_sbindir}/SUSEConnect

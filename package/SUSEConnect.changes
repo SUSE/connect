@@ -10,6 +10,11 @@ Wed Jul 16 11:42:51 UTC 2014 - tschmidt@suse.com
 - Add machine readable output (json format) to status call
 
 -------------------------------------------------------------------
+Tue Jul 15 17:38:56 UTC 2014 - mrueckert@suse.de
+
+- added gem2rpm.yml and regenerated the spec file with it
+
+-------------------------------------------------------------------
 Thu Jul 10 11:33:37 UTC 2014 - achernikov@suse.de
 
 - Update to version 0.2.4 
@@ -48,7 +53,7 @@ Mon Jun 30 11:39:35 UTC 2014 - achernikov@suse.de
 Tue Jun 17 14:12:50 UTC 2014 - achernikov@suse.de
 
 - Update to version 0.1.2
- - Fixed certificate import issue bcn#883006
+ - Fixed certificate import issue bnc#883006
  - Abstract certificate interaction into YaST module layer
 
 -------------------------------------------------------------------
