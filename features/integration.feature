@@ -29,7 +29,7 @@ Feature: SUSEConnect full stack integration testing
 
   Scenario: API response language check
     When I set env variable "LANG" to "de"
-    And I call SUSEConnect with '--regcode INVALID --language de' arguments
+    And I call SUSEConnect with '--regcode INVALID' arguments
     Then the exit status should be 67
 
     And the output should contain "Keine Subscription mit diesem Registrierungscode gefunden"
