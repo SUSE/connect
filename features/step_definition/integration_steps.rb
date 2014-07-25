@@ -3,8 +3,12 @@ Then(/^Set regcode and url options$/) do
   @url = ENV['URL'] || SUSE::Connect::Client::DEFAULT_URL
 end
 
+When /^I set env variable "(\w+)" to "([^"]*)"$/ do |var, value|
+  ENV[var] = value
+end
+
 ### SUSEConnect cmd steps
-Then(/^I call SUSEConnect with '(.*)' arguments and '(.*)' environment$/) do |args, env|
+Then(/^I call SUSEConnect with '(.*)' arguments$/) do |args|
   options = Hash[*args.gsub('--', '').split(' ')]
 
   step 'Set regcode and url options'
@@ -15,8 +19,7 @@ Then(/^I call SUSEConnect with '(.*)' arguments and '(.*)' environment$/) do |ar
   connect << " -r #{@regcode}" if options['regcode']
   connect << " -p #{options['product']}" if options['product']
 
-  puts "Calling '#{env} #{connect}' ..."
-  step "I run `#{env} #{connect}`"
+  step "I run `#{connect}`"
 end
 
 Then(/^zypper should contain a service for (base|sdk|wsm) product$/) do |product|
