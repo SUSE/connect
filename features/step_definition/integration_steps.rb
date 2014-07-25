@@ -13,7 +13,6 @@ Then(/^I call SUSEConnect with '(.*)' arguments$/) do |args|
 
   connect = "SUSEConnect --url #{@url}"
   connect << " -r #{@regcode}" if options['regcode']
-  connect << " -l #{options['language']}" if options['language']
   connect << " -p #{options['product']}" if options['product']
 
   puts "Calling '#{connect}' ..."
