@@ -39,8 +39,12 @@ execute 'cp suse-connect-*.gem package/' do
   user 'vagrant'
 end
 
-execute 'gem2rpm --config gem2rpm.yml -l -o SUSEConnect.spec -t /usr/share/doc/packages/ruby2.1-rubygem-gem2rpm/sles12.spec.erb suse-connect-*.gem' do
-  command 'gem2rpm --config gem2rpm.yml -l -o SUSEConnect.spec -t /usr/share/doc/packages/ruby2.1-rubygem-gem2rpm/sles12.spec.erb suse-connect-*.gem'
+execute 'gem2rpm --config gem2rpm.yml -l -o SUSEConnect.spec \
+    -t /usr/share/doc/packages/ruby2.1-rubygem-gem2rpm/sles12.spec.erb \
+    suse-connect-*.gem' do
+  command 'gem2rpm --config gem2rpm.yml -l -o SUSEConnect.spec \
+    -t /usr/share/doc/packages/ruby2.1-rubygem-gem2rpm/sles12.spec.erb \
+    suse-connect-*.gem'
   cwd "#{node[:connect][:project]}/package"
   user 'vagrant'
 end
