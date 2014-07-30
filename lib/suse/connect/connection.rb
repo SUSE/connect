@@ -54,13 +54,7 @@ module SUSE
 
       def json_request(method, path, params = {})
         request                    = VERB_TO_CLASS[method].new(path)
-        request['Authorization']   = auth
-        request['Content-Type']    = 'application/json'
-        request['Accept']          = "application/json,application/vnd.scc.suse.com.#{SUSE::Connect::Api::VERSION}+json"
-        request['Accept-Language'] = language
-        # do not use gzip compression in response for easy debugging
-        request['Accept-Encoding'] = 'identity' if debug
-        request['User-Agent']      = "SUSEConnect/#{SUSE::Connect::VERSION}"
+        add_headers(request)
 
         request.body               = params.to_json unless params.empty?
         response                   = @http.request(request)
@@ -72,6 +66,16 @@ module SUSE
           body: body,
           success: response.is_a?(Net::HTTPSuccess)
         )
+      end
+
+      def add_headers(request)
+        request['Authorization']   = auth
+        request['Content-Type']    = 'application/json'
+        request['Accept']          = "application/json,application/vnd.scc.suse.com.#{SUSE::Connect::Api::VERSION}+json"
+        request['Accept-Language'] = language
+        # no gzip compression for easier debugging
+        request['Accept-Encoding'] = 'identity' if debug
+        request['User-Agent']      = "SUSEConnect/#{SUSE::Connect::VERSION}"
       end
 
       # set a verify_callback to HTTP object, use a custom callback
