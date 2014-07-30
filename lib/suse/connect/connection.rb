@@ -16,7 +16,7 @@ module SUSE
         :delete => Net::HTTP::Delete
       }
 
-      attr_accessor :http, :auth, :language
+      attr_accessor :debug, :http, :auth, :language
 
       def initialize(endpoint, language: nil, insecure: false, debug: false, verify_callback: nil)
         uri              = URI.parse(endpoint)
@@ -32,6 +32,7 @@ module SUSE
         @http            = http
         @http.set_debug_output(STDERR) if debug
         @language        = language
+        @debug = debug
         self.verify_callback = verify_callback
       end
 
@@ -57,6 +58,8 @@ module SUSE
         request['Content-Type']    = 'application/json'
         request['Accept']          = "application/json,application/vnd.scc.suse.com.#{SUSE::Connect::Api::VERSION}+json"
         request['Accept-Language'] = language
+        # do not use gzip compression in response for easy debugging
+        request['Accept-Encoding'] = 'identity' if debug
         request['User-Agent']      = "SUSEConnect/#{SUSE::Connect::VERSION}"
 
         request.body               = params.to_json unless params.empty?
