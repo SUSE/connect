@@ -1,3 +1,4 @@
+# Collect hardware information for x86/x86_64 systems
 class SUSE::Connect::HwInfo::X86 < SUSE::Connect::HwInfo::Base
   class << self
     def hwinfo

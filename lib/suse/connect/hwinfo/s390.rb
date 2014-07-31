@@ -1,3 +1,4 @@
+# Collect hardware information for s390x systems
 class SUSE::Connect::HwInfo::S390 < SUSE::Connect::HwInfo::Base
   class << self
     def hwinfo
@@ -12,4 +13,3 @@ class SUSE::Connect::HwInfo::S390 < SUSE::Connect::HwInfo::Base
     end
   end
 end
-

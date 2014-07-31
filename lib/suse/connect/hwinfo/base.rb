@@ -1,6 +1,7 @@
 include SUSE::Toolkit::SystemCalls
 
 module SUSE::Connect::HwInfo
+  # Base class for harware information collection
   class Base
     class << self
       def info

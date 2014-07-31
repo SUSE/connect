@@ -45,7 +45,7 @@ describe SUSE::Connect::HwInfo::X86 do
   end
 
   it 'returns hypervisor vendor for virtual systems' do
-    expect(subject).to receive(:output).and_return({'Hypervisor vendor' => 'KVM'})
+    expect(subject).to receive(:output).and_return('Hypervisor vendor' => 'KVM')
     expect(subject.hypervisor).to eql 'KVM'
   end
 
