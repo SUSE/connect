@@ -13,7 +13,7 @@ describe SUSE::Connect::HwInfo::X86 do
   end
 
   it 'returns a hwinfo hash for x86/x86_64 systems' do
-    expect(Open3).to receive(:capture3).with('uname -i').and_return(['x86_64', '', success])
+    allow(Open3).to receive(:capture3).with('uname -i').and_return(['x86_64', '', success])
     expect(Open3).to receive(:capture3).with('dmidecode -s system-uuid').and_return(['uuid', '', success])
 
     hwinfo = subject.hwinfo
@@ -38,11 +38,6 @@ describe SUSE::Connect::HwInfo::X86 do
 
   it 'returns system sockets count' do
     expect(subject.sockets).to eql 1
-  end
-
-  it 'returns system architecture' do
-    expect(subject.superclass).to receive(:arch).and_return('blob')
-    expect(subject.arch).to eql 'blob'
   end
 
   it 'returns nil for hypervisor' do
