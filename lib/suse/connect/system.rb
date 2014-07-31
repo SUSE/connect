@@ -1,12 +1,8 @@
-require 'suse/toolkit/hwinfo'
-
 module SUSE
   module Connect
     # System class allowing to interact with underlying system
     class System
       class << self
-
-        include SUSE::Toolkit::Hwinfo
 
         attr_accessor :filesystem_root
 
@@ -15,21 +11,7 @@ module SUSE
         end
 
         def hwinfo
-          if x86?
-            {
-              hostname: hostname,
-              cpus: cpus,
-              sockets: sockets,
-              hypervisor: hypervisor,
-              arch: arch,
-              uuid: uuid
-            }
-          else
-            {
-              hostname: hostname,
-              arch: arch
-            }
-          end
+          SUSE::Connect::HwInfo::Base.info
         end
 
         # returns username and password from SCC_CREDENTIALS_FILE
@@ -74,10 +56,6 @@ module SUSE
           else
             Socket.ip_address_list.find {|intf| intf.ipv4_private? }.ip_address
           end
-        end
-
-        def x86?
-          %w{x86, x86_64}.include? arch
         end
 
       end
