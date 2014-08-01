@@ -13,10 +13,15 @@ module SUSE::Connect::HwInfo
           S390.hwinfo
         else
           {
-            hostname: SUSE::Connect::System.hostname,
+            hostname: hostname,
             arch: arch
           }
         end
+      end
+
+      # Delegate hostname to SUSE::Connect::System
+      def hostname
+        SUSE::Connect::System.hostname
       end
 
       def arch

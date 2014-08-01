@@ -3,7 +3,7 @@ class SUSE::Connect::HwInfo::X86 < SUSE::Connect::HwInfo::Base
   class << self
     def hwinfo
       {
-        hostname: SUSE::Connect::System.hostname,
+        hostname: hostname,
         cpus: cpus,
         sockets: sockets,
         hypervisor: hypervisor,
@@ -25,12 +25,11 @@ class SUSE::Connect::HwInfo::X86 < SUSE::Connect::HwInfo::Base
     end
 
     def uuid
-      if respond_to?("#{arch}_uuid", true)
-        send "#{arch}_uuid"
-      else
-        log.debug("Not implemented. Unable to determine UUID for #{arch}. Set to nil")
-        nil
-      end
+      read_values = execute('read_values -u', false)
+      uuid = read_values.empty? ? nil : read_values
+
+      log.debug("Not implemented. Unable to determine UUID for #{arch}. Set to nil") unless uuid
+      uuid
     end
 
     private
