@@ -184,6 +184,15 @@ describe SUSE::Connect::System do
         subject.hostname.should eq '192.168.42.42'
       end
     end
+
+    context 'hostname and private ip is none' do
+      it 'returns nil' do
+        stubbed_ip_address_list = [Addrinfo.ip('127.0.0.1'), Addrinfo.ip('44.0.0.69')]
+        Socket.stub(:ip_address_list => stubbed_ip_address_list)
+        Socket.stub(:gethostname => '(none)')
+        subject.hostname.should eq nil
+      end
+    end
   end
 
 end
