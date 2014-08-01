@@ -1,0 +1,13 @@
+Type: 2827
+Sequence Code: 0000000000069A27
+CPUs Total: 22
+CPUs IFL: 0
+LPAR Number: 15
+LPAR Name: LPF
+LPAR Characteristics: Shared
+LPAR CPUs Total: 6
+LPAR CPUs IFL: 6
+VM00 Name: LINUX209
+VM00 Control Program: z/VM    6.1.0
+VM00 CPUs Total: 1
+VM00 IFLs: 1
