@@ -47,6 +47,13 @@ describe SUSE::Connect::HwInfo::Base do
     end
   end
 
+  describe '#hostname' do
+    it 'delegates hostname to SUSE::Connect::System.hostname' do
+      expect(SUSE::Connect::System).to receive(:hostname).and_return('hostname')
+      expect(subject.hostname).to eql 'hostname'
+    end
+  end
+
   describe '#arch' do
     it 'returns the system architecture' do
       expect(Open3).to receive(:capture3).with('uname -i').and_return(['blob', '', success])
