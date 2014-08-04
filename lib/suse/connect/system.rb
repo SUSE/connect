@@ -72,7 +72,9 @@ module SUSE
           if hostname && hostname != '(none)'
             hostname
           else
-            Socket.ip_address_list.find {|intf| intf.ipv4_private? }.ip_address
+            # Fix for bnc#889869
+            addr_info = Socket.ip_address_list.find {|intf| intf.ipv4_private? }
+            addr_info.ip_address if addr_info
           end
         end
 
