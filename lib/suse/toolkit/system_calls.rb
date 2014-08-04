@@ -1,4 +1,5 @@
 require 'open3'
+require 'suse/connect/logger'
 
 module SUSE
   module Toolkit

@@ -1,10 +1,21 @@
 module SUSE
+
+  require 'suse/toolkit/system_calls'
+  require 'suse/toolkit/curlrc_dotfile'
+
   # All modules and classes of Connected nested
   module Connect
 
     require 'suse/connect/version'
     require 'suse/connect/logger'
     require 'suse/connect/errors'
+
+    module Archs
+      require 'suse/connect/archs/generic'
+      arch = Class.new{ extend SUSE::Connect::Archs::Generic; extend SUSE::Toolkit::SystemCalls }.arch
+      require "suse/connect/archs/#{arch}"
+    end
+
     require 'suse/connect/client'
     require 'suse/connect/system'
     require 'suse/connect/connection'
@@ -32,10 +43,6 @@ module SUSE
       require 'suse/connect/zypper/product'
     end
 
-  end
-  # Toolkit module holds useful tools to operate of various aspects of system data and collect needed info
-  module Toolkit
-    require 'suse/toolkit/curlrc_dotfile'
   end
 
 end
