@@ -13,12 +13,17 @@ At first you need to build the gem:
 
 `> gem build suse-connect.gemspec`
 
-This gem can already be installed and used. To create a RPM from this gem you need to create the .spec file:
-
+This gem can already be installed and used. To create a RPM from this gem you
+need to create the .spec file.  You need to use gem2rpm to do this, and using
+the specifically patched version from SLES12 or devel:languages:ruby:extensions, because this supports
+the SLES12 gem packaging standard via the --config option.
+f
 ```
 > cp suse-connect-*.gem package/
 > cd package
-> gem2rpm -l -s -o SUSEConnect.spec -t SUSEConnect.spec.erb suse-connect-*.gem
+> gem2rpm --config gem2rpm.yml -l -o SUSEConnect.spec \
+    -t /usr/share/doc/packages/rubygem-gem2rpm/sles12.spec.erb \
+    suse-connect-*.gem
 ```
 
 To create the man page do:
