@@ -8,7 +8,7 @@ default[:connect][:packages] = {
   'osc' => true,
   'build' => true,
   'ruby-devel' => true,
-  'rubygem-gem2rpm' => true
+  'ruby2.1-rubygem-gem2rpm' => true
 }
 
 default[:connect][:gems] = {
