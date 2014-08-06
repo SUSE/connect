@@ -1,19 +1,28 @@
 require 'spec_helper'
+require 'suse/connect/hwinfo/x86'
 
-# rubocop:disable Documentation
-class DummyReceiver
-  include SUSE::Toolkit::Hwinfo
-end
+describe SUSE::Connect::HwInfo::X86 do
 
-describe SUSE::Toolkit::Hwinfo do
-
-  subject { DummyReceiver.new }
-
+  subject { SUSE::Connect::HwInfo::X86 }
   let(:success) { double('Process Status', :exitstatus => 0) }
   let(:lscpu) { File.read(File.join(fixtures_dir, 'lscpu_phys.txt')) }
 
   before :each do
+    allow(SUSE::Connect::System).to receive(:hostname).and_return('test')
     allow(Open3).to receive(:capture3).with('lscpu').and_return([lscpu, '', success])
+  end
+
+  it 'returns a hwinfo hash for x86/x86_64 systems' do
+    allow(Open3).to receive(:capture3).with('uname -i').and_return(['x86_64', '', success])
+    expect(Open3).to receive(:capture3).with('dmidecode -s system-uuid').and_return(['uuid', '', success])
+
+    hwinfo = subject.hwinfo
+    expect(hwinfo[:hostname]).to eq 'test'
+    expect(hwinfo[:cpus]).to eq 8
+    expect(hwinfo[:sockets]).to eq 1
+    expect(hwinfo[:hypervisor]).to eq nil
+    expect(hwinfo[:arch]).to eq 'x86_64'
+    expect(hwinfo[:uuid]).to eq 'uuid'
   end
 
   it 'parses output of lscpu and returns hash' do
@@ -23,43 +32,24 @@ describe SUSE::Toolkit::Hwinfo do
     expect(subject.send(:output)).to include 'Architecture'
   end
 
-  context 'physical' do
-    it 'returns system cpus count' do
-      expect(subject.cpus).to eql 8
-    end
-
-    it 'returns system sockets count' do
-      expect(subject.sockets).to eql 1
-    end
-
-    it 'returns system architecture' do
-      allow(subject).to receive(:execute).with('uname -i', false).and_return 'blob'
-      expect(subject.arch).to eql 'blob'
-    end
-
-    describe '.hypervisor' do
-      it 'returns nil' do
-        expect(subject.hypervisor).to eql nil
-      end
-    end
+  it 'returns system cpus count' do
+    expect(subject.cpus).to eql 8
   end
 
-  context 'virtual' do
-    let(:lscpu) { File.read(File.join(fixtures_dir, 'lscpu_virt.txt')) }
+  it 'returns system sockets count' do
+    expect(subject.sockets).to eql 1
+  end
 
-    before do
-      allow(subject).to receive(:execute).with('lscpu', false).and_return(lscpu)
-    end
+  it 'returns nil for hypervisor' do
+    expect(subject.hypervisor).to eql nil
+  end
 
-    describe '.hypervisor' do
-      it 'returns hypervisor vendor' do
-        expect(subject.hypervisor).to eql 'KVM'
-      end
-    end
+  it 'returns hypervisor vendor for virtual systems' do
+    expect(subject).to receive(:output).and_return('Hypervisor vendor' => 'KVM')
+    expect(subject.hypervisor).to eql 'KVM'
   end
 
   describe '.uuid' do
-
     context :x86_64_arch do
 
       it 'extracts uuid from dmidecode' do
@@ -75,7 +65,6 @@ describe SUSE::Toolkit::Hwinfo do
         allow(subject).to receive(:execute).with('dmidecode -s system-uuid', false).and_return(mock_uuid)
         expect(subject.uuid).to be nil
       end
-
     end
 
     context :arch_with_no_uuid_implementation do
@@ -90,9 +79,7 @@ describe SUSE::Toolkit::Hwinfo do
         expect(subject.log).to receive(:debug).with('Not implemented. Unable to determine UUID for carbon. Set to nil')
         subject.uuid
       end
-
     end
-
   end
 
 end
