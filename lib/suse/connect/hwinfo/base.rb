@@ -29,11 +29,11 @@ module SUSE::Connect::HwInfo
       end
 
       def s390?
-        %w{s390x}.include? arch
+        arch == 's390x'
       end
 
       def x86?
-        %w{x86, x86_64}.include? arch
+        arch == 'x86_64'
       end
     end
   end
