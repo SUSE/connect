@@ -87,7 +87,7 @@
 :post_install: |-
   install -D -m 644 %_sourcedir/SUSEConnect.5.gz %{buildroot}%_mandir/man5/SUSEConnect.5.gz
   install -D -m 644 %_sourcedir/SUSEConnect.8.gz %{buildroot}%_mandir/man8/SUSEConnect.8.gz
-  install -D -m 640 %_sourcedir/SUSEConnect.example %{buildroot}%_sysconfdir/SUSEConnect.example
+  install -D -m 644 %_sourcedir/SUSEConnect.example %{buildroot}%_sysconfdir/SUSEConnect.example
 
   ln -s SUSEConnect.8.gz %{buildroot}%_mandir/man8/SUSEConnect-%{version}.8.gz
   mkdir %{buildroot}%{_sbindir}
