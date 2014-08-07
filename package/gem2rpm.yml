@@ -70,6 +70,7 @@
 #
 :name: SUSEConnect
 :sources:
+  - 'suse-connect-%{version}.gem'
   - '%{name}.5.gz'
   - '%{name}.8.gz'
   - '%{name}.example'

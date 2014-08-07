@@ -3,7 +3,7 @@ Wed Aug  6 14:18:35 UTC 2014 - vlewin@suse.com
 
 - Update to version 0.2.8
    - S390 support
-   - fix for bnc#889869 SCC registration during installation failed by reason 
+   - fix for bnc#889869 SCC registration during installation failed by reason
      that the IP address can not be handled by Yast for submitting to server
 
 -------------------------------------------------------------------
@@ -168,7 +168,7 @@ Fri Mar 14 13:40:01 UTC 2014 - mc@suse.de
 Thu Mar  6 09:30:40 UTC 2014 - achernikov@suse.de
 
 - Added products call allowing to get all publicly available
-  products 
+  products
 
 -------------------------------------------------------------------
 Fri Feb 28 14:40:07 UTC 2014 - achernikov@suse.de
