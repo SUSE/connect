@@ -21,7 +21,7 @@
 # ## used by gem2rpm
 # :patches:
 #   foo.patch: -p1
-#   bar.patch: 
+#   bar.patch:
 # ## used by gem2rpm
 # :sources:
 # - foo.desktop
@@ -72,8 +72,10 @@
 :sources:
   - '%{name}.5.gz'
   - '%{name}.8.gz'
+  - '%{name}.example'
+
 :license: LGPL-2.1
-:disable_docs: true      
+:disable_docs: true
 :preamble: |-
   %define rb_build_versions %{rb_default_ruby}
   PreReq:         rubygem(%{rb_default_ruby_abi}:%{mod_name})
@@ -85,6 +87,8 @@
 :post_install: |-
   install -D -m 644 %_sourcedir/SUSEConnect.5.gz %{buildroot}%_mandir/man5/SUSEConnect.5.gz
   install -D -m 644 %_sourcedir/SUSEConnect.8.gz %{buildroot}%_mandir/man8/SUSEConnect.8.gz
+  install -D -m 644 %_sourcedir/SUSEConnect.example %{buildroot}%_sysconfdir/SUSEConnect.example
+
   ln -s SUSEConnect.8.gz %{buildroot}%_mandir/man8/SUSEConnect-%{version}.8.gz
   mkdir %{buildroot}%{_sbindir}
   ln -s %{_bindir}/SUSEConnect %{buildroot}%{_sbindir}/SUSEConnect
@@ -107,3 +111,5 @@
   %_mandir/man5/SUSEConnect*
   %_mandir/man8/SUSEConnect*
   %{_sbindir}/SUSEConnect
+  %_sysconfdir/SUSEConnect.example
+
