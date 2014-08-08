@@ -37,7 +37,11 @@ class SUSE::Connect::HwInfo::X86 < SUSE::Connect::HwInfo::Base
 
     # Simple arch abstraction - as means to determine uuid can vary.
     def x86_64_uuid
-      uuid_output = execute('dmidecode -s system-uuid', false)
+      if File.file?('/sys/hypervisor/uuid')
+        uuid_output = IO.read('/sys/hypervisor/uuid')
+      else
+        uuid_output = execute('dmidecode -s system-uuid', false)
+      end
       uuid_output == 'Not Settable' ? nil : uuid_output
     end
 
