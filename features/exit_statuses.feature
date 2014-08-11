@@ -1,3 +1,11 @@
+Before('@libzypplocked') do
+  `echo $$ > /var/run/zypp.pid && kill -19`
+end
+
+After('@libzypplocked') do
+  `read PID < /tmp/foo.pid  && kill -18 $PID`
+end
+
 Feature: exit statuses
 
   SUSEConnect should provide expected exit statuses
@@ -13,3 +21,8 @@ Feature: exit statuses
   Scenario: binary call without token should exit with 1
     When I run `SUSEConnect`
     Then the exit status should be 1
+
+  @libzypplocked
+  Scenario: libzypp locked should exit with 7
+    When I call SUSEConnect with '--regcode VALID' arguments
+    Then the exit status should be 7
