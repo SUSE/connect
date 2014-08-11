@@ -10,37 +10,10 @@ describe SUSE::Connect::System do
 
   subject { SUSE::Connect::System }
 
-  describe '.x86?' do
-    it 'checks whether the system architecture is x86 or x86_64' do
-      expect(subject.x86?).to eql true
-    end
-  end
-
   describe '.hwinfo' do
-    let(:lscpu) { File.read(File.join(fixtures_dir, 'lscpu_phys.txt')) }
-
-    before :each do
-      allow(Socket).to receive(:gethostname).and_return('blue_gene')
-      allow(subject).to receive(:uuid).and_return('randomcrypticstring')
-      allow(subject).to receive('x86?').and_return(true)
-      allow(subject).to receive(:execute).with('lscpu', false).and_return(lscpu)
-      allow(subject).to receive(:execute).with('uname -i', false).and_return 'blob'
-    end
-
     it 'collects basic hwinfo for x86/x86_64 systems ' do
-      expect(subject.hwinfo).to eq(
-        hostname:   'blue_gene',
-        cpus:        8,
-        sockets:     1,
-        hypervisor:  nil,
-        arch:        'blob',
-        uuid: 'randomcrypticstring'
-      )
-    end
-
-    it 'returns only hostname for other architectures' do
-      allow(subject).to receive('x86?').and_return(false)
-      expect(subject.hwinfo).to eq(hostname: 'blue_gene', arch: 'blob')
+      expect(SUSE::Connect::HwInfo::Base).to receive(:info).and_return({})
+      subject.hwinfo
     end
   end
 
@@ -169,10 +142,10 @@ describe SUSE::Connect::System do
 
     context :hostname_nil do
       it 'returns first private ip' do
-        stubbed_ip_address_list = [Addrinfo.ip('127.0.0.1'), Addrinfo.ip('192.168.42.42')]
+        stubbed_ip_address_list = [Addrinfo.ip('127.0.0.1'), Addrinfo.ip('192.168.42.100'), Addrinfo.ip('192.168.42.42')]
         Socket.stub(:ip_address_list => stubbed_ip_address_list)
         Socket.stub(:gethostname => nil)
-        subject.hostname.should eq '192.168.42.42'
+        subject.hostname.should eq '192.168.42.100'
       end
     end
 
@@ -182,6 +155,15 @@ describe SUSE::Connect::System do
         Socket.stub(:ip_address_list => stubbed_ip_address_list)
         Socket.stub(:gethostname => '(none)')
         subject.hostname.should eq '192.168.42.42'
+      end
+    end
+
+    context 'hostname and private ip is nil' do
+      it 'returns nil' do
+        stubbed_ip_address_list = [Addrinfo.ip('127.0.0.1'), Addrinfo.ip('44.0.0.69')]
+        Socket.stub(:ip_address_list => stubbed_ip_address_list)
+        Socket.stub(:gethostname => nil)
+        subject.hostname.should eq nil
       end
     end
   end

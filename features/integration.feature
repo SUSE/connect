@@ -28,7 +28,10 @@ Feature: SUSEConnect full stack integration testing
     And zypper should contain a repositories for sdk product
 
   Scenario: API response language check
-    When I call SUSEConnect with '--regcode INVALID --language de' arguments
+    Given I set the environment variables to
+      | variable | value |
+      | LANG     | de    |
+    When I call SUSEConnect with '--regcode INVALID' arguments
     Then the exit status should be 67
 
     And the output should contain "Keine Subscription mit diesem Registrierungscode gefunden"

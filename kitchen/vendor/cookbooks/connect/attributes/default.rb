@@ -7,10 +7,10 @@ default[:connect][:packages] = {
   'git' => true,
   'osc' => true,
   'build' => true,
-  'ruby-devel' => true
+  'ruby-devel' => true,
+  'ruby2.1-rubygem-gem2rpm' => true
 }
 
 default[:connect][:gems] = {
-  'bundler' => '1.3.5',
-  'gem2rpm' => '0.9.2'
+  'bundler' => '1.3.5'
 }
