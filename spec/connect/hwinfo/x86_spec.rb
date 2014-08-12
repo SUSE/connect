@@ -51,24 +51,35 @@ describe SUSE::Connect::HwInfo::X86 do
 
   describe '.uuid' do
     context :x86_64_arch do
+      before :each do
+        allow(subject).to receive(:arch).and_return('x86_64')
+      end
 
       it 'extracts uuid from dmidecode' do
         mock_uuid = '4C4C4544-0059-4810-8034-C2C04F335931'
         allow(subject).to receive(:execute).with('dmidecode -s system-uuid', false).and_return(mock_uuid)
-        allow(subject).to receive(:arch).and_return('x86_64')
         expect(subject.uuid).to eq '4C4C4544-0059-4810-8034-C2C04F335931'
       end
 
       it 'return nil if uuid from dmidecode is Not Settable' do
         mock_uuid = 'Not Settable'
-        allow(subject).to receive(:arch).and_return('x86_64')
         allow(subject).to receive(:execute).with('dmidecode -s system-uuid', false).and_return(mock_uuid)
         expect(subject.uuid).to be nil
+      end
+
+      context 'SLES for EC2' do
+        it 'extracts uuid from /sys/hypervisor/uuid file' do
+          uuid_file = '/sys/hypervisor/uuid'
+          mock_uuid = "4C4C4544-0059-4810-8034-C2C04F335931\n"
+
+          expect(File).to receive(:exist?).with(uuid_file).and_return(true)
+          expect(File).to receive(:read).with(uuid_file).and_return(mock_uuid)
+          expect(subject.uuid).to eq '4C4C4544-0059-4810-8034-C2C04F335931'
+        end
       end
     end
 
     context :arch_with_no_uuid_implementation do
-
       it 'set uuid to nil' do
         allow(subject).to receive(:arch).and_return('megusta')
         expect(subject.uuid).to be nil
