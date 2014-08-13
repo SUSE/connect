@@ -1,11 +1,3 @@
-Before('@libzypplocked') do
-  `echo $$ > /var/run/zypp.pid && kill -19`
-end
-
-After('@libzypplocked') do
-  `read PID < /tmp/foo.pid  && kill -18 $PID`
-end
-
 Feature: exit statuses
 
   SUSEConnect should provide expected exit statuses
