@@ -14,7 +14,7 @@ Before('@libzypplocked') do
 end
 
 After('@libzypplocked') do
-  `read PID < /tmp/foo.pid  && kill -18 $PID`
+  `read PID < /var/run/zypp.pid  && kill -18 $PID`
 end
 
 
