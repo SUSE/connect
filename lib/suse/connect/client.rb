@@ -24,7 +24,7 @@ module SUSE
         @options[:token]    = opts[:token] || @config.regcode
         @options[:product]  = opts[:product]
         @api                = Api.new(self)
-        log.debug "Merged options: #{@options.compact}"
+        log.debug "Merged options: #{@options}"
       end
 
       def init_url(opts)
@@ -59,7 +59,7 @@ module SUSE
         if instance_data_file
           file_path = SUSE::Connect::System.prefix_path(instance_data_file)
           log.debug "Reading instance data from: #{file_path}"
-          raise FileError unless File.file?(file_path) && File.readable?(file_path)
+          raise FileError.new('instance data file not found') unless File.file?(file_path) && File.readable?(file_path)
           instance_data = File.read(file_path)
         end
         response = @api.announce_system(token_auth(@options[:token]), distro_target, instance_data)
