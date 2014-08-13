@@ -24,7 +24,7 @@ module SUSE
         @options[:token]    = opts[:token] || @config.regcode
         @options[:product]  = opts[:product]
         @api                = Api.new(self)
-        log.debug "Merged options: #{@options}"
+        log.debug "Merged options: #{@options.compact}"
       end
 
       def init_url(opts)
