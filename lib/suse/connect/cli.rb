@@ -50,6 +50,9 @@ module SUSE
       rescue ApiError => e
         log.fatal "Error: SCC returned '#{e.message}' (#{e.code})"
         exit 67
+      rescue ZypperError => e
+        log.fatal "Error: zypper call '#{e.commandline} returned (#{e.exitstatus})"
+        exit e.exitstatus
       end
 
       private
