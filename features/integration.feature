@@ -21,7 +21,7 @@ Feature: SUSEConnect full stack integration testing
   @libzypplocked
   Scenario: libzypp locked should exit with 7
     When I call SUSEConnect with '--regcode VALID' arguments
-    Then the exit status should be 7  Scenario: Extension activation with regcode
+    Then the exit status should be 7
 
   Scenario: Extension activation with regcode
     When I call SUSEConnect with '--regcode VALID --product sle-sdk/12/x86_64' arguments
