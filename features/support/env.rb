@@ -10,11 +10,12 @@ Before('@slow_process') do
 end
 
 Before('@libzypplocked') do
-  `echo $$ > /var/run/zypp.pid && kill -19 $$`
+  # this should put the pid of the cucumber process into the lockfile
+  `echo $$ > /var/run/zypp.pid`
 end
 
 After('@libzypplocked') do
-  `read PID < /var/run/zypp.pid  && kill -18 $PID && rm /var/run/zypp.pid`
+  `rm /var/run/zypp.pid`
 end
 
 
