@@ -51,7 +51,7 @@ module SUSE
         log.fatal "Error: SCC returned '#{e.message}' (#{e.code})"
         exit 67
       rescue ZypperError => e
-        log.fatal "Error: zypper call '#{e.commandline} returned (#{e.exitstatus})"
+        log.fatal "Error: zypper call '#{e.commandline}' returned (#{e.exitstatus}) with '#{e.output}'"
         exit e.exitstatus
       end
 
