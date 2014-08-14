@@ -10,11 +10,11 @@ Before('@slow_process') do
 end
 
 Before('@libzypplocked') do
-  `echo $$ > /var/run/zypp.pid && kill -19`
+  `echo $$ > /var/run/zypp.pid && kill -19 $$`
 end
 
 After('@libzypplocked') do
-  `read PID < /var/run/zypp.pid  && kill -18 $PID`
+  `read PID < /var/run/zypp.pid  && kill -18 $PID && rm /var/run/zypp.pid`
 end
 
 
