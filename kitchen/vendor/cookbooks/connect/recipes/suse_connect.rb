@@ -1,6 +1,6 @@
 git '/tmp/connect' do
   repository 'https://github.com/SUSE/connect.git'
-  reference 'review_140721_handle_zypper_nonzero_returns'
+  reference 'master'
   action 'sync'
   user 'vagrant'
   group 'users'
