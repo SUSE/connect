@@ -3,12 +3,6 @@ Feature: SUSEConnect full stack integration testing
   In order to deliver the best possible quality of SUSEConnect package we have to do a full stack integration testing
   This means we have to register a test machine against production server and examine all relevant data
 
-  ### Temporary addition for ease of testing
-  @libzypplocked
-  Scenario: libzypp locked should exit with 7
-    When I call SUSEConnect with '--regcode VALID' arguments
-    Then the exit status should be 7
-
   ### SUSEConnect cmd checks ###
   Scenario: System registration
     When I call SUSEConnect with '--regcode VALID' arguments
@@ -58,4 +52,11 @@ Feature: SUSEConnect full stack integration testing
   Scenario: System de-registration
     When SUSEConnect library should be able to de-register the system
     Then a file named "/etc/zypp/credentials.d/SCCcredentials" should not exist
+
+  # Temporary addition for ease of testing
+  @libzypplocked
+  Scenario: libzypp locked should exit with 7
+    When I call SUSEConnect with '-s' arguments
+    Then the exit status should be 7
+
 
