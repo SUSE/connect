@@ -4,11 +4,15 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 require 'suse/connect/cli'
 
 abort 'Root privileges are required to register products and change software repositories' unless Process.uid == 0
-cli = SUSE::Connect::Cli.new(ARGV.dup)
 
 begin
+  cli = SUSE::Connect::Cli.new(ARGV.dup)
   cli.execute!
+rescue OptionParser::InvalidOption => e
+  log.fatal "Error: #{e.message}"
+  exit(1)
 rescue => e
-  puts "SUSEConnect error: #{e.class}: #{e.message}"
+  log.fatal "SUSEConnect error: #{e.class}: #{e.message}"
   cli.log.debug e.backtrace.join("\n")
+  exit(1)
 end
