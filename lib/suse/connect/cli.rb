@@ -50,6 +50,9 @@ module SUSE
       rescue ApiError => e
         log.fatal "Error: SCC returned '#{e.message}' (#{e.code})"
         exit 67
+      rescue FileError => e
+        log.fatal "FileError: '#{e.message}'"
+        exit 68
       end
 
       private
