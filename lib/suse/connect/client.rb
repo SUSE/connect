@@ -59,7 +59,7 @@ module SUSE
         if instance_data_file
           file_path = SUSE::Connect::System.prefix_path(instance_data_file)
           log.debug "Reading instance data from: #{file_path}"
-          raise(Errno::EACCES, 'Instance data file not found') unless File.readable?(file_path)
+          raise(FileError, 'Instance data file not found') unless File.readable?(file_path)
           instance_data = File.read(file_path)
         end
         response = @api.announce_system(token_auth(@options[:token]), distro_target, instance_data)

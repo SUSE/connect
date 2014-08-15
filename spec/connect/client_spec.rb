@@ -127,7 +127,7 @@ describe SUSE::Connect::Client do
 
       it 'fails on unavailable instance_data_file' do
         File.should_receive(:readable?).with('/test').and_return(false)
-        expect { subject.announce_system(nil, '/test') }.to raise_error(Errno::EACCES, 'Permission denied - Instance data file not found')
+        expect { subject.announce_system(nil, '/test') }.to raise_error(FileError, 'Instance data file not found')
       end
 
     end
