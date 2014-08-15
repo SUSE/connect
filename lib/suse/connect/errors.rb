@@ -30,10 +30,9 @@ module SUSE
     end
 
     class ZypperError < StandardError
-      attr_accessor :exitstatus, :commandline, :output
-      def initialize(exitstatus, commandline, output)
+      attr_accessor :exitstatus, :output
+      def initialize(exitstatus, output)
         @exitstatus = exitstatus
-        @commandline = commandline
         @output = output
       end
     end
