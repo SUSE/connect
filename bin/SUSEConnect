@@ -12,7 +12,7 @@ rescue OptionParser::InvalidOption => e
   log.fatal "Error: #{e.message}"
   exit(1)
 rescue => e
-  puts "SUSEConnect error: #{e.class}: #{e.message}"
+  log.fatal "SUSEConnect error: #{e.class}: #{e.message}"
   cli.log.debug e.backtrace.join("\n")
   exit(1)
 end
