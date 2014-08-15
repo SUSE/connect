@@ -52,13 +52,6 @@ describe SUSE::Connect::Cli do
         cli.execute!
       end
 
-      it 'should produce log output if instance data file not found' do
-        File.should_receive(:readable?).with('/test').and_return(false)
-        string_logger.should_receive(:fatal).with(/Instance data file not found/)
-        cli = subject.new(%w{--url http://scc.suse.com --instance-data /test})
-        cli.execute!
-      end
-
     end
 
     context 'parameter dependencies' do
