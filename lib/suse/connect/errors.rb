@@ -29,6 +29,8 @@ module SUSE
       end
     end
 
+    # Error for interactions with zypper.  Collects process exit status for
+    # later reporting
     class ZypperError < StandardError
       attr_accessor :exitstatus, :output
       def initialize(exitstatus, output)

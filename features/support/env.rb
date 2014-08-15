@@ -17,5 +17,3 @@ end
 After('@libzypplocked') do
   `rm /var/run/zypp.pid`
 end
-
-
