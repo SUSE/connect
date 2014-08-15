@@ -12,6 +12,10 @@ describe SUSE::Connect::HwInfo::X86 do
     allow(Open3).to receive(:capture3).with('lscpu').and_return([lscpu, '', success])
   end
 
+  after(:each) do
+    SUSE::Connect::HwInfo::Base.class_variable_set('@@arch', nil)
+  end
+
   it 'returns a hwinfo hash for x86/x86_64 systems' do
     allow(Open3).to receive(:capture3).with('uname -i').and_return(['x86_64', '', success])
     expect(Open3).to receive(:capture3).with('dmidecode -s system-uuid').and_return(['uuid', '', success])

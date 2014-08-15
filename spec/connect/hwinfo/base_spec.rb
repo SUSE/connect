@@ -4,6 +4,10 @@ describe SUSE::Connect::HwInfo::Base do
   subject { SUSE::Connect::HwInfo::Base }
   let(:success) { double('Process Status', :exitstatus => 0) }
 
+  after(:each) do
+    SUSE::Connect::HwInfo::Base.class_variable_set('@@arch', nil)
+  end
+
   describe '#info' do
     context 'x86' do
       require 'suse/connect/hwinfo/x86'
