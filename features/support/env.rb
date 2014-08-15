@@ -11,7 +11,7 @@ end
 
 Before('@libzypplocked') do
   # this should put the pid of the cucumber process into the lockfile
-  `echo $$ > /var/run/zypp.pid`
+  `echo $PPID > /var/run/zypp.pid`
 end
 
 After('@libzypplocked') do
