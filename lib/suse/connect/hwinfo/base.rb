@@ -27,7 +27,7 @@ module SUSE::Connect::HwInfo
       end
 
       def arch
-        @@arch ||= execute('uname -i', false)
+        @arch ||= execute('uname -i', false)
       end
 
       def s390?

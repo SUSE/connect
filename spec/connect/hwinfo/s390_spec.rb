@@ -14,7 +14,7 @@ describe SUSE::Connect::HwInfo::S390 do
   end
 
   after(:each) do
-    SUSE::Connect::HwInfo::Base.class_variable_set('@@arch', nil)
+    SUSE::Connect::HwInfo::Base.instance_variable_set('@arch', nil)
   end
 
   it 'returns a hwinfo hash for x86/x86_64 systems' do

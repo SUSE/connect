@@ -5,7 +5,7 @@ describe SUSE::Connect::HwInfo::Base do
   let(:success) { double('Process Status', :exitstatus => 0) }
 
   after(:each) do
-    SUSE::Connect::HwInfo::Base.class_variable_set('@@arch', nil)
+    SUSE::Connect::HwInfo::Base.instance_variable_set('@arch', nil)
   end
 
   describe '#info' do
