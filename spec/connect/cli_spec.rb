@@ -52,6 +52,12 @@ describe SUSE::Connect::Cli do
         cli.execute!
       end
 
+      it 'should produce log output if FileError encountered' do
+        string_logger.should_receive(:fatal).with('FileError: \'test\'')
+        Client.any_instance.stub(:register!).and_raise(FileError, 'test')
+        cli.execute!
+      end
+
     end
 
     context 'parameter dependencies' do
