@@ -13,3 +13,8 @@ Feature: exit statuses
   Scenario: binary call without token should exit with 1
     When I run `SUSEConnect`
     Then the exit status should be 1
+
+  @libzypplocked
+  Scenario: libzypp locked should exit with 7
+    When I call SUSEConnect with '--regcode VALID' arguments
+    Then the exit status should be 7

@@ -53,3 +53,10 @@ Feature: SUSEConnect full stack integration testing
     When SUSEConnect library should be able to de-register the system
     Then a file named "/etc/zypp/credentials.d/SCCcredentials" should not exist
 
+  # Temporary addition for ease of testing
+  @libzypplocked
+  Scenario: libzypp locked should exit with 7
+    When I call SUSEConnect with '-s' arguments
+    Then the exit status should be 7
+
+

@@ -21,7 +21,8 @@ module SUSE
           error = error.empty? ? output : error
 
           if cmd.include? 'zypper'
-            raise Connect::ZypperError, error
+            e = Connect::ZypperError.new(status.exitstatus, error)
+            raise e, error
           else
             raise Connect::SystemCallError, error
           end

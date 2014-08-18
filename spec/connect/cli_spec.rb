@@ -60,6 +60,18 @@ describe SUSE::Connect::Cli do
 
     end
 
+    context 'zypper error' do
+
+      let(:cli) { subject.new(%w{-r 456}) }
+
+      it 'should produce log output if zypper errors' do
+        string_logger.should_receive(:fatal).with('Error: zypper returned (666) with \'<stream><error>zypper down</error></stream>\'')
+        Client.any_instance.stub(:register!).and_raise ZypperError.new(666, '<stream><error>zypper down</error></stream>')
+        cli.execute!
+      end
+
+    end
+
     context 'parameter dependencies' do
 
       it 'requires no other parameters on --status' do

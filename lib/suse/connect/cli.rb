@@ -53,6 +53,10 @@ module SUSE
       rescue FileError => e
         log.fatal "FileError: '#{e.message}'"
         exit 68
+      rescue ZypperError => e
+        # Zypper errors are in the range 1-7 and 100-105 (which connect will not cause)
+        log.fatal "Error: zypper returned (#{e.exitstatus}) with '#{e.output}'"
+        exit e.exitstatus
       end
 
       private

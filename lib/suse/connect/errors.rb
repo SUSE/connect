@@ -7,7 +7,6 @@ module SUSE
     class CannotBuildTokenAuth < StandardError; end
     class TokenNotPresent < StandardError; end
     class CannotDetectBaseProduct < StandardError; end
-    class ZypperError < StandardError; end
     class SystemCallError < StandardError; end
 
     # Basic error for API interactions. Collects HTTP response (which includes
@@ -30,5 +29,14 @@ module SUSE
       end
     end
 
+    # Error for interactions with zypper.  Collects process exit status for
+    # later reporting
+    class ZypperError < StandardError
+      attr_accessor :exitstatus, :output
+      def initialize(exitstatus, output)
+        @exitstatus = exitstatus
+        @output = output
+      end
+    end
   end
 end
