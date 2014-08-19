@@ -48,7 +48,7 @@ describe SUSE::Connect::Remote::Product do
 
   describe '#==' do
 
-    context :zypper_product do
+    context 'zypper product' do
 
       it 'is equal with zypper product if identifier, version and arch are equal' do
         zypper_product = Zypper::Product.new(:name => 'SLEEK-12', :version => '12', :arch => 'x86_64')

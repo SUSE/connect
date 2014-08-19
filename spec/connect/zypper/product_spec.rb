@@ -18,9 +18,9 @@ describe SUSE::Connect::Zypper::Product do
       expect(subject.new(:arch => 'x86_64').arch).to eq 'x86_64'
     end
 
-    describe :isbase do
+    describe 'isbase' do
 
-      context :isbase_is_1 do
+      context 'is 1' do
 
         it 'set isbase to true if isbase key is equal 1' do
           expect(subject.new(:isbase => '1').isbase).to be true
@@ -28,7 +28,7 @@ describe SUSE::Connect::Zypper::Product do
 
       end
 
-      context :isbase_is_yes do
+      context 'is yes' do
 
         it 'set isbase to true if isbase key is equal yes' do
           expect(subject.new(:isbase => 'yes').isbase).to be true
@@ -36,7 +36,7 @@ describe SUSE::Connect::Zypper::Product do
 
       end
 
-      context :isbase_is_true do
+      context 'is true' do
 
         it 'set isbase to true if isbase key is equal true' do
           expect(subject.new(:isbase => 'true').isbase).to be true
@@ -44,7 +44,7 @@ describe SUSE::Connect::Zypper::Product do
 
       end
 
-      context :isbase_is_different do
+      context 'is different' do
 
         it 'set isbase to true if isbase key is equal true' do
           %w{ foo aga sc 42 false}.each do |variant|
@@ -59,7 +59,7 @@ describe SUSE::Connect::Zypper::Product do
 
     describe 'release type' do
 
-      context :registerrelease_present do
+      context 'registerrelease present' do
 
         it 'set release_type based on registerrelease_present' do
           expect(subject.new(:registerrelease => 'OEMBBC').release_type).to eq 'OEMBBC'
@@ -67,7 +67,7 @@ describe SUSE::Connect::Zypper::Product do
 
       end
 
-      context :oemfile_exists do
+      context 'oemfile_exists' do
 
         it 'set release_type based on OEM file content' do
           file = File.join(SUSE::Connect::Zypper::OEM_PATH, 'NagaokaRobotics')
@@ -78,7 +78,7 @@ describe SUSE::Connect::Zypper::Product do
 
       end
 
-      context :oemfile_does_not_exists do
+      context 'oemfile_does_not_exists' do
 
         it 'fallback to registerrelease if productline passed, but does not exist' do
           product_hash = { :registerrelease => 'sic', :productline => 'NagaokaRobotics' }
