@@ -1,6 +1,6 @@
 git '/tmp/connect' do
   repository 'https://github.com/SUSE/connect.git'
-  reference 'master'
+  reference 'review_140819_fix_featuretest_cli_option_parsing'
   action 'sync'
   user 'vagrant'
   group 'users'
