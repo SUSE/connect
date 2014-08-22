@@ -23,7 +23,7 @@ describe SUSE::Connect::Zypper::ProductStatus do
 
   describe '#registration_status?' do
 
-    context :product_is_registered do
+    context 'product is registered' do
 
       it 'will be `Registered`' do
         allow(subject).to receive(:registered?).and_return true
@@ -32,7 +32,7 @@ describe SUSE::Connect::Zypper::ProductStatus do
 
     end
 
-    context :product_is_not_registered do
+    context 'product is not registered' do
 
       it 'will be `Not Registered`' do
         allow(subject).to receive(:registered?).and_return false

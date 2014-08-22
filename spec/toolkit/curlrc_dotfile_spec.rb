@@ -92,7 +92,7 @@ describe SUSE::Toolkit::CurlrcDotfile do
 
   describe '#line_with_credentials' do
 
-    context :file_exist do
+    context 'file exists' do
 
       before do
         allow(subject).to receive(:exist?).and_return(true)
@@ -110,7 +110,7 @@ describe SUSE::Toolkit::CurlrcDotfile do
 
     end
 
-    context :file_does_not_exist do
+    context 'file does not exist' do
 
       before { allow(subject).to receive(:exist?).and_return(false) }
 
