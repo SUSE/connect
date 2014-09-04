@@ -14,7 +14,9 @@ describe SUSE::Connect::Remote::Product do
       'free' => true,
       'eula_url' => 'https://nu.novell.com/SUSE:/Products:/SLE-12/images/' \
       'repo/SLE-12-module-sleek-POOL-x86_64-Media.license/',
-      'extensions' => [{ 'identifier' => 'SLEEK-12-EXT', 'version' => '12', 'arch' => 'x86_64' }]
+      'extensions' => [{ 'identifier' => 'SLEEK-12-EXT', 'version' => '12', 'arch' => 'x86_64' }],
+      'product_type' => 'extension'
+
     }
     described_class.new(product)
   end
