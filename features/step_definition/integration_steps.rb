@@ -49,7 +49,7 @@ Then(/^zypper should contain a repositories for (base|sdk|wsm) product$/) do |pr
     ]
   else
     repositories = [
-      'Web_and_Scripting_Module_12_x86_64:SLE-MODULE-WEB-SCRIPTING12-Pool'
+      'Web_and_Scripting_Module_12_x86_64:SLE-Module-Web-Scripting12-Pool'
     ]
   end
 
