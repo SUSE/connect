@@ -51,13 +51,12 @@ module SUSE
       #   In this case we expect Base64 encoded string with login and password
       # @return [OpenStruct] responding to #body(response from SCC), #code(natural HTTP response code) and #success.
       #
-      def update_system(auth, distro_target = nil, instance_data = nil)
+      def update_system(auth, distro_target = nil)
         payload = {
           :hostname      => System.hostname,
           :hwinfo        => System.hwinfo,
           :distro_target => distro_target || Zypper.distro_target
         }
-        payload[:instance_data] = instance_data if instance_data
         @connection.put('/connect/systems', :auth => auth, :params => payload)
       end
 

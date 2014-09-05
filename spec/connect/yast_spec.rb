@@ -42,6 +42,16 @@ describe SUSE::Connect::YaST do
       subject.update_system
     end
 
+    it 'forwards distro_target parameter to client' do
+      Client.any_instance.should_receive(:update_system).with('my-distro-target')
+      subject.update_system({}, 'my-distro-target')
+    end
+
+    it 'uses client params' do
+      Client.should_receive(:new).with(:language => 'de').and_call_original
+      subject.update_system(:language => 'de')
+    end
+
   end
 
   describe '#activate_product' do

@@ -304,12 +304,14 @@ describe SUSE::Connect::Api do
       stub_update_call
       System.stub(:hostname => 'connect')
       System.stub(:hwinfo => 'hwinfo')
+      Zypper.stub(:distro_target => 'openSUSE-4.1-x86_64')
     end
 
     it 'is authenticated via basic auth' do
       payload = [
         '/connect/systems',
-        :auth => 'Basic: encodedgibberish', :params => { :hostname => 'connect', :hwinfo => 'hwinfo' }
+        :auth => 'Basic: encodedgibberish', :params => { :hostname => 'connect', :hwinfo => 'hwinfo',
+                                                         :distro_target => 'openSUSE-4.1-x86_64' }
       ]
       Connection.any_instance.should_receive(:put).with(*payload).and_call_original
       subject.new(client).update_system('Basic: encodedgibberish')
