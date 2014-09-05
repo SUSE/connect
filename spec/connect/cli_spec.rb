@@ -184,6 +184,12 @@ describe SUSE::Connect::Cli do
       expect(subject.new(argv).options[:status]).to be true
     end
 
+    it 'sets write_config option' do
+      argv = %w{--write-config}
+      cli = subject.new(argv)
+      cli.options[:write_config].should be true
+    end
+
   end
 
   describe 'errors on invalid options format' do
