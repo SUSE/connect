@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Sep  5 07:32:10 UTC 2014 - wstephenson@suse.com
+
+- Update to version 0.2.11
+  - Use v3 of the SCC api; adds product_type to product listing
+
+-------------------------------------------------------------------
 Thu Aug 21 08:49:38 UTC 2014 - wstephenson@suse.com
 
 - Update to version 0.2.10
