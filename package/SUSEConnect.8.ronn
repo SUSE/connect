@@ -15,9 +15,9 @@ By default, SUSEConnect registers the base SUSE Linux Enterprise product
 installed on a system by querying zypper.  It can also be used to register
 extensions that have been installed after system installation from physical media.
 
-To register extensions, use the `--product <PRODUCT-IDENTIFIER>` option together 
+To register extensions, use the `--product <PRODUCT-IDENTIFIER>` option together
 with the product identifier of the extension, obtained with `zypper products`
-  
+
 Manage subscriptions at [SUSE Customer Center][scc]
 
 ## OPTIONS
@@ -45,6 +45,9 @@ Manage subscriptions at [SUSE Customer Center][scc]
   * `-s`, `--status`:
     Print current registration status of all products installed
 
+  * `--write-config`:
+    Write options to config file at /etc/SUSEConnect.
+
   * `--root [PATH]`:
     Path to the root folder, uses the same parameter for zypper.
 
@@ -69,7 +72,7 @@ Manage subscriptions at [SUSE Customer Center][scc]
   * 65: Access error, eg files not readable
   * 66: Parser error: Server JSON response was not parseable
   * 67: Server responded with error: see log output
- 
+
 ## COMPARED TO SUSE_REGISTER
 ### BEFORE
   `suse_register -a email=<email> -a regcode-sles=<regcode> -L <logfile>`
@@ -91,7 +94,7 @@ Manage subscriptions at [SUSE Customer Center][scc]
 
 ## FILES
   * `/etc/SUSEConnect`:
-    Configuration file containing server URL, regcode and language for registration 
+    Configuration file containing server URL, regcode and language for registration
     TBD
 
 ## AUTHOR

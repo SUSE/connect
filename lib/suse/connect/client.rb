@@ -24,6 +24,7 @@ module SUSE
         @options[:token]    = opts[:token] || @config.regcode
         @options[:product]  = opts[:product]
         @api                = Api.new(self)
+        write_config if opts[:write_config]
         log.debug "Merged options: #{@options}"
       end
 

@@ -37,6 +37,12 @@ describe SUSE::Connect::Client do
         expect(client.options[:insecure]).to be true
       end
 
+      it 'should set write_config flag from options if it was passed via constructor' do
+        expect_any_instance_of(Client).to receive(:write_config)
+        client = Client.new(:write_config => true)
+        expect(client.options[:write_config]).to be true
+      end
+
       it 'allows to pass arbitrary options' do
         client = Client.new(foo: 'bar')
         expect(client.options[:foo]).to eq 'bar'
