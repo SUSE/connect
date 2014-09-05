@@ -24,6 +24,7 @@ module SUSE
         @options[:token]    = opts[:token] || @config.regcode
         @options[:product]  = opts[:product]
         @api                = Api.new(self)
+        write_config if opts[:write_config]
         log.debug "Merged options: #{@options}"
       end
 
@@ -68,8 +69,8 @@ module SUSE
 
       # Re-send the system's hardware details on SCC
       #
-      def update_system
-        @api.update_system(system_auth)
+      def update_system(distro_target = nil)
+        @api.update_system(system_auth, distro_target)
       end
 
       # Activate a product

@@ -79,7 +79,7 @@
 :disable_docs: true
 :preamble: |-
   %define rb_build_versions %{rb_default_ruby}
-  PreReq:         rubygem(%{rb_default_ruby_abi}:%{mod_name})
+  Requires: rubygem(%{rb_default_ruby_abi}:%{mod_name})
   Requires: coreutils, util-linux, net-tools, hwinfo, zypper, ca-certificates-mozilla
   Conflicts: suseRegister
   %ifarch x86_64

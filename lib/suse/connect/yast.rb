@@ -25,8 +25,8 @@ module SUSE
         # @param [String] distro_target desired distro target
         #
         # @return [Array <String>] SCC / system credentials - login and password tuple
-        def update_system(client_params = {})
-          Client.new(client_params).update_system
+        def update_system(client_params = {}, distro_target = nil)
+          Client.new(client_params).update_system(distro_target)
         end
 
         # Activates a product on SCC / the registration server.
