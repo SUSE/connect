@@ -117,6 +117,10 @@ module SUSE
           @options[:status_text] = true
         end
 
+        @opts.on('--write-config', 'write options to config file at /etc/SUSEConnect') do |opt|
+          @options[:write_config] = true
+        end
+
         @opts.separator ''
         @opts.separator 'Common options:'
 
