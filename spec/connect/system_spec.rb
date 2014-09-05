@@ -168,4 +168,17 @@ describe SUSE::Connect::System do
     end
   end
 
+  describe '.read_file' do
+
+    it 'reads file' do
+      instance_file_path = 'spec/fixtures/instance_data.xml'
+      subject.read_file(instance_file_path).should eq File.read(instance_file_path)
+    end
+
+    it 'raises on unreadable file' do
+      expect { subject.read_file('/not_available_path') }.to raise_error(FileError, 'File not found')
+    end
+
+  end
+
 end

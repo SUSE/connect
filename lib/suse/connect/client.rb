@@ -57,20 +57,16 @@ module SUSE
       #
       # @returns: [Array] login, password tuple. Those credentials are given by SCC/Registration Proxy
       def announce_system(distro_target = nil, instance_data_file = nil)
-        if instance_data_file
-          file_path = SUSE::Connect::System.prefix_path(instance_data_file)
-          log.debug "Reading instance data from: #{file_path}"
-          raise(FileError, 'Instance data file not found') unless File.readable?(file_path)
-          instance_data = File.read(file_path)
-        end
+        instance_data = System.read_file(instance_data_file) if instance_data_file
         response = @api.announce_system(token_auth(@options[:token]), distro_target, instance_data)
         [response.body['login'], response.body['password']]
       end
 
       # Re-send the system's hardware details on SCC
       #
-      def update_system(distro_target = nil)
-        @api.update_system(system_auth, distro_target)
+      def update_system(distro_target = nil, instance_data_file = nil)
+        instance_data = System.read_file(instance_data_file) if instance_data_file
+        @api.update_system(system_auth, distro_target, instance_data)
       end
 
       # Activate a product
