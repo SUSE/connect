@@ -144,8 +144,13 @@ describe SUSE::Connect::Client do
         end
 
         it 'calls underlying api' do
-          Api.any_instance.should_receive(:update_system).with('auth')
+          Api.any_instance.should_receive(:update_system).with('auth', nil)
           subject.update_system
+        end
+
+        it 'forwards distro_target to api' do
+          Api.any_instance.should_receive(:update_system).with('auth', 'my-distro-target')
+          subject.update_system('my-distro-target')
         end
 
       end
