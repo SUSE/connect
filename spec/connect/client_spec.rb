@@ -133,7 +133,7 @@ describe SUSE::Connect::Client do
 
       it 'fails on unavailable instance_data_file' do
         File.should_receive(:readable?).with('/test').and_return(false)
-        expect { subject.announce_system(nil, '/test') }.to raise_error(FileError, 'Instance data file not found')
+        expect { subject.announce_system(nil, '/test') }.to raise_error(FileError, 'File not found')
       end
 
     end
@@ -150,13 +150,19 @@ describe SUSE::Connect::Client do
         end
 
         it 'calls underlying api' do
-          Api.any_instance.should_receive(:update_system).with('auth', nil)
+          Api.any_instance.should_receive(:update_system).with('auth', nil, nil)
           subject.update_system
         end
 
         it 'forwards distro_target to api' do
-          Api.any_instance.should_receive(:update_system).with('auth', 'my-distro-target')
+          Api.any_instance.should_receive(:update_system).with('auth', 'my-distro-target', nil)
           subject.update_system('my-distro-target')
+        end
+
+        it 'forwards instance_data_file to api' do
+          System.should_receive(:read_file).with('filepath').and_return('')
+          Api.any_instance.should_receive(:update_system).with('auth', 'my-distro-target', '')
+          subject.update_system('my-distro-target', 'filepath')
         end
 
       end

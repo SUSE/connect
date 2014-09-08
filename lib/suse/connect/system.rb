@@ -60,6 +60,13 @@ module SUSE
           end
         end
 
+        def read_file(path)
+          file_path = SUSE::Connect::System.prefix_path(path)
+          log.debug "Reading file from: #{file_path}"
+          raise(FileError, 'File not found') unless File.readable?(file_path)
+          File.read(file_path)
+        end
+
       end
     end
   end
