@@ -55,10 +55,14 @@ Feature: SUSEConnect full stack integration testing
 
   # Temporary addition for ease of testing
   @libzypplocked
-  Scenario: libzypp locked should exit with 7
+  Scenario: Error cleanly if system de-registered on SCC
     # 'true' is needed due to our naive options parser at integration_steps.rb:7
     # I don't want to replicate our entire optparse usage from cli.rb there, nor use the code to be tested in the test harness.
     When I call SUSEConnect with '--status true' arguments
-    Then the exit status should be 7
+    Then the exit status should be 67
+    And the output should contain:
+    """
+    Existing SCC credentials were not recognised
+    """
 
 
