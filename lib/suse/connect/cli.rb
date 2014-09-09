@@ -48,7 +48,11 @@ module SUSE
         log.fatal 'Error: Cannot parse response from server'
         exit 66
       rescue ApiError => e
-        log.fatal "Error: SCC returned '#{e.message}' (#{e.code})"
+        if e.code == 401
+          log.fatal "Existing SCC credentials were not recognised, probably because the registered system was unregistered or deleted. Check #{@options[:url] || 'https://scc.suse.com'} whether your system appears there. If it does not, remove /etc/SUSEConnect and re-register this system."
+        else
+            log.fatal "Error: SCC returned '#{e.message}' (#{e.code})"
+        end
         exit 67
       rescue FileError => e
         log.fatal "FileError: '#{e.message}'"
