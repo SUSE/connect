@@ -50,7 +50,11 @@ module SUSE
       rescue ApiError => e
         case e.code
         when 401
-          log.fatal "Error: Not authorised. If using existing SCC credentials, they were not recognised, probably because the registered system was unregistered or deleted. Check #{@options[:url] || 'https://scc.suse.com'} whether your system appears there. If it does not, remove /etc/SUSEConnect, /etc/zypp/credentials.d/* and zypper services using those credentials, and re-register this system."
+          log.fatal "Error: Not authorised. If using existing SCC credentials, they were not recognised," \
+          " probably because the registered system was unregistered or deleted." \
+          " Check #{@options[:url] || 'https://scc.suse.com'} whether your system appears there." \
+          " If it does not, remove /etc/SUSEConnect, /etc/zypp/credentials.d/* and zypper services" \
+          " using those credentials, and re-register this system."
         else
           log.fatal "Error: SCC returned '#{e.message}' (#{e.code})"
         end
