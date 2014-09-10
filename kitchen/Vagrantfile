@@ -21,7 +21,7 @@ Vagrant.configure('2') do |config|
       os.api_key      = ENV['CLOUD_PASS']
 
       os.tenant = 'appliances'
-      os.flavor       = /m1.small/
+      os.flavor       = 'm1.small'
       os.image        = /scc-connect-testing-sles-rc1/
       os.networks     = ['fixed']
       os.floating_ip  = 'auto'
