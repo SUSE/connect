@@ -34,6 +34,13 @@ describe SUSE::Connect::Cli do
         cli.execute!
       end
 
+      it 'should suggest re-registration if ApiError 401 encountered' do
+        response = Net::HTTPResponse.new('1.1', 401, 'Test')
+        expect_any_instance_of(Client).to receive(:register!).and_raise ApiError.new(response)
+        expect(string_logger).to receive(:fatal).with(match(/Error: Not authorised./))
+        cli.execute!
+      end
+
       it 'should produce log output if connection refused' do
         string_logger.should_receive(:fatal).with('Error: Connection refused by server https://scc.suse.com')
         Client.any_instance.stub(:register!).and_raise Errno::ECONNREFUSED
