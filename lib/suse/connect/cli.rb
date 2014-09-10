@@ -48,10 +48,11 @@ module SUSE
         log.fatal 'Error: Cannot parse response from server'
         exit 66
       rescue ApiError => e
-        if e.code == 401
-          log.fatal "Existing SCC credentials were not recognised, probably because the registered system was unregistered or deleted. Check #{@options[:url] || 'https://scc.suse.com'} whether your system appears there. If it does not, remove /etc/SUSEConnect and re-register this system."
+        case e.code
+        when 401
+          log.fatal "Error: Not authorised. If using existing SCC credentials, they were not recognised, probably because the registered system was unregistered or deleted. Check #{@options[:url] || 'https://scc.suse.com'} whether your system appears there. If it does not, remove /etc/SUSEConnect, /etc/zypp/credentials.d/* and zypper services using those credentials, and re-register this system."
         else
-            log.fatal "Error: SCC returned '#{e.message}' (#{e.code})"
+          log.fatal "Error: SCC returned '#{e.message}' (#{e.code})"
         end
         exit 67
       rescue FileError => e
