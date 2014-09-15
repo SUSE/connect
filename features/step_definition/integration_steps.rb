@@ -71,14 +71,14 @@ Then(/^SUSEConnect library should respect API headers$/) do
   expect(response.headers['scc-api-version'].first).to eq(SUSE::Connect::Api::VERSION)
 end
 
-Then(/^SUSEConnect library should be able to de-register the system$/) do
+Then(/^I cleanly deregister the system removing local credentials$/) do
   step 'Set regcode and url options'
 
   client = SUSE::Connect::Client.new(url: @url, regcode: @regcode)
   client.deregister!
 end
 
-Then(/^I delete the registered system on SCC only$/) do
+Then(/^I deregister the system only$/) do
   step 'Set regcode and url options'
   client = SUSE::Connect::Client.new(url: @url, regcode: @regcode)
   client.instance_eval { @api.deregister(system_auth) }

@@ -50,12 +50,12 @@ Feature: SUSEConnect full stack integration testing
 
   # De-register the system at the end of the feature
   Scenario: System de-registration
-    When SUSEConnect library should be able to de-register the system
+    When I cleanly deregister the system removing local credentials
     Then a file named "/etc/zypp/credentials.d/SCCcredentials" should not exist
 
   Scenario: Error cleanly if system record was deleted on SCC only
     When I call SUSEConnect with '--regcode VALID' arguments
-    Then I delete the registered system on SCC only
+    Then I deregister the system only
     And I call SUSEConnect with '--status true' arguments
     Then the exit status should be 67
     And the output should contain:
