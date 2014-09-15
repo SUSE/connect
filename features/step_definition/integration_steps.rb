@@ -87,7 +87,7 @@ end
 Then(/^I remove local credentials$/) do
   step 'Set regcode and url options'
   client = SUSE::Connect::Client.new(url: @url, regcode: @regcode)
-  client.instance_eval { System.remove_credentials }
+  client.instance_eval { SUSE::Connect::System.remove_credentials }
 end
 
 Then(/^SUSEConnect library should be able to activate a free extension without regcode$/) do
