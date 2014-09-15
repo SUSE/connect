@@ -53,18 +53,8 @@ Feature: SUSEConnect full stack integration testing
     When SUSEConnect library should be able to de-register the system
     Then a file named "/etc/zypp/credentials.d/SCCcredentials" should not exist
 
-  # This doesn't work because the above de-register also removed credentials, duh
-  # To test this behaviour, we need to de-register the system on SCC only, but keep the credentials.
-  # How to set up a separate integration test that does this?
-  # 1 Register
-  # 2 De-register by calling api.deregister only (simulates manual system deletion on SCC)
-  # 3 Test
-  # 4 Remove credentials
-
-  @ignore
-  Scenario: Error cleanly if system de-registered on SCC
-    # 'true' is needed due to our naive options parser at integration_steps.rb:7
-    # I don't want to replicate our entire optparse usage from cli.rb there, nor use the code to be tested in the test harness.
+  Scenario: Error cleanly if system record was deleted on SCC only
+    When I call SUSEConnect with '--regcode VALID' arguments
     Then I delete the registered system on SCC only
     And I call SUSEConnect with '--status true' arguments
     Then the exit status should be 67
