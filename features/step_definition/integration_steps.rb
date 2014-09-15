@@ -78,10 +78,16 @@ Then(/^SUSEConnect library should be able to de-register the system$/) do
   client.deregister!
 end
 
-Then( /^I delete the registered system on SCC only$/) do
+Then(/^I delete the registered system on SCC only$/) do
   step 'Set regcode and url options'
   client = SUSE::Connect::Client.new(url: @url, regcode: @regcode)
   client.instance_eval { @api.deregister(system_auth) }
+end
+
+Then(/^I remove local credentials$/) do
+  step 'Set regcode and url options'
+  client = SUSE::Connect::Client.new(url: @url, regcode: @regcode)
+  client.instance_eval(System.remove_credentials)
 end
 
 Then(/^SUSEConnect library should be able to activate a free extension without regcode$/) do

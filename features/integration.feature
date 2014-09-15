@@ -72,5 +72,6 @@ Feature: SUSEConnect full stack integration testing
     """
     Not authorised. If using existing SCC credentials
     """
+    Then I remove local credentials
 
 
