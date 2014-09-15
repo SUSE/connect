@@ -50,19 +50,18 @@ Feature: SUSEConnect full stack integration testing
 
   # De-register the system at the end of the feature
   Scenario: System de-registration
-    When SUSEConnect library should be able to de-register the system
+    When I cleanly deregister the system removing local credentials
     Then a file named "/etc/zypp/credentials.d/SCCcredentials" should not exist
 
-  # Temporary addition for ease of testing
-  @libzypplocked
-  Scenario: Error cleanly if system de-registered on SCC
-    # 'true' is needed due to our naive options parser at integration_steps.rb:7
-    # I don't want to replicate our entire optparse usage from cli.rb there, nor use the code to be tested in the test harness.
-    When I call SUSEConnect with '--status true' arguments
+  Scenario: Error cleanly if system record was deleted on SCC only
+    When I call SUSEConnect with '--regcode VALID' arguments
+    Then I deregister the system only
+    And I call SUSEConnect with '--status true' arguments
     Then the exit status should be 67
     And the output should contain:
     """
-    Existing SCC credentials were not recognised
+    Not authorised. If using existing SCC credentials
     """
+    Then I remove local credentials
 
 
