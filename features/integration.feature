@@ -53,8 +53,6 @@ Feature: SUSEConnect full stack integration testing
     When SUSEConnect library should be able to de-register the system
     Then a file named "/etc/zypp/credentials.d/SCCcredentials" should not exist
 
-  # Temporary addition for ease of testing
-  @libzypplocked
   Scenario: Error cleanly if system de-registered on SCC
     # 'true' is needed due to our naive options parser at integration_steps.rb:7
     # I don't want to replicate our entire optparse usage from cli.rb there, nor use the code to be tested in the test harness.
