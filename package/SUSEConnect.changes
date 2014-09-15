@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Mon Sep 15 12:00:19 UTC 2014 - wstephenson@suse.com
+
+- Update to version 0.2.12
+  - Output useful error message if the system was manually deleted
+    on the registration server, leaving stale credentials.
+
+-------------------------------------------------------------------
 Fri Sep  5 07:32:10 UTC 2014 - wstephenson@suse.com
 
 - Update to version 0.2.11
