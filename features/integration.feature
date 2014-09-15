@@ -70,7 +70,7 @@ Feature: SUSEConnect full stack integration testing
     Then the exit status should be 67
     And the output should contain:
     """
-    Existing SCC credentials were not recognised
+    Not authorised. If using existing SCC credentials
     """
 
 
