@@ -123,14 +123,14 @@ describe SUSE::Connect::Zypper do
   describe '.refresh' do
 
     it 'calls zypper with proper arguments' do
-      expect(Open3).to receive(:capture3).with('zypper refresh').and_return(['', '', status])
+      expect(Open3).to receive(:capture3).with('zypper --non-interactive refresh').and_return(['', '', status])
       subject.refresh
     end
 
     it 'calls zypper with proper arguments --root case' do
       SUSE::Connect::System.filesystem_root = '/path/to/root'
 
-      expect(Open3).to receive(:capture3).with("zypper --root '/path/to/root' refresh").and_return(['', '', status])
+      expect(Open3).to receive(:capture3).with("zypper --root '/path/to/root' --non-interactive refresh").and_return(['', '', status])
       subject.refresh
     end
 
@@ -139,14 +139,15 @@ describe SUSE::Connect::Zypper do
   describe '.refresh_services' do
 
     it 'calls zypper with proper arguments' do
-      expect(Open3).to receive(:capture3).with('zypper refresh-services -r').and_return(['', '', status])
+      expect(Open3).to receive(:capture3).with('zypper --non-interactive refresh-services -r').and_return(['', '', status])
       subject.refresh_services
     end
 
     it 'calls zypper with proper arguments' do
       SUSE::Connect::System.filesystem_root = '/path/to/root'
 
-      expect(Open3).to receive(:capture3).with("zypper --root '/path/to/root' refresh-services -r").and_return(['', '', status])
+      expect(Open3).to receive(:capture3).with("zypper --root '/path/to/root' --non-interactive refresh-services -r")
+                       .and_return(['', '', status])
       subject.refresh_services
     end
 
