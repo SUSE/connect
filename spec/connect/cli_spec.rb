@@ -89,7 +89,7 @@ describe SUSE::Connect::Cli do
 
       it 'requires either --token or --url (regcode-less SMT registration)' do
         string_logger.should_receive(:error)
-          .with('Please set the token parameter to register against SCC, or the url parameter to register against SMT')
+          .with('Please set the regcode parameter to register against SCC, or the url parameter to register against SMT')
         cli.execute!
       end
 
