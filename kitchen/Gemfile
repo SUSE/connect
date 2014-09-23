@@ -1,5 +1,8 @@
 source 'https://rubygems.org'
 
+# Provisioning
+gem 'vagrant', github: 'mitchellh/vagrant', tag: 'v1.6.3'
+
 group :development do
   gem 'librarian-chef'
 end
