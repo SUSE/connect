@@ -23,7 +23,8 @@ describe SUSE::Toolkit::SystemCalls do
     end
 
     it 'should produce debug log output' do
-      SUSE::Connect::GlobalLogger.instance.log.should_receive(:debug)
+      SUSE::Connect::GlobalLogger.instance.log.should_receive(:debug).with(/Executing:/)
+      SUSE::Connect::GlobalLogger.instance.log.should_receive(:debug).with(/Output:/)
       subject.should_receive(:capture3).with('date').and_return([date, '', success])
       expect(execute('date', false)).to eql date
     end
@@ -60,6 +61,13 @@ describe SUSE::Toolkit::SystemCalls do
       SUSE::Connect::GlobalLogger.instance.log.should_receive(:error)
       expect { execute('zypper --xmlout products -i') }.to raise_error(SUSE::Connect::ZypperError, 'error message')
     end
+
+    it 'should raise in case zypper tries to go interactive' do
+      subject.should_receive(:capture3).with('zypper --non-interactive refresh-services -r')
+        .and_return(['test', 'ABORT request', success])
+      expect { execute('zypper --non-interactive refresh-services -r') }.to raise_error(SUSE::Connect::ZypperError, /ABORT request/)
+    end
+
   end
 
 end

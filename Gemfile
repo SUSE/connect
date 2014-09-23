@@ -19,6 +19,7 @@ group :test do
   gem 'coveralls', :require => false
   gem 'rspec', '~> 2.14'
   gem 'webmock', '~> 1.15'
+  gem 'http', '>= 0.6.0'
   gem 'aruba'
 end
 

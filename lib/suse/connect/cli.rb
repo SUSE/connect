@@ -27,7 +27,7 @@ module SUSE
             log.error 'Please use --instance-data only in combination with --url pointing to your SMT server'
             exit(1)
           elsif @options[:url].nil? && @options[:token].nil?
-            log.error 'Please set the token parameter to register against SCC, or the url parameter to register against SMT'
+            log.error 'Please set the regcode parameter to register against SCC, or the url parameter to register against SMT'
             exit(1)
           elsif @options[:token] && @options[:instance_data_file]
             log.error 'Please use either --token or --instance-data'

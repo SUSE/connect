@@ -50,11 +50,11 @@ module SUSE
         end
 
         def refresh
-          call('refresh')
+          call('--non-interactive refresh')
         end
 
         def refresh_services
-          call('refresh-services -r')
+          call('--non-interactive refresh-services -r')
         end
 
         def write_service_credentials(service_name)

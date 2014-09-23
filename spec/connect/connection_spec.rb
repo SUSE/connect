@@ -156,8 +156,8 @@ describe SUSE::Connect::Connection do
 
     it 'hits requested endpoint with parametrized request' do
       result = connection.post('/api/v1/test', :auth => 'Token token=zulu')
-      result.body.should eq({})
-      result.code.should eq 200
+      expect(result.body).to eq({})
+      expect(result.code).to eq 200
     end
 
     it 'sends Accept-Language header with specified language' do
@@ -248,8 +248,8 @@ describe SUSE::Connect::Connection do
           :auth => 'Token token=zulu'
       )
 
-      result.body.should be_nil
-      result.code.should eq 204
+      expect(result.body).to be_nil
+      expect(result.code).to eq 204
     end
 
     it 'raise an ApiError if response code anything but 200' do
@@ -282,7 +282,7 @@ describe SUSE::Connect::Connection do
       expect { connection.post('/api/v1/test', :auth   => 'Token token=zulu', :params => {}) }
       .to raise_error(ApiError) do |error|
         error.code.should eq 422
-        error.body.should eq('error' => 'These are not the droids you were looking for')
+        error.response.body.should eq('error' => 'These are not the droids you were looking for')
       end
     end
   end
