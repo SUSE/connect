@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Tue Sep 23 10:23:17 UTC 2014 - tschmidt@suse.com
+
+- Update to version 0.2.13
+  - Fix help message (bnc#897528) 
+  - Don't get stuck when zypper goes into interactive mode, fail instead. 
+    (bnc#897054, bnc#897056)
+
+-------------------------------------------------------------------
 Mon Sep 15 12:00:19 UTC 2014 - wstephenson@suse.com
 
 - Update to version 0.2.12
