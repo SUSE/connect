@@ -12,6 +12,9 @@ desc 'Run console loaded with gem'
 task :console do
   require 'irb'
   require 'irb/completion'
+  require 'byebug'
+  require 'awesome_print'
+  require 'date'
   ARGV.clear
   IRB.start
 end
