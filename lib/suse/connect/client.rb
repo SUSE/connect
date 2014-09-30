@@ -26,7 +26,7 @@ module SUSE
         @api                  = Api.new(self)
 
         # Update config attributes
-        @config.merge(@options)
+        @config.merge!(@options)
 
         write_config if opts[:write_config]
         log.debug "Merged options: #{@options}"

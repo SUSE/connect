@@ -29,7 +29,7 @@ module SUSE
         self[:insecure] = false if insecure.nil?
       end
 
-      def merge(overrides)
+      def merge!(overrides)
         self.class.serializable.each{|attr| self.send("#{attr}=", overrides[attr]) if overrides[attr] }
       end
 

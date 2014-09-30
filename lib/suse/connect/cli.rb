@@ -18,7 +18,7 @@ module SUSE
 
         # Read SUSEConnect config and merge with cli options
         @config = Config.new
-        @config.merge(@options)
+        @config.merge!(@options)
       end
 
       def execute! # rubocop:disable MethodLength, CyclomaticComplexity

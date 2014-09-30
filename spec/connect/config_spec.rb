@@ -40,13 +40,13 @@ describe SUSE::Connect::Config do
       end
     end
 
-    context '#merge' do
+    context '#merge!' do
       it 'updates config attributes from overrides hash' do
         expect(config.url).to eq 'https://scc.suse.com'
         expect(config.insecure).to eq false
 
         overrides = { url: 'http://foo.bar', insecure: true }
-        config.merge(overrides)
+        config.merge!(overrides)
 
         expect(config.url).to eq overrides[:url]
         expect(config.insecure).to eq overrides[:insecure]
@@ -57,7 +57,7 @@ describe SUSE::Connect::Config do
         expect(config.insecure).to eq false
 
         overrides = { url: nil, insecure: nil }
-        config.merge(overrides)
+        config.merge!(overrides)
 
         expect(config.url).to eq 'https://scc.suse.com'
         expect(config.insecure).to eq false
