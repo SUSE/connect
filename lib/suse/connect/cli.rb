@@ -32,7 +32,7 @@ module SUSE
           if @options[:instance_data_file] && !@options[:url]
             log.error 'Please use --instance-data only in combination with --url pointing to your SMT server'
             exit(1)
-          elsif (@config.url.nil? && @options[:token].nil?) || (@config.url == SUSE::Connect::Client::DEFAULT_URL && @options[:token].nil?)
+          elsif ((@config.url.nil? || @config.url == SUSE::Connect::Client::DEFAULT_URL) && @options[:token].nil?)
             log.error 'Please set the regcode parameter to register against SCC, or the url parameter to register against SMT'
             exit(1)
           elsif @options[:token] && @options[:instance_data_file]
