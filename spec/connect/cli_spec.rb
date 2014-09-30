@@ -8,6 +8,7 @@ describe SUSE::Connect::Cli do
   let(:default_logger) { SUSE::Connect::GlobalLogger.instance.log }
   let(:string_logger) { ::Logger.new(StringIO.new) }
   let(:cli) { subject.new({}) }
+  let(:config_file) { File.expand_path File.join(File.dirname(__FILE__), '../fixtures/SUSEConnect') }
 
   before do
     Zypper.stub(:base_product => {})
@@ -89,6 +90,18 @@ describe SUSE::Connect::Cli do
 
       it 'requires either --token or --url (regcode-less SMT registration)' do
         string_logger.should_receive(:error)
+          .with('Please set the regcode parameter to register against SCC, or the url parameter to register against SMT')
+        cli.execute!
+      end
+
+      it 'requires either --token or --url (regcode-less SMT registration) but respects config attributes' do
+        config = SUSE::Connect::Config.new(config_file)
+        config.url = 'https://smt.server'
+        allow(SUSE::Connect::Config).to receive(:new).and_return(config)
+
+        Client.any_instance.stub(:register!).and_return true
+
+        string_logger.should_not_receive(:error)
           .with('Please set the regcode parameter to register against SCC, or the url parameter to register against SMT')
         cli.execute!
       end

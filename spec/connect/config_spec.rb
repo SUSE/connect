@@ -40,6 +40,30 @@ describe SUSE::Connect::Config do
       end
     end
 
+    context '#merge!' do
+      it 'updates config attributes from overrides hash' do
+        expect(config.url).to eq 'https://scc.suse.com'
+        expect(config.insecure).to eq false
+
+        overrides = { url: 'http://foo.bar', insecure: true }
+        config.merge!(overrides)
+
+        expect(config.url).to eq overrides[:url]
+        expect(config.insecure).to eq overrides[:insecure]
+      end
+
+      it 'does not override config attributes with nil values' do
+        expect(config.url).to eq 'https://scc.suse.com'
+        expect(config.insecure).to eq false
+
+        overrides = { url: nil, insecure: nil }
+        config.merge!(overrides)
+
+        expect(config.url).to eq 'https://scc.suse.com'
+        expect(config.insecure).to eq false
+      end
+    end
+
     context '#write' do
       it 'writes configuration settings to YAML file' do
         File.should_receive(:write).with(config_file, config.to_yaml).and_return(0)

@@ -29,6 +29,10 @@ module SUSE
         self[:insecure] = false if insecure.nil?
       end
 
+      def merge!(overrides)
+        self.class.serializable.each {|attr| send("#{attr}=", overrides[attr]) if overrides[attr] }
+      end
+
       def write
         File.write(@file, to_yaml)
       end
