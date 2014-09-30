@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Tue Sep 30 13:28:17 UTC 2014 - vlewin@suse.com
+
+- Update to version 0.2.14
+  - fix SUSEConnect parameter usage from config file (bnc#899166)
+  - use API version v4
+
+-------------------------------------------------------------------
 Tue Sep 23 10:23:17 UTC 2014 - tschmidt@suse.com
 
 - Update to version 0.2.13
