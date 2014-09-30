@@ -14,6 +14,7 @@ describe SUSE::Connect::Cli do
     subject.any_instance.stub(:exit)
     subject.any_instance.stub(:puts => true)
     SUSE::Connect::GlobalLogger.instance.log = string_logger
+    allow(Config).to receive(:new).and_return()
   end
 
   after do
@@ -89,6 +90,16 @@ describe SUSE::Connect::Cli do
 
       it 'requires either --token or --url (regcode-less SMT registration)' do
         string_logger.should_receive(:error)
+          .with('Please set the regcode parameter to register against SCC, or the url parameter to register against SMT')
+        cli.execute!
+      end
+
+      it 'requires either --token or --url (regcode-less SMT registration) but respects config attributes' do
+        config = subject.new('/non-existing-file')
+        expect(Config).to receive(:new).and_return(config)
+        Client.any_instance.stub(:register!).and_return true
+
+        string_logger.should_not_receive(:error)
           .with('Please set the regcode parameter to register against SCC, or the url parameter to register against SMT')
         cli.execute!
       end
