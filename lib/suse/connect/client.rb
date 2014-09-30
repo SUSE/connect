@@ -16,14 +16,14 @@ module SUSE
       def initialize(opts = {})
         @config = Config.new
 
-        @options            = opts
+        @options              = opts
         @url = @options[:url] = opts[:url] || @config.url || DEFAULT_URL
-        @options[:insecure] = !!opts[:insecure] || @config.insecure
-        @options[:debug]    = !!opts[:debug]
-        @options[:language] = opts[:language] || @config.language
-        @options[:token]    = opts[:token] || @config.regcode
-        @options[:product]  = opts[:product]
-        @api                = Api.new(self)
+        @options[:insecure]   = !!opts[:insecure] || @config.insecure
+        @options[:debug]      = !!opts[:debug]
+        @options[:language]   = opts[:language] || @config.language
+        @options[:token]      = opts[:token] || @config.regcode
+        @options[:product]    = opts[:product]
+        @api                  = Api.new(self)
 
         # Update config attributes
         @config.merge(@options)
