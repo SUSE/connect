@@ -17,25 +17,19 @@ module SUSE
         @config = Config.new
 
         @options            = opts
-        init_url(opts)
-        @config.insecure    = opts[:insecure] if opts[:insecure]
+        @url = @options[:url] = opts[:url] || @config.url || DEFAULT_URL
+        @options[:insecure] = !!opts[:insecure] || @config.insecure
         @options[:debug]    = !!opts[:debug]
         @options[:language] = opts[:language] || @config.language
         @options[:token]    = opts[:token] || @config.regcode
         @options[:product]  = opts[:product]
         @api                = Api.new(self)
+
+        # Update config attributes
+        @config.merge(@options)
+
         write_config if opts[:write_config]
         log.debug "Merged options: #{@options}"
-      end
-
-      def init_url(opts)
-        if opts[:url]
-          @url = @config.url = opts[:url]
-        elsif @config.url
-          @url = @config.url
-        else
-          @url = DEFAULT_URL
-        end
       end
 
       # Announces the system, activates the product on SCC and adds the service to the system
