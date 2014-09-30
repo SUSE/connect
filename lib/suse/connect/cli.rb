@@ -12,12 +12,18 @@ module SUSE
       def initialize(argv)
         @options = {}
         @argv = argv
+
+        # Read SUSEConnect config and merge with cli options
+        @config = Config.new
+        @config.merge(@options)
+
         extract_options
         extract_environment
       end
 
       def execute! # rubocop:disable MethodLength, CyclomaticComplexity
         # check for parameter dependencies
+
         if @options[:status]
           Status.print_product_statuses(:json)
         elsif @options[:status_text]
@@ -26,7 +32,7 @@ module SUSE
           if @options[:instance_data_file] && !@options[:url]
             log.error 'Please use --instance-data only in combination with --url pointing to your SMT server'
             exit(1)
-          elsif @options[:url].nil? && @options[:token].nil?
+          elsif @config.url.nil? && @options[:token].nil?
             log.error 'Please set the regcode parameter to register against SCC, or the url parameter to register against SMT'
             exit(1)
           elsif @options[:token] && @options[:instance_data_file]
