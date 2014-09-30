@@ -51,6 +51,17 @@ describe SUSE::Connect::Config do
         expect(config.url).to eq overrides[:url]
         expect(config.insecure).to eq overrides[:insecure]
       end
+
+      it 'does not override config attributes with nil values' do
+        expect(config.url).to eq 'https://scc.suse.com'
+        expect(config.insecure).to eq false
+
+        overrides = { url: nil, insecure: nil }
+        config.merge(overrides)
+
+        expect(config.url).to eq 'https://scc.suse.com'
+        expect(config.insecure).to eq false
+      end
     end
 
     context '#write' do
