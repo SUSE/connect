@@ -30,7 +30,7 @@ module SUSE
       end
 
       def merge!(overrides)
-        self.class.serializable.each{|attr| self.send("#{attr}=", overrides[attr]) if overrides[attr] }
+        self.class.serializable.each {|attr| send("#{attr}=", overrides[attr]) if overrides[attr] }
       end
 
       def write

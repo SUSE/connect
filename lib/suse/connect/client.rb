@@ -13,6 +13,7 @@ module SUSE
 
       attr_reader :options, :url, :api
 
+      # rubocop:disable CyclomaticComplexity
       def initialize(opts = {})
         @config = Config.new
 
