@@ -6,12 +6,12 @@ describe SUSE::Connect::Api do
 
   let(:config) do
     double('config',
-      url: 'https://example.com',
-      language: 'Klingon',
-      insecure: false,
-      verify_callback: nil,
-      debug: false,
-      token: 'token-shmocken'
+           url: 'https://example.com',
+           language: 'Klingon',
+           insecure: false,
+           verify_callback: nil,
+           debug: false,
+           token: 'token-shmocken'
     )
   end
 

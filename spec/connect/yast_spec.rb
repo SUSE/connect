@@ -180,7 +180,7 @@ describe SUSE::Connect::YaST do
     let(:params) { { url: 'http://scc.foo.com' } }
 
     it 'merges passed params into config' do
-      params = {url: 'http://smt.local.domain' }
+      params = { url: 'http://smt.local.domain' }
       allow_any_instance_of(SUSE::Connect::Config).to receive(:write!).and_return true
       expect_any_instance_of(SUSE::Connect::Config).to receive(:merge!).with(params).and_call_original
       subject.write_config(params)

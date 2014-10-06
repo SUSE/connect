@@ -29,12 +29,12 @@ module SUSE
 
       def print_product_statuses(format = :text)
         case format
-          when :text
-            status_output = text_product_status
-          when :json
-            status_output = json_product_status
-          else
-            raise UnsupportedStatusFormat, "Unsupported output format '#{format}'"
+        when :text
+          status_output = text_product_status
+        when :json
+          status_output = json_product_status
+        else
+          raise UnsupportedStatusFormat, "Unsupported output format '#{format}'"
         end
         puts status_output
       end
