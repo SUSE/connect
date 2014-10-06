@@ -16,6 +16,5 @@ group :test do
   gem 'chefspec'
   gem 'rspec'
   gem 'strainer'
-  gem 'debugger'
 end
 

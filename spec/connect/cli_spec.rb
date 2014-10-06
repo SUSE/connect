@@ -84,7 +84,7 @@ describe SUSE::Connect::Cli do
 
       it 'requires no other parameters on --status' do
         cli = subject.new(%w{--status})
-        expect(Status).to receive(:print_product_statuses)
+        expect_any_instance_of(Status).to receive(:print_product_statuses)
         cli.execute!
       end
 
@@ -116,7 +116,7 @@ describe SUSE::Connect::Cli do
       it '--instance-data is mutually exclusive with --token' do
         cli = subject.new(%w{-r 123 --instance-data /tmp/test --url test})
         string_logger.should_receive(:error)
-          .with('Please use either --token or --instance-data')
+          .with('Please use either --token either --instance-data')
         cli.execute!
       end
 
@@ -127,14 +127,14 @@ describe SUSE::Connect::Cli do
       it '--status calls json_product_status' do
         cli = subject.new(%w{--status})
         expect_any_instance_of(Client).to_not receive(:register!)
-        expect(Status).to receive(:json_product_status)
+        expect_any_instance_of(Status).to receive(:json_product_status)
         cli.execute!
       end
 
       it '--status-text calls text_product_status' do
         cli = subject.new(%w{--status-text})
         expect_any_instance_of(Client).to_not receive(:register!)
-        expect(Status).to receive(:text_product_status)
+        expect_any_instance_of(Status).to receive(:text_product_status)
         cli.execute!
       end
 

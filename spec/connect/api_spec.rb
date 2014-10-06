@@ -4,12 +4,18 @@ describe SUSE::Connect::Api do
 
   subject { SUSE::Connect::Api }
 
-  let :client do
-    client = double('client')
-    client.stub(:url => 'https://example.com')
-    client.stub(:options => { :token => 'token-shmocken' })
-    client
+  let(:config) do
+    double('config',
+      url: 'https://example.com',
+      language: 'Klingon',
+      insecure: false,
+      verify_callback: nil,
+      debug: false,
+      token: 'token-shmocken'
+    )
   end
+
+  let(:client) { double('client', config: config) }
 
   describe '.new' do
 
