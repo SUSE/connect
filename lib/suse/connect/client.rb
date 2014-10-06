@@ -26,7 +26,7 @@ module SUSE
       def register!
         announce_or_update
         product = @config.product || Zypper.base_product
-        service = activate_product(product, config.email)
+        service = activate_product(product, @config.email)
         System.add_service(service)
         print_success_message product
       end
