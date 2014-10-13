@@ -1,6 +1,6 @@
 Then(/^Set regcode and url options$/) do
   @regcode = ENV['REGCODE'] || YAML.load_file('/root/.regcode')['code']
-  @url = ENV['URL'] || SUSE::Connect::Client::DEFAULT_URL
+  @url = ENV['URL'] || SUSE::Connect::Config::DEFAULT_URL
 end
 
 ### SUSEConnect cmd steps
@@ -65,7 +65,7 @@ end
 Then(/^SUSEConnect library should respect API headers$/) do
   step 'Set regcode and url options'
 
-  client = SUSE::Connect::Client.new(url: @url, regcode: @regcode)
+  client = SUSE::Connect::Client.new(SUSE::Connect::Config.new.merge!(url: @url, regcode: @regcode))
   response = SUSE::Connect::Api.new(client).announce_system("Token token=#{@regcode}")
 
   expect(response.headers['scc-api-version'].first).to eq(SUSE::Connect::Api::VERSION)
@@ -74,19 +74,19 @@ end
 Then(/^I cleanly deregister the system removing local credentials$/) do
   step 'Set regcode and url options'
 
-  client = SUSE::Connect::Client.new(url: @url, regcode: @regcode)
+  client = SUSE::Connect::Client.new(SUSE::Connect::Config.new.merge!(url: @url, regcode: @regcode))
   client.deregister!
 end
 
 Then(/^I deregister the system only$/) do
   step 'Set regcode and url options'
-  client = SUSE::Connect::Client.new(url: @url, regcode: @regcode)
+  client = SUSE::Connect::Client.new(SUSE::Connect::Config.new.merge!(url: @url, regcode: @regcode))
   client.instance_eval { @api.deregister(system_auth) }
 end
 
 Then(/^I remove local credentials$/) do
   step 'Set regcode and url options'
-  client = SUSE::Connect::Client.new(url: @url, regcode: @regcode)
+  client = SUSE::Connect::Client.new(SUSE::Connect::Config.new.merge!(url: @url, regcode: @regcode))
   client.instance_eval { SUSE::Connect::System.remove_credentials }
 end
 
@@ -94,7 +94,7 @@ Then(/^SUSEConnect library should be able to activate a free extension without r
   step 'Set regcode and url options'
 
   product = SUSE::Connect::Remote::Product.new(identifier: 'sle-module-web-scripting', version: '12', arch: 'x86_64')
-  client = SUSE::Connect::Client.new(url: @url, debug: true)
+  client = SUSE::Connect::Client.new(SUSE::Connect::Config.new.merge!(url: @url))
   service = client.activate_product(product)
   SUSE::Connect::System.add_service(service)
 end
@@ -103,7 +103,7 @@ Then(/^SUSEConnect library should be able to retrieve the product information$/)
   step 'Set regcode and url options'
 
   remote_product = SUSE::Connect::Remote::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64')
-  client = SUSE::Connect::Client.new(url: @url, regcode: @regcode)
+  client = SUSE::Connect::Client.new(SUSE::Connect::Config.new.merge!(url: @url, regcode: @regcode))
   products = client.show_product(remote_product).extensions.map(&:friendly_name).sort
 
   products.each {|product| puts "- #{product}" }
