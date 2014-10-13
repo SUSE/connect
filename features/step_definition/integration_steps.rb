@@ -1,6 +1,6 @@
 Then(/^Set regcode and url options$/) do
   @regcode = ENV['REGCODE'] || YAML.load_file('/root/.regcode')['code']
-  @url = ENV['URL'] || SUSE::Connect::Client::DEFAULT_URL
+  @url = ENV['URL'] || SUSE::Connect::Config::DEFAULT_URL
 end
 
 ### SUSEConnect cmd steps
