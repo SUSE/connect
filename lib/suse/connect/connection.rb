@@ -30,9 +30,9 @@ module SUSE
         http.read_timeout = 60
 
         @http            = http
-        @http.set_debug_output(STDERR) if debug
         @language        = language
-        @debug = debug
+        @debug           = debug
+        @http.set_debug_output(STDERR) if debug
         self.verify_callback = verify_callback
       end
 

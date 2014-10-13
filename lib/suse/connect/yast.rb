@@ -17,7 +17,8 @@ module SUSE
         #
         # @return [Array <String>] SCC / system credentials - login and password tuple
         def announce_system(client_params = {}, distro_target = nil)
-          Client.new(client_params).announce_system(distro_target)
+          config = SUSE::Connect::Config.new.merge!(client_params)
+          Client.new(config).announce_system(distro_target)
         end
 
         # Updates the systems hardware info on the server
@@ -26,7 +27,8 @@ module SUSE
         #
         # @return [Array <String>] SCC / system credentials - login and password tuple
         def update_system(client_params = {}, distro_target = nil)
-          Client.new(client_params).update_system(distro_target)
+          config = SUSE::Connect::Config.new.merge!(client_params)
+          Client.new(config).update_system(distro_target)
         end
 
         # Activates a product on SCC / the registration server.
@@ -40,7 +42,8 @@ module SUSE
         #
         # @return [Service] Service
         def activate_product(product, client_params = {}, email = nil)
-          Client.new(client_params).activate_product(product, email)
+          config = SUSE::Connect::Config.new.merge!(client_params)
+          Client.new(config).activate_product(product, email)
         end
 
         # Upgrades a product on SCC / the registration server.
@@ -54,7 +57,8 @@ module SUSE
         #
         # @return [Service] Service
         def upgrade_product(product, client_params = {})
-          Client.new(client_params).upgrade_product(product)
+          config = SUSE::Connect::Config.new.merge!(client_params)
+          Client.new(config).upgrade_product(product)
         end
 
         # Lists all available products for a system.
@@ -67,7 +71,8 @@ module SUSE
         #
         # @return [Product] {Product}s from registration server with all extensions included
         def show_product(product, client_params = {})
-          Client.new(client_params).show_product(product)
+          config = SUSE::Connect::Config.new.merge!(client_params)
+          Client.new(config).show_product(product)
         end
 
         # Checks if the given product is already activated in SCC
@@ -87,7 +92,8 @@ module SUSE
         #  - :insecure [Boolean]
         #  - :url [String]
         def write_config(client_params = {})
-          Client.new(client_params).write_config
+          config = SUSE::Connect::Config.new.merge!(client_params)
+          config.write!
         end
 
         # Adds given certificate to trusted
@@ -111,9 +117,8 @@ module SUSE
         # Provides access to current system status in terms of activated products
         # @param [Hash] client_params parameters to instantiate {Client}
         def status(client_params)
-          client = Client.new(client_params)
-          Status.client = client
-          Status
+          config = SUSE::Connect::Config.new.merge!(client_params)
+          Status.new(config)
         end
 
       end

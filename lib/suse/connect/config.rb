@@ -1,12 +1,14 @@
 require 'yaml'
+require 'ostruct'
 
 module SUSE
   module Connect
 
     # Class for handling SUSEConnect configuration
-    class Config < Struct.new(:url, :regcode, :language, :insecure)
+    class Config < OpenStruct
 
       DEFAULT_CONFIG_FILE = '/etc/SUSEConnect'
+      DEFAULT_URL = 'https://scc.suse.com'
 
       class << self
         attr_accessor :serializable
@@ -16,24 +18,16 @@ module SUSE
         end
       end
 
-      serializable_attributes :url, :insecure
+      serializable_attributes :url, :insecure, :language
 
       def initialize(file = DEFAULT_CONFIG_FILE)
         @file = file
-
-        read.each_pair do |key, value|
-          self[key] = value if members.include?(key.to_sym)
-        end
-
-        # default value if insecure is not specified
-        self[:insecure] = false if insecure.nil?
+        super(read)
+        self.insecure ||= false
+        self.url ||= DEFAULT_URL
       end
 
-      def merge!(overrides)
-        self.class.serializable.each {|attr| send("#{attr}=", overrides[attr]) if overrides[attr] }
-      end
-
-      def write
+      def write!
         File.write(@file, to_yaml)
       end
 
@@ -44,7 +38,20 @@ module SUSE
       end
 
       def select_serializable_attributes
-        to_hash_with_string_keys.select {|key, value| self.class.serializable.include?(key.to_sym) }
+        to_hash_with_string_keys.select {|key, _| self.class.serializable.include?(key.to_sym) }
+      end
+
+      # allows to merge hash from other source into config to maintain precedence
+      def merge!(overwrites)
+        raise ArgumentError, 'Only Hash instance can be merged' unless overwrites.is_a?(Hash)
+        overwrites.each_pair do |name, value|
+          self[name] = value if value
+        end
+        self
+      end
+
+      def url_default?
+        url == DEFAULT_URL
       end
 
       private
@@ -57,7 +64,6 @@ module SUSE
 
       def read
         return {} unless File.exist?(@file)
-
         YAML.load_file(@file) || {}
       end
     end

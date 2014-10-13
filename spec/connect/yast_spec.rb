@@ -20,13 +20,13 @@ describe SUSE::Connect::YaST do
     end
 
     it 'forwards all params to an instance of Client' do
-      Client.should_receive(:new).with(params.first).and_call_original
+      Client.should_receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
       Client.any_instance.should_receive(:announce_system)
       subject.announce_system(*params)
     end
 
     it 'falls back to use an empty Hash as params if none are specified' do
-      Client.should_receive(:new).with({}).and_call_original
+      Client.should_receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
       Client.any_instance.should_receive(:announce_system)
       subject.announce_system
     end
@@ -48,7 +48,7 @@ describe SUSE::Connect::YaST do
     end
 
     it 'uses client params' do
-      Client.should_receive(:new).with(:language => 'de').and_call_original
+      expect_any_instance_of(SUSE::Connect::Config)
       subject.update_system(:language => 'de')
     end
 
@@ -68,19 +68,20 @@ describe SUSE::Connect::YaST do
     end
 
     it 'forwards all params to an instance of Client' do
-      Client.should_receive(:new).with(client_params).and_call_original
+      Client.should_receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
+      expect_any_instance_of(SUSE::Connect::Config).to receive(:merge!).with(client_params).and_call_original
       Client.any_instance.should_receive(:activate_product)
       subject.activate_product(*[product, client_params, email])
     end
 
     it 'falls back to use an empty Hash as params if none are specified' do
-      Client.should_receive(:new).with({}).and_call_original
+      Client.should_receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
       Client.any_instance.should_receive(:activate_product)
       subject.activate_product(nil)
     end
 
     it 'uses product_ident and email as parameter for Client#activate_product' do
-      Client.should_receive(:new).with(client_params).and_call_original
+      Client.should_receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
       Client.any_instance.should_receive(:activate_product).with(product, email)
       subject.activate_product(*[product, client_params, email])
     end
@@ -100,12 +101,13 @@ describe SUSE::Connect::YaST do
     end
 
     it 'forwards all params to an instance of Client' do
-      Client.should_receive(:new).with(client_params).and_call_original
+      Client.should_receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
+      expect_any_instance_of(SUSE::Connect::Config).to receive(:merge!).with(client_params).and_call_original
       subject.upgrade_product product, client_params
     end
 
     it 'falls back to use an empty Hash as params if none are specified' do
-      Client.should_receive(:new).with({}).and_call_original
+      Client.should_receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
       subject.upgrade_product product
     end
 
@@ -129,19 +131,19 @@ describe SUSE::Connect::YaST do
     end
 
     it 'forwards all params to an instance of Client' do
-      Client.should_receive(:new).with(client_params).and_call_original
+      Client.should_receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
       Client.any_instance.should_receive(:show_product)
       subject.show_product product, client_params
     end
 
     it 'falls back to use an empty Hash as params if none are specified' do
-      Client.should_receive(:new).with({}).and_call_original
+      Client.should_receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
       Client.any_instance.should_receive(:show_product)
       subject.show_product product
     end
 
     it 'uses product as parameter for Client#list_products' do
-      Client.should_receive(:new).with({}).and_call_original
+      Client.should_receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
       Client.any_instance.should_receive(:show_product).with(product)
       subject.show_product product
     end
@@ -149,6 +151,7 @@ describe SUSE::Connect::YaST do
   end
 
   describe '#product_activated?' do
+
     let(:product) { Remote::Product.new(identifier: 'tango') }
 
     it 'returns false if no credentials' do
@@ -158,17 +161,16 @@ describe SUSE::Connect::YaST do
 
     it 'checks if the given product is already activated in SCC' do
       expect(System).to receive(:credentials?).and_return(true)
-      expect(Status).to receive(:activated_products).and_return([product])
+      expect_any_instance_of(Status).to receive(:activated_products).and_return([product])
       expect(subject.product_activated?(product)).to be true
     end
 
     it 'allows to pass a Hash with params to instantiate the client' do
-      expect(System).to receive(:credentials?).and_return(true)
-      client = double 'status'
+      allow(System).to receive(:credentials?).and_return(true)
+      status = double 'status'
       params_hash = { foo: 'bar' }
-      expect(Client).to receive(:new).with(params_hash).and_return(client)
-      expect(Status).to receive(:client=).with(client)
-      expect(Status).to receive(:activated_products).and_return([product])
+      allow(status).to receive(:activated_products).and_return([product])
+      expect(subject).to receive(:status).with(params_hash).and_return status
       expect(subject.product_activated?(product, params_hash)).to be true
     end
 
@@ -177,9 +179,16 @@ describe SUSE::Connect::YaST do
   describe '#write_config' do
     let(:params) { { url: 'http://scc.foo.com' } }
 
-    it 'calls write_config on an instance of Client' do
-      Client.any_instance.should_receive(:write_config)
-      subject.write_config params
+    it 'merges passed params into config' do
+      params = { url: 'http://smt.local.domain' }
+      allow_any_instance_of(SUSE::Connect::Config).to receive(:write!).and_return true
+      expect_any_instance_of(SUSE::Connect::Config).to receive(:merge!).with(params).and_call_original
+      subject.write_config(params)
+    end
+
+    it 'calls write_config on an instance of config' do
+      expect_any_instance_of(SUSE::Connect::Config).to receive(:write!)
+      subject.write_config
     end
   end
 
@@ -212,8 +221,15 @@ describe SUSE::Connect::YaST do
 
   describe '#status' do
 
+    it 'merges passed parameters with config' do
+      params = { insecure: true }
+      expect_any_instance_of(SUSE::Connect::Config).to receive(:merge!).with(params)
+      allow(Status).to receive(:new)
+      subject.status(params)
+    end
+
     it 'assigns new client to status with passed hash' do
-      expect(Client).to receive(:new).with(:foo => :bar)
+      expect(Status).to receive(:new).with(instance_of(SUSE::Connect::Config))
       subject.status(:foo => :bar)
     end
 

@@ -7,45 +7,40 @@ module SUSE
     class Cli  # rubocop:disable ClassLength
       include Logger
 
-      attr_reader :options
+      attr_reader :config, :options
 
       def initialize(argv)
         @options = {}
         @argv = argv
-
         extract_options
-        extract_environment
-
-        # Read SUSEConnect config and merge with cli options
-        @config = Config.new
-        @config.merge!(@options)
+        @config = Config.new.merge!(@options)
       end
 
       def execute! # rubocop:disable MethodLength, CyclomaticComplexity
         # check for parameter dependencies
-
-        if @options[:status]
-          Status.print_product_statuses(:json)
-        elsif @options[:status_text]
-          Status.print_product_statuses(:text)
+        if @config.status
+          Status.new(@config).print_product_statuses(:json)
+        elsif @config.status_text
+          Status.new(@config).print_product_statuses(:text)
         else
-          if @options[:instance_data_file] && !@options[:url]
+          if @config.instance_data_file && @config.url_default?
             log.error 'Please use --instance-data only in combination with --url pointing to your SMT server'
             exit(1)
-          elsif (@config.url.nil? || @config.url == SUSE::Connect::Client::DEFAULT_URL) && @options[:token].nil?
+          elsif @config.token.nil? && @config.url_default?
             log.error 'Please set the regcode parameter to register against SCC, or the url parameter to register against SMT'
             exit(1)
-          elsif @options[:token] && @options[:instance_data_file]
+          elsif @config.token && @config.instance_data_file
             log.error 'Please use either --token or --instance-data'
             exit(1)
           else
-            Client.new(@options).register!
+            Client.new(@config).register!
           end
-
         end
 
+        @config.write! if @config.write_config
+
       rescue Errno::ECONNREFUSED
-        log.fatal "Error: Connection refused by server #{@options[:url] || 'https://scc.suse.com'}"
+        log.fatal "Error: Connection refused by server #{@config.url}"
         exit 64
       rescue Errno::EACCES => e
         log.fatal "Error: Access error - #{e.message}"
@@ -162,12 +157,8 @@ module SUSE
 
         @opts.set_summary_width(24)
         @opts.parse(@argv)
-        log.debug("cmd options: '#{@options}'")
-
-      end
-
-      def extract_environment
         @options[:language] = ENV['LANG'] if ENV['LANG']
+        log.debug("cmd options: '#{@options}'")
       end
 
       def check_if_param(opt, message)

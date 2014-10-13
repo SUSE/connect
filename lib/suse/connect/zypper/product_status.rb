@@ -5,8 +5,9 @@ class SUSE::Connect::Zypper::ProductStatus
 
   attr_reader :installed_product
 
-  def initialize(installed_product)
+  def initialize(installed_product, status)
     @installed_product = installed_product
+    @status            = status
   end
 
   def registration_status
@@ -20,13 +21,13 @@ class SUSE::Connect::Zypper::ProductStatus
 
   def related_activation
     return nil unless remote_product
-    SUSE::Connect::Status.activations.find do |activation|
+    @status.activations.find do |activation|
       activation.service.product == remote_product
     end
   end
 
   def remote_product
-    SUSE::Connect::Status.activated_products.find do |remote_product|
+    @status.activated_products.find do |remote_product|
       installed_product == remote_product
     end
   end

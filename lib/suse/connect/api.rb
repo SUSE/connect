@@ -19,11 +19,11 @@ module SUSE
       def initialize(client)
         @client     = client
         @connection = Connection.new(
-          client.url,
-          :language => client.options[:language],
-          :insecure => client.options[:insecure],
-          :verify_callback => client.options[:verify_callback],
-          :debug => client.options[:debug]
+          client.config.url,
+          :language        => client.config.language,
+          :insecure        => client.config.insecure,
+          :verify_callback => client.config.verify_callback,
+          :debug           => client.config.debug
         )
       end
 
@@ -77,7 +77,7 @@ module SUSE
           :version      => product.version,
           :arch         => product.arch,
           :release_type => product.release_type,
-          :token        => @client.options[:token],
+          :token        => @client.config.token,
           :email        => email
         }
         @connection.post('/connect/systems/products', :auth => auth, :params => payload)

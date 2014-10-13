@@ -2,21 +2,24 @@ require 'spec_helper'
 
 describe SUSE::Connect::Status do
 
-  subject { described_class }
+  let(:client_double) { double('client') }
+
+  subject do
+    described_class.new(double('config'))
+  end
 
   before do
-    reset_class_variables Status
+    allow(Client).to receive(:new).and_return(client_double)
   end
 
   describe '.client' do
 
     it 'sets client class variable' do
-      allow(Client).to receive(:new).and_return(:baz)
-      expect(described_class.client).to eq :baz
+      expect(subject.client).to eq client_double
     end
 
     it 'memoizes client class variable to avoid reinstantiation' do
-      expect(described_class.client).to be subject.client
+      expect(subject.client).to be client_double
     end
 
   end
@@ -24,13 +27,13 @@ describe SUSE::Connect::Status do
   describe '.activated_products' do
 
     it 'memoizes activated_products by the first call' do
-      allow(Status).to receive(:products_from_activations).and_return(:foobazbar)
-      expect(Status.activated_products).to be Status.activated_products
+      allow(subject).to receive(:products_from_activations).and_return(:foobazbar)
+      expect(subject.activated_products).to be subject.activated_products
     end
 
     it 'calls products_from_services from Status class' do
-      expect(Status).to receive(:products_from_activations)
-      Status.activated_products
+      expect(subject).to receive(:products_from_activations)
+      subject.activated_products
     end
 
   end
@@ -38,13 +41,13 @@ describe SUSE::Connect::Status do
   describe '.installed_products' do
 
     it 'memoizes installed_products by the first call' do
-      allow(Status).to receive(:products_from_zypper).and_return(:barbarbaz)
-      expect(Status.installed_products).to be Status.installed_products
+      allow(subject).to receive(:products_from_zypper).and_return(:barbarbaz)
+      expect(subject.installed_products).to be subject.installed_products
     end
 
     it 'calls products_from_zypper from Status class' do
-      expect(Status).to receive(:products_from_activations)
-      Status.activated_products
+      expect(subject).to receive(:products_from_activations)
+      subject.activated_products
     end
 
   end
@@ -52,25 +55,25 @@ describe SUSE::Connect::Status do
   describe '.known_activations' do
 
     it 'memoizes known_activations by the first call' do
-      allow(Status).to receive(:activations_from_server).and_return(:superdo)
-      expect(Status.activations).to be Status.activations
+      allow(subject).to receive(:activations_from_server).and_return(:superdo)
+      expect(subject.activations).to be subject.activations
     end
 
     it 'calls products_from_zypper from Status class' do
-      expect(Status).to receive(:activations_from_server)
-      Status.activations
+      expect(subject).to receive(:activations_from_server)
+      subject.activations
     end
 
   end
 
   describe '.print_product_statuses' do
 
-    describe 'text format' do
+    context 'text format' do
 
       it 'reads template from erb file' do
         expect(File).to receive(:read).with(include('templates/product_statuses.text.erb')).and_return '111'
-        allow(described_class).to receive(:puts)
-        described_class.print_product_statuses
+        allow(subject).to receive(:puts)
+        subject.print_product_statuses
       end
 
       it 'builds proper erb entity' do
@@ -79,39 +82,43 @@ describe SUSE::Connect::Status do
         mock_erb = double('mock_erb')
         allow(mock_erb).to receive(:result)
         expect(ERB).to receive(:new).with('blaherbfile', 0, '-<>').and_return mock_erb
-        described_class.print_product_statuses
+        subject.print_product_statuses
       end
 
       it 'outputs the result of parsing erb with bindings' do
         allow(File).to receive(:read).and_return('blaherbfile')
-        expect(described_class).to receive(:puts).with('parsed erb output')
+        expect(subject).to receive(:puts).with('parsed erb output')
         mock_erb = double('mock_erb')
         allow(mock_erb).to receive(:result).and_return('parsed erb output')
         allow(ERB).to receive(:new).with('blaherbfile', 0, '-<>').and_return mock_erb
-        described_class.print_product_statuses
+        subject.print_product_statuses
       end
 
     end
 
-    describe 'json format' do
+    context 'json format' do
 
       it 'outputs the system status in json format' do
-        status = Zypper::ProductStatus.new(Zypper::Product.new({}))
+        status = Zypper::ProductStatus.new(Zypper::Product.new({}), subject)
         status.stub(:registration_status) { 'test' }
         status.stub(:remote_product) { true }
         status.stub_chain(:remote_product, :free).and_return(false)
         activation = SUSE::Connect::Remote::Activation.new('service' => { 'product' => {} })
         status.stub(:related_activation).and_return(activation)
 
-        expect(described_class).to receive(:product_statuses).and_return [status]
-        expect(described_class).to receive(:puts)
-        described_class.print_product_statuses(:json)
+        expect(subject).to receive(:product_statuses).and_return [status]
+        expect(subject).to receive(:puts)
+        subject.print_product_statuses(:json)
       end
 
     end
 
-    it 'errors out on unsupported format' do
-      expect { described_class.print_product_statuses(:xml) }.to raise_error
+    context 'unsupported format' do
+
+      it 'errors out on unsupported format' do
+        expect { subject.print_product_statuses(:xml) }.to raise_error(UnsupportedStatusFormat, "Unsupported output format 'xml'")
+      end
+
     end
 
   end
@@ -121,11 +128,11 @@ describe SUSE::Connect::Status do
     describe '?product_statuses' do
 
       it 'wrapping each installed product into Zypper::ProductStatus' do
-        allow(described_class).to receive(:installed_products).and_return([:f, :a, :b])
-        expect(Zypper::ProductStatus).to receive(:new).with(:f)
-        expect(Zypper::ProductStatus).to receive(:new).with(:a)
-        expect(Zypper::ProductStatus).to receive(:new).with(:b)
-        described_class.send(:product_statuses)
+        allow(subject).to receive(:installed_products).and_return([:f, :a, :b])
+        expect(Zypper::ProductStatus).to receive(:new).with(:f, subject)
+        expect(Zypper::ProductStatus).to receive(:new).with(:a, subject)
+        expect(Zypper::ProductStatus).to receive(:new).with(:b, subject)
+        subject.send(:product_statuses)
       end
 
     end
@@ -154,11 +161,11 @@ describe SUSE::Connect::Status do
     describe '?activations_from_server' do
 
       it 'mapping system_activations response to Remote::Activations' do
-        described_class.stub(:system_activations).and_return [1, 2, 3]
+        subject.stub(:system_activations).and_return [1, 2, 3]
         expect(Remote::Activation).to receive(:new).with(1)
         expect(Remote::Activation).to receive(:new).with(2)
         expect(Remote::Activation).to receive(:new).with(3)
-        described_class.send(:activations_from_server)
+        subject.send(:activations_from_server)
       end
 
     end

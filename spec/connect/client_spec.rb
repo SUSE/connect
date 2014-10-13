@@ -2,7 +2,12 @@ require 'spec_helper'
 
 describe SUSE::Connect::Client do
 
-  subject { SUSE::Connect::Client.new({}) }
+  let :config do
+    SUSE::Connect::Config.new
+  end
+
+  subject { SUSE::Connect::Client.new(config) }
+
   let(:default_logger) { SUSE::Connect::GlobalLogger.instance.log }
   let(:string_logger) { ::Logger.new(StringIO.new) }
 
@@ -11,89 +16,57 @@ describe SUSE::Connect::Client do
     context :empty_opts do
 
       it 'should set url to default_url' do
-        subject.url.should eq subject.class::DEFAULT_URL
+        subject.config.url.should eq SUSE::Connect::Config::DEFAULT_URL
       end
 
     end
 
     context :passed_opts do
 
-      subject { Client.new(:url => 'http://dummy:42') }
-
-      let :parsed_uri do
-        URI.parse(subject.url)
-      end
-
-      it 'should set port to one from options if it was passed via constructor' do
-        parsed_uri.port.should eq 42
-      end
-
-      it 'should set host to one from options if it was passed via constructor' do
-        parsed_uri.host.should eq 'dummy'
-      end
-
       it 'should set insecure flag from options if it was passed via constructor' do
-        client = Client.new(:insecure => true)
-        expect(client.options[:insecure]).to be true
+        config.insecure = true
+        client = Client.new(config)
+        expect(client.config.insecure).to be true
       end
 
       it 'should set write_config flag from options if it was passed via constructor' do
-        expect_any_instance_of(Client).to receive(:write_config)
-        client = Client.new(:write_config => true)
-        expect(client.options[:write_config]).to be true
+        config.write_config = true
+        client = Client.new(config)
+        expect(client.config.write_config).to be true
       end
 
       it 'allows to pass arbitrary options' do
-        client = Client.new(foo: 'bar')
-        expect(client.options[:foo]).to eq 'bar'
+        config.foo = 'bar'
+        client = Client.new(config)
+        expect(client.config.foo).to eq 'bar'
       end
 
     end
 
     context :from_config do
 
-      subject { Client.new({}) }
+      subject do
+        SUSE::Connect::Client.new(SUSE::Connect::Config.new)
+      end
 
       before do
         SUSE::Connect::Config.any_instance.stub(:read).and_return(
-            'regcode' => 'from_config',
-            'url' => 'https://localsmt.domain.local',
-            'language' => 'RU'
+          'url'      => 'https://localsmt.domain.local',
+          'language' => 'RU',
+          'insecure' => true
         )
       end
 
       it 'should set url to the config URL' do
-        expect(subject.url).to eq 'https://localsmt.domain.local'
+        expect(subject.config.url).to eq 'https://localsmt.domain.local'
       end
 
       it 'should set token to one from config file' do
-        expect(subject.options[:token]).to eq 'from_config'
+        expect(subject.config.insecure).to eq true
       end
 
       it 'should set language to one from config file' do
-        expect(subject.options[:language]).to eq 'RU'
-      end
-
-    end
-
-    context :override_config_file_with_opts do
-
-      subject { Client.new(url: 'https://localsmt.domain.local') }
-
-      before do
-        SUSE::Connect::Config.any_instance.stub(:read).and_return(
-            'regcode' => 'from_config',
-            'url' => 'localhost',
-            'language' => 'RU'
-        )
-      end
-
-      it 'url should be from options, not configfile' do
-        expect(subject.url).to eq 'https://localsmt.domain.local'
-      end
-
-      it 'should set url in config to that form opts' do
-        expect(subject.instance_variable_get(:@config).url).to eq 'https://localsmt.domain.local'
+        expect(subject.config.language).to eq 'RU'
       end
 
     end
@@ -104,7 +77,10 @@ describe SUSE::Connect::Client do
 
     context :direct_connection do
 
-      subject { SUSE::Connect::Client.new(:token => 'blabla') }
+      subject do
+        config.token = 'blabla'
+        SUSE::Connect::Client.new(config)
+      end
 
       before do
         api_response = double('api_response')
@@ -142,7 +118,7 @@ describe SUSE::Connect::Client do
 
       context :direct_connection do
 
-        subject { SUSE::Connect::Client.new({}) }
+        subject { SUSE::Connect::Client.new(config) }
 
         before do
           subject.stub(:system_auth => 'auth')
@@ -170,7 +146,10 @@ describe SUSE::Connect::Client do
 
     context :registration_proxy_connection do
 
-      subject { SUSE::Connect::Client.new(:url => 'http://smt.local') }
+      subject do
+        config.url = 'http://smt.local'
+        SUSE::Connect::Client.new(config)
+      end
 
       before do
         api_response = double('api_response')
@@ -303,7 +282,8 @@ describe SUSE::Connect::Client do
 
     it 'prints message on successful register' do
       product = Zypper::Product.new(name: 'SLES', version: 12, arch: 's390')
-      client = Client.new(url: 'http://dummy:42', email: 'asd@asd.de', product: product, filesystem_root: '/test')
+      merged_config = config.merge!(url: 'http://dummy:42', email: 'asd@asd.de', product: product, filesystem_root: '/test', language: 'EN')
+      client = Client.new(merged_config)
       client.stub(:announce_or_update)
       client.stub(:activate_product)
       Zypper.stub(:base_product => product)
@@ -364,15 +344,6 @@ describe SUSE::Connect::Client do
     it 'calls underlying api and removes credentials file' do
       subject.api.should_receive(:deregister).with('Basic: encodedstring').and_return stubbed_response
       subject.deregister!.should be true
-    end
-  end
-
-  describe '#write_config' do
-    subject { Client.new({}) }
-    it 'should call write_config on client' do
-      subject.instance_variable_get(:@config).should_receive(:write)
-      File.stub(:write => 42)
-      subject.write_config
     end
   end
 

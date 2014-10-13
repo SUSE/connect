@@ -2,7 +2,9 @@ require 'spec_helper'
 
 describe SUSE::Connect::Zypper::ProductStatus do
 
-  subject { described_class.new(1) }
+  let(:status) { double('status') }
+
+  subject { described_class.new(1, status) }
 
   describe 'constants' do
 
@@ -15,7 +17,7 @@ describe SUSE::Connect::Zypper::ProductStatus do
   describe '.initialize' do
 
     it 'assigns @installed_products to passed argument' do
-      instance = described_class.new(:foo_bar_baz)
+      instance = described_class.new(:foo_bar_baz, status)
       expect(instance.installed_product).to eq :foo_bar_baz
     end
 
@@ -68,7 +70,7 @@ describe SUSE::Connect::Zypper::ProductStatus do
       activation = double('activation')
       remote_product = Remote::Product.new(:identifier => :foo, :version => 42, :arch => :wax)
       activation.stub_chain(:service, :product).and_return remote_product
-      allow(SUSE::Connect::Status).to receive(:activations).and_return [activation]
+      allow(status).to receive(:activations).and_return [activation]
       allow(subject).to receive(:remote_product).and_return remote_product
       expect(subject.related_activation).to eq activation
     end
@@ -80,7 +82,7 @@ describe SUSE::Connect::Zypper::ProductStatus do
     it 'search if there is a product in activations which is equal to one installed' do
       remote_product = Remote::Product.new(:identifier => :foo, :version => 42, :arch => :wax)
       allow(subject).to receive(:installed_product).and_return(Zypper::Product.new(:name => :foo, :version => 42, :arch => :wax))
-      allow(SUSE::Connect::Status).to receive(:activated_products).and_return([remote_product])
+      allow(status).to receive(:activated_products).and_return([remote_product])
       expect(subject.remote_product).to eq remote_product
     end
 
