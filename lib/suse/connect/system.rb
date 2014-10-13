@@ -55,6 +55,7 @@ module SUSE
             hostname
           else
             # Fix for bnc#889869
+            # Sending (and storing on our servers) the public IPs would be a privacy violation
             addr_info = Socket.ip_address_list.find {|intf| intf.ipv4_private? }
             addr_info.ip_address if addr_info
           end
