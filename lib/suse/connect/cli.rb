@@ -30,14 +30,14 @@ module SUSE
             log.error 'Please set the regcode parameter to register against SCC, or the url parameter to register against SMT'
             exit(1)
           elsif @config.token && @config.instance_data_file
-            log.error 'Please use either --token either --instance-data'
+            log.error 'Please use either --token or --instance-data'
             exit(1)
           else
             Client.new(@config).register!
           end
         end
 
-        @config.write if @config.write_config
+        @config.write! if @config.write_config
 
       rescue Errno::ECONNREFUSED
         log.fatal "Error: Connection refused by server #{@config.url}"

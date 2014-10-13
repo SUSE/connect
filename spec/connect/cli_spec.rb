@@ -116,7 +116,7 @@ describe SUSE::Connect::Cli do
       it '--instance-data is mutually exclusive with --token' do
         cli = subject.new(%w{-r 123 --instance-data /tmp/test --url test})
         string_logger.should_receive(:error)
-          .with('Please use either --token either --instance-data')
+          .with('Please use either --token or --instance-data')
         cli.execute!
       end
 
@@ -135,6 +135,17 @@ describe SUSE::Connect::Cli do
         cli = subject.new(%w{--status-text})
         expect_any_instance_of(Client).to_not receive(:register!)
         expect_any_instance_of(Status).to receive(:text_product_status)
+        cli.execute!
+      end
+
+    end
+
+    describe 'config write' do
+
+      it 'writes config if approproate cli param been passed' do
+        cli = subject.new(%w{--write-config --status})
+        expect_any_instance_of(Config).to receive(:write!)
+        allow_any_instance_of(Status).to receive(:print_product_statuses)
         cli.execute!
       end
 
