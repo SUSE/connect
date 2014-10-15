@@ -17,7 +17,7 @@ This gem can already be installed and used. To create a RPM from this gem you
 need to create the .spec file.  You need to use gem2rpm to do this, and using
 the specifically patched version from SLES12 or devel:languages:ruby:extensions, because this supports
 the SLES12 gem packaging standard via the --config option.
-f
+
 ```
 > cp suse-connect-*.gem package/
 > cd package
