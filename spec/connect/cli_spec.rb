@@ -150,7 +150,7 @@ describe SUSE::Connect::Cli do
 
     describe 'config write' do
 
-      it 'writes config if approproate cli param been passed' do
+      it 'writes config if appropriate cli param been passed' do
         cli = subject.new(%w{--write-config --status})
         expect_any_instance_of(SUSE::Connect::Config).to receive(:write!)
         allow_any_instance_of(Status).to receive(:print_product_statuses)
