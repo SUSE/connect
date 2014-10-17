@@ -37,7 +37,7 @@ module SUSE
           end
         end
 
-        @config.write! if @config.write_config || @options[:url]
+        @config.write! if @config.write_config
 
       rescue Errno::ECONNREFUSED
         log.fatal "Error: Connection refused by server #{@config.url}"
@@ -118,6 +118,7 @@ module SUSE
                  '  Implies --write-config so that subsequent invocations use the same registration server.') do |opt|
           check_if_param(opt, 'Please provide registration server URL')
           @options[:url] = opt
+          @options[:write_config] = true
         end
 
         @opts.on('-s', '--status', 'get current system registration status in json format') do |opt|
