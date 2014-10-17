@@ -120,6 +120,14 @@ describe SUSE::Connect::Cli do
         cli.execute!
       end
 
+      it '--url implies --write-config' do
+        cli = subject.new(%w{-r 123 --url http://foo.test.com})
+        expect(cli.config.write_config).to eq true
+        allow_any_instance_of(SUSE::Connect::Client).to receive(:register!)
+        expect_any_instance_of(SUSE::Connect::Config).to receive(:write!)
+        cli.execute!
+      end
+
     end
 
     context 'status subcommand' do
