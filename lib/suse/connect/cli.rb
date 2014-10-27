@@ -114,9 +114,11 @@ module SUSE
           @options[:email] = opt
         end
 
-        @opts.on('--url [URL]', 'URL of registration server (e.g. https://scc.suse.com).') do |opt|
+        @opts.on('--url [URL]', 'URL of registration server (e.g. https://scc.suse.com).',
+                 '  Implies --write-config so that subsequent invocations use the same registration server.') do |opt|
           check_if_param(opt, 'Please provide registration server URL')
           @options[:url] = opt
+          @options[:write_config] = true
         end
 
         @opts.on('-s', '--status', 'get current system registration status in json format') do |opt|
