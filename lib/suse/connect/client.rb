@@ -174,7 +174,9 @@ module SUSE
         if registered?
           update_system
         else
-          login, password = announce_system(nil, @config.instance_data_file)
+          distro_target = @config.product ? @config.product.distro_target : nil
+          login, password = announce_system(distro_target,
+                                            @config.instance_data_file)
           Credentials.new(login, password, Credentials.system_credentials_file).write
         end
       end
