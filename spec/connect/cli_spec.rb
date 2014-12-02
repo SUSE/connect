@@ -35,11 +35,24 @@ describe SUSE::Connect::Cli do
         cli.execute!
       end
 
-      it 'should suggest re-registration if ApiError 401 encountered' do
-        response = Net::HTTPResponse.new('1.1', 401, 'Test')
-        expect_any_instance_of(Client).to receive(:register!).and_raise ApiError.new(response)
-        expect(string_logger).to receive(:fatal).with(match(/Error: Not authorised./))
-        cli.execute!
+      context 'system has proper credentials file' do
+        it 'should suggest re-registration if ApiError 401 encountered' do
+          response = Net::HTTPResponse.new('1.1', 401, 'Test')
+          allow(System).to receive(:credentials?).and_return true
+          expect_any_instance_of(Client).to receive(:register!).and_raise ApiError.new(response)
+          expect(string_logger).to receive(:fatal).with(match(/Error: Not authorised./))
+          cli.execute!
+        end
+      end
+
+      context 'system has no proper credentials file' do
+        it 'should suggest re-registration if ApiError 401 encountered' do
+          response = Net::HTTPResponse.new('1.1', 401, 'Test')
+          allow(System).to receive(:credentials?).and_return false
+          expect_any_instance_of(Client).to receive(:register!).and_raise ApiError.new(response)
+          expect(string_logger).to receive(:fatal).with('Provided registration code is not recognized by registration server.')
+          cli.execute!
+        end
       end
 
       it 'should produce log output if connection refused' do
