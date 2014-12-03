@@ -64,4 +64,12 @@ Feature: SUSEConnect full stack integration testing
     """
     Then I remove local credentials
 
+  Scenario: client provides meaningful message in case of invalid reg-code
+    When I call SUSEConnect with '--regcode invalid' arguments
+    Then the exit status should be 67
+    And the output should contain:
+    """
+    Provided registration code is not recognized by registration server.
+    """
+
 
