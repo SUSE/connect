@@ -111,12 +111,13 @@ Then(/^SUSEConnect library should be able to retrieve the product information$/)
   extensions = [
     'SUSE Linux Enterprise High Availability Extension 12 x86_64',
     'SUSE Linux Enterprise Software Development Kit 12 x86_64',
-    'Legacy Module 12 x86_64',
-    'Advanced Systems Management Module 12 x86_64',
     'SUSE Linux Enterprise Workstation Extension 12 x86_64',
+    'SUSE Linux Enterprise Live Patching 12 x86_64',
+    'Advanced Systems Management Module 12 x86_64',
     'Web and Scripting Module 12 x86_64',
-    'Public Cloud Module 12 x86_64'
-  ].sort
+    'Public Cloud Module 12 x86_64',
+    'Legacy Module 12 x86_64'
+  ]
 
-  expect(products).to eq(extensions)
+  expect(products).to match_array(extensions)
 end
