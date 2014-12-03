@@ -11,6 +11,9 @@ Please visit https://scc.suse.com to see and manage your subscriptions.
 
 # Rake tasks
 
+NOTE: If you are using RVM/Chruby/rbenv - make sure you installed gem2rpm as the package to the system itself and
+using it for `rake build`
+
 ```
 rake build    # build locally (prepare for pushing to ibs)
 rake bump     # increase version of a gem

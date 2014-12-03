@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Wed Dec  3 13:06:07 UTC 2014 - achernikov@suse.de
+
+- Update to version 0.2.16
+  - In case of wrong regcode provide meaningful message back to
+    the user (Wrong regcode in that case).
+
+-------------------------------------------------------------------
 Mon Oct 20 08:14:40 UTC 2014 - wstephenson@suse.com
 
 - Update to version 0.2.15
