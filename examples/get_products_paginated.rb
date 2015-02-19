@@ -34,13 +34,11 @@ resp = get(URL)
 loop do
   links = process_rels(resp)
   @entities += JSON.parse(resp)
-  # puts '>' + resp
   break unless links[:next]
   @page = + 1
   resp = get(links[:next])
 end
 
-@entities.sort! {|a, b| a['name'] <=> b['name'] }
 @entities.each do |entity|
   puts "#{entity['name']}"
 end
