@@ -6,15 +6,15 @@ require 'pp'
 require 'json'
 require 'base64'
 
-USERNAME=ARGV[0]
-PASSWORD=ARGV[1]
+USERNAME = ARGV[0]
+PASSWORD = ARGV[1]
 
 AUTH_HEADER = { Authorization: 'Basic ' + Base64.encode64("#{USERNAME}:#{PASSWORD}").chomp }
 URL = 'https://scc.suse.com/connect/organizations/products/unscoped'
 
 def process_rels(response)
   links = (response.headers[:link] || '').split(', ').map do |link|
-  href, name = link.match(/<(.*?)>; rel="(\w+)"/).captures
+    href, name = link.match(/<(.*?)>; rel="(\w+)"/).captures
     [name.to_sym, href]
   end
   Hash[*links.flatten]
@@ -34,13 +34,13 @@ resp = get(URL)
 loop do
   links = process_rels(resp)
   @entities += JSON.parse(resp)
-  #puts '>' + resp
+  # puts '>' + resp
   break unless links[:next]
-  @page =+ 1
-  resp = get( links[:next] )
+  @page = + 1
+  resp = get(links[:next])
 end
 
-@entities.sort! {|a,b| a['name'] <=> b['name'] }
+@entities.sort! {|a, b| a['name'] <=> b['name'] }
 @entities.each do |entity|
   puts "#{entity['name']}"
 end
