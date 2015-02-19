@@ -23,7 +23,6 @@ sub processed_rels {
   return %hash_refs;
 }
 
-print AUTH_HEADER;
 $client->addHeader('Authorization', AUTH_HEADER);
 $client->GET('https://scc.suse.com/connect/organizations/products/unscoped');
  
@@ -35,4 +34,8 @@ while (1) {
   $client->GET($rels{"next"});
 }
  
-print scalar(flat @products) . "\n";
+@products = flat @products;
+
+foreach my $product (@products) {
+  print $product->{"name"} . "\n";
+}
