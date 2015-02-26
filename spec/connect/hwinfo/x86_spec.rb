@@ -71,6 +71,12 @@ describe SUSE::Connect::HwInfo::X86 do
         expect(subject.uuid).to be nil
       end
 
+      it 'return nil if uuid from dmidecode is Not Present' do
+        mock_uuid = 'Not Present'
+        allow(subject).to receive(:execute).with('dmidecode -s system-uuid', false).and_return(mock_uuid)
+        expect(subject.uuid).to be nil
+      end
+
       context 'SLES for EC2' do
         it 'extracts uuid from /sys/hypervisor/uuid file' do
           uuid_file = '/sys/hypervisor/uuid'
