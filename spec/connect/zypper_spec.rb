@@ -12,6 +12,7 @@ describe SUSE::Connect::Zypper do
 
   subject { SUSE::Connect::Zypper }
   let(:status) { double('Process Status', :exitstatus => 0) }
+  include_context 'shared lets'
 
   describe '.installed_products' do
 
@@ -22,7 +23,7 @@ describe SUSE::Connect::Zypper do
 
         before do
           args = 'zypper --xmlout --non-interactive products -i'
-          Open3.should_receive(:capture3).with(args).and_return([xml, '', status])
+          Open3.should_receive(:capture3).with(shared_env_hash, args).and_return([xml, '', status])
         end
 
         it 'returns valid list of products based on proper XML' do
@@ -51,7 +52,7 @@ describe SUSE::Connect::Zypper do
 
         before do
           args = 'zypper --xmlout --non-interactive products -i'
-          Open3.should_receive(:capture3).with(args).and_return([xml, '', status])
+          Open3.should_receive(:capture3).with(shared_env_hash, args).and_return([xml, '', status])
         end
 
         it 'returns valid name' do
@@ -79,13 +80,13 @@ describe SUSE::Connect::Zypper do
 
     it 'calls zypper with proper arguments' do
       args = "zypper --non-interactive addservice -t ris http://example.com 'branding'"
-      expect(Open3).to receive(:capture3).with(args).and_return(['', '', status])
+      expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
       subject.add_service('http://example.com', 'branding')
     end
 
     it 'escapes shell parameters' do
       args = "zypper --non-interactive addservice -t ris http://example.com\\;id 'branding'"
-      expect(Open3).to receive(:capture3).with(args).and_return(['', '', status])
+      expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
       subject.add_service('http://example.com;id', 'branding')
     end
 
@@ -93,7 +94,7 @@ describe SUSE::Connect::Zypper do
       SUSE::Connect::System.filesystem_root = '/path/to/root'
 
       args = "zypper --root '/path/to/root' --non-interactive addservice -t ris http://example.com 'branding'"
-      expect(Open3).to receive(:capture3).with(args).and_return(['', '', status])
+      expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
 
       subject.add_service('http://example.com', 'branding')
     end
@@ -104,7 +105,7 @@ describe SUSE::Connect::Zypper do
 
     it 'calls zypper with proper arguments' do
       args = "zypper --non-interactive removeservice 'branding'"
-      expect(Open3).to receive(:capture3).with(args).and_return(['', '', status])
+      expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
 
       subject.remove_service('branding')
     end
@@ -113,7 +114,7 @@ describe SUSE::Connect::Zypper do
       SUSE::Connect::System.filesystem_root = '/path/to/root'
 
       args = "zypper --root '/path/to/root' --non-interactive removeservice 'branding'"
-      expect(Open3).to receive(:capture3).with(args).and_return(['', '', status])
+      expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
 
       subject.remove_service('branding')
     end
@@ -123,14 +124,14 @@ describe SUSE::Connect::Zypper do
   describe '.refresh' do
 
     it 'calls zypper with proper arguments' do
-      expect(Open3).to receive(:capture3).with('zypper --non-interactive refresh').and_return(['', '', status])
+      expect(Open3).to receive(:capture3).with(shared_env_hash, 'zypper --non-interactive refresh').and_return(['', '', status])
       subject.refresh
     end
 
     it 'calls zypper with proper arguments --root case' do
       SUSE::Connect::System.filesystem_root = '/path/to/root'
 
-      expect(Open3).to receive(:capture3).with("zypper --root '/path/to/root' --non-interactive refresh").and_return(['', '', status])
+      expect(Open3).to receive(:capture3).with(shared_env_hash, "zypper --root '/path/to/root' --non-interactive refresh").and_return(['', '', status])
       subject.refresh
     end
 
@@ -139,14 +140,14 @@ describe SUSE::Connect::Zypper do
   describe '.refresh_services' do
 
     it 'calls zypper with proper arguments' do
-      expect(Open3).to receive(:capture3).with('zypper --non-interactive refresh-services -r').and_return(['', '', status])
+      expect(Open3).to receive(:capture3).with(shared_env_hash, 'zypper --non-interactive refresh-services -r').and_return(['', '', status])
       subject.refresh_services
     end
 
     it 'calls zypper with proper arguments' do
       SUSE::Connect::System.filesystem_root = '/path/to/root'
 
-      expect(Open3).to receive(:capture3).with("zypper --root '/path/to/root' --non-interactive refresh-services -r")
+      expect(Open3).to receive(:capture3).with(shared_env_hash, "zypper --root '/path/to/root' --non-interactive refresh-services -r")
                        .and_return(['', '', status])
       subject.refresh_services
     end
@@ -216,13 +217,13 @@ describe SUSE::Connect::Zypper do
 
   describe '.distro_target' do
     it 'return zypper targetos output' do
-      Open3.should_receive(:capture3).with('zypper targetos').and_return(['openSUSE-13.1-x86_64', '', status])
+      Open3.should_receive(:capture3).with(shared_env_hash, 'zypper targetos').and_return(['openSUSE-13.1-x86_64', '', status])
       Zypper.distro_target.should eq 'openSUSE-13.1-x86_64'
     end
 
     it 'return zypper targetos output --root case' do
       args = "zypper --root '/path/to/root' targetos"
-      Open3.should_receive(:capture3).with(args).and_return(['openSUSE-13.1-x86_64', '', status])
+      Open3.should_receive(:capture3).with(shared_env_hash, args).and_return(['openSUSE-13.1-x86_64', '', status])
 
       SUSE::Connect::System.filesystem_root = '/path/to/root'
       Zypper.distro_target.should eq 'openSUSE-13.1-x86_64'

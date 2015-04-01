@@ -6,10 +6,11 @@ describe SUSE::Connect::HwInfo::X86 do
   subject { SUSE::Connect::HwInfo::X86 }
   let(:success) { double('Process Status', :exitstatus => 0) }
   let(:lscpu) { File.read(File.join(fixtures_dir, 'lscpu_phys.txt')) }
+  include_context 'shared lets'
 
   before :each do
     allow(SUSE::Connect::System).to receive(:hostname).and_return('test')
-    allow(Open3).to receive(:capture3).with('lscpu').and_return([lscpu, '', success])
+    allow(Open3).to receive(:capture3).with(shared_env_hash, 'lscpu').and_return([lscpu, '', success])
   end
 
   after(:each) do
@@ -17,8 +18,8 @@ describe SUSE::Connect::HwInfo::X86 do
   end
 
   it 'returns a hwinfo hash for x86/x86_64 systems' do
-    allow(Open3).to receive(:capture3).with('uname -i').and_return(['x86_64', '', success])
-    expect(Open3).to receive(:capture3).with('dmidecode -s system-uuid').and_return(['uuid', '', success])
+    allow(Open3).to receive(:capture3).with(shared_env_hash, 'uname -i').and_return(['x86_64', '', success])
+    expect(Open3).to receive(:capture3).with(shared_env_hash, 'dmidecode -s system-uuid').and_return(['uuid', '', success])
 
     hwinfo = subject.hwinfo
     expect(hwinfo[:hostname]).to eq 'test'
