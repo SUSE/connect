@@ -43,7 +43,7 @@ class SUSE::Connect::HwInfo::X86 < SUSE::Connect::HwInfo::Base
       else
         uuid_output = execute('dmidecode -s system-uuid', false)
       end
-      uuid_output == 'Not Settable' ? nil : uuid_output
+      ['Not Settable', 'Not Present'].include?(uuid_output) ? nil : uuid_output
     end
 
     def output
