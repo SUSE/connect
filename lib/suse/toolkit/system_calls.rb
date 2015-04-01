@@ -8,7 +8,7 @@ module SUSE
 
       def execute(cmd, quiet = true) # rubocop:disable CyclomaticComplexity
         log.debug("Executing: '#{cmd}' Quiet: #{quiet}")
-        output, error, status = Open3.capture3({'LC_ALL' => 'C'}, cmd) {|stdin, stdout, stderr, wait_thr| stdout.read }
+        output, error, status = Open3.capture3({ 'LC_ALL' => 'C' }, cmd) {|stdin, stdout, stderr, wait_thr| stdout.read }
         log.debug("Output: '#{output.strip}'") unless output.empty?
 
         # Catching interactive failures of zypper. --non-interactive always returns with exit code 0 here

@@ -131,7 +131,8 @@ describe SUSE::Connect::Zypper do
     it 'calls zypper with proper arguments --root case' do
       SUSE::Connect::System.filesystem_root = '/path/to/root'
 
-      expect(Open3).to receive(:capture3).with(shared_env_hash, "zypper --root '/path/to/root' --non-interactive refresh").and_return(['', '', status])
+      expect(Open3).to receive(:capture3).with(shared_env_hash, "zypper --root '/path/to/root' --non-interactive refresh")
+                           .and_return(['', '', status])
       subject.refresh
     end
 

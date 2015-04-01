@@ -5,7 +5,7 @@ describe SUSE::Connect::HwInfo::S390 do
   subject { SUSE::Connect::HwInfo::S390 }
   let(:success) { double('Process Status', :exitstatus => 0) }
   let(:read_values) { File.read(File.join(fixtures_dir, 'read_values_s.txt')) }
-  include_context "shared lets"
+  include_context 'shared lets'
 
   before :each do
     allow(Open3).to receive(:capture3).with(shared_env_hash, 'uname -i').and_return(['s390x', '', success])
