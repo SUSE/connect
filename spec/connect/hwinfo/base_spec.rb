@@ -3,6 +3,7 @@ require 'spec_helper'
 describe SUSE::Connect::HwInfo::Base do
   subject { SUSE::Connect::HwInfo::Base }
   let(:success) { double('Process Status', :exitstatus => 0) }
+  include_context 'shared lets'
 
   after(:each) do
     SUSE::Connect::HwInfo::Base.instance_variable_set('@arch', nil)
@@ -60,31 +61,31 @@ describe SUSE::Connect::HwInfo::Base do
 
   describe '#arch' do
     it 'returns the system architecture' do
-      expect(Open3).to receive(:capture3).with('uname -i').and_return(['blob', '', success])
+      expect(Open3).to receive(:capture3).with(shared_env_hash, 'uname -i').and_return(['blob', '', success])
       expect(subject.arch).to eql 'blob'
     end
   end
 
   describe '#x86?' do
     it 'returns true if the system architecture is x86 or x86_64' do
-      expect(Open3).to receive(:capture3).with('uname -i').and_return(['x86_64', '', success])
+      expect(Open3).to receive(:capture3).with(shared_env_hash, 'uname -i').and_return(['x86_64', '', success])
       expect(subject.x86?).to eql true
     end
 
     it 'returns false if the system architecture is not x86 or x86_64' do
-      expect(Open3).to receive(:capture3).with('uname -i').and_return(['blob', '', success])
+      expect(Open3).to receive(:capture3).with(shared_env_hash, 'uname -i').and_return(['blob', '', success])
       expect(subject.x86?).to eql false
     end
   end
 
   describe '#s390?' do
     it 'returns true if the system architecture is s390x' do
-      expect(Open3).to receive(:capture3).with('uname -i').and_return(['s390x', '', success])
+      expect(Open3).to receive(:capture3).with(shared_env_hash, 'uname -i').and_return(['s390x', '', success])
       expect(subject.s390?).to eql true
     end
 
     it 'returns false if the system architecture is not s390x' do
-      expect(Open3).to receive(:capture3).with('uname -i').and_return(['blob', '', success])
+      expect(Open3).to receive(:capture3).with(shared_env_hash, 'uname -i').and_return(['blob', '', success])
       expect(subject.s390?).to eql false
     end
   end

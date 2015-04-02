@@ -3,6 +3,7 @@ require 'spec_helper'
 describe SUSE::Connect::SSLCertificate do
   subject { SUSE::Connect::SSLCertificate }
   let(:test_cert) { File.read(File.join(fixtures_dir, 'test.pem')) }
+  include_context 'shared lets'
 
   describe '.sha1_fingerprint' do
     it 'returns the certificate SHA1 fingerprint' do
@@ -56,7 +57,8 @@ describe SUSE::Connect::SSLCertificate do
                           cert.to_pem
                       )
 
-      expect(Open3).to receive(:capture3).with('/usr/sbin/update-ca-certificates').and_return(['', '', double(:exitstatus => 0)])
+      expect(Open3).to receive(:capture3).with(shared_env_hash, '/usr/sbin/update-ca-certificates')
+                           .and_return(['', '', double(:exitstatus => 0)])
 
       SUSE::Connect::SSLCertificate.import(cert)
     end
