@@ -107,6 +107,10 @@ module SUSE
           @options[:token] = opt
         end
 
+        @opts.on('-d', '--de-register', 'de-register my system in order to not consume a subscription in SCC anymore') do |opt|
+          @options[:deregister] = true
+        end
+
         @opts.on('--instance-data  [path to file]', 'Path to the XML file holding the public key and instance data',
                  '  for cloud registration with SMT') do |opt|
           check_if_param(opt, 'Please provide the path to your instance data file')
