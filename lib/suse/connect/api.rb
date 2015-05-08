@@ -25,6 +25,7 @@ module SUSE
           :verify_callback => client.config.verify_callback,
           :debug           => client.config.debug
         )
+        @connection.yast_version = client.config.yast_version
       end
 
       # Announce a system to SCC.

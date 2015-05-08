@@ -11,7 +11,8 @@ describe SUSE::Connect::Api do
            insecure: false,
            verify_callback: nil,
            debug: false,
-           token: 'token-shmocken'
+           token: 'token-shmocken',
+           yast_version: nil
     )
   end
 
