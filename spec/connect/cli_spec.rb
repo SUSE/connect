@@ -138,7 +138,7 @@ describe SUSE::Connect::Cli do
     context 'de-register command' do
       it '--de-register calls deregister! method' do
         cli = subject.new(%w{--de-register})
-        expect_any_instance_of(Client).to_not receive(:deregister!)
+        expect_any_instance_of(Client).to receive(:deregister!)
         cli.execute!
       end
     end
