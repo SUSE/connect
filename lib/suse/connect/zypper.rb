@@ -50,6 +50,14 @@ module SUSE
         end
 
         ##
+        # Remove all installed services
+        def remove_all_services
+          services.map do |service_name|
+            remove_service(service_name)
+          end
+        end
+
+        ##
         # Returns an array of all installed service names
         def services
           output = call('services', false)

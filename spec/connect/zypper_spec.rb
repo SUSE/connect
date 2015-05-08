@@ -121,12 +121,33 @@ describe SUSE::Connect::Zypper do
 
   end
 
+  describe '.remove_all_services' do
+    let(:zypper_services_output) { File.read('spec/fixtures/zypper_services') }
+    let(:args) { 'zypper services' }
+
+    before do
+      expect(Open3).to receive(:capture3).with(shared_env_hash, args).at_least(1).and_return([zypper_services_output, '', status])
+    end
+
+    it 'removes all installed services.' do
+      subject.services.each do |service_name|
+        args = "zypper --non-interactive removeservice '#{service_name}'"
+        expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
+      end
+
+      subject.remove_all_services
+    end
+  end
+
   describe '.services' do
     let(:zypper_services_output) { File.read('spec/fixtures/zypper_services') }
-    it 'lists all defined services.' do
-      args = 'zypper services'
-      expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return([zypper_services_output, '', status])
+    let(:args) { 'zypper services' }
 
+    before do
+      expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return([zypper_services_output, '', status])
+    end
+
+    it 'lists all defined services.' do
       expect(subject.services).to match_array(%w{sles12ga sles12gaup})
     end
 
