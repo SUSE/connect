@@ -49,6 +49,16 @@ module SUSE
           call("--non-interactive removeservice '#{Shellwords.escape(service_name)}'")
         end
 
+        ##
+        # Returns an array of all installed service names
+        def services
+          output = call('services', false)
+          lines = output.split("\n").drop(2)
+          lines.map do |line|
+            line.split('|')[2].strip
+          end
+        end
+
         def refresh
           call('--non-interactive refresh')
         end

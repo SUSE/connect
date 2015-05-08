@@ -1,0 +1,4 @@
+# | Alias                  | Name                           | Enabled | Refresh
+--+------------------------+--------------------------------+---------+--------
+1 | sles12ga               | sles12ga                       | Yes     | No
+2 | sles12gaup             | sles12gaup                     | Yes     | Yes
