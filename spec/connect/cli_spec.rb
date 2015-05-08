@@ -10,9 +10,9 @@ describe SUSE::Connect::Cli do
   let(:config_file) { File.expand_path File.join(File.dirname(__FILE__), '../fixtures/SUSEConnect') }
 
   before do
-    Zypper.stub(:base_product => {})
+    Zypper.stub(base_product: {})
     subject.any_instance.stub(:exit)
-    subject.any_instance.stub(:puts => true)
+    subject.any_instance.stub(puts: true)
     SUSE::Connect::GlobalLogger.instance.log = string_logger
   end
 
@@ -179,7 +179,7 @@ describe SUSE::Connect::Cli do
     it 'sets product options' do
       argv = %w{--product sles/12/i386}
       cli = subject.new(argv)
-      cli.options[:product].should eq Remote::Product.new(:identifier => 'sles', :version => '12', :arch => 'i386')
+      cli.options[:product].should eq Remote::Product.new(identifier: 'sles', version: '12', arch: 'i386')
     end
 
     it 'sets token options' do

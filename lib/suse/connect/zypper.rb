@@ -20,7 +20,7 @@ module SUSE
         # presented as a hash.
         def installed_products
           zypper_out = call('--xmlout --non-interactive products -i', false)
-          xml_doc = REXML::Document.new(zypper_out, :compress_whitespace => [])
+          xml_doc = REXML::Document.new(zypper_out, compress_whitespace: [])
           ary_of_products_hashes = xml_doc.root.elements['product-list'].elements.map(&:to_hash)
           ary_of_products_hashes.map {|hash| Product.new(hash) }
         end

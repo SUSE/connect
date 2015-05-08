@@ -3,7 +3,7 @@ require 'spec_helper'
 describe SUSE::Connect::Zypper do
 
   before(:each) do
-    Object.stub(:system => true)
+    Object.stub(system: true)
   end
 
   after(:each) do
@@ -11,7 +11,7 @@ describe SUSE::Connect::Zypper do
   end
 
   subject { SUSE::Connect::Zypper }
-  let(:status) { double('Process Status', :exitstatus => 0) }
+  let(:status) { double('Process Status', exitstatus: 0) }
   include_context 'shared lets'
 
   describe '.installed_products' do
@@ -191,13 +191,13 @@ describe SUSE::Connect::Zypper do
 
     let :parsed_products do
       [
-        SUSE::Connect::Zypper::Product.new(:isbase => '1', :name => 'SLES', :productline => 'SLE_productline1', :registerrelease => ''),
-        SUSE::Connect::Zypper::Product.new(:isbase => '2', :name => 'Cloud', :productline => 'SLE_productline2', :registerrelease => '')
+        SUSE::Connect::Zypper::Product.new(isbase: '1', name: 'SLES', productline: 'SLE_productline1', registerrelease: ''),
+        SUSE::Connect::Zypper::Product.new(isbase: '2', name: 'Cloud', productline: 'SLE_productline2', registerrelease: '')
       ]
     end
 
     before do
-      subject.stub(:installed_products => parsed_products)
+      subject.stub(installed_products: parsed_products)
       Credentials.any_instance.stub(:write)
     end
 
@@ -206,7 +206,7 @@ describe SUSE::Connect::Zypper do
     end
 
     it 'raises CannotDetectBaseProduct if cant get base system from list of installed products' do
-      product = double('Product', :isbase => false)
+      product = double('Product', isbase: false)
       allow(Zypper).to receive(:installed_products).and_return([product])
       expect { Zypper.base_product }.to raise_error(CannotDetectBaseProduct)
     end
