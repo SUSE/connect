@@ -337,6 +337,7 @@ describe SUSE::Connect::Client do
     end
 
     before do
+      Zypper.should_receive(:remove_all_services).and_return(true)
       System.should_receive(:remove_credentials).and_return(true)
       subject.stub(system_auth: 'Basic: encodedstring')
     end
