@@ -60,6 +60,7 @@ module SUSE
         ##
         # Returns an array of all installed service names
         def services
+          # FIXME: List only SCC seervices, detect them by service URL
           output = call('services', false)
           lines = output.split("\n").drop(2)
           lines.map do |line|
