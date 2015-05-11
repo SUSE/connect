@@ -1,4 +1,5 @@
-# | Alias                  | Name                           | Enabled | Refresh
---+------------------------+--------------------------------+---------+--------
-1 | sles12ga               | sles12ga                       | Yes     | No
-2 | sles12gaup             | sles12gaup                     | Yes     | Yes
+# | Alias                  | Name                           | Enabled | Refresh | Type   | URI
+--+------------------------+--------------------------------+---------+---------+--------+---------------------------------------------------------------------------
+1 | scc_sles12             | scc_sles12                     | Yes     | No      | rpm-md | https://scc.suse.com/repos/SLES12-GA-Pool/
+2 | smt_sles12             | smt_sles12                     | Yes     | Yes     | rpm-md | http://smt.suse.de/repos/SLES12-GA-Pool/
+3 | legacy_sles12          | legacy_sles12                  | Yes     | Yes     | rpm-md | http://legacy.suse.de/repos/SLES12-GA-Pool/
