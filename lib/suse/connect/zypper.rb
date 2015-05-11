@@ -50,21 +50,28 @@ module SUSE
         end
 
         ##
-        # Remove all installed services
-        def remove_all_services
-          services.map do |service_name|
-            remove_service(service_name)
+        # Remove all installed SUSE services
+        def remove_all_suse_services
+          services.each do |service|
+            remove_service(service[:name]) if service[:url].include?(Config.new.url)
           end
         end
 
         ##
-        # Returns an array of all installed service names
+        # Returns an array of hashes of all installed services
         def services
-          # FIXME: List only SCC seervices, detect them by service URL
-          output = call('services', false)
-          lines = output.split("\n").drop(2)
+          output = call('services -u', false)
+          lines = output.split("\n").drop(2).map {|line| line.split('|').map(&:strip) }
+
           lines.map do |line|
-            line.split('|')[2].strip
+            {
+              alias:    line[1],
+              name:     line[2],
+              enabled:  line[3],
+              refresh:  line[4],
+              type:     line[5],
+              url:      line[6]
+            }
           end
         end
 

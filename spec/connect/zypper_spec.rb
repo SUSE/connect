@@ -121,34 +121,57 @@ describe SUSE::Connect::Zypper do
 
   end
 
-  describe '.remove_all_services' do
+  describe '.remove_all_suse_services' do
     let(:zypper_services_output) { File.read('spec/fixtures/zypper_services') }
-    let(:args) { 'zypper services' }
+    let(:service_args) { 'zypper services -u' }
 
     before do
-      expect(Open3).to receive(:capture3).with(shared_env_hash, args).at_least(1).and_return([zypper_services_output, '', status])
+      expect(Open3).to receive(:capture3).with(shared_env_hash, service_args).at_least(1).and_return([zypper_services_output, '', status])
     end
 
-    it 'removes all installed services.' do
-      subject.services.each do |service_name|
-        args = "zypper --non-interactive removeservice '#{service_name}'"
-        expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
-      end
+    it 'removes SCC installed services' do
+      args = "zypper --non-interactive removeservice 'scc_sles12'"
 
-      subject.remove_all_services
+      allow_any_instance_of(SUSE::Connect::Config).to receive(:url).and_return('https://scc.suse.com')
+      expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
+
+      subject.remove_all_suse_services
+
+    end
+
+    it 'removes SMT installed services' do
+      args = "zypper --non-interactive removeservice 'smt_sles12'"
+
+      allow_any_instance_of(SUSE::Connect::Config).to receive(:url).and_return('https://smt.suse.de')
+      expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
+
+      subject.remove_all_suse_services
+
+    end
+
+    it 'removes legacy services' do
+      args = "zypper --non-interactive removeservice 'legacy_sles12'"
+
+      allow_any_instance_of(SUSE::Connect::Config).to receive(:url).and_return('https://legacy.suse.de')
+      expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
+
+      subject.remove_all_suse_services
+
     end
   end
 
   describe '.services' do
     let(:zypper_services_output) { File.read('spec/fixtures/zypper_services') }
-    let(:args) { 'zypper services' }
+    let(:args) { 'zypper services -u' }
 
     before do
-      expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return([zypper_services_output, '', status])
+      expect(Open3).to receive(:capture3).with(shared_env_hash, args).at_least(1).and_return([zypper_services_output, '', status])
     end
 
     it 'lists all defined services.' do
-      expect(subject.services).to match_array(%w{sles12ga sles12gaup})
+      expect(subject.services.size).to eq 3
+      expect(subject.services.first.keys).to match_array([:alias, :name, :enabled, :refresh, :type, :url])
+      expect(subject.services.map {|service| service[:name] }).to match_array(%w{scc_sles12 smt_sles12 legacy_sles12})
     end
 
   end
