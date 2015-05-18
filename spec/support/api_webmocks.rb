@@ -101,3 +101,39 @@ def stub_systems_activations_call
   .with(:headers => headers)
   .to_return(:status => 200, :body => response_body, :headers => {})
 end
+
+def stub_system_migrations_call
+  response_body = JSON.parse(File.read('spec/fixtures/migrations_response.json')).to_json
+  headers = { 'Accept' => api_header_version, \
+              'Authorization' => 'Basic: encodedgibberish' }
+  request_body = [{
+      identifier:   'SLES',
+      version:      '12',
+      arch:         'x86_64',
+      release_type: 'HP-CNB'
+    },
+    {
+      identifier:   'SUSE-Cloud',
+      version:      '7',
+      arch:         'x86_64',
+      release_type: nil
+    }]
+  stub_request(:post, 'https://example.com/connect/systems/products/migrations')
+    .with(:headers => headers, :body => request_body.to_json)
+    .to_return(:status => 200, :body => response_body, :headers => {})
+end
+
+def stub_empty_system_migrations_call
+  response_body = [].to_json
+  headers = { 'Accept' => api_header_version, \
+              'Authorization' => 'Basic: encodedgibberish' }
+  request_body = [{
+      identifier:   'SLES',
+      version:      'not-upgradeable',
+      arch:         'x86_64',
+      release_type: nil
+    }]
+  stub_request(:post, 'https://example.com/connect/systems/products/migrations')
+    .with(:headers => headers, :body => request_body.to_json)
+    .to_return(:status => 200, :body => response_body, :headers => {})
+end
