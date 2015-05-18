@@ -109,8 +109,8 @@ module SUSE
           @options[:token] = opt
         end
 
-        @opts.on('-d', '--de-register', 'de-registers a system in order to not consume a subscription in SCC anymore,',
-                 ' and removes all installed services') do |opt|
+        @opts.on('-d', '--de-register', 'De-registers a system in order to not consume a subscription slot in SCC anymore',
+                 ' and removes all services installed by SUSEConnect') do |opt|
           @options[:deregister] = true
         end
 
