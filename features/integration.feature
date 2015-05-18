@@ -48,13 +48,6 @@ Feature: SUSEConnect full stack integration testing
   Scenario: API version check
     When SUSEConnect library should respect API headers
 
-  # De-register the system at the end of the feature
-  Scenario: System de-registration
-    When I cleanly deregister the system removing local credentials
-    Then a file named "/etc/zypp/credentials.d/SCCcredentials" should not exist
-    And a file named "/etc/zypp/credentials.d/SUSE_Linux_Enterprise_Server_12_x86_64" should not exist
-    And a file named "/etc/zypp/credentials.d/SUSE_Linux_Enterprise_Software_Development_Kit_12_x86_64" should not exist
-
   Scenario: Error cleanly if system record was deleted on SCC only
     When I call SUSEConnect with '--regcode VALID' arguments
     Then I deregister the system only
@@ -73,5 +66,13 @@ Feature: SUSEConnect full stack integration testing
     """
     Provided registration code is not recognized by registration server.
     """
+
+  # IMPORTANT NOTICE: Call de-register the system at the end of the feature file
+  Scenario: System de-registration
+    When I cleanly deregister the system removing local credentials
+    Then a file named "/etc/zypp/credentials.d/SCCcredentials" should not exist
+    And a file named "/etc/zypp/credentials.d/SUSE_Linux_Enterprise_Server_12_x86_64" should not exist
+    And a file named "/etc/zypp/credentials.d/SUSE_Linux_Enterprise_Software_Development_Kit_12_x86_64" should not exist
+    And a file named "/etc/zypp/credentials.d/Web_and_Scripting_Module_12_x86_64" should not exist
 
 
