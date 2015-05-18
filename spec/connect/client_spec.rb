@@ -337,13 +337,14 @@ describe SUSE::Connect::Client do
     end
 
     before do
-      Zypper.should_receive(:remove_all_services).and_return(true)
-      System.should_receive(:remove_credentials).and_return(true)
       subject.stub(system_auth: 'Basic: encodedstring')
     end
 
     it 'calls underlying api and removes credentials file' do
-      subject.api.should_receive(:deregister).with('Basic: encodedstring').and_return stubbed_response
+      expect(Zypper).to receive(:remove_all_suse_services).and_return(true)
+      expect(System).to receive(:remove_credentials).and_return(true)
+      expect(subject.api).to receive(:deregister).with('Basic: encodedstring').and_return stubbed_response
+
       subject.deregister!.should be true
     end
   end

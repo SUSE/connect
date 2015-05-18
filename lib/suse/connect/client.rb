@@ -35,7 +35,7 @@ module SUSE
       def deregister!
         @api.deregister(system_auth)
         System.remove_credentials
-        Zypper.remove_all_services
+        Zypper.remove_all_suse_services
       end
 
       # Announce system via SCC/Registration Proxy
