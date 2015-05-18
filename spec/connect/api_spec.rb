@@ -274,6 +274,63 @@ describe SUSE::Connect::Api do
 
   end
 
+  describe '#system_migrations' do
+    context 'with a non-empty response' do
+      before do
+        stub_system_migrations_call
+      end
+
+      let(:products) do
+        [
+          Remote::Product.new(:identifier => 'SLES', :version => '12', :arch => 'x86_64', :release_type => 'HP-CNB'),
+          Remote::Product.new(:identifier => 'SUSE-Cloud', :version => '7', :arch => 'x86_64', :release_type => nil)
+        ]
+      end
+
+      let(:query) do
+        products.map {|product| { :identifier => product.identifier, :version => product.version, :arch => product.arch, :release_type => product.release_type }}
+      end
+
+      it 'is authenticated via basic auth' do
+        payload = [
+          '/connect/systems/products/migrations',
+          :auth => 'Basic: encodedgibberish',
+          :params => query
+        ]
+        expect_any_instance_of(Connection).to receive(:post)
+          .with(*payload)
+          .and_call_original
+        subject.new(client).system_migrations('Basic: encodedgibberish', products)
+      end
+
+      it 'responds with proper status code' do
+        response = subject.new(client).system_migrations('Basic: encodedgibberish', products)
+        expect(response.code).to eq 200
+      end
+
+      it 'returns array of upgrade paths' do
+        body = subject.new(client).system_migrations('Basic: encodedgibberish', products).body
+
+        expect(body.first).to include({'identifier' => 'SLES', 'version' => '12.1', 'arch' => 'x86_64', 'release_type' => 'HP-CNB'})
+        expect(body.first).to include({'identifier' => 'SUSE-Cloud', 'version' => '8', 'arch' => 'x86_64', 'release_type' => nil})
+      end
+    end
+
+    context 'with an empty response' do
+      before do
+        stub_empty_system_migrations_call
+      end
+
+      let(:products) { [Remote::Product.new(identifier: 'SLES', version: 'not-upgradeable', arch: 'x86_64', release_type: nil)] }
+
+      it 'returns an empty array' do
+        body = subject.new(client).system_migrations('Basic: encodedgibberish', products).body
+
+        expect(body).to eq([])
+      end
+    end
+  end
+
   describe 'deregister' do
 
     before do

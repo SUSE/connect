@@ -156,6 +156,21 @@ module SUSE
         @connection.get('/connect/systems/activations', :auth => auth)
       end
 
+      def system_migrations(auth, products)
+        payload = products.map {|product| serialize_product(product)}
+        @connection.post('/connect/systems/products/migrations', auth: auth, params: payload)
+      end
+
+      private
+      def serialize_product(product)
+        {
+          identifier:   product.identifier,
+          version:      product.version,
+          arch:         product.arch,
+          release_type: product.release_type
+        }
+      end
+
     end
   end
 end
