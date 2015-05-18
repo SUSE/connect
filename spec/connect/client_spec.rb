@@ -327,6 +327,57 @@ describe SUSE::Connect::Client do
 
   end
 
+  describe '#fetch_system_migrations' do
+    let(:stubbed_response) do
+      OpenStruct.new(
+        :code => 200,
+        :body => [[{ 'identifier' => 'bravo', 'version' => '12.1' }]],
+        :success => true
+      )
+    end
+
+    let(:empty_response) do
+      OpenStruct.new(
+        :code => 200,
+        :body => [],
+        :success => true
+      )
+    end
+
+    let(:products) do
+      [
+        Remote::Product.new(identifier: 'tango', version: '12'),
+        Remote::Product.new(identifier: 'bravo', version: '7')
+      ]
+    end
+
+    before do
+      subject.stub(:system_auth => 'Basic: encodedstring')
+    end
+
+    it 'collects data from api response' do
+      expect(subject.api).to receive(:fetch_system_migrations).with('Basic: encodedstring', products).and_return(stubbed_response)
+      subject.fetch_system_migrations(products)
+    end
+
+    it 'returns array of upgrade paths returned from api' do
+      subject.api.should_receive(:fetch_system_migrations).with('Basic: encodedstring', products).and_return stubbed_response
+      upgrade_paths = subject.fetch_system_migrations(products)
+      expect(upgrade_paths).to be_kind_of Array
+      expect(upgrade_paths.first).to be_kind_of Array
+      expect(upgrade_paths.first.first).to be_kind_of Remote::Product
+    end
+
+    context 'when no upgrades are available' do
+      it 'returns an empty array' do
+        subject.api.should_receive(:fetch_system_migrations).with('Basic: encodedstring', products).and_return empty_response
+        upgrade_paths = subject.fetch_system_migrations(products)
+        expect(upgrade_paths).to be_kind_of Array
+        expect(upgrade_paths).to be_empty
+      end
+    end
+  end
+
   describe '#deregister!' do
     let(:stubbed_response) do
       OpenStruct.new(
