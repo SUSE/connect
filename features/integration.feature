@@ -51,9 +51,15 @@ Feature: SUSEConnect full stack integration testing
   Scenario: System de-registration
     When I cleanly deregister the system removing local credentials
     Then a file named "/etc/zypp/credentials.d/SCCcredentials" should not exist
+
     And a file named "/etc/zypp/credentials.d/SUSE_Linux_Enterprise_Server_12_x86_64" should not exist
     And a file named "/etc/zypp/credentials.d/SUSE_Linux_Enterprise_Software_Development_Kit_12_x86_64" should not exist
     And a file named "/etc/zypp/credentials.d/Web_and_Scripting_Module_12_x86_64" should not exist
+
+    And I run `zypper lr`
+    And the output should not contain "SUSE_Linux_Enterprise_Server_12_x86_64"
+    And the output should not contain "SUSE_Linux_Enterprise_Software_Development_Kit_12_x86_64"
+    And the output should not contain "Web_and_Scripting_Module_12_x86_64"
 
   Scenario: Error cleanly if system record was deleted on SCC only
     When I call SUSEConnect with '--regcode VALID' arguments
