@@ -85,9 +85,9 @@ module SUSE
           status(client_params).activated_products.include?(product)
         end
 
-        def fetch_system_migrations(products, client_params = {})
+        def system_migrations(products, client_params = {})
           config = SUSE::Connect::Config.new.merge!(client_params)
-          Client.new(config).fetch_system_migrations(products)
+          Client.new(config).system_migrations(products)
         end
 
         # Writes the config file with the given parameters, overwriting any existing contents

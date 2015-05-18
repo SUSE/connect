@@ -96,8 +96,8 @@ module SUSE
         @api.system_activations(system_auth)
       end
 
-      def fetch_system_migrations(products)
-        upgrade_paths = @api.fetch_system_migrations(system_auth, products).body
+      def system_migrations(products)
+        upgrade_paths = @api.system_migrations(system_auth, products).body
         upgrade_paths.map do |upgrade_path|
           upgrade_path.map do |product_attributes|
             Remote::Product.new(product_attributes)

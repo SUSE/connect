@@ -327,7 +327,7 @@ describe SUSE::Connect::Client do
 
   end
 
-  describe '#fetch_system_migrations' do
+  describe '#system_migrations' do
     let(:stubbed_response) do
       OpenStruct.new(
         :code => 200,
@@ -355,14 +355,14 @@ describe SUSE::Connect::Client do
       subject.stub(:system_auth => 'Basic: encodedstring')
     end
 
-    it 'collects data from api response' do
-      expect(subject.api).to receive(:fetch_system_migrations).with('Basic: encodedstring', products).and_return(stubbed_response)
-      subject.fetch_system_migrations(products)
+    it 'collects data from the API response' do
+      expect(subject.api).to receive(:system_migrations).with('Basic: encodedstring', products).and_return(stubbed_response)
+      subject.system_migrations(products)
     end
 
-    it 'returns array of upgrade paths returned from api' do
-      subject.api.should_receive(:fetch_system_migrations).with('Basic: encodedstring', products).and_return stubbed_response
-      upgrade_paths = subject.fetch_system_migrations(products)
+    it 'returns array of upgrade paths returned from the API' do
+      subject.api.should_receive(:system_migrations).with('Basic: encodedstring', products).and_return stubbed_response
+      upgrade_paths = subject.system_migrations(products)
       expect(upgrade_paths).to be_kind_of Array
       expect(upgrade_paths.first).to be_kind_of Array
       expect(upgrade_paths.first.first).to be_kind_of Remote::Product
@@ -370,8 +370,8 @@ describe SUSE::Connect::Client do
 
     context 'when no upgrades are available' do
       it 'returns an empty array' do
-        subject.api.should_receive(:fetch_system_migrations).with('Basic: encodedstring', products).and_return empty_response
-        upgrade_paths = subject.fetch_system_migrations(products)
+        subject.api.should_receive(:system_migrations).with('Basic: encodedstring', products).and_return empty_response
+        upgrade_paths = subject.system_migrations(products)
         expect(upgrade_paths).to eq []
       end
     end

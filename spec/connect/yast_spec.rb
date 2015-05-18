@@ -176,7 +176,7 @@ describe SUSE::Connect::YaST do
 
   end
 
-  describe '#fetch_system_migrations' do
+  describe '#system_migrations' do
     let(:products) do
       [
         Remote::Product.new(identifier: 'tango', version: '12'),
@@ -185,16 +185,16 @@ describe SUSE::Connect::YaST do
     end
     let(:client_params) { { :foo => 'oink' } }
 
-    it 'calls fetch_system_migrations on an instance of Client' do
+    it 'calls system_migrations on an instance of Client' do
       expect(Client).to receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
-      expect_any_instance_of(Client).to receive(:fetch_system_migrations)
-      subject.fetch_system_migrations products, client_params
+      expect_any_instance_of(Client).to receive(:system_migrations)
+      subject.system_migrations products, client_params
     end
 
-    it 'uses products list as parameter for Client#fetch_system_migrations' do
+    it 'uses products list as parameter for Client#system_migrations' do
       expect(Client).to receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
-      expect_any_instance_of(Client).to receive(:fetch_system_migrations).with(products)
-      subject.fetch_system_migrations products, client_params
+      expect_any_instance_of(Client).to receive(:system_migrations).with(products)
+      subject.system_migrations products, client_params
     end
   end
 
