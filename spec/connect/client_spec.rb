@@ -372,8 +372,7 @@ describe SUSE::Connect::Client do
       it 'returns an empty array' do
         subject.api.should_receive(:fetch_system_migrations).with('Basic: encodedstring', products).and_return empty_response
         upgrade_paths = subject.fetch_system_migrations(products)
-        expect(upgrade_paths).to be_kind_of Array
-        expect(upgrade_paths).to be_empty
+        expect(upgrade_paths).to eq []
       end
     end
   end
