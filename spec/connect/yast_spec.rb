@@ -176,6 +176,28 @@ describe SUSE::Connect::YaST do
 
   end
 
+  describe '#fetch_system_migrations' do
+    let(:products) do
+      [
+        Remote::Product.new(identifier: 'tango', version: '12'),
+        Remote::Product.new(identifier: 'bravo', version: '7')
+      ]
+    end
+    let(:client_params) { { :foo => 'oink' } }
+
+    it 'calls fetch_system_migrations on an instance of Client' do
+      expect(Client).to receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
+      expect_any_instance_of(Client).to receive(:fetch_system_migrations)
+      subject.fetch_system_migrations products, client_params
+    end
+
+    it 'uses products list as parameter for Client#fetch_system_migrations' do
+      expect(Client).to receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
+      expect_any_instance_of(Client).to receive(:fetch_system_migrations).with(products)
+      subject.fetch_system_migrations products, client_params
+    end
+  end
+
   describe '#write_config' do
     let(:params) { { url: 'http://scc.foo.com' } }
 
