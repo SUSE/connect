@@ -288,7 +288,15 @@ describe SUSE::Connect::Api do
       end
 
       let(:query) do
-        products.map {|product| { :identifier => product.identifier, :version => product.version, :arch => product.arch, :release_type => product.release_type }}
+        products_attributes = products.map do |product|
+          {
+            identifier: product.identifier,
+            version: product.version,
+            arch: product.arch,
+            release_type: product.release_type
+          }
+        end
+        { installed_products: products_attributes }
       end
 
       it 'is authenticated via basic auth' do
