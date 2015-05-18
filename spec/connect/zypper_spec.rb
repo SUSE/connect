@@ -106,6 +106,7 @@ describe SUSE::Connect::Zypper do
     it 'calls zypper with proper arguments' do
       args = "zypper --non-interactive removeservice 'branding'"
       expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
+      expect(Zypper).to receive(:remove_service_credentials).with('branding')
 
       subject.remove_service('branding')
     end
@@ -136,7 +137,6 @@ describe SUSE::Connect::Zypper do
       expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
 
       subject.remove_all_suse_services
-
     end
 
     it 'removes SMT installed services' do
@@ -146,7 +146,6 @@ describe SUSE::Connect::Zypper do
       expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
 
       subject.remove_all_suse_services
-
     end
 
     it 'removes legacy services' do
@@ -156,7 +155,20 @@ describe SUSE::Connect::Zypper do
       expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
 
       subject.remove_all_suse_services
+    end
+  end
 
+  describe '.remove_service_credentials' do
+    let(:service_name) { 'SLES_12_Service' }
+    let(:service_credentials_dir) { SUSE::Connect::Credentials::DEFAULT_CREDENTIALS_DIR }
+    let(:service_credentials_file) { File.join(service_credentials_dir, service_name) }
+
+    it 'removes zypper service credentials' do
+      expect(File).to receive(:join).with(service_credentials_dir, service_name).and_return(service_credentials_file)
+      expect(File).to receive(:exist?).with(service_credentials_file).and_return(true)
+      expect(File).to receive(:delete).with(service_credentials_file).and_return(true)
+
+      subject.remove_service_credentials(service_name)
     end
   end
 

@@ -1,5 +1,6 @@
 require 'rexml/document'
 require 'shellwords'
+require 'fileutils'
 require 'suse/connect/rexml_refinement'
 require 'suse/toolkit/system_calls'
 
@@ -44,16 +45,28 @@ module SUSE
           call("--non-interactive addservice -t ris #{service}")
         end
 
-        # @param service_name [String] Alias-mnemonic with which zypper should add this service
+        # @param service_name [String] Alias-mnemonic with which zypper should remove this service
         def remove_service(service_name)
           call("--non-interactive removeservice '#{Shellwords.escape(service_name)}'")
+          remove_service_credentials(service_name)
         end
 
         ##
         # Remove all installed SUSE services
         def remove_all_suse_services
           services.each do |service|
-            remove_service(service[:name]) if service[:url].include?(Config.new.url)
+            if service[:url].include?(Config.new.url)
+              remove_service(service[:name])
+            end
+          end
+        end
+
+        # @param service_name [String] Alias-mnemonic with which service credentials file should be removed
+        def remove_service_credentials(service_name)
+          service_credentials_file = File.join(SUSE::Connect::Credentials::DEFAULT_CREDENTIALS_DIR, service_name)
+
+          if File.exist?(service_credentials_file)
+            File.delete service_credentials_file
           end
         end
 
