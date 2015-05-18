@@ -179,8 +179,8 @@ describe SUSE::Connect::YaST do
   describe '#system_migrations' do
     let(:products) do
       [
-        Remote::Product.new(identifier: 'tango', version: '12'),
-        Remote::Product.new(identifier: 'bravo', version: '7')
+        Remote::Product.new(:identifier => 'SLES', :version => '12', :arch => 'x86_64', :release_type => 'HP-CNB'),
+        Remote::Product.new(:identifier => 'SUSE-Cloud', :version => '7', :arch => 'x86_64', :release_type => nil)
       ]
     end
     let(:client_params) { { :foo => 'oink' } }
@@ -195,6 +195,14 @@ describe SUSE::Connect::YaST do
       expect(Client).to receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
       expect_any_instance_of(Client).to receive(:system_migrations).with(products)
       subject.system_migrations products, client_params
+    end
+
+    it 'returns a list of upgrade paths' do
+      expect(Client).to receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
+      expect_any_instance_of(Client).to receive(:system_migrations).with(products)
+        .and_return([[Remote::Product.new(identifier: 'SLES')]])
+      upgrade_paths = subject.system_migrations products, client_params
+      expect(upgrade_paths.first.first).to be_instance_of Remote::Product
     end
   end
 

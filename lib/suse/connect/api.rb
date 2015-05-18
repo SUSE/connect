@@ -177,7 +177,6 @@ module SUSE
           release_type: product.release_type
         }
       end
-
     end
   end
 end

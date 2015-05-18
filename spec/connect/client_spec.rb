@@ -357,12 +357,14 @@ describe SUSE::Connect::Client do
 
     it 'collects data from the API response' do
       expect(subject.api).to receive(:system_migrations).with('Basic: encodedstring', products).and_return(stubbed_response)
+
       subject.system_migrations(products)
     end
 
     it 'returns array of upgrade paths returned from the API' do
       subject.api.should_receive(:system_migrations).with('Basic: encodedstring', products).and_return stubbed_response
       upgrade_paths = subject.system_migrations(products)
+
       expect(upgrade_paths).to be_kind_of Array
       expect(upgrade_paths.first).to be_kind_of Array
       expect(upgrade_paths.first.first).to be_kind_of Remote::Product
