@@ -164,12 +164,13 @@ module SUSE
       #
       # @return [Array <Array <Remote::Product>>] the list of possible upgrade paths for the given products
       def system_migrations(auth, products)
-        products_attributes = products.map {|product| serialize_product(product)}
+        products_attributes = products.map {|product| serialize_product(product) }
         payload = { installed_products: products_attributes }
         @connection.post('/connect/systems/products/migrations', auth: auth, params: payload)
       end
 
       private
+
       def serialize_product(product)
         {
           identifier:   product.identifier,

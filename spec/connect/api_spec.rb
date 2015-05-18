@@ -319,8 +319,8 @@ describe SUSE::Connect::Api do
       it 'returns array of upgrade paths' do
         body = subject.new(client).system_migrations('Basic: encodedgibberish', products).body
 
-        expect(body.first).to include({'identifier' => 'SLES', 'version' => '12.1', 'arch' => 'x86_64', 'release_type' => 'HP-CNB'})
-        expect(body.first).to include({'identifier' => 'SUSE-Cloud', 'version' => '8', 'arch' => 'x86_64', 'release_type' => nil})
+        expect(body.first).to include('identifier' => 'SLES', 'version' => '12.1', 'arch' => 'x86_64', 'release_type' => 'HP-CNB')
+        expect(body.first).to include('identifier' => 'SUSE-Cloud', 'version' => '8', 'arch' => 'x86_64', 'release_type' => nil)
       end
     end
 
