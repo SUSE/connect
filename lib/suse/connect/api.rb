@@ -156,6 +156,13 @@ module SUSE
         @connection.get('/connect/systems/activations', :auth => auth)
       end
 
+      # Lists all available upgrade paths for a given list of products
+      #
+      # @param auth [String] authorization string which will be injected in 'Authorization' header in request.
+      #   In this case we expect Base64 encoded string with login and password
+      # @param [Array <Remote::Product>] a list of producs
+      #
+      # @return [Array <Array <Remote::Product>>] the list of possible upgrade paths for the given products
       def system_migrations(auth, products)
         payload = products.map {|product| serialize_product(product)}
         @connection.post('/connect/systems/products/migrations', auth: auth, params: payload)
