@@ -288,15 +288,7 @@ describe SUSE::Connect::Api do
       end
 
       let(:query) do
-        products_attributes = products.map do |product|
-          {
-            identifier: product.identifier,
-            version: product.version,
-            arch: product.arch,
-            release_type: product.release_type
-          }
-        end
-        { installed_products: products_attributes }
+        { installed_products: products.map(&:to_params) }
       end
 
       it 'is authenticated via basic auth' do
@@ -308,11 +300,13 @@ describe SUSE::Connect::Api do
         expect_any_instance_of(Connection).to receive(:post)
           .with(*payload)
           .and_call_original
+
         subject.new(client).system_migrations('Basic: encodedgibberish', products)
       end
 
       it 'responds with proper status code' do
         response = subject.new(client).system_migrations('Basic: encodedgibberish', products)
+
         expect(response.code).to eq 200
       end
 

@@ -89,13 +89,7 @@ module SUSE
       #   In this case we expect Base64 encoded string with login and password
       # @param product [SUSE::Connect::Remote::Product] product
       def upgrade_product(auth, product)
-        payload = {
-          :identifier   => product.identifier,
-          :version      => product.version,
-          :arch         => product.arch,
-          :release_type => product.release_type
-        }
-        @connection.put('/connect/systems/products', :auth => auth, :params => payload)
+        @connection.put('/connect/systems/products', :auth => auth, :params => product.to_params)
       end
 
       # Show details of an (activated) product including repositories and available extensions
@@ -103,13 +97,7 @@ module SUSE
       # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
       #
       def show_product(auth, product)
-        payload = {
-          :identifier   => product.identifier,
-          :version      => product.version,
-          :arch         => product.arch,
-          :release_type => product.release_type
-        }
-        @connection.get('/connect/systems/products', :auth => auth, :params => payload)
+        @connection.get('/connect/systems/products', :auth => auth, :params => product.to_params)
       end
 
       # Deregister/unregister a system
@@ -165,20 +153,8 @@ module SUSE
       # @return [Array <Array <Hash>>] the list of possible upgrade paths for the given products,
       #   where each product is represented by a hash with identifier, version, arch and release_type
       def system_migrations(auth, products)
-        products_attributes = products.map {|product| serialize_product(product) }
-        payload = { installed_products: products_attributes }
+        payload = { installed_products: products.map(&:to_params) }
         @connection.post('/connect/systems/products/migrations', auth: auth, params: payload)
-      end
-
-      private
-
-      def serialize_product(product)
-        {
-          identifier:   product.identifier,
-          version:      product.version,
-          arch:         product.arch,
-          release_type: product.release_type
-        }
       end
     end
   end

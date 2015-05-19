@@ -201,7 +201,9 @@ describe SUSE::Connect::YaST do
       expect(Client).to receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
       expect_any_instance_of(Client).to receive(:system_migrations).with(products)
         .and_return([[Remote::Product.new(identifier: 'SLES')]])
+
       upgrade_paths = subject.system_migrations products, client_params
+
       expect(upgrade_paths.first.first).to be_instance_of Remote::Product
     end
   end
