@@ -218,22 +218,12 @@ describe SUSE::Connect::Api do
 
     let(:api_endpoint) { '/connect/systems/products' }
     let(:system_auth) { 'basic_auth_mock' }
-
     let(:product) { Remote::Product.new(:identifier => 'SLES', :version => '12', :arch => 'x86_64') }
-
-    let(:payload) do
-      {
-        :identifier   => 'SLES',
-        :version      => '12',
-        :arch         => 'x86_64',
-        :release_type => nil
-      }
-    end
 
     it 'calls ConnectAPI with basic auth and params and receives a JSON in return' do
       stub_upgrade_call
       Connection.any_instance.should_receive(:put)
-      .with(api_endpoint, :auth => system_auth, :params => payload)
+      .with(api_endpoint, :auth => system_auth, :params => product.to_params)
       .and_call_original
       response = subject.new(client).upgrade_product(system_auth, product)
       response.body['sources'].keys.first.should include('SUSE')
@@ -248,13 +238,12 @@ describe SUSE::Connect::Api do
     end
 
     let(:product) { Remote::Product.new(:identifier => 'rodent', :version => 'good', :arch => 'z42', :release_type => 'foo') }
-    let(:query) { { :identifier => product.identifier, :version => product.version, :arch => product.arch, :release_type => 'foo' } }
 
     it 'is authenticated via basic auth' do
       payload = [
         '/connect/systems/products',
         :auth => 'Basic: encodedgibberish',
-        :params => query
+        :params => product.to_params
       ]
       Connection.any_instance.should_receive(:get)
         .with(*payload)
@@ -287,9 +276,7 @@ describe SUSE::Connect::Api do
         ]
       end
 
-      let(:query) do
-        { installed_products: products.map(&:to_params) }
-      end
+      let(:query) { { installed_products: products.map(&:to_params) } }
 
       it 'is authenticated via basic auth' do
         payload = [
