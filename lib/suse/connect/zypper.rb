@@ -73,18 +73,10 @@ module SUSE
         ##
         # Returns an array of hashes of all installed services
         def services
-          output = call('services -u', false)
-          lines = output.split("\n").drop(2).map {|line| line.split('|').map(&:strip) }
-
-          lines.map do |line|
-            {
-              alias:    line[1],
-              name:     line[2],
-              enabled:  line[3],
-              refresh:  line[4],
-              type:     line[5],
-              url:      line[6]
-            }
+          zypper_out = call('--xmlout --non-interactive services -d', false)
+          xml_doc = REXML::Document.new(zypper_out, compress_whitespace: [])
+          xml_doc.root.elements['service-list'].elements.map do |r|
+            r.to_hash.merge(url: r.get_elements('url').first.text)
           end
         end
 

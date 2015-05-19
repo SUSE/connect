@@ -123,8 +123,8 @@ describe SUSE::Connect::Zypper do
   end
 
   describe '.remove_all_suse_services' do
-    let(:zypper_services_output) { File.read('spec/fixtures/zypper_services') }
-    let(:service_args) { 'zypper services -u' }
+    let(:zypper_services_output) { File.read('spec/fixtures/zypper_services.xml') }
+    let(:service_args) { 'zypper --xmlout --non-interactive services -d' }
 
     before do
       expect(Open3).to receive(:capture3).with(shared_env_hash, service_args).at_least(1).and_return([zypper_services_output, '', status])
@@ -173,8 +173,8 @@ describe SUSE::Connect::Zypper do
   end
 
   describe '.services' do
-    let(:zypper_services_output) { File.read('spec/fixtures/zypper_services') }
-    let(:args) { 'zypper services -u' }
+    let(:zypper_services_output) { File.read('spec/fixtures/zypper_services.xml') }
+    let(:args) { 'zypper --xmlout --non-interactive services -d' }
 
     before do
       expect(Open3).to receive(:capture3).with(shared_env_hash, args).at_least(1).and_return([zypper_services_output, '', status])
@@ -182,7 +182,7 @@ describe SUSE::Connect::Zypper do
 
     it 'lists all defined services.' do
       expect(subject.services.size).to eq 3
-      expect(subject.services.first.keys).to match_array([:alias, :name, :enabled, :refresh, :type, :url])
+      expect(subject.services.first.keys).to match_array([:alias, :autorefresh, :enabled, :gpgcheck, :name, :priority, :type, :url])
       expect(subject.services.map {|service| service[:name] }).to match_array(%w{scc_sles12 smt_sles12 legacy_sles12})
     end
 
