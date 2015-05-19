@@ -297,7 +297,7 @@ describe SUSE::Connect::Api do
         expect(response.code).to eq 200
       end
 
-      it 'returns array of upgrade paths' do
+      it 'returns array of arrays of product hashes' do
         body = subject.new(client).system_migrations('Basic: encodedgibberish', products).body
 
         expect(body.first).to include('identifier' => 'SLES', 'version' => '12.1', 'arch' => 'x86_64', 'release_type' => 'HP-CNB')

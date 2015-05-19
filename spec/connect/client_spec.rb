@@ -361,7 +361,7 @@ describe SUSE::Connect::Client do
       subject.system_migrations(products)
     end
 
-    it 'returns array of upgrade paths returned from the API' do
+    it 'returns a list of upgrade paths (array of Products) returned from the API' do
       subject.api.should_receive(:system_migrations).with('Basic: encodedstring', products).and_return stubbed_response
       upgrade_paths = subject.system_migrations(products)
 
@@ -374,7 +374,7 @@ describe SUSE::Connect::Client do
       it 'returns an empty array' do
         subject.api.should_receive(:system_migrations).with('Basic: encodedstring', products).and_return empty_response
         upgrade_paths = subject.system_migrations(products)
-        expect(upgrade_paths).to eq []
+        expect(upgrade_paths).to eq([])
       end
     end
   end

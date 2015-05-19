@@ -188,12 +188,14 @@ describe SUSE::Connect::YaST do
     it 'calls system_migrations on an instance of Client' do
       expect(Client).to receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
       expect_any_instance_of(Client).to receive(:system_migrations)
+
       subject.system_migrations products, client_params
     end
 
     it 'uses products list as parameter for Client#system_migrations' do
       expect(Client).to receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
       expect_any_instance_of(Client).to receive(:system_migrations).with(products)
+
       subject.system_migrations products, client_params
     end
 
