@@ -199,14 +199,15 @@ describe SUSE::Connect::YaST do
       subject.system_migrations products, client_params
     end
 
-    it 'returns a list of upgrade paths' do
+    it 'returns the output received from Client' do
+      expected_migration = [[Remote::Product.new(identifier: 'SLES')]]
+
       expect(Client).to receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
-      expect_any_instance_of(Client).to receive(:system_migrations).with(products)
-        .and_return([[Remote::Product.new(identifier: 'SLES')]])
+      expect_any_instance_of(Client).to receive(:system_migrations).with(products).and_return(expected_migration)
 
-      upgrade_paths = subject.system_migrations products, client_params
+      actual_migration = subject.system_migrations products, client_params
 
-      expect(upgrade_paths.first.first).to be_instance_of Remote::Product
+      expect(actual_migration).to eq(expected_migration)
     end
   end
 
