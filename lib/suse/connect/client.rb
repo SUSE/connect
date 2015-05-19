@@ -96,6 +96,21 @@ module SUSE
         @api.system_activations(system_auth)
       end
 
+      # Lists all available upgrade paths for a given list of products
+      #
+      # @param [Array <Remote::Product>] the list of currently installed products in the system
+      #
+      # @return [Array <Array <Remote::Product>>] the list of possible upgrade paths for the given products,
+      #   where an upgrade path is an array of Remote::Product objects.
+      def system_migrations(products)
+        upgrade_paths = @api.system_migrations(system_auth, products).body
+        upgrade_paths.map do |upgrade_path|
+          upgrade_path.map do |product_attributes|
+            Remote::Product.new(product_attributes)
+          end
+        end
+      end
+
       private
 
       # Announces the system to the server, receiving and storing its credentials.

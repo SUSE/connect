@@ -176,6 +176,41 @@ describe SUSE::Connect::YaST do
 
   end
 
+  describe '#system_migrations' do
+    let(:products) do
+      [
+        Remote::Product.new(:identifier => 'SLES', :version => '12', :arch => 'x86_64', :release_type => 'HP-CNB'),
+        Remote::Product.new(:identifier => 'SUSE-Cloud', :version => '7', :arch => 'x86_64', :release_type => nil)
+      ]
+    end
+    let(:client_params) { { :foo => 'oink' } }
+
+    it 'calls system_migrations on an instance of Client' do
+      expect(Client).to receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
+      expect_any_instance_of(Client).to receive(:system_migrations)
+
+      subject.system_migrations products, client_params
+    end
+
+    it 'uses products list as parameter for Client#system_migrations' do
+      expect(Client).to receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
+      expect_any_instance_of(Client).to receive(:system_migrations).with(products)
+
+      subject.system_migrations products, client_params
+    end
+
+    it 'returns the output received from Client' do
+      expected_migration = [[Remote::Product.new(identifier: 'SLES')]]
+
+      expect(Client).to receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
+      expect_any_instance_of(Client).to receive(:system_migrations).with(products).and_return(expected_migration)
+
+      actual_migration = subject.system_migrations products, client_params
+
+      expect(actual_migration).to eq(expected_migration)
+    end
+  end
+
   describe '#write_config' do
     let(:params) { { url: 'http://scc.foo.com' } }
 

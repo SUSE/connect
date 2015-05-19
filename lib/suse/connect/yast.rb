@@ -85,6 +85,21 @@ module SUSE
           status(client_params).activated_products.include?(product)
         end
 
+        # Lists all available upgrade paths for a given list of products
+        # Accepts an array of products, and returns an array of possible
+        # upgrade paths. An upgrade path is a list of products that may
+        # be upgraded.
+        #
+        # @param [Array <Remote::Product>] the list of currently installed {Product}s in the system
+        # @param [Hash] client_params parameters to instantiate {Client}
+        #
+        # @return [Array <Array <Remote::Product>>] the list of possible upgrade paths for the given {Product}s,
+        #   where an upgrade path is an array of Remote::Product object.
+        def system_migrations(products, client_params = {})
+          config = SUSE::Connect::Config.new.merge!(client_params)
+          Client.new(config).system_migrations(products)
+        end
+
         # Writes the config file with the given parameters, overwriting any existing contents
         # Only persistent connection parameters (url, insecure) are written by this method
         # Regcode, language, debug etc are not

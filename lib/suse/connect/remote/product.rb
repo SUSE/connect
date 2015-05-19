@@ -11,4 +11,13 @@ class SUSE::Connect::Remote::Product < SUSE::Connect::Remote::ServerDrivenModel
     self.extensions = extensions.map {|ext| self.class.new(ext) } if extensions
   end
 
+  def to_params
+    {
+      identifier: identifier,
+      version: version,
+      arch: arch,
+      release_type: release_type
+    }
+  end
+
 end

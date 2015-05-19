@@ -218,22 +218,12 @@ describe SUSE::Connect::Api do
 
     let(:api_endpoint) { '/connect/systems/products' }
     let(:system_auth) { 'basic_auth_mock' }
-
     let(:product) { Remote::Product.new(:identifier => 'SLES', :version => '12', :arch => 'x86_64') }
-
-    let(:payload) do
-      {
-        :identifier   => 'SLES',
-        :version      => '12',
-        :arch         => 'x86_64',
-        :release_type => nil
-      }
-    end
 
     it 'calls ConnectAPI with basic auth and params and receives a JSON in return' do
       stub_upgrade_call
       Connection.any_instance.should_receive(:put)
-      .with(api_endpoint, :auth => system_auth, :params => payload)
+      .with(api_endpoint, :auth => system_auth, :params => product.to_params)
       .and_call_original
       response = subject.new(client).upgrade_product(system_auth, product)
       response.body['sources'].keys.first.should include('SUSE')
@@ -248,13 +238,12 @@ describe SUSE::Connect::Api do
     end
 
     let(:product) { Remote::Product.new(:identifier => 'rodent', :version => 'good', :arch => 'z42', :release_type => 'foo') }
-    let(:query) { { :identifier => product.identifier, :version => product.version, :arch => product.arch, :release_type => 'foo' } }
 
     it 'is authenticated via basic auth' do
       payload = [
         '/connect/systems/products',
         :auth => 'Basic: encodedgibberish',
-        :params => query
+        :params => product.to_params
       ]
       Connection.any_instance.should_receive(:get)
         .with(*payload)
@@ -272,6 +261,63 @@ describe SUSE::Connect::Api do
       body.should be_kind_of Hash
     end
 
+  end
+
+  describe '#system_migrations' do
+    context 'with a non-empty response' do
+      before do
+        stub_system_migrations_call
+      end
+
+      let(:products) do
+        [
+          Remote::Product.new(:identifier => 'SLES', :version => '12', :arch => 'x86_64', :release_type => 'HP-CNB'),
+          Remote::Product.new(:identifier => 'SUSE-Cloud', :version => '7', :arch => 'x86_64', :release_type => nil)
+        ]
+      end
+
+      let(:query) { { installed_products: products.map(&:to_params) } }
+
+      it 'is authenticated via basic auth' do
+        payload = [
+          '/connect/systems/products/migrations',
+          :auth => 'Basic: encodedgibberish',
+          :params => query
+        ]
+        expect_any_instance_of(Connection).to receive(:post)
+          .with(*payload)
+          .and_call_original
+
+        subject.new(client).system_migrations('Basic: encodedgibberish', products)
+      end
+
+      it 'responds with proper status code' do
+        response = subject.new(client).system_migrations('Basic: encodedgibberish', products)
+
+        expect(response.code).to eq 200
+      end
+
+      it 'returns array of arrays of product hashes' do
+        body = subject.new(client).system_migrations('Basic: encodedgibberish', products).body
+
+        expect(body.first).to include('identifier' => 'SLES', 'version' => '12.1', 'arch' => 'x86_64', 'release_type' => 'HP-CNB')
+        expect(body.first).to include('identifier' => 'SUSE-Cloud', 'version' => '8', 'arch' => 'x86_64', 'release_type' => nil)
+      end
+    end
+
+    context 'with an empty response' do
+      before do
+        stub_empty_system_migrations_call
+      end
+
+      let(:products) { [Remote::Product.new(identifier: 'SLES', version: 'not-upgradeable', arch: 'x86_64', release_type: nil)] }
+
+      it 'returns an empty array' do
+        body = subject.new(client).system_migrations('Basic: encodedgibberish', products).body
+
+        expect(body).to match_array([])
+      end
+    end
   end
 
   describe 'deregister' do

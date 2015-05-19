@@ -15,7 +15,8 @@ describe SUSE::Connect::Remote::Product do
       'eula_url' => 'https://nu.novell.com/SUSE:/Products:/SLE-12/images/' \
       'repo/SLE-12-module-sleek-POOL-x86_64-Media.license/',
       'extensions' => [{ 'identifier' => 'SLEEK-12-EXT', 'version' => '12', 'arch' => 'x86_64' }],
-      'product_type' => 'extension'
+      'product_type' => 'extension',
+      'release_type' => 'HP-CNB'
     }
     described_class.new(product)
   end
@@ -85,6 +86,12 @@ describe SUSE::Connect::Remote::Product do
 
     end
 
+  end
+
+  describe '#to_params' do
+    it "returns a hash with the product's identifier, version, arch and release_type" do
+      expect(subject.to_params).to eq(identifier: 'SLEEK-12', version: '12', arch: 'x86_64', release_type: 'HP-CNB')
+    end
   end
 
 end
