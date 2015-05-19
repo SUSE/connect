@@ -315,7 +315,7 @@ describe SUSE::Connect::Api do
       it 'returns an empty array' do
         body = subject.new(client).system_migrations('Basic: encodedgibberish', products).body
 
-        expect(body).to eq([])
+        expect(body).to match_array([])
       end
     end
   end
