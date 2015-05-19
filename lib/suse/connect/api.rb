@@ -162,7 +162,8 @@ module SUSE
       #   In this case we expect Base64 encoded string with login and password
       # @param [Array <Remote::Product>] a list of producs
       #
-      # @return [Array <Array <Remote::Product>>] the list of possible upgrade paths for the given products
+      # @return [Array <Array <Hash>>] the list of possible upgrade paths for the given products,
+      #   where each product is represented by a hash with identifier, version, arch and release_type
       def system_migrations(auth, products)
         products_attributes = products.map {|product| serialize_product(product) }
         payload = { installed_products: products_attributes }
