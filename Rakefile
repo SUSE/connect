@@ -24,11 +24,6 @@ task :rubocop do
   sh 'bundle exec rubocop'
 end
 
-desc 'Increase version of a gem'
-task :bump do
-  sh 'gem bump --no-commit'
-end
-
 desc 'Build locally (prepare for pushing to ibs)'
 task :build do
 

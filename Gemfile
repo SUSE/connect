@@ -11,6 +11,7 @@ group :development do
   gem 'ronn'
   gem 'rake'
   gem 'gem2rpm', '~> 0.10.1'
+  gem 'bump'
 end
 
 group :test do
