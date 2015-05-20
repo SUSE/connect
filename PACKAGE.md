@@ -19,6 +19,8 @@ bundle exec bump patch
 
 The gem version will be as a package version by `gem2rpm` tool, so without the bump package won't be updated.
 
+Please also update `SUSEConnect.changes` file with a list of new features in master since the last version update.
+
 
 Then build the gem:
 
