@@ -129,4 +129,5 @@ Then(/^System cleanup$/) do
 
   FileUtils.rm_rf(Dir.glob('/etc/zypp/credentials.d/*'))
   FileUtils.rm_rf(Dir.glob('/etc/zypp/services.d/*'))
+  FileUtils.rm_rf(Dir.glob('/etc/zypp/repos.d/*'))
 end
