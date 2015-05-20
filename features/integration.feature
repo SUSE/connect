@@ -80,3 +80,5 @@ Feature: SUSEConnect full stack integration testing
     Provided registration code is not recognized by registration server.
     """
 
+  Scenario: Remove all registration leftovers
+    When System cleanup
