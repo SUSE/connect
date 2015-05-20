@@ -182,7 +182,7 @@ describe SUSE::Connect::Zypper do
 
     it 'lists all defined services.' do
       expect(subject.services.size).to eq 3
-      expect(subject.services.first.keys).to match_array([:alias, :autorefresh, :enabled, :gpgcheck, :name, :priority, :type, :url])
+      expect(subject.services.first.keys).to match_array([:alias, :autorefresh, :enabled, :name, :type, :url])
       expect(subject.services.map {|service| service[:name] }).to match_array(%w{scc_sles12 smt_sles12 legacy_sles12})
     end
 

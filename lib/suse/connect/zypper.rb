@@ -75,9 +75,7 @@ module SUSE
         def services
           zypper_out = call('--xmlout --non-interactive services -d', false)
           xml_doc = REXML::Document.new(zypper_out, compress_whitespace: [])
-          xml_doc.root.elements['service-list'].elements.map do |r|
-            r.to_hash.merge(url: r.get_elements('url').first.text)
-          end
+          xml_doc.elements.each('stream/service-list/service') {}.map(&:to_hash)
         end
 
         def refresh
