@@ -1,4 +1,13 @@
 -------------------------------------------------------------------
+Wed May 20 15:25:00 UTC 2015 - kpimenov@suse.de
+
+- Update to version 0.2.17
+  - Added migrations endpoint support for Yast
+  - Use C locale for all the syscalls (solves output parsing issues in some locales)
+  - Stripping UUID from SCC API calls if it is not settable
+  - Moved examples from gist to project
+
+-------------------------------------------------------------------
 Wed Dec  3 13:06:07 UTC 2014 - achernikov@suse.de
 
 - Update to version 0.2.16
@@ -22,8 +31,8 @@ Tue Sep 30 13:28:17 UTC 2014 - vlewin@suse.com
 Tue Sep 23 10:23:17 UTC 2014 - tschmidt@suse.com
 
 - Update to version 0.2.13
-  - Fix help message (bnc#897528) 
-  - Don't get stuck when zypper goes into interactive mode, fail instead. 
+  - Fix help message (bnc#897528)
+  - Don't get stuck when zypper goes into interactive mode, fail instead.
     (bnc#897054, bnc#897056)
 
 -------------------------------------------------------------------
