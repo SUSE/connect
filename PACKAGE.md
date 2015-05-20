@@ -35,7 +35,7 @@ the SLES12 gem packaging standard via the --config option.
 cp suse-connect-*.gem package/
 cd package
 gem2rpm --config gem2rpm.yml -l -o SUSEConnect.spec \
-    -t /usr/share/doc/packages/rubygem-gem2rpm/sles12.spec.erb \
+    -t /usr/share/doc/packages/ruby2.1-rubygem-gem2rpm/sles12.spec.erb \
     suse-connect-*.gem
 ```
 
