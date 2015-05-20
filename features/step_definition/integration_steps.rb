@@ -127,6 +127,6 @@ end
 Then(/^System cleanup$/) do
   require 'fileutils'
 
-  FileUtils.rm_rf('/etc/zypp/credentials.d/*')
-  FileUtils.rm_rf('/etc/zypp/services.d/*')
+  FileUtils.rm_rf(Dir.glob('/etc/zypp/credentials.d/*'))
+  FileUtils.rm_rf(Dir.glob('/etc/zypp/services.d/*'))
 end
