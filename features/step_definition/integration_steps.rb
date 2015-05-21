@@ -109,15 +109,25 @@ Then(/^SUSEConnect library should be able to retrieve the product information$/)
   products.each {|product| puts "- #{product}" }
 
   extensions = [
+    'Advanced Systems Management Module 12 x86_64',
+    'Legacy Module 12 x86_64',
+    'Public Cloud Module 12 x86_64',
+    'SUSE Cloud for SLE 12 Compute Nodes 5 x86_64',
+    'SUSE Enterprise Storage 1 x86_64',
     'SUSE Linux Enterprise High Availability Extension 12 x86_64',
+    'SUSE Linux Enterprise Live Patching 12 x86_64',
     'SUSE Linux Enterprise Software Development Kit 12 x86_64',
     'SUSE Linux Enterprise Workstation Extension 12 x86_64',
-    'SUSE Linux Enterprise Live Patching 12 x86_64',
-    'Advanced Systems Management Module 12 x86_64',
-    'Web and Scripting Module 12 x86_64',
-    'Public Cloud Module 12 x86_64',
-    'Legacy Module 12 x86_64'
+    'Web and Scripting Module 12 x86_64'
   ]
 
   expect(products).to match_array(extensions)
+end
+
+Then(/^System cleanup$/) do
+  require 'fileutils'
+
+  FileUtils.rm_rf(Dir.glob('/etc/zypp/credentials.d/*'))
+  FileUtils.rm_rf(Dir.glob('/etc/zypp/services.d/*'))
+  FileUtils.rm_rf(Dir.glob('/etc/zypp/repos.d/*'))
 end

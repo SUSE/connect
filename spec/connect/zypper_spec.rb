@@ -3,7 +3,7 @@ require 'spec_helper'
 describe SUSE::Connect::Zypper do
 
   before(:each) do
-    Object.stub(:system => true)
+    Object.stub(system: true)
   end
 
   after(:each) do
@@ -11,7 +11,7 @@ describe SUSE::Connect::Zypper do
   end
 
   subject { SUSE::Connect::Zypper }
-  let(:status) { double('Process Status', :exitstatus => 0) }
+  let(:status) { double('Process Status', exitstatus: 0) }
   include_context 'shared lets'
 
   describe '.installed_products' do
@@ -106,6 +106,7 @@ describe SUSE::Connect::Zypper do
     it 'calls zypper with proper arguments' do
       args = "zypper --non-interactive removeservice 'branding'"
       expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
+      expect(Zypper).to receive(:remove_service_credentials).with('branding')
 
       subject.remove_service('branding')
     end
@@ -117,6 +118,72 @@ describe SUSE::Connect::Zypper do
       expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
 
       subject.remove_service('branding')
+    end
+
+  end
+
+  describe '.remove_all_suse_services' do
+    let(:zypper_services_output) { File.read('spec/fixtures/zypper_services.xml') }
+    let(:service_args) { 'zypper --xmlout --non-interactive services -d' }
+
+    before do
+      expect(Open3).to receive(:capture3).with(shared_env_hash, service_args).at_least(1).and_return([zypper_services_output, '', status])
+    end
+
+    it 'removes SCC installed services' do
+      args = "zypper --non-interactive removeservice 'scc_sles12'"
+
+      allow_any_instance_of(SUSE::Connect::Config).to receive(:url).and_return('https://scc.suse.com')
+      expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
+
+      subject.remove_all_suse_services
+    end
+
+    it 'removes SMT installed services' do
+      args = "zypper --non-interactive removeservice 'smt_sles12'"
+
+      allow_any_instance_of(SUSE::Connect::Config).to receive(:url).and_return('https://smt.suse.de')
+      expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
+
+      subject.remove_all_suse_services
+    end
+
+    it 'removes legacy services' do
+      args = "zypper --non-interactive removeservice 'legacy_sles12'"
+
+      allow_any_instance_of(SUSE::Connect::Config).to receive(:url).and_return('https://legacy.suse.de')
+      expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
+
+      subject.remove_all_suse_services
+    end
+  end
+
+  describe '.remove_service_credentials' do
+    let(:service_name) { 'SLES_12_Service' }
+    let(:service_credentials_dir) { SUSE::Connect::Credentials::DEFAULT_CREDENTIALS_DIR }
+    let(:service_credentials_file) { File.join(service_credentials_dir, service_name) }
+
+    it 'removes zypper service credentials' do
+      expect(File).to receive(:join).with(service_credentials_dir, service_name).and_return(service_credentials_file)
+      expect(File).to receive(:exist?).with(service_credentials_file).and_return(true)
+      expect(File).to receive(:delete).with(service_credentials_file).and_return(true)
+
+      subject.remove_service_credentials(service_name)
+    end
+  end
+
+  describe '.services' do
+    let(:zypper_services_output) { File.read('spec/fixtures/zypper_services.xml') }
+    let(:args) { 'zypper --xmlout --non-interactive services -d' }
+
+    before do
+      expect(Open3).to receive(:capture3).with(shared_env_hash, args).at_least(1).and_return([zypper_services_output, '', status])
+    end
+
+    it 'lists all defined services.' do
+      expect(subject.services.size).to eq 3
+      expect(subject.services.first.keys).to match_array([:alias, :autorefresh, :enabled, :name, :type, :url])
+      expect(subject.services.map {|service| service[:name] }).to match_array(%w{scc_sles12 smt_sles12 legacy_sles12})
     end
 
   end
@@ -159,13 +226,13 @@ describe SUSE::Connect::Zypper do
 
     let :parsed_products do
       [
-        SUSE::Connect::Zypper::Product.new(:isbase => '1', :name => 'SLES', :productline => 'SLE_productline1', :registerrelease => ''),
-        SUSE::Connect::Zypper::Product.new(:isbase => '2', :name => 'Cloud', :productline => 'SLE_productline2', :registerrelease => '')
+        SUSE::Connect::Zypper::Product.new(isbase: '1', name: 'SLES', productline: 'SLE_productline1', registerrelease: ''),
+        SUSE::Connect::Zypper::Product.new(isbase: '2', name: 'Cloud', productline: 'SLE_productline2', registerrelease: '')
       ]
     end
 
     before do
-      subject.stub(:installed_products => parsed_products)
+      subject.stub(installed_products: parsed_products)
       Credentials.any_instance.stub(:write)
     end
 
@@ -174,7 +241,7 @@ describe SUSE::Connect::Zypper do
     end
 
     it 'raises CannotDetectBaseProduct if cant get base system from list of installed products' do
-      product = double('Product', :isbase => false)
+      product = double('Product', isbase: false)
       allow(Zypper).to receive(:installed_products).and_return([product])
       expect { Zypper.base_product }.to raise_error(CannotDetectBaseProduct)
     end

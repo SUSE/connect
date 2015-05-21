@@ -22,6 +22,8 @@ module SUSE
           Status.new(@config).print_product_statuses(:json)
         elsif @config.status_text
           Status.new(@config).print_product_statuses(:text)
+        elsif @config.deregister
+          Client.new(@config).deregister!
         else
           if @config.instance_data_file && @config.url_default?
             log.error 'Please use --instance-data only in combination with --url pointing to your SMT server'
@@ -105,6 +107,11 @@ module SUSE
                  '  and enables software repositories for that product') do |opt|
           check_if_param(opt, 'Please provide a registration code parameter')
           @options[:token] = opt
+        end
+
+        @opts.on('-d', '--de-register', 'De-registers a system in order to not consume a subscription slot in SCC anymore',
+                 ' and removes all services installed by SUSEConnect') do |opt|
+          @options[:deregister] = true
         end
 
         @opts.on('--instance-data  [path to file]', 'Path to the XML file holding the public key and instance data',

@@ -84,9 +84,9 @@ describe SUSE::Connect::Client do
 
       before do
         api_response = double('api_response')
-        api_response.stub(:body => { 'login' => 'lg', 'password' => 'pw' })
-        Api.any_instance.stub(:announce_system => api_response)
-        subject.stub(:token_auth => true)
+        api_response.stub(body: { 'login' => 'lg', 'password' => 'pw' })
+        Api.any_instance.stub(announce_system: api_response)
+        subject.stub(token_auth: true)
       end
 
       it 'calls underlying api' do
@@ -121,7 +121,7 @@ describe SUSE::Connect::Client do
         subject { SUSE::Connect::Client.new(config) }
 
         before do
-          subject.stub(:system_auth => 'auth')
+          subject.stub(system_auth: 'auth')
           Api.any_instance.stub(:update_system)
         end
 
@@ -153,10 +153,10 @@ describe SUSE::Connect::Client do
 
       before do
         api_response = double('api_response')
-        api_response.stub(:body => { 'login' => 'lg', 'password' => 'pw' })
+        api_response.stub(body: { 'login' => 'lg', 'password' => 'pw' })
         Zypper.stub(:write_base_credentials).with('lg', 'pw')
-        Api.any_instance.stub(:announce_system => api_response)
-        subject.stub(:token_auth => true)
+        Api.any_instance.stub(announce_system: api_response)
+        subject.stub(token_auth: true)
       end
 
       it 'not raising exception if regcode is absent' do
@@ -175,13 +175,13 @@ describe SUSE::Connect::Client do
 
   describe '#activate_product' do
 
-    let(:product_ident) { { :identifier => 'SLES', :version => '12', :arch => 'x86_64' } }
+    let(:product_ident) { { identifier: 'SLES', version: '12', arch: 'x86_64' } }
 
     before do
       api_response = double('api_response')
-      api_response.stub(:body => { 'name' => 'kinkat', 'url' => 'kinkaturl', 'product' => {} })
-      Api.any_instance.stub(:activate_product => api_response)
-      subject.stub(:system_auth => 'secretsecret')
+      api_response.stub(body: { 'name' => 'kinkat', 'url' => 'kinkaturl', 'product' => {} })
+      Api.any_instance.stub(activate_product: api_response)
+      subject.stub(system_auth: 'secretsecret')
     end
 
     it 'gets login and password from system' do
@@ -210,13 +210,13 @@ describe SUSE::Connect::Client do
 
   describe '#upgrade_product' do
 
-    let(:product_ident) { { :identifier => 'SLES', :version => '12', :arch => 'x86_64' } }
+    let(:product_ident) { { identifier: 'SLES', version: '12', arch: 'x86_64' } }
 
     before do
       api_response = double('api_response')
-      api_response.stub(:body => { 'name' => 'tongobongo', 'url' => 'tongobongourl', 'product' => {} })
-      Api.any_instance.stub(:upgrade_product => api_response)
-      subject.stub(:system_auth => 'secretsecret')
+      api_response.stub(body: { 'name' => 'tongobongo', 'url' => 'tongobongourl', 'product' => {} })
+      Api.any_instance.stub(upgrade_product: api_response)
+      subject.stub(system_auth: 'secretsecret')
     end
 
     it 'gets login and password from system' do
@@ -240,8 +240,8 @@ describe SUSE::Connect::Client do
   describe '#register!' do
 
     before do
-      Zypper.stub(:base_product => Zypper::Product.new(:name => 'SLE_BASE'))
-      System.stub(:add_service => true)
+      Zypper.stub(base_product: Zypper::Product.new(name: 'SLE_BASE'))
+      System.stub(add_service: true)
       Zypper.stub(:write_base_credentials)
       Credentials.any_instance.stub(:write)
       subject.stub(:activate_product)
@@ -249,33 +249,33 @@ describe SUSE::Connect::Client do
     end
 
     it 'should call announce if system not registered' do
-      System.stub(:credentials? => false)
+      System.stub(credentials?: false)
       subject.should_receive(:announce_system)
       subject.register!
     end
 
     it 'should not call announce but update on api if system registered' do
-      System.stub(:credentials? => true)
+      System.stub(credentials?: true)
       subject.should_not_receive(:announce_system)
       subject.should_receive(:update_system)
       subject.register!
     end
 
     it 'should call activate_product on api' do
-      System.stub(:credentials? => true)
+      System.stub(credentials?: true)
       subject.should_receive(:activate_product)
       subject.register!
     end
 
     it 'writes credentials file' do
-      System.stub(:credentials? => false)
-      subject.stub(:announce_system => %w{ lg pw })
+      System.stub(credentials?: false)
+      subject.stub(announce_system: %w{ lg pw })
       Credentials.should_receive(:new).with('lg', 'pw', Credentials::GLOBAL_CREDENTIALS_FILE).and_call_original
       subject.register!
     end
 
     it 'adds service after product activation' do
-      System.stub(:credentials? => true)
+      System.stub(credentials?: true)
       System.should_receive(:add_service)
       subject.register!
     end
@@ -286,7 +286,7 @@ describe SUSE::Connect::Client do
       client = Client.new(merged_config)
       client.stub(:announce_or_update)
       client.stub(:activate_product)
-      Zypper.stub(:base_product => product)
+      Zypper.stub(base_product: product)
       SUSE::Connect::GlobalLogger.instance.log = string_logger
 
       string_logger.should_receive(:info).with('Registered SLES 12 s390')
@@ -303,16 +303,16 @@ describe SUSE::Connect::Client do
 
     let(:stubbed_response) do
       OpenStruct.new(
-        :code => 200,
-        :body => { 'name' => 'short_name', 'identifier' => 'text_identifier' },
-        :success => true
+        code: 200,
+        body: { 'name' => 'short_name', 'identifier' => 'text_identifier' },
+        success: true
       )
     end
 
-    let(:product) { Remote::Product.new(:identifier => 'text_identifier')  }
+    let(:product) { Remote::Product.new(identifier: 'text_identifier')  }
 
     before do
-      subject.stub(:system_auth => 'Basic: encodedstring')
+      subject.stub(system_auth: 'Basic: encodedstring')
     end
 
     it 'collects data from api response' do
@@ -382,19 +382,21 @@ describe SUSE::Connect::Client do
   describe '#deregister!' do
     let(:stubbed_response) do
       OpenStruct.new(
-        :code => 204,
-        :body => nil,
-        :success => true
+        code: 204,
+        body: nil,
+        success: true
       )
     end
 
     before do
-      System.should_receive(:remove_credentials).and_return(true)
-      subject.stub(:system_auth => 'Basic: encodedstring')
+      subject.stub(system_auth: 'Basic: encodedstring')
     end
 
     it 'calls underlying api and removes credentials file' do
-      subject.api.should_receive(:deregister).with('Basic: encodedstring').and_return stubbed_response
+      expect(Zypper).to receive(:remove_all_suse_services).and_return(true)
+      expect(System).to receive(:remove_credentials).and_return(true)
+      expect(subject.api).to receive(:deregister).with('Basic: encodedstring').and_return stubbed_response
+
       subject.deregister!.should be true
     end
   end
@@ -402,14 +404,14 @@ describe SUSE::Connect::Client do
   describe '#systems_services' do
     let(:stubbed_response) do
       OpenStruct.new(
-          :code => 204,
-          :body => nil,
-          :success => true
+          code: 204,
+          body: nil,
+          success: true
       )
     end
 
     before do
-      subject.stub(:system_auth => 'Basic: encodedstring')
+      subject.stub(system_auth: 'Basic: encodedstring')
     end
 
     it 'calls underlying api and removes credentials file' do
@@ -421,14 +423,14 @@ describe SUSE::Connect::Client do
   describe '#systems_subscriptions' do
     let(:stubbed_response) do
       OpenStruct.new(
-          :code => 204,
-          :body => nil,
-          :success => true
+          code: 204,
+          body: nil,
+          success: true
       )
     end
 
     before do
-      subject.stub(:system_auth => 'Basic: encodedstring')
+      subject.stub(system_auth: 'Basic: encodedstring')
     end
 
     it 'calls underlying api and removes credentials file' do
@@ -441,14 +443,14 @@ describe SUSE::Connect::Client do
 
     let(:stubbed_response) do
       OpenStruct.new(
-          :code => 200,
-          :body => nil,
-          :success => true
+          code: 200,
+          body: nil,
+          success: true
       )
     end
 
     before do
-      subject.stub(:system_auth => 'Basic: encodedstring')
+      subject.stub(system_auth: 'Basic: encodedstring')
     end
 
     it 'calls underlying api with system_activations call' do

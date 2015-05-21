@@ -2,7 +2,6 @@ require 'spec_helper'
 require 'suse/connect/cli'
 
 describe SUSE::Connect::Cli do
-
   subject { SUSE::Connect::Cli }
 
   let(:default_logger) { SUSE::Connect::GlobalLogger.instance.log }
@@ -11,9 +10,9 @@ describe SUSE::Connect::Cli do
   let(:config_file) { File.expand_path File.join(File.dirname(__FILE__), '../fixtures/SUSEConnect') }
 
   before do
-    Zypper.stub(:base_product => {})
+    Zypper.stub(base_product: {})
     subject.any_instance.stub(:exit)
-    subject.any_instance.stub(:puts => true)
+    subject.any_instance.stub(puts: true)
     SUSE::Connect::GlobalLogger.instance.log = string_logger
   end
 
@@ -22,9 +21,7 @@ describe SUSE::Connect::Cli do
   end
 
   describe '#execute!' do
-
     context 'server errors' do
-
       let(:cli) { subject.new(%w{-r 123}) }
 
       it 'should produce log output if ApiError encountered' do
@@ -78,11 +75,9 @@ describe SUSE::Connect::Cli do
         Client.any_instance.stub(:register!).and_raise(FileError, 'test')
         cli.execute!
       end
-
     end
 
     context 'zypper error' do
-
       let(:cli) { subject.new(%w{-r 456}) }
 
       it 'should produce log output if zypper errors' do
@@ -90,11 +85,9 @@ describe SUSE::Connect::Cli do
         Client.any_instance.stub(:register!).and_raise ZypperError.new(666, '<stream><error>zypper down</error></stream>')
         cli.execute!
       end
-
     end
 
     context 'parameter dependencies' do
-
       it 'requires no other parameters on --status' do
         cli = subject.new(%w{--status})
         expect_any_instance_of(Status).to receive(:print_product_statuses)
@@ -140,11 +133,17 @@ describe SUSE::Connect::Cli do
         expect_any_instance_of(SUSE::Connect::Config).to receive(:write!)
         cli.execute!
       end
+    end
 
+    context 'de-register command' do
+      it '--de-register calls deregister! method' do
+        cli = subject.new(%w{--de-register})
+        expect_any_instance_of(Client).to receive(:deregister!)
+        cli.execute!
+      end
     end
 
     context 'status subcommand' do
-
       it '--status calls json_product_status' do
         cli = subject.new(%w{--status})
         expect_any_instance_of(Client).to_not receive(:register!)
@@ -158,24 +157,19 @@ describe SUSE::Connect::Cli do
         expect_any_instance_of(Status).to receive(:text_product_status)
         cli.execute!
       end
-
     end
 
     describe 'config write' do
-
       it 'writes config if appropriate cli param been passed' do
         cli = subject.new(%w{--write-config --status})
         expect_any_instance_of(SUSE::Connect::Config).to receive(:write!)
         allow_any_instance_of(Status).to receive(:print_product_statuses)
         cli.execute!
       end
-
     end
-
   end
 
   describe '?extract_options' do
-
     it 'sets token options' do
       argv = %w{-r matoken}
       cli = subject.new(argv)
@@ -185,7 +179,7 @@ describe SUSE::Connect::Cli do
     it 'sets product options' do
       argv = %w{--product sles/12/i386}
       cli = subject.new(argv)
-      cli.options[:product].should eq Remote::Product.new(:identifier => 'sles', :version => '12', :arch => 'i386')
+      cli.options[:product].should eq Remote::Product.new(identifier: 'sles', version: '12', arch: 'i386')
     end
 
     it 'sets token options' do
@@ -224,6 +218,12 @@ describe SUSE::Connect::Cli do
       cli.options[:debug].should be true
     end
 
+    it 'sets deregister option' do
+      argv = %w{--de-register}
+      cli = subject.new(argv)
+      cli.options[:deregister].should be true
+    end
+
     it 'sets root option' do
       argv = %w{--root /path/to/root}
       subject.new(argv)
@@ -241,17 +241,14 @@ describe SUSE::Connect::Cli do
       cli = subject.new(argv)
       cli.options[:write_config].should be true
     end
-
   end
 
   describe 'errors on invalid options format' do
-
     it 'error on invalid product options format' do
       string_logger.should_receive(:error).with(/Please provide the product identifier in this format/)
       argv = %w{--product sles}
       subject.new(argv)
     end
-
   end
 
   describe '?check_if_param' do
@@ -269,7 +266,5 @@ describe SUSE::Connect::Cli do
       cli = subject.new([])
       expect(cli.options[:language]).to eq 'de'
     end
-
   end
-
 end

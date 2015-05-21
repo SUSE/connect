@@ -1,0 +1,22 @@
+<?xml version='1.0'?>
+<stream>
+  <service-list>
+    <service alias='scc_sles12' autorefresh='0' enabled='1' name='scc_sles12' type='ris' url='https://scc.suse.com/access/services/1?credentials=scc_sles12'>
+      <repo alias='scc_sles12_repo' autorefresh='0' enabled='0' gpgcheck='1' name='scc_sles12_repo' priority='99' type='rpm-md'>
+        <url>https://scc.suse.com/repos/SLES12-GA-Pool/</url>
+      </repo>
+    </service>
+
+    <service alias='smt_sles12' autorefresh='0' enabled='1' name='smt_sles12' type='ris' url='https://smt.suse.de/access/services/1?credentials=smt_sles12'>
+      <repo alias='smt_sles12_repo' autorefresh='0' enabled='0' gpgcheck='1' name='scc_sles12_repo' priority='99' type='rpm-md'>
+        <url>https://smt.suse.de/repos/SLES12-GA-Pool/</url>
+      </repo>
+    </service>
+
+    <service alias='legacy_sles12' autorefresh='0' enabled='1' name='legacy_sles12' type='ris' url='https://legacy.suse.de/access/services/1?credentials=legacy_sles12'>
+      <repo alias='legacy_sles12_repo' autorefresh='0' enabled='0' gpgcheck='1' name='legacy_sles12_repo' priority='99' type='rpm-md'>
+        <url>https://legacy.suse.de/repos/SLES12-GA-Pool/</url>
+      </repo>
+    </service>
+  </service-list>
+</stream>
