@@ -6,6 +6,7 @@ describe 'connect::packages' do
     runner = ChefSpec::Runner.new
     runner.node.set[:connect][:packages] = {
       'gcc' => true,
+      'gcc-c++' => true,
       'git' => true,
       'ruby-devel' => true,
       'osc' => true,

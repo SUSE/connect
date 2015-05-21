@@ -4,6 +4,7 @@ default[:connect][:osc][:arch] = 'x86_64'
 
 default[:connect][:packages] = {
   'gcc' => true,
+  'gcc-c++' => true,
   'git' => true,
   'osc' => true,
   'build' => true,
