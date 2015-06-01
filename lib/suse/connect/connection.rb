@@ -16,7 +16,7 @@ module SUSE
         :delete => Net::HTTP::Delete
       }
 
-      attr_accessor :debug, :http, :auth, :language
+      attr_accessor :debug, :http, :auth, :language, :yast_version
 
       def initialize(endpoint, language: nil, insecure: false, debug: false, verify_callback: nil)
         uri              = URI.parse(endpoint)
@@ -76,6 +76,11 @@ module SUSE
         # no gzip compression for easier debugging
         request['Accept-Encoding'] = 'identity' if debug
         request['User-Agent']      = "SUSEConnect/#{SUSE::Connect::VERSION}"
+
+        unless @yast_version.nil?
+          request['User-Agent'] += ";YAST/#{yast_version}"
+        end
+
       end
 
       # set a verify_callback to HTTP object, use a custom callback
