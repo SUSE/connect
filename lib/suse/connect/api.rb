@@ -20,10 +20,10 @@ module SUSE
         @client     = client
         @connection = Connection.new(
           client.config.url,
-          :language        => client.config.language,
-          :insecure        => client.config.insecure,
-          :verify_callback => client.config.verify_callback,
-          :debug           => client.config.debug
+          language:        client.config.language,
+          insecure:        client.config.insecure,
+          verify_callback: client.config.verify_callback,
+          debug:           client.config.debug
         )
       end
 
@@ -36,15 +36,15 @@ module SUSE
       #
       def announce_system(auth, distro_target = nil, instance_data = nil, namespace = nil)
         payload = {
-          :hostname      => System.hostname,
-          :hwinfo        => System.hwinfo,
-          :distro_target => distro_target || Zypper.distro_target
+          hostname:      System.hostname,
+          hwinfo:        System.hwinfo,
+          distro_target: distro_target || Zypper.distro_target
         }
 
         payload[:instance_data] = instance_data if instance_data
         payload[:namespace] = namespace if namespace
 
-        @connection.post('/connect/subscriptions/systems', :auth => auth, :params => payload)
+        @connection.post('/connect/subscriptions/systems', auth: auth, params: payload)
       end
 
       # Re-send the system's hardware info to SCC.
@@ -56,14 +56,14 @@ module SUSE
       #
       def update_system(auth, distro_target = nil, instance_data = nil, namespace = nil)
         payload = {
-          :hostname      => System.hostname,
-          :hwinfo        => System.hwinfo,
-          :distro_target => distro_target || Zypper.distro_target
+          hostname:      System.hostname,
+          hwinfo:        System.hwinfo,
+          distro_target: distro_target || Zypper.distro_target
         }
         payload[:instance_data] = instance_data if instance_data
         payload[:namespace] = namespace if namespace
 
-        @connection.put('/connect/systems', :auth => auth, :params => payload)
+        @connection.put('/connect/systems', auth: auth, params: payload)
       end
 
       # Activate a product, consuming an entitlement, and receive the service for this
@@ -78,14 +78,14 @@ module SUSE
       # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
       def activate_product(auth, product, email = nil)
         payload = {
-          :identifier   => product.identifier,
-          :version      => product.version,
-          :arch         => product.arch,
-          :release_type => product.release_type,
-          :token        => @client.config.token,
-          :email        => email
+          identifier:   product.identifier,
+          version:      product.version,
+          arch:         product.arch,
+          release_type: product.release_type,
+          token:        @client.config.token,
+          email:        email
         }
-        @connection.post('/connect/systems/products', :auth => auth, :params => payload)
+        @connection.post('/connect/systems/products', auth: auth, params: payload)
       end
 
       # Upgrade a product and receive the updated service for the system.
@@ -94,7 +94,7 @@ module SUSE
       #   In this case we expect Base64 encoded string with login and password
       # @param product [SUSE::Connect::Remote::Product] product
       def upgrade_product(auth, product)
-        @connection.put('/connect/systems/products', :auth => auth, :params => product.to_params)
+        @connection.put('/connect/systems/products', auth: auth, params: product.to_params)
       end
 
       # Show details of an (activated) product including repositories and available extensions
@@ -102,7 +102,7 @@ module SUSE
       # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
       #
       def show_product(auth, product)
-        @connection.get('/connect/systems/products', :auth => auth, :params => product.to_params)
+        @connection.get('/connect/systems/products', auth: auth, params: product.to_params)
       end
 
       # Deregister/unregister a system
@@ -113,7 +113,7 @@ module SUSE
       # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
       #
       def deregister(auth)
-        @connection.delete('/connect/systems', :auth => auth)
+        @connection.delete('/connect/systems', auth: auth)
       end
 
       # Gets a list of services known by the system with system credentials
@@ -124,7 +124,7 @@ module SUSE
       # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
       #
       def system_services(auth)
-        @connection.get('/connect/systems/services', :auth => auth)
+        @connection.get('/connect/systems/services', auth: auth)
       end
 
       # Gets a list of subscriptions known by system authenticated with system credentials
@@ -135,7 +135,7 @@ module SUSE
       # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
       #
       def system_subscriptions(auth)
-        @connection.get('/connect/systems/subscriptions', :auth => auth)
+        @connection.get('/connect/systems/subscriptions', auth: auth)
       end
 
       # Gets a list of activations known by system authenticated with system credentials
@@ -146,7 +146,7 @@ module SUSE
       # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
       #
       def system_activations(auth)
-        @connection.get('/connect/systems/activations', :auth => auth)
+        @connection.get('/connect/systems/activations', auth: auth)
       end
 
       # Lists all available upgrade paths for a given list of products
