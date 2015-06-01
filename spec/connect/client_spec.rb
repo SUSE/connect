@@ -86,7 +86,7 @@ describe SUSE::Connect::Client do
         api_response = double('api_response')
         api_response.stub(body: { 'login' => 'lg', 'password' => 'pw' })
         Api.any_instance.stub(announce_system: api_response)
-        subject.stub(token_auth: true)
+        subject.stub(token_auth: 'auth')
       end
 
       it 'calls underlying api' do
@@ -97,19 +97,19 @@ describe SUSE::Connect::Client do
 
       it 'forwards the optional parameter "distro_target" to the API' do
         optional_target = 'optional_target'
-        Api.any_instance.should_receive(:announce_system).with(true, optional_target, nil)
+        Api.any_instance.should_receive(:announce_system).with('auth', optional_target, nil)
         subject.announce_system(optional_target)
       end
 
       it 'forwards the optional parameter "namespace" to the API' do
         optional_namespace = 'namespace'
-        Api.any_instance.should_receive(:announce_system).with(true, optional_namespace, nil)
+        Api.any_instance.should_receive(:announce_system).with('auth', optional_namespace, nil)
         subject.announce_system(optional_namespace)
       end
 
       it 'reads instance_data_file and passes content the API' do
         instance_file_path = 'spec/fixtures/instance_data.xml'
-        Api.any_instance.should_receive(:announce_system).with(true, nil, File.read(instance_file_path))
+        Api.any_instance.should_receive(:announce_system).with('auth', nil, File.read(instance_file_path))
         subject.announce_system(nil, instance_file_path)
       end
 
