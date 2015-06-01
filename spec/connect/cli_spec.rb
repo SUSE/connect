@@ -146,7 +146,7 @@ describe SUSE::Connect::Cli do
     context 'namespace option' do |variables|
       it '--namespace requires namespace' do
         expect(string_logger).to receive(:error).with('Please provide a namespace')
-        cli = subject.new('--namespace')
+        subject.new('--namespace')
       end
     end
 
