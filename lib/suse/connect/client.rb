@@ -43,7 +43,10 @@ module SUSE
       # @returns: [Array] login, password tuple. Those credentials are given by SCC/Registration Proxy
       def announce_system(distro_target = nil, instance_data_file = nil)
         instance_data = System.read_file(instance_data_file) if instance_data_file
-        response = @api.announce_system(token_auth(@config.token), distro_target, instance_data)
+        params = [token_auth(@config.token), distro_target, instance_data]
+        params.push(@config.namespace) if @config.namespace
+
+        response = @api.announce_system(*params)
         [response.body['login'], response.body['password']]
       end
 
@@ -51,7 +54,10 @@ module SUSE
       #
       def update_system(distro_target = nil, instance_data_file = nil)
         instance_data = System.read_file(instance_data_file) if instance_data_file
-        @api.update_system(system_auth, distro_target, instance_data)
+        params = [system_auth, distro_target, instance_data]
+        params.push(@config.namespace) if @config.namespace
+
+        @api.update_system(*params)
       end
 
       # Activate a product
