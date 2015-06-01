@@ -44,10 +44,10 @@ describe SUSE::Connect::Api do
 
     before do
       stub_announce_call
-      Socket.stub(:gethostname => 'connect')
-      System.stub(:hwinfo => 'hwinfo')
-      Zypper.stub(:write_base_credentials => true)
-      Zypper.stub(:distro_target => 'HHH')
+      Socket.stub(gethostname: 'connect')
+      System.stub(hwinfo: 'hwinfo')
+      Zypper.stub(write_base_credentials: true)
+      Zypper.stub(distro_target: 'HHH')
     end
 
     mock_dry_file
@@ -74,8 +74,8 @@ describe SUSE::Connect::Api do
     it 'sets instance data in payload' do
       Connection.any_instance.should_receive(:post)
         .with('/connect/subscriptions/systems',
-              :auth => 'token',
-              :params => { :hostname => 'connect', :hwinfo => 'hwinfo', :distro_target => 'HHH', :instance_data => '<test>' })
+              auth: 'token',
+              params: { hostname: 'connect', hwinfo: 'hwinfo', distro_target: 'HHH', instance_data: '<test>' })
         .and_call_original
       subject.new(client).announce_system('token', nil, '<test>')
     end
@@ -83,8 +83,8 @@ describe SUSE::Connect::Api do
     context :hostname_detected do
 
       it 'sends a call with hostname' do
-        payload = ['/connect/subscriptions/systems', :auth => 'token', :params => {
-          :hostname => 'connect', :hwinfo => 'hwinfo', :distro_target => 'HHH' }
+        payload = ['/connect/subscriptions/systems', auth: 'token', params: {
+          hostname: 'connect', hwinfo: 'hwinfo', distro_target: 'HHH' }
         ]
         Connection.any_instance.should_receive(:post).with(*payload).and_call_original
         subject.new(client).announce_system('token')
@@ -95,10 +95,10 @@ describe SUSE::Connect::Api do
     context :no_hostname do
 
       it 'sends a call with ip when hostname is nil' do
-        Socket.stub(:gethostname => nil)
-        Socket.stub(:ip_address_list => [Addrinfo.ip('192.168.42.42')])
-        payload = ['/connect/subscriptions/systems', :auth => 'token', :params => {
-          :hostname => '192.168.42.42', :hwinfo => 'hwinfo', :distro_target => 'HHH' }
+        Socket.stub(gethostname: nil)
+        Socket.stub(ip_address_list: [Addrinfo.ip('192.168.42.42')])
+        payload = ['/connect/subscriptions/systems', auth: 'token', params: {
+          hostname: '192.168.42.42', hwinfo: 'hwinfo', distro_target: 'HHH' }
         ]
         Connection.any_instance.should_receive(:post).with(*payload).and_call_original
         subject.new(client).announce_system('token')
@@ -119,12 +119,12 @@ describe SUSE::Connect::Api do
     describe :services do
 
       it 'returns returns array of services as known by the system' do
-        Connection.any_instance.should_receive(:get).with('/connect/systems/services', :auth => 'basic_auth_string').and_call_original
+        Connection.any_instance.should_receive(:get).with('/connect/systems/services', auth: 'basic_auth_string').and_call_original
         subject.new(client).system_services('basic_auth_string')
       end
 
       it 'holds expected structure' do
-        Connection.any_instance.should_receive(:get).with('/connect/systems/services', :auth => 'basic_auth_string').and_call_original
+        Connection.any_instance.should_receive(:get).with('/connect/systems/services', auth: 'basic_auth_string').and_call_original
         result = subject.new(client).system_services('basic_auth_string').body
         result.should be_kind_of Array
         result.first.keys.should eq %w{id name product}
@@ -139,12 +139,12 @@ describe SUSE::Connect::Api do
       end
 
       it 'returns returns array of subscriptions known by the system' do
-        Connection.any_instance.should_receive(:get).with('/connect/systems/subscriptions', :auth => 'basic_auth_string').and_call_original
+        Connection.any_instance.should_receive(:get).with('/connect/systems/subscriptions', auth: 'basic_auth_string').and_call_original
         subject.new(client).system_subscriptions('basic_auth_string')
       end
 
       it 'holds expected structure' do
-        Connection.any_instance.should_receive(:get).with('/connect/systems/subscriptions', :auth => 'basic_auth_string').and_call_original
+        Connection.any_instance.should_receive(:get).with('/connect/systems/subscriptions', auth: 'basic_auth_string').and_call_original
         result = subject.new(client).system_subscriptions('basic_auth_string').body
         result.should be_kind_of Array
         attr_ary = %w{id regcode name type status starts_at expires_at}
@@ -161,12 +161,12 @@ describe SUSE::Connect::Api do
       end
 
       it 'returns returns array of subscriptions known by the system' do
-        Connection.any_instance.should_receive(:get).with('/connect/systems/activations', :auth => 'basic_auth_string').and_call_original
+        Connection.any_instance.should_receive(:get).with('/connect/systems/activations', auth: 'basic_auth_string').and_call_original
         subject.new(client).system_activations('basic_auth_string')
       end
 
       it 'holds expected structure' do
-        Connection.any_instance.should_receive(:get).with('/connect/systems/activations', :auth => 'basic_auth_string').and_call_original
+        Connection.any_instance.should_receive(:get).with('/connect/systems/activations', auth: 'basic_auth_string').and_call_original
         result = subject.new(client).system_activations('basic_auth_string').body
         result.should be_kind_of Array
         attr_ary = %w{id regcode type status starts_at expires_at system_id service}
@@ -182,23 +182,23 @@ describe SUSE::Connect::Api do
     let(:api_endpoint) { '/connect/systems/products' }
     let(:system_auth) { 'basic_auth_mock' }
 
-    let(:product) { Remote::Product.new(:identifier => 'SLES', :version => '11-SP2', :arch => 'x86_64', :token => 'token-shmocken') }
+    let(:product) { Remote::Product.new(identifier: 'SLES', version: '11-SP2', arch: 'x86_64', token: 'token-shmocken') }
 
     let(:payload) do
       {
-        :identifier   => 'SLES',
-        :version      => '11-SP2',
-        :arch         => 'x86_64',
-        :release_type => nil,
-        :token        => 'token-shmocken',
-        :email        => nil
+        identifier:   'SLES',
+        version:      '11-SP2',
+        arch:         'x86_64',
+        release_type: nil,
+        token:        'token-shmocken',
+        email:        nil
       }
     end
 
     it 'calls ConnectAPI with basic auth and params and receives a JSON in return (use proper webmock)' do
       stub_activate_call
       Connection.any_instance.should_receive(:post)
-        .with(api_endpoint, :auth => system_auth, :params => payload)
+        .with(api_endpoint, auth: system_auth, params: payload)
         .and_call_original
       response = subject.new(client).activate_product(system_auth, product)
       response.body['name'].should eq 'SUSE_Linux_Enterprise_Server_12_x86_64'
@@ -208,7 +208,7 @@ describe SUSE::Connect::Api do
       email = 'email@domain.com'
       payload[:email] = email
       Connection.any_instance.should_receive(:post)
-        .with(api_endpoint, :auth => system_auth, :params => payload)
+        .with(api_endpoint, auth: system_auth, params: payload)
       subject.new(client).activate_product(system_auth, product, email)
     end
 
@@ -218,12 +218,12 @@ describe SUSE::Connect::Api do
 
     let(:api_endpoint) { '/connect/systems/products' }
     let(:system_auth) { 'basic_auth_mock' }
-    let(:product) { Remote::Product.new(:identifier => 'SLES', :version => '12', :arch => 'x86_64') }
+    let(:product) { Remote::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64') }
 
     it 'calls ConnectAPI with basic auth and params and receives a JSON in return' do
       stub_upgrade_call
       Connection.any_instance.should_receive(:put)
-      .with(api_endpoint, :auth => system_auth, :params => product.to_params)
+      .with(api_endpoint, auth: system_auth, params: product.to_params)
       .and_call_original
       response = subject.new(client).upgrade_product(system_auth, product)
       response.body['sources'].keys.first.should include('SUSE')
@@ -237,13 +237,13 @@ describe SUSE::Connect::Api do
       stub_show_product_call
     end
 
-    let(:product) { Remote::Product.new(:identifier => 'rodent', :version => 'good', :arch => 'z42', :release_type => 'foo') }
+    let(:product) { Remote::Product.new(identifier: 'rodent', version: 'good', arch: 'z42', release_type: 'foo') }
 
     it 'is authenticated via basic auth' do
       payload = [
         '/connect/systems/products',
-        :auth => 'Basic: encodedgibberish',
-        :params => product.to_params
+        auth: 'Basic: encodedgibberish',
+        params: product.to_params
       ]
       Connection.any_instance.should_receive(:get)
         .with(*payload)
@@ -271,8 +271,8 @@ describe SUSE::Connect::Api do
 
       let(:products) do
         [
-          Remote::Product.new(:identifier => 'SLES', :version => '12', :arch => 'x86_64', :release_type => 'HP-CNB'),
-          Remote::Product.new(:identifier => 'SUSE-Cloud', :version => '7', :arch => 'x86_64', :release_type => nil)
+          Remote::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64', release_type: 'HP-CNB'),
+          Remote::Product.new(identifier: 'SUSE-Cloud', version: '7', arch: 'x86_64', release_type: nil)
         ]
       end
 
@@ -281,8 +281,8 @@ describe SUSE::Connect::Api do
       it 'is authenticated via basic auth' do
         payload = [
           '/connect/systems/products/migrations',
-          :auth => 'Basic: encodedgibberish',
-          :params => query
+          auth: 'Basic: encodedgibberish',
+          params: query
         ]
         expect_any_instance_of(Connection).to receive(:post)
           .with(*payload)
@@ -329,7 +329,7 @@ describe SUSE::Connect::Api do
     it 'is authenticated via basic auth' do
       payload = [
         '/connect/systems',
-        :auth => 'Basic: encodedgibberish'
+        auth: 'Basic: encodedgibberish'
       ]
 
       Connection.any_instance.should_receive(:delete)
@@ -354,16 +354,16 @@ describe SUSE::Connect::Api do
 
     before do
       stub_update_call
-      System.stub(:hostname => 'connect')
-      System.stub(:hwinfo => 'hwinfo')
-      Zypper.stub(:distro_target => 'openSUSE-4.1-x86_64')
+      System.stub(hostname: 'connect')
+      System.stub(hwinfo: 'hwinfo')
+      Zypper.stub(distro_target: 'openSUSE-4.1-x86_64')
     end
 
     it 'is authenticated via basic auth' do
       payload = [
         '/connect/systems',
-        :auth => 'Basic: encodedgibberish', :params => { :hostname => 'connect', :hwinfo => 'hwinfo',
-                                                         :distro_target => 'openSUSE-4.1-x86_64' }
+        auth: 'Basic: encodedgibberish', params: { hostname: 'connect', hwinfo: 'hwinfo',
+                                                   distro_target: 'openSUSE-4.1-x86_64' }
       ]
       Connection.any_instance.should_receive(:put).with(*payload).and_call_original
       subject.new(client).update_system('Basic: encodedgibberish')
