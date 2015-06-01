@@ -34,13 +34,16 @@ module SUSE
       # In this case we expect Token authentication where token is a registration code e.g. 'Token token=<REGCODE>'
       # @return [OpenStruct] responding to #body(response from SCC), #code(natural HTTP response code) and #success.
       #
-      def announce_system(auth, distro_target = nil, instance_data = nil)
+      def announce_system(auth, distro_target = nil, instance_data = nil, namespace = nil)
         payload = {
           :hostname      => System.hostname,
           :hwinfo        => System.hwinfo,
           :distro_target => distro_target || Zypper.distro_target
         }
+
         payload[:instance_data] = instance_data if instance_data
+        payload[:namespace] = namespace if namespace
+
         @connection.post('/connect/subscriptions/systems', :auth => auth, :params => payload)
       end
 
@@ -51,13 +54,15 @@ module SUSE
       #   In this case we expect Base64 encoded string with login and password
       # @return [OpenStruct] responding to #body(response from SCC), #code(natural HTTP response code) and #success.
       #
-      def update_system(auth, distro_target = nil, instance_data = nil)
+      def update_system(auth, distro_target = nil, instance_data = nil, namespace = nil)
         payload = {
           :hostname      => System.hostname,
           :hwinfo        => System.hwinfo,
           :distro_target => distro_target || Zypper.distro_target
         }
         payload[:instance_data] = instance_data if instance_data
+        payload[:namespace] = namespace if namespace
+
         @connection.put('/connect/systems', :auth => auth, :params => payload)
       end
 

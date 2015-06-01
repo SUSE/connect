@@ -80,6 +80,17 @@ describe SUSE::Connect::Api do
       subject.new(client).announce_system('token', nil, '<test>')
     end
 
+    it 'sets namespace data in payload' do
+      namespace = 'SMT namespace'
+
+      Connection.any_instance.should_receive(:post)
+        .with('/connect/subscriptions/systems',
+              auth: 'token',
+              params: { hostname: 'connect', hwinfo: 'hwinfo', distro_target: 'HHH', namespace: namespace })
+        .and_call_original
+      subject.new(client).announce_system('token', nil, nil, namespace)
+    end
+
     context :hostname_detected do
 
       it 'sends a call with hostname' do
@@ -350,7 +361,7 @@ describe SUSE::Connect::Api do
     end
   end
 
-  describe 'update' do
+  describe 'update_system' do
 
     before do
       stub_update_call
@@ -377,6 +388,20 @@ describe SUSE::Connect::Api do
     it 'returns empty body' do
       body = subject.new(client).update_system('Basic: encodedgibberish').body
       body.should be_nil
+    end
+
+    it 'sets namespace data in payload' do
+      namespace = 'SMT namespace'
+
+      params = { hostname: 'connect', hwinfo: 'hwinfo', distro_target: 'openSUSE-4.1-x86_64', namespace: namespace }
+      payload = [
+        '/connect/systems',
+        auth: 'Basic: encodedgibberish',
+        params: params
+      ]
+
+      Connection.any_instance.should_receive(:put).with(*payload).and_call_original
+      subject.new(client).update_system('Basic: encodedgibberish', nil, nil, namespace)
     end
   end
 
