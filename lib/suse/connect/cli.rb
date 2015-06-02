@@ -132,6 +132,11 @@ module SUSE
           @options[:write_config] = true
         end
 
+        @opts.on('--namespace [NAMESPACE]', 'namespace option for use with SMT staging environments') do |opt|
+          check_if_param(opt, 'Please provide a namespace')
+          @options[:namespace] = opt
+        end
+
         @opts.on('-s', '--status', 'get current system registration status in json format') do |opt|
           @options[:status] = true
         end

@@ -143,6 +143,13 @@ describe SUSE::Connect::Cli do
       end
     end
 
+    context 'namespace option' do |variables|
+      it '--namespace requires namespace' do
+        expect(string_logger).to receive(:error).with('Please provide a namespace')
+        subject.new('--namespace')
+      end
+    end
+
     context 'status subcommand' do
       it '--status calls json_product_status' do
         cli = subject.new(%w{--status})

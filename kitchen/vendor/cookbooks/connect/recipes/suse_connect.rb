@@ -1,6 +1,6 @@
 git '/tmp/connect' do
   repository 'https://github.com/SUSE/connect.git'
-  reference 'master'
+  reference  node[:branch] || 'master'
   action 'sync'
   user 'vagrant'
   group 'users'
@@ -67,6 +67,6 @@ end
 
 zypper_options = '--non-interactive  --no-gpg-checks'
 execute 'install SUSEConnect RPM' do
-  command "zypper #{zypper_options} in /var/tmp/build-root/SLE_12-x86_64/home/abuild/rpmbuild/RPMS/x86_64/*"
+  command "zypper #{zypper_options} in --force /var/tmp/build-root/SLE_12-x86_64/home/abuild/rpmbuild/RPMS/x86_64/*"
   cwd "#{node[:connect][:project]}/package"
 end
