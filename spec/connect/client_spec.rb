@@ -406,11 +406,10 @@ describe SUSE::Connect::Client do
     end
 
     it 'calls underlying api and removes credentials file' do
-      expect(Zypper).to receive(:remove_all_suse_services).and_return(true)
-      expect(System).to receive(:remove_credentials).and_return(true)
       expect(subject.api).to receive(:deregister).with('Basic: encodedstring').and_return stubbed_response
+      expect(System).to receive(:cleanup).and_return(true)
 
-      subject.deregister!.should be true
+      subject.deregister!
     end
   end
 
