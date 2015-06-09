@@ -132,6 +132,15 @@ describe SUSE::Connect::System do
     end
   end
 
+  describe '.cleanup' do
+    it 'removes system credentials and zypper services which were added by SUSEConnect' do
+      expect(Zypper).to receive(:remove_all_suse_services).and_return(true)
+      expect(System).to receive(:remove_credentials).and_return(true)
+
+      subject.cleanup
+    end
+  end
+
   describe '.hostname' do
     context :hostname_detected do
       it 'returns hostname' do
