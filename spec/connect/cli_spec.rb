@@ -47,7 +47,7 @@ describe SUSE::Connect::Cli do
           response = Net::HTTPResponse.new('1.1', 401, 'Test')
           allow(System).to receive(:credentials?).and_return false
           expect_any_instance_of(Client).to receive(:register!).and_raise ApiError.new(response)
-          expect(string_logger).to receive(:fatal).with('Provided registration code is not recognized by registration server.')
+          expect(string_logger).to receive(:fatal).with('Error: Provided registration code is not recognized by registration server.')
           cli.execute!
         end
       end

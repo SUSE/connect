@@ -60,7 +60,7 @@ module SUSE
             ' If it does not, remove /etc/SUSEConnect, /etc/zypp/credentials.d/* and zypper services' \
             ' using those credentials, and re-register this system.'
           else
-            log.fatal 'Provided registration code is not recognized by registration server.'
+            log.fatal 'Error: Provided registration code is not recognized by registration server.'
           end
         else
           log.fatal "Error: SCC returned '#{e.message}' (#{e.code})"
