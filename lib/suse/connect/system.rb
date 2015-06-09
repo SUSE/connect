@@ -40,7 +40,7 @@ module SUSE
           File.delete Credentials.system_credentials_file if credentials?
         end
 
-        def cleanup
+        def cleanup!
           System.remove_credentials
           Zypper.remove_all_suse_services
         end
