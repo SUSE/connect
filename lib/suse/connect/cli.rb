@@ -24,6 +24,8 @@ module SUSE
           Status.new(@config).print_product_statuses(:text)
         elsif @config.deregister
           Client.new(@config).deregister!
+        elsif @config.cleanup
+          System.cleanup!
         else
           if @config.instance_data_file && @config.url_default?
             log.error 'Please use --instance-data only in combination with --url pointing to your SMT server'
@@ -54,11 +56,9 @@ module SUSE
         case e.code
         when 401
           if System.credentials?
-            log.fatal 'Error: Not authorised. If using existing SCC credentials, they were not recognised,' \
-            ' probably because the registered system was unregistered or deleted.' \
+            log.fatal 'Error: Invalid system credentials, probably because the registered system was deleted in SUSE Customer Center.' \
             " Check #{@options[:url] || 'https://scc.suse.com'} whether your system appears there." \
-            ' If it does not, remove /etc/SUSEConnect, /etc/zypp/credentials.d/* and zypper services' \
-            ' using those credentials, and re-register this system.'
+            ' If it does not, please call SUSEConnect --cleanup and re-register this system.'
           else
             log.fatal 'Error: Provided registration code is not recognized by registration server.'
           end
@@ -147,6 +147,10 @@ module SUSE
 
         @opts.on('--write-config', 'write options to config file at /etc/SUSEConnect') do |opt|
           @options[:write_config] = true
+        end
+
+        @opts.on('--cleanup', 'remove old system credentials and all zypper services installed by SUSEConnect') do |opt|
+          @options[:cleanup] = true
         end
 
         @opts.separator ''

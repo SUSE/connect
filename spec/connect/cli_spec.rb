@@ -37,7 +37,7 @@ describe SUSE::Connect::Cli do
           response = Net::HTTPResponse.new('1.1', 401, 'Test')
           allow(System).to receive(:credentials?).and_return true
           expect_any_instance_of(Client).to receive(:register!).and_raise ApiError.new(response)
-          expect(string_logger).to receive(:fatal).with(match(/Error: Not authorised./))
+          expect(string_logger).to receive(:fatal).with(match(/Error: Invalid system credentials/))
           cli.execute!
         end
       end
@@ -139,6 +139,14 @@ describe SUSE::Connect::Cli do
       it '--de-register calls deregister! method' do
         cli = subject.new(%w{--de-register})
         expect_any_instance_of(Client).to receive(:deregister!)
+        cli.execute!
+      end
+    end
+
+    context 'cleanup command' do
+      it '--cleanup calls Systems cleanup! method' do
+        cli = subject.new(%w{--cleanup})
+        expect(System).to receive(:cleanup!)
         cli.execute!
       end
     end
