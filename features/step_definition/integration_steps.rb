@@ -19,6 +19,7 @@ Then(/^I call SUSEConnect with '(.*)' arguments$/) do |args|
   connect << " -r #{@regcode}" if options['regcode']
   connect << " -p #{options['product']}" if options['product']
   connect << ' -s' if options['status']
+  connect << ' --cleanup' if options['cleanup']
 
   puts "Calling '#{connect}' ..."
   step "I run `#{connect}`"
