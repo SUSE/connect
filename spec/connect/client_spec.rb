@@ -407,7 +407,7 @@ describe SUSE::Connect::Client do
 
     it 'calls underlying api and removes credentials file' do
       expect(subject.api).to receive(:deregister).with('Basic: encodedstring').and_return stubbed_response
-      expect(System).to receive(:cleanup).and_return(true)
+      expect(System).to receive(:cleanup!).and_return(true)
 
       subject.deregister!
     end

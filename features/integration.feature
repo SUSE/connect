@@ -28,9 +28,10 @@ Feature: SUSEConnect full stack integration testing
     And zypper should contain a repositories for sdk product
 
   Scenario: API response language check
-    Given I set the environment variables to
+    Given I set the environment variables to:
       | variable | value |
       | LANG     | de    |
+
     When I call SUSEConnect with '--regcode INVALID' arguments
     Then the exit status should be 67
 
@@ -49,7 +50,7 @@ Feature: SUSEConnect full stack integration testing
     When SUSEConnect library should respect API headers
 
   Scenario: System de-registration
-    When I cleanly deregister the system removing local credentials
+    When I deregister the system
     Then a file named "/etc/zypp/credentials.d/SCCcredentials" should not exist
 
     And a file named "/etc/zypp/credentials.d/SUSE_Linux_Enterprise_Server_12_x86_64" should not exist
@@ -63,21 +64,20 @@ Feature: SUSEConnect full stack integration testing
 
   Scenario: Error cleanly if system record was deleted on SCC only
     When I call SUSEConnect with '--regcode VALID' arguments
-    Then I deregister the system only
+    Then I delete the system on SCC
+
     And I call SUSEConnect with '--status true' arguments
     Then the exit status should be 67
     And the output should contain:
     """
-    Not authorised. If using existing SCC credentials
+    Invalid system credentials, probably because the registered system was deleted in SUSE Customer Center.
     """
-    Then I remove local credentials
-
-  Scenario: client provides meaningful message in case of invalid reg-code
+  Scenario: Client provides meaningful message in case of invalid reg-code
     When I call SUSEConnect with '--regcode invalid' arguments
     Then the exit status should be 67
     And the output should contain:
     """
-    Provided registration code is not recognized by registration server.
+    Error: SCC returned 'No subscription with this registration code found
     """
 
   Scenario: Remove all registration leftovers

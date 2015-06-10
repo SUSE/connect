@@ -7,7 +7,7 @@ Then(/^Prepare SUSEConnect client with a valid regcode/) do
   step 'Set regcode and url options'
   @client = SUSE::Connect::Client.new(SUSE::Connect::Config.new.merge!(url: @url, regcode: @regcode))
 end
-### SUSEConnect cmd steps
+
 Then(/^I call SUSEConnect with '(.*)' arguments$/) do |args|
   options = Hash[*args.gsub('--', '').split(' ')]
 
@@ -69,23 +69,23 @@ end
 Then(/^SUSEConnect library should respect API headers$/) do
   step 'Prepare SUSEConnect client with a valid regcode'
 
-  response = SUSE::Connect::Api.new(client).announce_system("Token token=#{@regcode}")
+  response = SUSE::Connect::Api.new(@client).announce_system("Token token=#{@regcode}")
   expect(response.headers['scc-api-version'].first).to eq(SUSE::Connect::Api::VERSION)
 end
 
-Then(/^I cleanly deregister the system removing local credentials$/) do
+Then(/^I deregister the system$/) do
   step 'Prepare SUSEConnect client with a valid regcode'
-  client.deregister!
+  @client.deregister!
 end
 
-Then(/^I deregister the system only$/) do
+Then(/^I delete the system on SCC$/) do
   step 'Prepare SUSEConnect client with a valid regcode'
-  client.instance_eval { @api.deregister(system_auth) }
+  @client.instance_eval { @api.deregister(system_auth) }
 end
 
 Then(/^I remove local credentials$/) do
   step 'Prepare SUSEConnect client with a valid regcode'
-  client.instance_eval { SUSE::Connect::System.remove_credentials }
+  @client.instance_eval { SUSE::Connect::System.remove_credentials }
 end
 
 Then(/^SUSEConnect library should be able to activate a free extension without regcode$/) do
@@ -101,7 +101,7 @@ Then(/^SUSEConnect library should be able to retrieve the product information$/)
   step 'Prepare SUSEConnect client with a valid regcode'
 
   remote_product = SUSE::Connect::Remote::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64')
-  products = client.show_product(remote_product).extensions.map(&:friendly_name).sort
+  products = @client.show_product(remote_product).extensions.map(&:friendly_name).sort
 
   products.each {|product| puts "- #{product}" }
 
