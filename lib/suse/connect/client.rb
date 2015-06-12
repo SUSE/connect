@@ -34,8 +34,7 @@ module SUSE
       # @returns: Empty body and 204 status code
       def deregister!
         @api.deregister(system_auth)
-        System.remove_credentials
-        Zypper.remove_all_suse_services
+        System.cleanup!
       end
 
       # Announce system via SCC/Registration Proxy
