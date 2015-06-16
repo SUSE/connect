@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Mon Jun 15 11:17:45 UTC 2015 - vlewin@suse.com
+
+- Update to version 0.2.18
+  - Improve SUSEConnect error messages
+  - New --cleanup option (remove old system credentials and all zypper services installed by SUSEConnect)
+  - New --namespace option (forward SMT staging environment to proxy registration server)
+
+-------------------------------------------------------------------
 Wed May 20 15:25:00 UTC 2015 - kpimenov@suse.de
 
 - Update to version 0.2.17
