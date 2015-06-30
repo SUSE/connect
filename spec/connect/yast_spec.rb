@@ -211,7 +211,7 @@ describe SUSE::Connect::YaST do
     end
   end
 
-  describe '#all_products' do
+  describe '#system_products' do
     let(:zypper_product) { Zypper::Product.new(:name => 'SLES', :version => '12', :arch => 'x86_64') }
     let(:remote_product) { Remote::Product.new(:identifier => 'SLES', :version => '12', :arch => 'x86_64', :release_type => 'HP-CNB') }
 
@@ -219,7 +219,7 @@ describe SUSE::Connect::YaST do
       expect_any_instance_of(Status).to receive(:installed_products).and_return([zypper_product])
       expect_any_instance_of(Status).to receive(:activated_products).and_return([remote_product])
 
-      result = SUSE::Connect::YaST.all_products
+      result = SUSE::Connect::YaST.system_products
       expect(result).to match_array([Product.transform(zypper_product), Product.transform(remote_product)])
     end
   end

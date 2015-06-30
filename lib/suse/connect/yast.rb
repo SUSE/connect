@@ -100,7 +100,10 @@ module SUSE
           Client.new(config).system_migrations(products)
         end
 
-        def all_products(client_params = {})
+        # Returns installed and activated products on the system
+        # @param [Hash] client_params parameters to instantiate {Client}
+        # @return [Array <Connect::Product>] the list of system products
+        def system_products(client_params = {})
           config = SUSE::Connect::Config.new.merge!(client_params)
           status = Status.new(config)
           installed_products = status.installed_products
@@ -109,10 +112,15 @@ module SUSE
           products.map {|product| Product.transform(product) }
         end
 
+        # Forwards the service which should be added with zypper
+        # @param [String] service_url the url from the service to add
+        # @param [String] service_name the name of the service to add
         def add_service(service_url, service_name)
           SUSE::Connect::Zypper.add_service(service_url, service_name)
         end
 
+        # Forwards the service names which should be removed with zypper
+        # @param [String] service_name the name of the service to remove
         def remove_service(service_name)
           SUSE::Connect::Zypper.remove_service(service_name)
         end
