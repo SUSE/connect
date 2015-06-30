@@ -17,6 +17,7 @@ module SUSE
     require 'suse/connect/zypper'
     require 'suse/connect/zypper/product_status'
     require 'suse/connect/hwinfo/base'
+    require 'suse/connect/product'
 
     # Holding all the object classes received from registration server
     module Remote
