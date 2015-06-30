@@ -1,5 +1,7 @@
 module SUSE
   module Connect
+
+    # Product class is a common class to represent all products
     class Product < OpenStruct
 
       def self.transform(old_product)

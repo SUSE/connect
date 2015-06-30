@@ -106,7 +106,7 @@ module SUSE
           installed_products = status.installed_products
           activated_products = status.activated_products
           products = installed_products + activated_products
-          products.map { |product| Product.transform(product) }
+          products.map {|product| Product.transform(product) }
         end
 
         def add_service(service_url, service_name)

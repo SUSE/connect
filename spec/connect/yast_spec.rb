@@ -220,7 +220,7 @@ describe SUSE::Connect::YaST do
       expect_any_instance_of(Status).to receive(:activated_products).and_return([remote_product])
 
       result = SUSE::Connect::YaST.all_products
-      expect(result).to match_array([ Product.transform(zypper_product), Product.transform(remote_product) ])
+      expect(result).to match_array([Product.transform(zypper_product), Product.transform(remote_product)])
     end
   end
 
