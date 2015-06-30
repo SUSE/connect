@@ -81,7 +81,7 @@ describe SUSE::Connect::Zypper do
     describe 'calls zypper with proper arguments' do
       it 'adds service' do
         addservice_args = "zypper --non-interactive addservice -t ris http://example.com 'branding'"
-        autorefresh_args = "zypper --non-interactive modifyservice -r http://example.com"
+        autorefresh_args = 'zypper --non-interactive modifyservice -r http://example.com'
         expect(Open3).to receive(:capture3).with(shared_env_hash, addservice_args).and_return(['', '', status])
         allow(Open3).to receive(:capture3).with(shared_env_hash, autorefresh_args).and_return(['', '', status])
         subject.add_service('http://example.com', 'branding')
@@ -90,7 +90,7 @@ describe SUSE::Connect::Zypper do
 
       it 'sets autorefresh flag' do
         addservice_args = "zypper --non-interactive addservice -t ris http://example.com 'branding'"
-        autorefresh_args = "zypper --non-interactive modifyservice -r http://example.com"
+        autorefresh_args = 'zypper --non-interactive modifyservice -r http://example.com'
         allow(Open3).to receive(:capture3).with(shared_env_hash, addservice_args).and_return(['', '', status])
         expect(Open3).to receive(:capture3).with(shared_env_hash, autorefresh_args).and_return(['', '', status])
         subject.add_service('http://example.com', 'branding')
@@ -99,7 +99,7 @@ describe SUSE::Connect::Zypper do
 
     it 'escapes shell parameters' do
       args = "zypper --non-interactive addservice -t ris http://example.com\\;id 'branding'"
-      autorefresh_args = "zypper --non-interactive modifyservice -r http://example.com\\;id"
+      autorefresh_args = 'zypper --non-interactive modifyservice -r http://example.com\\;id'
       allow(Open3).to receive(:capture3).with(shared_env_hash, autorefresh_args).and_return(['', '', status])
       expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
       subject.add_service('http://example.com;id', 'branding')
