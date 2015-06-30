@@ -1,6 +1,9 @@
 require 'suse/toolkit/product_equality'
 
 # Product as sent from registration server
+#
+# Used by YaST already, do not refactor without consulting them!
+# Reads attributes (i.e. calls #identifier, #version, #arch)
 class SUSE::Connect::Remote::Product < SUSE::Connect::Remote::ServerDrivenModel
 
   include SUSE::Toolkit::ProductEquality

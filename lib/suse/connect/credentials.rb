@@ -7,6 +7,9 @@ module SUSE
     # Class for handling credentials
     # It can read the global credentials (/etc/zypp/credentials.d/SCCcredentials)
     # or the services credentials
+    #
+    # Used by YaST already, do not refactor without consulting them!
+    # (Reading and writing (#read, #write), reading/writing the attributes (#file, #username, #password))
     class Credentials
 
       include Logger

@@ -5,6 +5,9 @@ module SUSE
   module Connect
 
     # Class for handling SUSEConnect configuration
+    #
+    # Used by YaST already, do not refactor without consulting them!
+    # Reading the config file (#url, #insecure), for writing it uses the yast.rb wrapper
     class Config < OpenStruct
 
       DEFAULT_CONFIG_FILE = '/etc/SUSEConnect'
