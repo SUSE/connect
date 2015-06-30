@@ -211,6 +211,38 @@ describe SUSE::Connect::YaST do
     end
   end
 
+  describe '#all_products' do
+    let(:zypper_product) { Zypper::Product.new(:name => 'SLES', :version => '12', :arch => 'x86_64') }
+    let(:remote_product) { Remote::Product.new(:identifier => 'SLES', :version => '12', :arch => 'x86_64', :release_type => 'HP-CNB') }
+
+    it 'forwards to status installed products and status activated products' do
+      expect_any_instance_of(Status).to receive(:installed_products).and_return([zypper_product])
+      expect_any_instance_of(Status).to receive(:activated_products).and_return([remote_product])
+
+      result = SUSE::Connect::YaST.all_products
+      expect(result).to match_array([ Product.transform(zypper_product), Product.transform(remote_product) ])
+    end
+  end
+
+  describe '#add_service' do
+    it 'forwards to zypper add_service' do
+      service_url = 'http://bla.bla'
+      service_name = 'bla'
+      expect(SUSE::Connect::Zypper).to receive(:add_service).with(service_url, service_name)
+
+      SUSE::Connect::YaST.add_service(service_url, service_name)
+    end
+  end
+
+  describe '#remove_service' do
+    it 'forwards to zypper remove_service' do
+      service_name = 'bla'
+      expect(SUSE::Connect::Zypper).to receive(:remove_service).with(service_name)
+
+      SUSE::Connect::YaST.remove_service(service_name)
+    end
+  end
+
   describe '#write_config' do
     let(:params) { { url: 'http://scc.foo.com' } }
 

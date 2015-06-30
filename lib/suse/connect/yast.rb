@@ -100,6 +100,23 @@ module SUSE
           Client.new(config).system_migrations(products)
         end
 
+        def all_products(client_params = {})
+          config = SUSE::Connect::Config.new.merge!(client_params)
+          status = Status.new(config)
+          installed_products = status.installed_products
+          activated_products = status.activated_products
+          products = installed_products + activated_products
+          products.map { |product| Product.transform(product) }
+        end
+
+        def add_service(service_url, service_name)
+          SUSE::Connect::Zypper.add_service(service_url, service_name)
+        end
+
+        def remove_service(service_name)
+          SUSE::Connect::Zypper.remove_service(service_name)
+        end
+
         # Writes the config file with the given parameters, overwriting any existing contents
         # Only persistent connection parameters (url, insecure) are written by this method
         # Regcode, language, debug etc are not
