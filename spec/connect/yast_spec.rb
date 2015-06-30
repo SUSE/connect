@@ -4,6 +4,17 @@ describe SUSE::Connect::YaST do
 
   subject { SUSE::Connect::YaST }
 
+  describe '#defaults' do
+    it 'returns expected keys' do
+      expect(subject.defaults).to have_key(:config_file_path)
+      expect(subject.defaults).to have_key(:scc_url)
+      expect(subject.defaults).to have_key(:server_cert_file_path)
+      expect(subject.defaults).to have_key(:update_certificates_script_path)
+      expect(subject.defaults).to have_key(:credentials_dir_path)
+      expect(subject.defaults).to have_key(:global_credentials_file_path)
+    end
+  end
+
   describe '#announce_system' do
 
     let(:params) { [{}, 'sles12-x86_64'] }

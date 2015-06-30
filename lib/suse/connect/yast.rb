@@ -7,6 +7,19 @@ module SUSE
     class YaST
       class << self
 
+        # Returns a hash containing default configuration values.
+        # Keys: :config_file_path, :scc_url, :server_cert_file_path, :update_certificates_script_path, :credentials_dir_path, :global_credentials_file_path
+        # @return [Hash]
+        def defaults()
+          { config_file_path: SUSE::Connect::Config::DEFAULT_CONFIG_FILE,
+            scc_url: SUSE::Connect::Config::DEFAULT_URL,
+            server_cert_file_path: SUSE::Connect::SSLCertificate::SERVER_CERT_FILE,
+            update_certificates_script_path: SUSE::Connect::SSLCertificate::UPDATE_CERTIFICATES,
+            credentials_dir_path: SUSE::Connect::Credentials::DEFAULT_CREDENTIALS_DIR,
+            global_credentials_file_path: SUSE::Connect::Credentials::GLOBAL_CREDENTIALS_FILE
+          }
+        end
+
         # Announces the system to SCC / the registration server.
         # Expects a token / regcode to identify the correct subscription.
         # Additionally, distro_target should be set to avoid calls to Zypper.
