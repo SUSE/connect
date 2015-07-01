@@ -12,6 +12,9 @@ module SUSE
 
     # Basic error for API interactions. Collects HTTP response (which includes
     # status code and response body) for future showing to user via {Cli}
+    #
+    # Used by YaST already, do not refactor without consulting them!
+    # (Error handling: #response, #code, #message, #service)
     class ApiError < StandardError
       attr_accessor :response, :message
 

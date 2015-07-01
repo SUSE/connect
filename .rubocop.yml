@@ -5,7 +5,7 @@ MethodLength:
   Max: 15
 
 LineLength:
-  Max: 140
+  Max: 160
 
 SpaceBeforeBlockBraces:
   Enabled: true

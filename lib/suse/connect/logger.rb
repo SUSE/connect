@@ -22,6 +22,9 @@ module SUSE
     #
     # @example Set own logger
     #   GlobalLogger.instance.log = ::Logger.new($stderr)
+    #
+    # Used by YaST already, do not refactor without consulting them!
+    # Passing the YaST logger for writing the log to /var/log/YaST2/y2log (#log=)
     class GlobalLogger
 
       include Singleton
