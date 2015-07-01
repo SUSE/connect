@@ -43,6 +43,7 @@ module SUSE
         def add_service(service_url, service_name)
           service = "#{Shellwords.escape(service_url)} '#{Shellwords.escape(service_name)}'"
           call("--non-interactive addservice -t ris #{service}")
+          call("--non-interactive modifyservice -r #{Shellwords.escape(service_url)}")
         end
 
         # @param service_name [String] Alias-mnemonic with which zypper should remove this service
