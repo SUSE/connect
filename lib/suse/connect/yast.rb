@@ -10,7 +10,7 @@ module SUSE
         # Returns a hash containing default configuration values.
         # Keys: :config_file_path, :scc_url, :server_cert_file_path, :update_certificates_script_path, :credentials_dir_path, :global_credentials_file_path
         # @return [Hash]
-        def defaults()
+        def defaults
           { config_file_path: SUSE::Connect::Config::DEFAULT_CONFIG_FILE,
             scc_url: SUSE::Connect::Config::DEFAULT_URL,
             server_cert_file_path: SUSE::Connect::SSLCertificate::SERVER_CERT_FILE,
