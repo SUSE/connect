@@ -12,6 +12,12 @@ describe SUSE::Connect::YaST do
       expect(subject.defaults).to have_key(:update_certificates_script_path)
       expect(subject.defaults).to have_key(:credentials_dir_path)
       expect(subject.defaults).to have_key(:global_credentials_file_path)
+      expect(subject.defaults[:config_file_path]).to eq SUSE::Connect::Config::DEFAULT_CONFIG_FILE
+      expect(subject.defaults[:scc_url]).to eq SUSE::Connect::Config::DEFAULT_URL
+      expect(subject.defaults[:server_cert_file_path]).to eq SUSE::Connect::SSLCertificate::SERVER_CERT_FILE
+      expect(subject.defaults[:update_certificates_script_path]).to eq SUSE::Connect::SSLCertificate::UPDATE_CERTIFICATES
+      expect(subject.defaults[:credentials_dir_path]).to eq SUSE::Connect::Credentials::DEFAULT_CREDENTIALS_DIR
+      expect(subject.defaults[:global_credentials_file_path]).to eq SUSE::Connect::Credentials::GLOBAL_CREDENTIALS_FILE
     end
   end
 
