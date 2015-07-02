@@ -106,10 +106,7 @@ module SUSE
         def system_products(client_params = {})
           config = SUSE::Connect::Config.new.merge!(client_params)
           status = Status.new(config)
-          installed_products = status.installed_products
-          activated_products = status.activated_products
-          products = installed_products + activated_products
-          products.map {|product| Product.transform(product) }
+          status.system_products
         end
 
         # Forwards the service which should be added with zypper

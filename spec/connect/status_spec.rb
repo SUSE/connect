@@ -123,6 +123,19 @@ describe SUSE::Connect::Status do
 
   end
 
+  describe '#system_products' do
+
+    let(:zypper_product) { Zypper::Product.new(:name => 'SLES', :version => '12', :arch => 'x86_64') }
+    let(:remote_product) { Remote::Product.new(:identifier => 'SLES', :version => '12', :arch => 'x86_64', :release_type => 'HP-CNB') }
+
+    it 'returns the installed and activated products from system' do
+      expect_any_instance_of(Status).to receive(:installed_products).and_return([zypper_product])
+      expect_any_instance_of(Status).to receive(:activated_products).and_return([remote_product])
+      result = subject.system_products
+      expect(result).to match_array([Product.transform(zypper_product), Product.transform(remote_product)])
+    end
+  end
+
   describe 'private' do
 
     describe '?product_statuses' do
