@@ -13,6 +13,7 @@ end
 
 require 'rspec'
 require 'ap'
+require 'byebug'
 require 'webmock/rspec'
 require 'suse/connect'
 
