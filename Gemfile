@@ -15,11 +15,11 @@ group :development do
 end
 
 group :test do
-  gem 'rubocop', :require => false
+  gem 'rubocop', '~> 0.32.1', :require => false
   gem 'coveralls', :require => false
-  gem 'rspec'
-  gem 'webmock'
-  gem 'http'
+  gem 'rspec', '~> 3.3.0'
+  gem 'webmock', '~> 1.21.0'
+  gem 'http', '~> 0.8.12'
   gem 'aruba'
 end
 
