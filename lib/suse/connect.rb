@@ -10,13 +10,13 @@ module SUSE
     require 'suse/connect/credentials'
     require 'suse/connect/config'
     require 'suse/connect/api'
-    require 'suse/connect/yast'
     require 'suse/connect/ssl_certificate'
     require 'suse/connect/status'
     require 'suse/connect/zypper'
     require 'suse/connect/zypper/product_status'
     require 'suse/connect/hwinfo/base'
     require 'suse/connect/product'
+    require 'suse/connect/yast'
 
     # Holding all the object classes received from registration server
     module Remote

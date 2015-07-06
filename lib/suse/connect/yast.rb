@@ -1,23 +1,19 @@
 module SUSE
   module Connect
+
     # YaST class provides methods emulating SCC's API.
     # YaST call this class from:
     # https://github.com/yast/yast-registration/blob/master/src/lib/registration/registration.rb
     class YaST
-      class << self
-        # Returns a hash containing default configuration values.
-        # Keys: :config_file_path, :scc_url, :server_cert_file_path, :update_certificates_script_path, :credentials_dir_path, :global_credentials_file_path
-        # @return [Hash]
-        def defaults
-          { config_file_path: SUSE::Connect::Config::DEFAULT_CONFIG_FILE,
-            scc_url: SUSE::Connect::Config::DEFAULT_URL,
-            server_cert_file_path: SUSE::Connect::SSLCertificate::SERVER_CERT_FILE,
-            update_certificates_script_path: SUSE::Connect::SSLCertificate::UPDATE_CERTIFICATES,
-            credentials_dir_path: SUSE::Connect::Credentials::DEFAULT_CREDENTIALS_DIR,
-            global_credentials_file_path: SUSE::Connect::Credentials::GLOBAL_CREDENTIALS_FILE
-          }
-        end
+      # Define a constants which point to the constants used in SUSEConnect
+      DEFAULT_CONFIG_FILE = SUSE::Connect::Config::DEFAULT_CONFIG_FILE
+      DEFAULT_URL = SUSE::Connect::Config::DEFAULT_URL
+      DEFAULT_CREDENTIALS_DIR = SUSE::Connect::Credentials::DEFAULT_CREDENTIALS_DIR
+      GLOBAL_CREDENTIALS_FILE = SUSE::Connect::Credentials::GLOBAL_CREDENTIALS_FILE
+      SERVER_CERT_FILE = SUSE::Connect::SSLCertificate::SERVER_CERT_FILE
+      UPDATE_CERTIFICATES = SUSE::Connect::SSLCertificate::UPDATE_CERTIFICATES
 
+      class << self
         # Announces the system to SCC / the registration server.
         # Expects a token / regcode to identify the correct subscription.
         # Additionally, distro_target should be set to avoid calls to Zypper.
@@ -167,7 +163,9 @@ module SUSE
           config = SUSE::Connect::Config.new.merge!(client_params)
           Status.new(config)
         end
+
       end
     end
+
   end
 end
