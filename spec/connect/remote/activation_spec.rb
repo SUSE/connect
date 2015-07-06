@@ -1,11 +1,9 @@
 require 'spec_helper'
 
 describe SUSE::Connect::Remote::Activation do
-
   subject { described_class }
 
   describe '.new' do
-
     let(:activation) { described_class.new(JSON.parse(File.read('spec/fixtures/activations_response.json')).last) }
 
     it 'contains id' do
@@ -43,7 +41,5 @@ describe SUSE::Connect::Remote::Activation do
     it 'contains product withing service' do
       expect(activation.service.product).to be_kind_of Remote::Product
     end
-
   end
-
 end

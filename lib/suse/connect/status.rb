@@ -8,7 +8,6 @@ module SUSE
     # At first it collects all installed products from the system, then it gets its `activations`
     # from the registration server. This information is merged and printed out.
     class Status
-
       attr_reader :client
 
       def initialize(config)
@@ -97,9 +96,6 @@ module SUSE
         return [] unless SUSE::Connect::System.credentials?
         @system_activations ||= @client.system_activations.body
       end
-
     end
-
   end
-
 end

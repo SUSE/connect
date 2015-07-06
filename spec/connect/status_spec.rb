@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe SUSE::Connect::Status do
-
   let(:client_double) { double('client') }
 
   subject do
@@ -13,7 +12,6 @@ describe SUSE::Connect::Status do
   end
 
   describe '.client' do
-
     it 'sets client class variable' do
       expect(subject.client).to eq client_double
     end
@@ -21,11 +19,9 @@ describe SUSE::Connect::Status do
     it 'memoizes client class variable to avoid reinstantiation' do
       expect(subject.client).to be client_double
     end
-
   end
 
   describe '.activated_products' do
-
     it 'memoizes activated_products by the first call' do
       allow(subject).to receive(:products_from_activations).and_return(:foobazbar)
       expect(subject.activated_products).to be subject.activated_products
@@ -35,11 +31,9 @@ describe SUSE::Connect::Status do
       expect(subject).to receive(:products_from_activations)
       subject.activated_products
     end
-
   end
 
   describe '.installed_products' do
-
     it 'memoizes installed_products by the first call' do
       allow(subject).to receive(:products_from_zypper).and_return(:barbarbaz)
       expect(subject.installed_products).to be subject.installed_products
@@ -49,11 +43,9 @@ describe SUSE::Connect::Status do
       expect(subject).to receive(:products_from_activations)
       subject.activated_products
     end
-
   end
 
   describe '.known_activations' do
-
     it 'memoizes known_activations by the first call' do
       allow(subject).to receive(:activations_from_server).and_return(:superdo)
       expect(subject.activations).to be subject.activations
@@ -63,13 +55,10 @@ describe SUSE::Connect::Status do
       expect(subject).to receive(:activations_from_server)
       subject.activations
     end
-
   end
 
   describe '.print_product_statuses' do
-
     context 'text format' do
-
       it 'reads template from erb file' do
         expect(File).to receive(:read).with(include('templates/product_statuses.text.erb')).and_return '111'
         allow(subject).to receive(:puts)
@@ -93,11 +82,9 @@ describe SUSE::Connect::Status do
         allow(ERB).to receive(:new).with('blaherbfile', 0, '-<>').and_return mock_erb
         subject.print_product_statuses
       end
-
     end
 
     context 'json format' do
-
       it 'outputs the system status in json format' do
         status = Zypper::ProductStatus.new(Zypper::Product.new({}), subject)
         status.stub(:registration_status) { 'test' }
@@ -110,21 +97,16 @@ describe SUSE::Connect::Status do
         expect(subject).to receive(:puts)
         subject.print_product_statuses(:json)
       end
-
     end
 
     context 'unsupported format' do
-
       it 'errors out on unsupported format' do
         expect { subject.print_product_statuses(:xml) }.to raise_error(UnsupportedStatusFormat, "Unsupported output format 'xml'")
       end
-
     end
-
   end
 
   describe '#system_products' do
-
     let(:zypper_product) { Zypper::Product.new(:name => 'SLES', :version => '12', :arch => 'x86_64') }
     let(:remote_product) { Remote::Product.new(:identifier => 'SLES', :version => '12', :arch => 'x86_64', :release_type => 'HP-CNB') }
 
@@ -137,9 +119,7 @@ describe SUSE::Connect::Status do
   end
 
   describe 'private' do
-
     describe '?product_statuses' do
-
       it 'wrapping each installed product into Zypper::ProductStatus' do
         allow(subject).to receive(:installed_products).and_return([:f, :a, :b])
         expect(Zypper::ProductStatus).to receive(:new).with(:f, subject)
@@ -147,20 +127,16 @@ describe SUSE::Connect::Status do
         expect(Zypper::ProductStatus).to receive(:new).with(:b, subject)
         subject.send(:product_statuses)
       end
-
     end
 
     describe '?products_from_zypper' do
-
       it 'uses zypper output to collect info' do
         Zypper.stub_chain(:installed_products).and_return [1, 2, 3]
         expect(subject.send(:products_from_zypper)).to eq [1, 2, 3]
       end
-
     end
 
     describe '?products_from_activations' do
-
       it 'uses clients response to collect info' do
         fake_client = double('client')
         allow(Client).to receive(:new).and_return(fake_client)
@@ -168,11 +144,9 @@ describe SUSE::Connect::Status do
         fake_client.stub_chain(:system_activations, :body, :map).and_return [1, 2, 3]
         expect(subject.send(:products_from_activations)).to eq [1, 2, 3]
       end
-
     end
 
     describe '?activations_from_server' do
-
       it 'mapping system_activations response to Remote::Activations' do
         subject.stub(:system_activations).and_return [1, 2, 3]
         expect(Remote::Activation).to receive(:new).with(1)
@@ -180,9 +154,6 @@ describe SUSE::Connect::Status do
         expect(Remote::Activation).to receive(:new).with(3)
         subject.send(:activations_from_server)
       end
-
     end
-
   end
-
 end

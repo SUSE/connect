@@ -3,7 +3,6 @@ require 'suse/toolkit/system_calls'
 
 module SUSE
   module Connect
-
     # helper methods for managing the SSL certificates
     class SSLCertificate
       extend SUSE::Toolkit::SystemCalls
@@ -48,8 +47,6 @@ module SUSE
       def self.format_digest(digest_class, cert)
         digest_class.new(cert.to_der).to_s.upcase.scan(/../).join(':')
       end
-
     end
-
   end
 end

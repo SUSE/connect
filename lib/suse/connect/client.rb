@@ -5,7 +5,6 @@ module SUSE
   module Connect
     # Client to interact with API
     class Client
-
       include SUSE::Toolkit::Utilities
       include Logger
 
@@ -136,9 +135,6 @@ module SUSE
         log.info "To server: #{@config.url}" if @config.url
         log.info "Using E-Mail: #{@config.email}" if @config.email
       end
-
     end
-
   end
-
 end

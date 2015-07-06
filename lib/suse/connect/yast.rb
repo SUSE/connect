@@ -1,12 +1,10 @@
 module SUSE
   module Connect
-
     # YaST class provides methods emulating SCC's API.
     # YaST call this class from:
     # https://github.com/yast/yast-registration/blob/master/src/lib/registration/registration.rb
     class YaST
       class << self
-
         # Returns a hash containing default configuration values.
         # Keys: :config_file_path, :scc_url, :server_cert_file_path, :update_certificates_script_path, :credentials_dir_path, :global_credentials_file_path
         # @return [Hash]
@@ -169,9 +167,7 @@ module SUSE
           config = SUSE::Connect::Config.new.merge!(client_params)
           Status.new(config)
         end
-
       end
     end
-
   end
 end

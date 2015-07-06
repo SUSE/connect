@@ -26,11 +26,9 @@ describe SUSE::Connect::SSLCertificate do
   end
 
   describe '.import' do
-
     let(:cert) { OpenSSL::X509::Certificate.new(test_cert) }
 
     it 'writes the PEM certificate into the system and activates it' do
-
       expect(File).to receive(:exist?).with(
         SUSE::Connect::SSLCertificate::SERVER_CERT_FILE
       ).and_return(false)
@@ -47,22 +45,19 @@ describe SUSE::Connect::SSLCertificate do
     end
 
     it 'gets to the underlying open3 call' do
-
       allow(File).to receive(:exist?).with(
-                          SUSE::Connect::SSLCertificate::SERVER_CERT_FILE
-                      ).and_return(false)
+        SUSE::Connect::SSLCertificate::SERVER_CERT_FILE
+      ).and_return(false)
 
       allow(File).to receive(:write).with(
-                          SUSE::Connect::SSLCertificate::SERVER_CERT_FILE,
-                          cert.to_pem
-                      )
+        SUSE::Connect::SSLCertificate::SERVER_CERT_FILE,
+        cert.to_pem
+      )
 
       expect(Open3).to receive(:capture3).with(shared_env_hash, '/usr/sbin/update-ca-certificates')
-                           .and_return(['', '', double(:exitstatus => 0)])
+        .and_return(['', '', double(:exitstatus => 0)])
 
       SUSE::Connect::SSLCertificate.import(cert)
     end
-
   end
-
 end

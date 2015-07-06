@@ -37,8 +37,8 @@ def stub_upgrade_call
     :release_type => nil
   }
   stub_request(:put, 'https://example.com/connect/systems/products')
-  .with(:headers => headers, :body => request_body)
-  .to_return(:status => 200, :body => response_body, :headers => {})
+    .with(:headers => headers, :body => request_body)
+    .to_return(:status => 200, :body => response_body, :headers => {})
 end
 
 def stub_products_call
@@ -63,16 +63,14 @@ def stub_deregister_call
   stub_request(:delete, 'https://example.com/connect/systems')
     .with(:headers => headers)
     .to_return(:status => 204, :body => '', :headers => {})
-
 end
 
 def stub_update_call
   headers = { 'Accept' => api_header_version, \
               'Authorization' => 'Basic: encodedgibberish' }
   stub_request(:put, 'https://example.com/connect/systems')
-  .with(:headers => headers)
-  .to_return(:status => 204, :body => '', :headers => {})
-
+    .with(:headers => headers)
+    .to_return(:status => 204, :body => '', :headers => {})
 end
 
 def stub_systems_services_call
@@ -80,8 +78,8 @@ def stub_systems_services_call
   headers = { 'Accept' => api_header_version, \
               'Authorization' => 'basic_auth_string' }
   stub_request(:get, 'https://example.com/connect/systems/services')
-  .with(:headers => headers)
-  .to_return(:status => 200, :body => response_body, :headers => {})
+    .with(:headers => headers)
+    .to_return(:status => 200, :body => response_body, :headers => {})
 end
 
 def stub_systems_subscriptions_call
@@ -89,8 +87,8 @@ def stub_systems_subscriptions_call
   headers = { 'Accept' => api_header_version, \
               'Authorization' => 'basic_auth_string' }
   stub_request(:get, 'https://example.com/connect/systems/subscriptions')
-  .with(:headers => headers)
-  .to_return(:status => 200, :body => response_body, :headers => {})
+    .with(:headers => headers)
+    .to_return(:status => 200, :body => response_body, :headers => {})
 end
 
 def stub_systems_activations_call
@@ -98,8 +96,8 @@ def stub_systems_activations_call
   headers = { 'Accept' => api_header_version, \
               'Authorization' => 'basic_auth_string' }
   stub_request(:get, 'https://example.com/connect/systems/activations')
-  .with(:headers => headers)
-  .to_return(:status => 200, :body => response_body, :headers => {})
+    .with(:headers => headers)
+    .to_return(:status => 200, :body => response_body, :headers => {})
 end
 
 def stub_system_migrations_call

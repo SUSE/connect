@@ -2,7 +2,6 @@ module SUSE
   module Toolkit
     # utility methods
     module Utilities
-
       include ::Net::HTTPHeader
 
       def token_auth(token)
@@ -24,7 +23,6 @@ module SUSE
         raise SUSE::Connect::CannotBuildBasicAuth,
               "Cannot read username and password from #{SUSE::Connect::Credentials::GLOBAL_CREDENTIALS_FILE}"
       end
-
     end
   end
 end

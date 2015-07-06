@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe SUSE::Connect::Zypper do
-
   before(:each) do
     Object.stub(system: true)
   end
@@ -15,10 +14,8 @@ describe SUSE::Connect::Zypper do
   include_context 'shared lets'
 
   describe '.installed_products' do
-
     context :sle11 do
       context :sp3 do
-
         let(:xml) { File.read('spec/fixtures/product_valid_sle11sp3.xml') }
 
         before do
@@ -41,13 +38,11 @@ describe SUSE::Connect::Zypper do
         it 'returns proper base product' do
           subject.base_product.identifier.should eq 'SUSE_SLES'
         end
-
       end
     end
 
     context :sle12 do
       context :sp0 do
-
         let(:xml) { File.read('spec/fixtures/product_valid_sle12sp0.xml') }
 
         before do
@@ -70,14 +65,11 @@ describe SUSE::Connect::Zypper do
         it 'returns proper base product' do
           subject.base_product.identifier.should eq 'SLES'
         end
-
       end
     end
-
   end
 
   describe '.add_service' do
-
     describe 'calls zypper with proper arguments' do
       it 'adds service' do
         addservice_args = "zypper --non-interactive addservice -t ris http://example.com 'branding'"
@@ -85,7 +77,6 @@ describe SUSE::Connect::Zypper do
         expect(Open3).to receive(:capture3).with(shared_env_hash, addservice_args).and_return(['', '', status])
         allow(Open3).to receive(:capture3).with(shared_env_hash, autorefresh_args).and_return(['', '', status])
         subject.add_service('http://example.com', 'branding')
-
       end
 
       it 'sets autorefresh flag' do
@@ -115,11 +106,9 @@ describe SUSE::Connect::Zypper do
 
       subject.add_service('http://example.com', 'branding')
     end
-
   end
 
   describe '.remove_service' do
-
     it 'calls zypper with proper arguments' do
       args = "zypper --non-interactive removeservice 'branding'"
       expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
@@ -136,7 +125,6 @@ describe SUSE::Connect::Zypper do
 
       subject.remove_service('branding')
     end
-
   end
 
   describe '.remove_all_suse_services' do
@@ -202,11 +190,9 @@ describe SUSE::Connect::Zypper do
       expect(subject.services.first.keys).to match_array([:alias, :autorefresh, :enabled, :name, :type, :url])
       expect(subject.services.map {|service| service[:name] }).to match_array(%w{scc_sles12 smt_sles12 legacy_sles12})
     end
-
   end
 
   describe '.refresh' do
-
     it 'calls zypper with proper arguments' do
       expect(Open3).to receive(:capture3).with(shared_env_hash, 'zypper --non-interactive refresh').and_return(['', '', status])
       subject.refresh
@@ -216,14 +202,12 @@ describe SUSE::Connect::Zypper do
       SUSE::Connect::System.filesystem_root = '/path/to/root'
 
       expect(Open3).to receive(:capture3).with(shared_env_hash, "zypper --root '/path/to/root' --non-interactive refresh")
-                           .and_return(['', '', status])
+        .and_return(['', '', status])
       subject.refresh
     end
-
   end
 
   describe '.refresh_services' do
-
     it 'calls zypper with proper arguments' do
       expect(Open3).to receive(:capture3).with(shared_env_hash, 'zypper --non-interactive refresh-services -r').and_return(['', '', status])
       subject.refresh_services
@@ -233,14 +217,12 @@ describe SUSE::Connect::Zypper do
       SUSE::Connect::System.filesystem_root = '/path/to/root'
 
       expect(Open3).to receive(:capture3).with(shared_env_hash, "zypper --root '/path/to/root' --non-interactive refresh-services -r")
-                       .and_return(['', '', status])
+        .and_return(['', '', status])
       subject.refresh_services
     end
-
   end
 
   describe '.base_product' do
-
     let :parsed_products do
       [
         SUSE::Connect::Zypper::Product.new(isbase: '1', name: 'SLES', productline: 'SLE_productline1', registerrelease: ''),
@@ -262,11 +244,9 @@ describe SUSE::Connect::Zypper do
       allow(Zypper).to receive(:installed_products).and_return([product])
       expect { Zypper.base_product }.to raise_error(CannotDetectBaseProduct)
     end
-
   end
 
   describe '.write_base_credentials' do
-
     mock_dry_file
 
     before do
@@ -277,11 +257,9 @@ describe SUSE::Connect::Zypper do
       Credentials.should_receive(:new).with('dummy', 'tummy', Credentials::GLOBAL_CREDENTIALS_FILE).and_call_original
       subject.write_base_credentials('dummy', 'tummy')
     end
-
   end
 
   describe '.write_service_credentials' do
-
     mock_dry_file
 
     before do
@@ -297,7 +275,6 @@ describe SUSE::Connect::Zypper do
       Credentials.should_receive(:new).with('dummy', 'tummy', 'turbo').and_call_original
       subject.write_service_credentials('turbo')
     end
-
   end
 
   describe '.distro_target' do
@@ -314,5 +291,4 @@ describe SUSE::Connect::Zypper do
       Zypper.distro_target.should eq 'openSUSE-13.1-x86_64'
     end
   end
-
 end

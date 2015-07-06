@@ -17,9 +17,9 @@ end
 group :test do
   gem 'rubocop', '~> 0.20.1', :require => false
   gem 'coveralls', :require => false
-  gem 'rspec', '~> 2.14'
-  gem 'webmock', '~> 1.15'
-  gem 'http', '>= 0.6.0'
+  gem 'rspec', '~> 3.3.0'
+  gem 'webmock', '~> 1.21.0'
+  gem 'http', '~> 0.8.12'
   gem 'aruba'
 end
 

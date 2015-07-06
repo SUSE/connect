@@ -89,5 +89,4 @@ describe SUSE::Connect::HwInfo::Base do
       expect(subject.s390?).to eql false
     end
   end
-
 end

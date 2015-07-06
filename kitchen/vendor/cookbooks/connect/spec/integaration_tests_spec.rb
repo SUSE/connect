@@ -9,7 +9,6 @@ describe 'connect::integration_tests' do
       user: 'root',
       group: 'root'
     )
-
   end
 
   it 'runs cucumber tests' do

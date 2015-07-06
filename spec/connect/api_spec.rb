@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe SUSE::Connect::Api do
-
   subject { SUSE::Connect::Api }
 
   let(:config) do
@@ -12,13 +11,12 @@ describe SUSE::Connect::Api do
            verify_callback: nil,
            debug: false,
            token: 'token-shmocken'
-    )
+          )
   end
 
   let(:client) { double('client', config: config) }
 
   describe '.new' do
-
     it 'require client object' do
       expect { subject.new }.to raise_error ArgumentError
     end
@@ -26,7 +24,6 @@ describe SUSE::Connect::Api do
     it 'require client object' do
       expect { subject.new(client) }.not_to raise_error
     end
-
   end
 
   describe 'announce_system' do
@@ -92,35 +89,29 @@ describe SUSE::Connect::Api do
     end
 
     context :hostname_detected do
-
       it 'sends a call with hostname' do
         payload = ['/connect/subscriptions/systems', auth: 'token', params: {
           hostname: 'connect', hwinfo: 'hwinfo', distro_target: 'HHH' }
-        ]
+                  ]
         Connection.any_instance.should_receive(:post).with(*payload).and_call_original
         subject.new(client).announce_system('token')
       end
-
     end
 
     context :no_hostname do
-
       it 'sends a call with ip when hostname is nil' do
         Socket.stub(gethostname: nil)
         Socket.stub(ip_address_list: [Addrinfo.ip('192.168.42.42')])
         payload = ['/connect/subscriptions/systems', auth: 'token', params: {
           hostname: '192.168.42.42', hwinfo: 'hwinfo', distro_target: 'HHH' }
-        ]
+                  ]
         Connection.any_instance.should_receive(:post).with(*payload).and_call_original
         subject.new(client).announce_system('token')
       end
-
     end
-
   end
 
   describe :systems do
-
     before do
       stub_systems_services_call
     end
@@ -128,7 +119,6 @@ describe SUSE::Connect::Api do
     mock_dry_file
 
     describe :services do
-
       it 'returns returns array of services as known by the system' do
         Connection.any_instance.should_receive(:get).with('/connect/systems/services', auth: 'basic_auth_string').and_call_original
         subject.new(client).system_services('basic_auth_string')
@@ -140,11 +130,9 @@ describe SUSE::Connect::Api do
         result.should be_kind_of Array
         result.first.keys.should eq %w{id name product}
       end
-
     end
 
     describe :subscriptions do
-
       before do
         stub_systems_subscriptions_call
       end
@@ -162,11 +150,9 @@ describe SUSE::Connect::Api do
         attr_ary += %w{system_limit systems_count virtual_count product_classes systems product_ids}
         result.first.keys.should eq attr_ary
       end
-
     end
 
     describe :activations do
-
       before do
         stub_systems_activations_call
       end
@@ -183,13 +169,10 @@ describe SUSE::Connect::Api do
         attr_ary = %w{id regcode type status starts_at expires_at system_id service}
         expect(result.first.keys).to eq attr_ary
       end
-
     end
-
   end
 
   describe 'activate_product' do
-
     let(:api_endpoint) { '/connect/systems/products' }
     let(:system_auth) { 'basic_auth_mock' }
 
@@ -222,11 +205,9 @@ describe SUSE::Connect::Api do
         .with(api_endpoint, auth: system_auth, params: payload)
       subject.new(client).activate_product(system_auth, product, email)
     end
-
   end
 
   describe 'upgrade_product' do
-
     let(:api_endpoint) { '/connect/systems/products' }
     let(:system_auth) { 'basic_auth_mock' }
     let(:product) { Remote::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64') }
@@ -234,16 +215,14 @@ describe SUSE::Connect::Api do
     it 'calls ConnectAPI with basic auth and params and receives a JSON in return' do
       stub_upgrade_call
       Connection.any_instance.should_receive(:put)
-      .with(api_endpoint, auth: system_auth, params: product.to_params)
-      .and_call_original
+        .with(api_endpoint, auth: system_auth, params: product.to_params)
+        .and_call_original
       response = subject.new(client).upgrade_product(system_auth, product)
       response.body['sources'].keys.first.should include('SUSE')
     end
-
   end
 
   describe 'system products' do
-
     before do
       stub_show_product_call
     end
@@ -271,7 +250,6 @@ describe SUSE::Connect::Api do
       body = subject.new(client).show_product('Basic: encodedgibberish', product).body
       body.should be_kind_of Hash
     end
-
   end
 
   describe '#system_migrations' do
@@ -332,7 +310,6 @@ describe SUSE::Connect::Api do
   end
 
   describe 'deregister' do
-
     before do
       stub_deregister_call
     end
@@ -362,7 +339,6 @@ describe SUSE::Connect::Api do
   end
 
   describe 'update_system' do
-
     before do
       stub_update_call
       System.stub(hostname: 'connect')
@@ -404,5 +380,4 @@ describe SUSE::Connect::Api do
       subject.new(client).update_system('Basic: encodedgibberish', nil, nil, namespace)
     end
   end
-
 end
