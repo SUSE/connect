@@ -1,11 +1,9 @@
 require 'spec_helper'
 
 describe SUSE::Connect::Remote::Service do
-
   subject { described_class }
 
   describe '.new' do
-
     let(:service) { subject.new(JSON.parse(File.read('spec/fixtures/activate_response.json'))) }
 
     it 'contains name' do
@@ -23,7 +21,5 @@ describe SUSE::Connect::Remote::Service do
     it 'contains product' do
       expect(service.product).to_not be_nil
     end
-
   end
-
 end

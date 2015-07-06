@@ -5,19 +5,19 @@ require 'cloud_vm'
 namespace :cloud do
   namespace :vm do
     desc 'Creates and starts new VM instance on cloud.suse.de; Optional parameter: name'
-    task :create, :name do |t, args|
+    task :create, :name do |_t, args|
       name = args.to_hash.key?(:name) ? args[:name] : 'SUSEConnect_testing'
       Cloud::VM.create(name)
     end
 
     desc 'Terminate VM instance on cloud.suse.de; Optional parameter: name'
-    task :terminate, :name do |t, args|
+    task :terminate, :name do |_t, args|
       name = args.to_hash.key?(:name) ? args[:name] : 'SUSEConnect_testing'
       Cloud::VM.destroy(name)
     end
 
     desc 'Deregister VM instance'
-    task :deregister do |t|
+    task :deregister do |_t|
       Cloud::VM.deregister!
     end
   end
@@ -25,7 +25,7 @@ end
 
 namespace :dotoscrc do
   desc 'Creates ~/.oscrc configuration file'
-  task :create, [:username, :password] do |t, args|
+  task :create, [:username, :password] do |_t, args|
     args = args.to_hash
     if args.key?(:username) && args.key?(:password)
       username = args[:username]
@@ -41,6 +41,5 @@ namespace :dotoscrc do
     else
       puts 'ERROR: Missing required parameters [:username, :password]'
     end
-
   end
 end

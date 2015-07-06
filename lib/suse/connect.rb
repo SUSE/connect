@@ -1,7 +1,6 @@
 module SUSE
   # All modules and classes of Connected nested
   module Connect
-
     require 'suse/connect/version'
     require 'suse/connect/logger'
     require 'suse/connect/errors'
@@ -33,11 +32,9 @@ module SUSE
     module Zypper
       require 'suse/connect/zypper/product'
     end
-
   end
   # Toolkit module holds useful tools to operate of various aspects of system data and collect needed info
   module Toolkit
     require 'suse/toolkit/curlrc_dotfile'
   end
-
 end

@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe SUSE::Connect::Remote::Product do
-
   subject do
     product = {
       'id' => 700,
@@ -22,7 +21,6 @@ describe SUSE::Connect::Remote::Product do
   end
 
   describe '#extensions' do
-
     it 'build as much nested extensions as returned by server' do
       subject = described_class.new('extensions' =>
         [
@@ -33,7 +31,7 @@ describe SUSE::Connect::Remote::Product do
             ]
           }
         ]
-      )
+                                   )
       expect(subject.extensions.size).to eq 1
       expect(subject.extensions.first.extensions.size).to eq 1
       expect(subject.extensions.first.extensions.first.extensions).to eq []
@@ -43,15 +41,12 @@ describe SUSE::Connect::Remote::Product do
       expect(subject.extensions.size).to eq 1
       expect(subject.extensions.first.identifier).to eq 'SLEEK-12-EXT'
     end
-
   end
 
   it_behaves_like 'server driven model'
 
   describe '#==' do
-
     context 'zypper product' do
-
       it 'is equal with zypper product if identifier, version and arch are equal' do
         zypper_product = Zypper::Product.new(:name => 'SLEEK-12', :version => '12', :arch => 'x86_64')
         expect(subject == zypper_product).to be true
@@ -81,11 +76,8 @@ describe SUSE::Connect::Remote::Product do
         [:foo, 'bar', 12, 12.5].each do |other|
           expect(subject == other).to be false
         end
-
       end
-
     end
-
   end
 
   describe '#to_params' do
@@ -93,5 +85,4 @@ describe SUSE::Connect::Remote::Product do
       expect(subject.to_params).to eq(identifier: 'SLEEK-12', version: '12', arch: 'x86_64', release_type: 'HP-CNB')
     end
   end
-
 end

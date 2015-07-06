@@ -2,7 +2,6 @@ require 'spec_helper'
 require 'suse/connect/hwinfo/x86'
 
 describe SUSE::Connect::HwInfo::X86 do
-
   subject { SUSE::Connect::HwInfo::X86 }
   let(:success) { double('Process Status', :exitstatus => 0) }
   let(:lscpu) { File.read(File.join(fixtures_dir, 'lscpu_phys.txt')) }
@@ -103,5 +102,4 @@ describe SUSE::Connect::HwInfo::X86 do
       end
     end
   end
-
 end

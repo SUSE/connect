@@ -15,7 +15,12 @@ SpaceInsideBlockBraces:
   EnforcedStyle: space
   SpaceBeforeBlockParameters: false
 
-EmptyLinesAroundBody:
+EmptyLinesAroundClassBody:
+  Description: "Keeps track of empty lines around class bodies."
+  Enabled: false
+
+EmptyLinesAroundModuleBody:
+  Description: "Keeps track of empty lines around module bodies."
   Enabled: false
 
 SignalException:

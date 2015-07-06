@@ -1,9 +1,7 @@
 RSpec.shared_examples 'server driven model' do
-
   subject { described_class }
 
   describe '.initialize' do
-
     it 'sets all the passed attributes assumed it is hash' do
       instance = subject.new('foo' => 'bar')
       expect(instance.foo).to eq 'bar'
@@ -17,7 +15,5 @@ RSpec.shared_examples 'server driven model' do
     it 'raises error if not hash passed to initializer' do
       expect { subject.new(:foo) }.to raise_error ArgumentError, /Only Hash instance accepted/
     end
-
   end
-
 end

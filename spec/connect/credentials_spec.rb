@@ -2,11 +2,9 @@ require 'spec_helper'
 require 'tmpdir'
 
 describe SUSE::Connect::Credentials do
-
   let(:credentials_file) { SUSE::Connect::Credentials::GLOBAL_CREDENTIALS_FILE }
 
   describe '.system_credentials_file' do
-
     it 'without root folder set' do
       expect(Credentials.system_credentials_file).to eq Credentials::GLOBAL_CREDENTIALS_FILE
     end
@@ -17,11 +15,9 @@ describe SUSE::Connect::Credentials do
       expect(Credentials.system_credentials_file).to eq expected
       SUSE::Connect::System.filesystem_root = nil
     end
-
   end
 
   describe '.read' do
-
     it 'creates Credentials object from a credentials file' do
       file = File.join(fixtures_dir, 'SCCcredentials')
       credentials = Credentials.read(file)
@@ -49,11 +45,9 @@ describe SUSE::Connect::Credentials do
         MalformedSccCredentialsFile,
         'Cannot parse credentials file')
     end
-
   end
 
   describe '#write' do
-
     it 'creates a credentials file accessible only by user' do
       Dir.mktmpdir do |dir|
         credentials = Credentials.new('name', '1234', "#{dir}/SLES")
@@ -90,7 +84,6 @@ describe SUSE::Connect::Credentials do
   end
 
   describe '#to_s' do
-
     it 'does not serialize password (to avoid logging it)' do
       user = 'USER'
       file = 'FOO_credentials'
@@ -100,7 +93,5 @@ describe SUSE::Connect::Credentials do
       expect(credentials_str).to include(user)
       expect(credentials_str).to include(file)
     end
-
   end
-
 end

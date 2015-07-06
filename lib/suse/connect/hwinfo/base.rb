@@ -3,9 +3,7 @@ include SUSE::Toolkit::SystemCalls
 module SUSE::Connect::HwInfo
   # Base class for hardware information collection
   class Base
-
     class << self
-
       def info
         if x86?
           require_relative 'x86'
@@ -37,8 +35,6 @@ module SUSE::Connect::HwInfo
       def x86?
         arch == 'x86_64'
       end
-
     end
-
   end
 end

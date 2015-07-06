@@ -53,6 +53,5 @@ class SUSE::Connect::HwInfo::X86 < SUSE::Connect::HwInfo::Base
         hash
       end
     end
-
   end
 end

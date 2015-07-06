@@ -5,7 +5,6 @@
 # vagrant box add openstack_box veewee/boxes/openstack.box --provider=openstack --force
 # vagrant up --provider=openstack
 
-
 @vm_name = ENV['VM_NAME'] || "jenkins_scc_connect_build_#{ENV['BUILD_NUMBER']}"
 @branch = `git rev-parse --abbrev-ref HEAD`.strip.empty? ? 'master' : `git rev-parse --abbrev-ref HEAD`.strip
 
@@ -42,5 +41,3 @@ Vagrant.configure('2') do |config|
     end
   end
 end
-
-

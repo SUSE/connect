@@ -2,7 +2,6 @@ module SUSE
   module Connect
     # Refinement for Rexml::Element which allows us simply to_hash elements and get products as array of hashes
     module RexmlRefinement
-
       REXML::Element.class_eval do
         def to_hash
           attributes.reduce({}) do |mem, attr|
@@ -11,7 +10,6 @@ module SUSE
           end
         end
       end
-
     end
   end
 end

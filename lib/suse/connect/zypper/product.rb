@@ -1,6 +1,5 @@
 # Product Extensions to give to YaST.
 class SUSE::Connect::Zypper::Product
-
   include SUSE::Toolkit::ProductEquality
 
   attr_reader :identifier, :version, :arch, :isbase, :release_type, :summary
@@ -26,5 +25,4 @@ class SUSE::Connect::Zypper::Product
       return product_hash[:registerrelease]
     end
   end
-
 end

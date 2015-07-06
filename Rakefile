@@ -26,7 +26,6 @@ end
 
 desc 'Build locally (prepare for pushing to ibs)'
 task :build do
-
   def gemfilename
     "suse-connect-#{SUSE::Connect::VERSION}.gem"
   end
@@ -41,18 +40,17 @@ task :build do
   sh 'ronn --roff --manual SUSEConnect --pipe SUSEConnect.8.ronn > SUSEConnect.8 && gzip -f SUSEConnect.8'
   sh 'ronn --roff --manual SUSEConnect --pipe SUSEConnect.5.ronn > SUSEConnect.5 && gzip -f SUSEConnect.5'
   sh 'osc -A https://api.suse.de build SLE_12 x86_64 --no-verify'
-
 end
 
 namespace :vm do
   desc 'Ssh into virtual machine'
-  task :ssh, :ip do |t, args|
+  task :ssh, :ip do |_t, args|
     system("echo -e | ssh vagrant@#{args[:args]}")
   end
 
   namespace :remotefs do
     desc 'Mount remote connect source code'
-    task :mount, :ip do |t, args|
+    task :mount, :ip do |_t, args|
       if args[:ip]
         options = '-o password_stdin -o uid=$(id -u) -o gid=$(id -g) -o auto_unmount'
         system "echo vagrant | sshfs vagrant@#{args[:ip]}:/tmp/connect /tmp/remotefs #{options}"

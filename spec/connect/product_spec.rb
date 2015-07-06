@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe SUSE::Connect::Product do
-
   describe '.transform' do
     it 'returns Product Class from Zypper products' do
       zypperprod = Zypper::Product.new(:name => 'SLES', :version => '12', :arch => 'x86_64')
@@ -22,7 +21,5 @@ describe SUSE::Connect::Product do
       expect(connectprod.arch).to eq(remoteprod.arch)
       expect(connectprod.release_type).to eq(remoteprod.release_type)
     end
-
   end
-
 end

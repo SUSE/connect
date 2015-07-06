@@ -2,11 +2,9 @@ require 'spec_helper'
 require 'rubygems'
 
 describe SUSE::Connect::Config do
-
   let(:config_file) { File.expand_path File.join(File.dirname(__FILE__), '../fixtures/SUSEConnect') }
 
   context 'class methods' do
-
     subject { SUSE::Connect::Config }
 
     after do
@@ -17,11 +15,9 @@ describe SUSE::Connect::Config do
       subject.serializable_attributes :baz, :buz
       expect(subject.serializable).to include :baz, :buz
     end
-
   end
 
   context 'instance methods' do
-
     subject { SUSE::Connect::Config }
 
     let(:config) { subject.new(config_file) }
@@ -56,7 +52,6 @@ describe SUSE::Connect::Config do
     end
 
     describe '#merge' do
-
       it 'overwrites attributes from passed hash' do
         allow_any_instance_of(subject).to receive(:read).and_return('insecure' => :stubval)
         conf = subject.new
@@ -77,18 +72,17 @@ describe SUSE::Connect::Config do
         allow_any_instance_of(subject).to receive(:read).and_return('insecure' => :base_value)
         conf = subject.new
         conf.merge!(
-            :url => 'http://smt.domain.local',
-            :language => 'DE',
-            :insecure => true,
-            :filesystem_root => '/docker/pool/2'
+          :url => 'http://smt.domain.local',
+          :language => 'DE',
+          :insecure => true,
+          :filesystem_root => '/docker/pool/2'
         )
         expect(conf.select_serializable_attributes).to eq(
-                                                           'url' => 'http://smt.domain.local',
-                                                           'insecure' => true,
-                                                           'language' => 'DE'
-                                                       )
+          'url' => 'http://smt.domain.local',
+          'insecure' => true,
+          'language' => 'DE'
+        )
       end
-
     end
 
     context '#merge!' do
@@ -116,16 +110,13 @@ describe SUSE::Connect::Config do
     end
 
     context '#write' do
-
       it 'writes configuration settings to YAML file' do
         File.should_receive(:write).with(config_file, config.to_yaml).and_return(0)
         config.write!
       end
-
     end
 
     context '#to_yaml' do
-
       it 'converts object attributes to yaml' do
         expect(YAML.load(config.to_yaml)).to_not be_empty
       end
@@ -134,7 +125,6 @@ describe SUSE::Connect::Config do
         config.regcode  = 'CRYTOP'
         expect(config.send(:select_serializable_attributes)).to_not include 'regcode'
       end
-
     end
   end
 end

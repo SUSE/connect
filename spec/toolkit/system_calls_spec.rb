@@ -2,7 +2,6 @@ require 'spec_helper'
 require 'suse/toolkit/system_calls'
 
 describe SUSE::Toolkit::SystemCalls do
-
   subject { Open3 }
   let(:date) { 'Fr 13. Jun 10:50:53 CEST 2014' }
   let(:success) { double('Process Status', :exitstatus => 0) }
@@ -17,7 +16,6 @@ describe SUSE::Toolkit::SystemCalls do
   end
 
   describe '.execute' do
-
     it 'should make a quiet system call' do
       subject.should_receive(:capture3).with(shared_env_hash, 'date').and_return([date, '', success])
       execute('date').should be nil
@@ -68,7 +66,5 @@ describe SUSE::Toolkit::SystemCalls do
         .and_return(['test', 'ABORT request', success])
       expect { execute('zypper --non-interactive refresh-services -r') }.to raise_error(SUSE::Connect::ZypperError, /ABORT request/)
     end
-
   end
-
 end

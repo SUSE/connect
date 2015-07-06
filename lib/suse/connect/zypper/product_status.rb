@@ -1,6 +1,5 @@
 # Product Extensions to give to YaST.
 class SUSE::Connect::Zypper::ProductStatus
-
   REGISTRATION_STATUS_MESSAGES = ['Registered', 'Not Registered']
 
   attr_reader :installed_product
@@ -31,5 +30,4 @@ class SUSE::Connect::Zypper::ProductStatus
       installed_product == remote_product
     end
   end
-
 end

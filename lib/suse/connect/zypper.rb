@@ -8,11 +8,9 @@ module SUSE
   module Connect
     # Implements zypper interaction
     module Zypper
-
       OEM_PATH  = '/var/lib/suseRegister/OEM'
 
       class << self
-
         include RexmlRefinement
         include SUSE::Toolkit::SystemCalls
 
@@ -88,7 +86,8 @@ module SUSE
         end
 
         def write_service_credentials(service_name)
-          login, password = System.credentials.username, System.credentials.password
+          login = System.credentials.username
+          password = System.credentials.password
           credentials = Credentials.new(login, password, service_name)
           credentials.write
         end
@@ -109,7 +108,6 @@ module SUSE
           cmd  = "zypper #{root_arg}#{args}"
           execute(cmd, quiet)
         end
-
       end
     end
   end
