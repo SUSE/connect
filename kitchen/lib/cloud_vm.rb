@@ -25,7 +25,7 @@ module Cloud
       def create(name = 'SUSEConnect_testing')
         image = connection.get_image('19724f29-9713-4277-b359-2029508acf16')
         flavor = connection.get_flavor(2)
-        address = connection.get_floating_ips.select {|ip| ip.instance_id.nil? }.first || connection.create_floating_ip
+        address = connection.get_floating_ips.find {|ip| ip.instance_id.nil? } || connection.create_floating_ip
 
         puts "*** Creating new '#{name}' VM ..."
         server = connection.create_server(:name => name, :imageRef => image.id, :flavorRef => flavor.id)
@@ -73,7 +73,6 @@ module Cloud
         rescue OpenStack::Exception::BadRequest
           sleep 5
           attach_ip(server, address)
-
       end
 
       def create_node_file(ip)

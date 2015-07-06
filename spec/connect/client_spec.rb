@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe SUSE::Connect::Client do
-
   let :config do
     SUSE::Connect::Config.new
   end
@@ -12,17 +11,13 @@ describe SUSE::Connect::Client do
   let(:string_logger) { ::Logger.new(StringIO.new) }
 
   describe '.new' do
-
     context :empty_opts do
-
       it 'should set url to default_url' do
         subject.config.url.should eq SUSE::Connect::Config::DEFAULT_URL
       end
-
     end
 
     context :passed_opts do
-
       it 'should set insecure flag from options if it was passed via constructor' do
         config.insecure = true
         client = Client.new(config)
@@ -40,11 +35,9 @@ describe SUSE::Connect::Client do
         client = Client.new(config)
         expect(client.config.foo).to eq 'bar'
       end
-
     end
 
     context :from_config do
-
       subject do
         SUSE::Connect::Client.new(SUSE::Connect::Config.new)
       end
@@ -68,15 +61,11 @@ describe SUSE::Connect::Client do
       it 'should set language to one from config file' do
         expect(subject.config.language).to eq 'RU'
       end
-
     end
-
   end
 
   describe '#announce_system' do
-
     context :direct_connection do
-
       subject do
         config.token = 'blabla'
         SUSE::Connect::Client.new(config)
@@ -117,13 +106,10 @@ describe SUSE::Connect::Client do
         File.should_receive(:readable?).with('/test').and_return(false)
         expect { subject.announce_system(nil, '/test') }.to raise_error(FileError, 'File not found')
       end
-
     end
 
     describe '#update_system' do
-
       context :direct_connection do
-
         subject { SUSE::Connect::Client.new(config) }
 
         before do
@@ -153,12 +139,10 @@ describe SUSE::Connect::Client do
           Api.any_instance.should_receive(:update_system).with('auth', 'my-distro-target', '')
           subject.update_system('my-distro-target', 'filepath')
         end
-
       end
     end
 
     context :registration_proxy_connection do
-
       subject do
         config.url = 'http://smt.local'
         SUSE::Connect::Client.new(config)
@@ -181,13 +165,10 @@ describe SUSE::Connect::Client do
         Api.any_instance.should_receive :announce_system
         subject.announce_system
       end
-
     end
-
   end
 
   describe '#activate_product' do
-
     let(:product_ident) { { identifier: 'SLES', version: '12', arch: 'x86_64' } }
 
     before do
@@ -218,11 +199,9 @@ describe SUSE::Connect::Client do
       service.name.should eq 'kinkat'
       service.url.should eq 'kinkaturl'
     end
-
   end
 
   describe '#upgrade_product' do
-
     let(:product_ident) { { identifier: 'SLES', version: '12', arch: 'x86_64' } }
 
     before do
@@ -247,11 +226,9 @@ describe SUSE::Connect::Client do
       service.name.should eq 'tongobongo'
       service.url.should eq 'tongobongourl'
     end
-
   end
 
   describe '#register!' do
-
     before do
       Zypper.stub(base_product: Zypper::Product.new(name: 'SLE_BASE'))
       System.stub(add_service: true)
@@ -309,11 +286,9 @@ describe SUSE::Connect::Client do
       client.register!
       SUSE::Connect::GlobalLogger.instance.log = default_logger
     end
-
   end
 
   describe '#show_product' do
-
     let(:stubbed_response) do
       OpenStruct.new(
         code: 200,
@@ -337,7 +312,6 @@ describe SUSE::Connect::Client do
       subject.api.should_receive(:show_product).with('Basic: encodedstring', product).and_return stubbed_response
       subject.show_product(product).should be_kind_of Remote::Product
     end
-
   end
 
   describe '#system_migrations' do
@@ -416,9 +390,9 @@ describe SUSE::Connect::Client do
   describe '#systems_services' do
     let(:stubbed_response) do
       OpenStruct.new(
-          code: 204,
-          body: nil,
-          success: true
+        code: 204,
+        body: nil,
+        success: true
       )
     end
 
@@ -435,9 +409,9 @@ describe SUSE::Connect::Client do
   describe '#systems_subscriptions' do
     let(:stubbed_response) do
       OpenStruct.new(
-          code: 204,
-          body: nil,
-          success: true
+        code: 204,
+        body: nil,
+        success: true
       )
     end
 
@@ -452,12 +426,11 @@ describe SUSE::Connect::Client do
   end
 
   describe '#systems_activations' do
-
     let(:stubbed_response) do
       OpenStruct.new(
-          code: 200,
-          body: nil,
-          success: true
+        code: 200,
+        body: nil,
+        success: true
       )
     end
 
@@ -469,7 +442,5 @@ describe SUSE::Connect::Client do
       expect(subject.api).to receive(:system_activations).with('Basic: encodedstring').and_return stubbed_response
       subject.system_activations
     end
-
   end
-
 end

@@ -1,11 +1,9 @@
 require 'spec_helper'
 
 describe SUSE::Connect::Connection do
-
   subject { SUSE::Connect::Connection }
 
   describe '.new' do
-
     let :secure_connection do
       subject.new('https://example.com')
     end
@@ -20,7 +18,6 @@ describe SUSE::Connect::Connection do
     end
 
     context :proxy_detected do
-
       before do
         allow_any_instance_of(Net::HTTP).to receive(:proxy?).and_return(true)
         allow_any_instance_of(SUSE::Toolkit::CurlrcDotfile).to receive(:username).and_return('robot')
@@ -34,11 +31,9 @@ describe SUSE::Connect::Connection do
       it 'sets proxy_pass to curlrc extracted password' do
         expect(subject.new('https://example.com').http.proxy_pass).to eq 'gobot'
       end
-
     end
 
     context :default_values do
-
       it 'set ssl to true by default' do
         secure_connection.http.use_ssl?.should be true
       end
@@ -67,12 +62,11 @@ describe SUSE::Connect::Connection do
         # call the default callbak
         expect(secure_connection.http.verify_callback.call(false, context)).to be false
       end
-
     end
 
     context :passed_options do
       # just an empty lambda function
-      let(:callback) { ->(p1, p2) {} }
+      let(:callback) { ->(_p1, _p2) {} }
 
       let :secure_connection do
         subject.new('https://example.com', :insecure => true, :verify_callback => callback)
@@ -89,13 +83,10 @@ describe SUSE::Connect::Connection do
       it 'sets the provided verify_callback' do
         expect(secure_connection.http.verify_callback).to be callback
       end
-
     end
-
   end
 
   describe '?json_request' do
-
     let :connection do
       subject.new('https://leg')
     end
@@ -106,52 +97,43 @@ describe SUSE::Connect::Connection do
     end
 
     context :get_request do
-
       it 'takes Net::HTTP::Get class to build request' do
         Net::HTTP::Get.should_receive(:new).and_call_original
         connection.send(:json_request, :get, '/api/v1/megusta')
       end
-
     end
 
     context :post_request do
-
       it 'takes Net::HTTP::Post class to build request' do
         Net::HTTP::Post.should_receive(:new).and_call_original
         connection.send(:json_request, :post, '/api/v1/megusta')
       end
-
     end
 
     context :put_request do
-
       it 'takes Net::HTTP::Put class to build request' do
         Net::HTTP::Put.should_receive(:new).and_call_original
         connection.send(:json_request, :put, '/api/v1/megusta')
       end
-
     end
 
     context :delete_request do
-
       it 'takes Net::HTTP::Delete class to build request' do
         Net::HTTP::Delete.should_receive(:new).and_call_original
         connection.send(:json_request, :delete, '/api/v1/megusta')
       end
-
     end
   end
 
   describe '#post' do
-
     let :connection do
       subject.new('https://example.com')
     end
 
     before do
       stub_request(:post, 'https://example.com/api/v1/test')
-      .with(:body => '', :headers => { 'Authorization' => 'Token token=zulu' })
-      .to_return(:status => 200, :body => '{}', :headers => {})
+        .with(:body => '', :headers => { 'Authorization' => 'Token token=zulu' })
+        .to_return(:status => 200, :body => '{}', :headers => {})
     end
 
     it 'hits requested endpoint with parametrized request' do
@@ -162,8 +144,8 @@ describe SUSE::Connect::Connection do
 
     it 'sends Accept-Language header with specified language' do
       stub_request(:post, 'https://example.com/api/v1/test')
-      .with(:body => '', :headers => { 'Authorization' => 'Token token=zulu', 'Accept-Language' => 'blabla' })
-      .to_return(:status => 200, :body => '{}', :headers => {})
+        .with(:body => '', :headers => { 'Authorization' => 'Token token=zulu', 'Accept-Language' => 'blabla' })
+        .to_return(:status => 200, :body => '{}', :headers => {})
 
       connection = subject.new('https://example.com', :language => 'blabla')
       result = connection.post('/api/v1/test', :auth => 'Token token=zulu')
@@ -172,9 +154,9 @@ describe SUSE::Connect::Connection do
 
     it 'sends Accept header with api versioning' do
       stub_request(:post, 'https://example.com/api/v1/test')
-      .with(:body => '', :headers => { 'Authorization' => 'Token token=zulu', \
-                                       'Accept' => 'application/json,application/vnd.scc.suse.com.v1+json' })
-      .to_return(:status => 200, :body => '{}', :headers => {})
+        .with(:body => '', :headers => { 'Authorization' => 'Token token=zulu', \
+                                         'Accept' => 'application/json,application/vnd.scc.suse.com.v1+json' })
+        .to_return(:status => 200, :body => '{}', :headers => {})
 
       connection = subject.new('https://example.com')
       result = connection.post('/api/v1/test', :auth => 'Token token=zulu')
@@ -199,7 +181,6 @@ describe SUSE::Connect::Connection do
     end
 
     it 'converts response into proper hash' do
-
       stub_request(:post, 'https://example.com/api/v1/test')
         .with(:body => '', :headers => { 'Authorization' => 'Token token=zulu' })
         .to_return(:status => 200, :body => "{\"keyyo\":\"vallue\"}", :headers => {})
@@ -213,8 +194,8 @@ describe SUSE::Connect::Connection do
       api_version = SUSE::Connect::Api::VERSION
 
       stub_request(:post, 'https://example.com/api/v1/test')
-      .with(:body => '', :headers => { 'Authorization' => 'Token token=zulu' })
-      .to_return(:status => 200, :body => '{}', :headers => { 'scc-api-version' => api_version })
+        .with(:body => '', :headers => { 'Authorization' => 'Token token=zulu' })
+        .to_return(:status => 200, :body => '{}', :headers => { 'scc-api-version' => api_version })
 
       connection = subject.new('https://example.com')
       result = connection.post('/api/v1/test', :auth => 'Token token=zulu')
@@ -223,29 +204,27 @@ describe SUSE::Connect::Connection do
     end
 
     it 'send params alongside with request' do
-
       stub_request(:post, 'https://example.com/api/v1/test')
         .with(:body => "{\"foo\":\"bar\",\"bar\":[1,3,4]}", :headers => { 'Authorization' => 'Token token=zulu' })
         .to_return(:status => 200, :body => "{\"keyyo\":\"vallue\"}", :headers => {})
 
       result = connection.post(
-          '/api/v1/test',
-          :auth => 'Token token=zulu',
-          :params => { :foo => 'bar', :bar => [1, 3, 4] }
+        '/api/v1/test',
+        :auth => 'Token token=zulu',
+        :params => { :foo => 'bar', :bar => [1, 3, 4] }
       )
       result.body.should eq('keyyo' => 'vallue')
       result.code.should eq 200
     end
 
     it 'accepts empty request body' do
-
       stub_request(:delete, 'https://example.com/api/v1/test')
         .with(:headers => { 'Authorization' => 'Token token=zulu' })
         .to_return(:status => 204, :body => nil, :headers => {})
 
       result = connection.delete(
-          '/api/v1/test',
-          :auth => 'Token token=zulu'
+        '/api/v1/test',
+        :auth => 'Token token=zulu'
       )
 
       expect(result.body).to be_nil
@@ -254,14 +233,14 @@ describe SUSE::Connect::Connection do
 
     it 'raise an ApiError if response code anything but 200' do
       stub_request(:post, 'https://example.com/api/v1/test')
-      .with(
+        .with(
           :body => '',
           :headers => { 'Authorization' => 'Token token=zulu' }
-      )
-      .to_return(
+        )
+        .to_return(
           :status => 422,
           :body => '{}'
-      )
+        )
 
       expect do
         connection.post(
@@ -274,13 +253,13 @@ describe SUSE::Connect::Connection do
 
     it 'raise an error with response from api if response code anything but 200' do
       parsed_output = OpenStruct.new(
-          :code => 422,
-          :body => { 'error' => 'These are not the droids you were looking for' }
+        :code => 422,
+        :body => { 'error' => 'These are not the droids you were looking for' }
       )
 
       connection.should_receive(:json_request).and_return parsed_output
       expect { connection.post('/api/v1/test', :auth   => 'Token token=zulu', :params => {}) }
-      .to raise_error(ApiError) do |error|
+        .to raise_error(ApiError) do |error|
         error.code.should eq 422
         error.response.body.should eq('error' => 'These are not the droids you were looking for')
       end

@@ -5,7 +5,6 @@ require 'suse/toolkit/product_equality'
 # Used by YaST already, do not refactor without consulting them!
 # Reads attributes (i.e. calls #identifier, #version, #arch)
 class SUSE::Connect::Remote::Product < SUSE::Connect::Remote::ServerDrivenModel
-
   include SUSE::Toolkit::ProductEquality
 
   def initialize(product_hash)
@@ -22,5 +21,4 @@ class SUSE::Connect::Remote::Product < SUSE::Connect::Remote::ServerDrivenModel
       release_type: release_type
     }
   end
-
 end

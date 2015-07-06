@@ -3,19 +3,16 @@ require 'singleton'
 
 module SUSE
   module Connect
-
     # the default logger
     class DefaultLogger < ::Logger
-
       def initialize(*args)
         super(*args)
         self.level = ::Logger::INFO
         # by default log only the message
-        self.formatter = proc do |severity, datetime, progname, msg|
+        self.formatter = proc do |_severity, _datetime, _progname, msg|
           "#{msg}\n"
         end
       end
-
     end
 
     # Singleton log instance used by SUSE::Connect::Logger module
@@ -26,7 +23,6 @@ module SUSE
     # Used by YaST already, do not refactor without consulting them!
     # Passing the YaST logger for writing the log to /var/log/YaST2/y2log (#log=)
     class GlobalLogger
-
       include Singleton
 
       attr_accessor :log
@@ -34,7 +30,6 @@ module SUSE
       def initialize
         @log = DefaultLogger.new($stdout)
       end
-
     end
 
     # Module provides access to specific logging. To set logging see GlobalLogger.
@@ -52,7 +47,6 @@ module SUSE
     #     end
     #   end
     module Logger
-
       def log
         GlobalLogger.instance.log
       end
@@ -61,6 +55,5 @@ module SUSE
         base.extend self
       end
     end
-
   end
 end

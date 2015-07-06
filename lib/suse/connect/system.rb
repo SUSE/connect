@@ -3,7 +3,6 @@ module SUSE
     # System class allowing to interact with underlying system
     class System
       class << self
-
         attr_accessor :filesystem_root
 
         def prefix_path(path)
@@ -22,8 +21,6 @@ module SUSE
         def credentials
           if File.exist?(Credentials.system_credentials_file)
             Credentials.read(Credentials.system_credentials_file)
-          else
-            nil
           end
         end
 
@@ -61,7 +58,7 @@ module SUSE
           else
             # Fix for bnc#889869
             # Sending (and storing on our servers) the public IPs would be a privacy violation
-            addr_info = Socket.ip_address_list.find {|intf| intf.ipv4_private? }
+            addr_info = Socket.ip_address_list.find(&:ipv4_private?)
             addr_info.ip_address if addr_info
           end
         end
@@ -72,7 +69,6 @@ module SUSE
           raise(FileError, 'File not found') unless File.readable?(file_path)
           File.read(file_path)
         end
-
       end
     end
   end

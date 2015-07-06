@@ -3,7 +3,6 @@ require 'pathname'
 
 module SUSE
   module Connect
-
     # Class for handling credentials
     # It can read the global credentials (/etc/zypp/credentials.d/SCCcredentials)
     # or the services credentials
@@ -11,7 +10,6 @@ module SUSE
     # Used by YaST already, do not refactor without consulting them!
     # (Reading and writing (#read, #write), reading/writing the attributes (#file, #username, #password))
     class Credentials
-
       include Logger
 
       DEFAULT_CREDENTIALS_DIR = '/etc/zypp/credentials.d'
@@ -70,7 +68,6 @@ module SUSE
 
       # parse a credentials file content
       def self.parse(input)
-
         if input.match(/^\s*username\s*=\s*(\S+)\s*$/)
           user = Regexp.last_match(1)
         else
@@ -90,7 +87,6 @@ module SUSE
       def serialize
         "username=#{username}\npassword=#{password}\n"
       end
-
     end
   end
 end

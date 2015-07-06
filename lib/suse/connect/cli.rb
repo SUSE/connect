@@ -78,7 +78,6 @@ module SUSE
       private
 
       def extract_options # rubocop:disable MethodLength
-
         @opts = OptionParser.new
 
         @opts.separator 'Register SUSE Linux Enterprise installations with the SUSE Customer Center.'
@@ -91,7 +90,6 @@ module SUSE
                  '  Enterprise product on this system.',
                  '  Product identifiers can be obtained with \'zypper products\'',
                  '  Format: <internal name>/<version>/<architecture>') do |opt|
-
           check_if_param(opt, 'Please provide a product identifier')
           # rubocop:disable RegexpLiteral
           check_if_param((opt =~ /\S+\/\S+\/\S+/), 'Please provide the product identifier in this format: ' \
@@ -110,7 +108,7 @@ module SUSE
         end
 
         @opts.on('-d', '--de-register', 'De-registers a system in order to not consume a subscription slot in SCC anymore',
-                 ' and removes all services installed by SUSEConnect') do |opt|
+                 ' and removes all services installed by SUSEConnect') do |_opt|
           @options[:deregister] = true
         end
 
@@ -137,19 +135,19 @@ module SUSE
           @options[:namespace] = opt
         end
 
-        @opts.on('-s', '--status', 'get current system registration status in json format') do |opt|
+        @opts.on('-s', '--status', 'get current system registration status in json format') do |_opt|
           @options[:status] = true
         end
 
-        @opts.on('--status-text', 'get current system registration status in text format') do |opt|
+        @opts.on('--status-text', 'get current system registration status in text format') do |_opt|
           @options[:status_text] = true
         end
 
-        @opts.on('--write-config', 'write options to config file at /etc/SUSEConnect') do |opt|
+        @opts.on('--write-config', 'write options to config file at /etc/SUSEConnect') do |_opt|
           @options[:write_config] = true
         end
 
-        @opts.on('--cleanup', 'remove old system credentials and all zypper services installed by SUSEConnect') do |opt|
+        @opts.on('--cleanup', 'remove old system credentials and all zypper services installed by SUSEConnect') do |_opt|
           @options[:cleanup] = true
         end
 
@@ -189,7 +187,6 @@ module SUSE
           exit 1
         end
       end
-
     end
   end
 end

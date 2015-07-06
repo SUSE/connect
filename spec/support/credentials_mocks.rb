@@ -1,5 +1,4 @@
 def mock_dry_file
-
   let :source_cred_file do
     opened_file = double('me_file')
     opened_file.stub(:puts => true)
@@ -18,7 +17,6 @@ def mock_dry_file
     Dir.stub(:mkdir => true)
     SUSE::Connect::System.stub(:credentials => Credentials.new('dummy', 'tummy'))
   end
-
 end
 
 def fixtures_dir

@@ -108,6 +108,7 @@ Then(/^SUSEConnect library should be able to retrieve the product information$/)
 
   extensions = [
     'Advanced Systems Management Module 12 x86_64',
+    'Containers Module 12 x86_64',
     'Legacy Module 12 x86_64',
     'Public Cloud Module 12 x86_64',
     'SUSE Cloud for SLE 12 Compute Nodes 5 x86_64',

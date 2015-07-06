@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe SUSE::Connect::System do
-
   let(:credentials_file) { Credentials::GLOBAL_CREDENTIALS_FILE }
 
   before(:each) do
@@ -18,9 +17,7 @@ describe SUSE::Connect::System do
   end
 
   describe '.credentials' do
-
     context :credentials_exist do
-
       let :stub_ncc_cred_file do
         stub_creds_file = double('me_file')
         stub_creds_file.stub(:close)
@@ -42,11 +39,9 @@ describe SUSE::Connect::System do
         subject.credentials.username.should eq 'bill'
         subject.credentials.password.should eq 'nevermore'
       end
-
     end
 
     context :credentials_not_exist do
-
       before(:each) do
         File.should_receive(:exist?).with(credentials_file).and_return(false)
       end
@@ -54,11 +49,9 @@ describe SUSE::Connect::System do
       it 'should produce log message' do
         subject.credentials.should be_nil
       end
-
     end
 
     context :remove_credentials do
-
       before(:each) do
         subject.should_receive(:credentials?).and_return(true)
         File.should_receive(:delete).with(credentials_file).and_return(true)
@@ -67,12 +60,10 @@ describe SUSE::Connect::System do
       it 'should remove credentials file' do
         subject.remove_credentials.should be true
       end
-
     end
   end
 
   describe '.credentials?' do
-
     it 'returns false if no credentials' do
       subject.stub(credentials: nil)
       subject.credentials?.should be false
@@ -85,7 +76,6 @@ describe SUSE::Connect::System do
   end
 
   describe '.activated_base_product?' do
-
     it 'returns false if sytem does not have a credentials' do
       subject.stub(:credentials? => false)
       subject.activated_base_product?.should be false
@@ -109,7 +99,6 @@ describe SUSE::Connect::System do
   end
 
   describe '.add_service' do
-
     before(:each) do
       Zypper.stub(:write_service_credentials)
       Credentials.any_instance.stub(:write)
@@ -178,7 +167,6 @@ describe SUSE::Connect::System do
   end
 
   describe '.read_file' do
-
     it 'reads file' do
       instance_file_path = 'spec/fixtures/instance_data.xml'
       subject.read_file(instance_file_path).should eq File.read(instance_file_path)
@@ -187,7 +175,5 @@ describe SUSE::Connect::System do
     it 'raises on unreadable file' do
       expect { subject.read_file('/not_available_path') }.to raise_error(FileError, 'File not found')
     end
-
   end
-
 end
