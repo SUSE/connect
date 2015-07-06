@@ -39,6 +39,11 @@ module SUSE
         puts status_output
       end
 
+      def system_products
+        products = installed_products + activated_products
+        products.map {|product| Product.transform(product) }
+      end
+
       private
 
       def text_product_status
