@@ -40,7 +40,7 @@ module SUSE
 
       def system_products
         products = installed_products + activated_products
-        products.map {|product| Product.transform(product) }
+        products.map {|product| Product.transform(product) }.uniq
       end
 
       private
