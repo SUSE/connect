@@ -1,4 +1,5 @@
 require 'suse/toolkit/product_equality'
+require 'suse/toolkit/cast'
 
 # Product as sent from registration server
 #
@@ -6,6 +7,7 @@ require 'suse/toolkit/product_equality'
 # Reads attributes (i.e. calls #identifier, #version, #arch)
 class SUSE::Connect::Remote::Product < SUSE::Connect::Remote::ServerDrivenModel
   include SUSE::Toolkit::ProductEquality
+  include SUSE::Toolkit::Cast
 
   def initialize(product_hash)
     super
