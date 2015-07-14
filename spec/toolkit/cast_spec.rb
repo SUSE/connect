@@ -6,7 +6,7 @@ class DummyReceiver < OpenStruct
 end
 
 describe SUSE::Toolkit::Cast do
-  subject { DummyReceiver.new({ a: 1, b: 2, c: [DummyReceiver.new(x: 7, y: 8)] }) }
+  subject { DummyReceiver.new(a: 1, b: 2, c: [DummyReceiver.new(x: 7, y: 8)]) }
 
   describe '.to_openstruct' do
     it 'casts an object to openstruct' do
