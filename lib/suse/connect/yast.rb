@@ -92,6 +92,14 @@ module SUSE
           status(client_params).activated_products.include?(product)
         end
 
+        # Returns activated products on the system
+        # @param [Hash] client_params parameters to instantiate {Client}
+        # @return [Array <OpenStruct>] the list of activated products
+        def activated_products(client_params = {})
+          config = SUSE::Connect::Config.new.merge!(client_params)
+          Status.new(config).activated_products.map(&:to_openstruct)
+        end
+
         # Lists all available upgrade paths for a given list of products
         # Accepts an array of products, and returns an array of possible
         # upgrade paths. An upgrade path is a list of products that may

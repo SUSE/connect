@@ -174,6 +174,15 @@ describe SUSE::Connect::YaST do
     end
   end
 
+  describe '#activated_products' do
+    let(:remote_product) { Remote::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64', release_type: 'HP-CNB') }
+
+    it 'returns an array of activated system products' do
+      expect_any_instance_of(SUSE::Connect::Status).to receive(:activated_products).and_return([remote_product])
+      expect(SUSE::Connect::YaST.activated_products).to match_array([remote_product.to_openstruct])
+    end
+  end
+
   describe '#system_migrations' do
     let(:products) do
       [
