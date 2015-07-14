@@ -12,8 +12,8 @@ module SUSE
 
       def attributes
         attributes = to_h
-        attributes.each do |k, v|
-          attributes[k] = v.map(&:to_h) if v.is_a?(Array) && v.any? {|v| v.is_a?(OpenStruct) }
+        attributes.each do |key, value|
+          attributes[key] = value.map(&:to_h) if value.is_a?(Array) && value.any? {|v| v.is_a?(OpenStruct) }
         end
         attributes
       end
@@ -21,6 +21,7 @@ module SUSE
   end
 end
 
+# Extends a Hash class with a to_openstruct method
 class Hash
   def to_openstruct
     OpenStruct.new self
