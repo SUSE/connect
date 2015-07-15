@@ -1,3 +1,6 @@
+require 'suse/connect/core_ext/hash_refinement'
+using SUSE::Connect::CoreExt::HashRefinement
+
 module SUSE
   module Toolkit
     # Object conversion
@@ -18,12 +21,5 @@ module SUSE
         attributes
       end
     end
-  end
-end
-
-# Extends a Hash class with a to_openstruct method
-class Hash
-  def to_openstruct
-    OpenStruct.new self
   end
 end
