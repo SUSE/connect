@@ -20,7 +20,7 @@ Vagrant.configure('2') do |config|
       os.username     = ENV['CLOUD_USER']
       os.api_key      = ENV['CLOUD_PASS']
 
-      os.tenant = 'appliances'
+      os.tenant = 'scc'
       os.flavor       = 'm1.small'
       os.image        = /scc-connect-testing-sles-rc3/
       os.networks     = ['fixed']
