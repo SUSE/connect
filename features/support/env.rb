@@ -17,3 +17,9 @@ end
 After('@libzypplocked') do
   `rm /var/run/zypp.pid`
 end
+
+Before('@yast') do
+  # needed only for the YaST integration tests
+  require 'yast'
+  require 'registration/registration'
+end
