@@ -19,7 +19,7 @@ describe SUSE::Connect::HwInfo::S390 do
     SUSE::Connect::HwInfo::S390.instance_variable_set('@output', nil)
   end
 
-  it 'returns a hwinfo hash for x86/x86_64 systems' do
+  it 'returns a hwinfo hash for s390 systems' do
     expect(Open3).to receive(:capture3).with(shared_env_hash, 'read_values -u').and_return(['', '', success])
 
     hwinfo = subject.hwinfo
