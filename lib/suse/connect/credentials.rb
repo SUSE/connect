@@ -1,5 +1,6 @@
 require 'fileutils'
 require 'pathname'
+require 'suse/toolkit/cast'
 
 module SUSE
   module Connect
@@ -11,6 +12,7 @@ module SUSE
     # (Reading and writing (#read, #write), reading/writing the attributes (#file, #username, #password))
     class Credentials
       include Logger
+      include SUSE::Toolkit::Cast
 
       DEFAULT_CREDENTIALS_DIR = '/etc/zypp/credentials.d'
       GLOBAL_CREDENTIALS_FILE = File.join(DEFAULT_CREDENTIALS_DIR, 'SCCcredentials')
@@ -62,6 +64,11 @@ module SUSE
         contents[:password] = '[FILTERED]'.inspect
         contents[:file]     = file.inspect
         format('#<%{class}:%{id} @username=%{username}, @password=%{password}, @file=%{file}>', contents)
+      end
+
+      # Returns a hash representation of the object
+      def to_h
+        { username: username, password: password, file: file }
       end
 
       private
