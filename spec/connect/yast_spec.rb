@@ -147,31 +147,43 @@ describe SUSE::Connect::YaST do
 
   describe '#show_product' do
     let(:product) { Remote::Product.new(identifier: 'tango') }
-    let(:client_params) { { :foo => 'oink' } }
+    let(:client_params) { { foo: 'oink' } }
 
-    before { Client.any_instance.stub :show_product }
-
-    it 'calls list_products on an instance of Client' do
-      Client.any_instance.should_receive(:show_product)
+    it 'calls show_product on an instance of Client' do
+      expect_any_instance_of(Client).to receive(:show_product).with(product).and_return product
       subject.show_product product
     end
 
     it 'forwards all params to an instance of Client' do
-      Client.should_receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
-      Client.any_instance.should_receive(:show_product)
+      config = SUSE::Connect::Config.new.merge!(client_params)
+
+      expect_any_instance_of(SUSE::Connect::Config).to receive(:merge!).with(client_params).and_call_original
+      expect(Client).to receive(:new).with(config).and_call_original
+      expect_any_instance_of(Client).to receive(:show_product).with(product).and_return product
+
       subject.show_product product, client_params
     end
 
     it 'falls back to use an empty Hash as params if none are specified' do
-      Client.should_receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
-      Client.any_instance.should_receive(:show_product)
+      expect_any_instance_of(SUSE::Connect::Config).to receive(:merge!).with({}).and_call_original
+      expect(Client).to receive(:new).with(SUSE::Connect::Config.new).and_call_original
+      expect_any_instance_of(Client).to receive(:show_product).and_return product
+
       subject.show_product product
     end
 
     it 'uses product as parameter for Client#list_products' do
-      Client.should_receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
-      Client.any_instance.should_receive(:show_product).with(product)
+      expect(Client).to receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
+      expect_any_instance_of(Client).to receive(:show_product).with(product).and_return product
+
       subject.show_product product
+    end
+
+    it 'returns product as an instance of OpenStruct' do
+      expect(Client).to receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
+      expect_any_instance_of(Client).to receive(:show_product).with(product).and_return product
+
+      expect(subject.show_product(product)).to be_kind_of(OpenStruct)
     end
   end
 
