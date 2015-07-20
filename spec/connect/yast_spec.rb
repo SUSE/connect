@@ -120,6 +120,31 @@ describe SUSE::Connect::YaST do
     end
   end
 
+  describe '.credentials' do
+    let(:login) { 'login' }
+    let(:password) { 'password' }
+    let(:system_credentials) { Credentials.new(login, password, subject::GLOBAL_CREDENTIALS_FILE) }
+
+    context 'with no arguments' do
+      it 'reads system credentials file' do
+        expect(Credentials).to receive(:read).with(subject::GLOBAL_CREDENTIALS_FILE).and_return(system_credentials)
+        subject.credentials
+      end
+    end
+
+    context 'with credentials_file argument' do
+      it 'reads credentials from given path' do
+        expect(Credentials).to receive(:read).with('/tmp/credentials').and_return(system_credentials)
+        subject.credentials('/tmp/credentials')
+      end
+    end
+
+    it 'returns an OpenStruct instance' do
+      expect(Credentials).to receive(:read).with(subject::GLOBAL_CREDENTIALS_FILE).and_return(system_credentials)
+      expect(subject.credentials).to be_kind_of(OpenStruct)
+    end
+  end
+
   describe '.create_credentials_file' do
     let(:login) { 'login' }
     let(:password) { 'password' }

@@ -68,6 +68,16 @@ module SUSE
           Client.new(config).upgrade_product(product)
         end
 
+        # Reads credentials file.
+        # Returns the credentials object with login, password and credentials file
+        #
+        # @param [String] Path to credentials file - defaults to /etc/zypp/credentials.d/SCCcredentials
+        #
+        # @return [OpenStruct] Credentials object as openstruct
+        def credentials(credentials_file = GLOBAL_CREDENTIALS_FILE)
+          Credentials.read(credentials_file).to_openstruct
+        end
+
         # Creates the system or zypper service credentials file with given login and password.
         # Returns the number of bytes written.
         #
@@ -88,7 +98,7 @@ module SUSE
         # @param product [OpenStruct] product to list extensions for
         # @param [Hash] client_params parameters to instantiate {Client}
         #
-        # @return [OpenStruct] {Product}s from registration server with all extensions included
+        # @return [OpenStruct] {Product} from registration server with all extensions included
         def show_product(product, client_params = {})
           config = SUSE::Connect::Config.new.merge!(client_params)
           Client.new(config).show_product(product).to_openstruct
