@@ -76,7 +76,7 @@ module SUSE
         # @param [String] credentials_file - defaults to /etc/zypp/credentials.d/SCCcredentials
         #
         # @return [Integer] number of written bytes
-        def create_credentials_file(login, password, credentials_file=GLOBAL_CREDENTIALS_FILE)
+        def create_credentials_file(login, password, credentials_file = GLOBAL_CREDENTIALS_FILE)
           Credentials.new(login, password, credentials_file).write
         end
 
