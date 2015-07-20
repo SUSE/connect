@@ -68,6 +68,18 @@ module SUSE
           Client.new(config).upgrade_product(product)
         end
 
+        # Creates the system or zypper service credentials file with given login and password.
+        # Returns the number of bytes written.
+        #
+        # @param [String] system login - return value of announce_system method
+        # @param [String] system password - return value of announce_system method
+        # @param [String] credentials_file - defaults to /etc/zypp/credentials.d/SCCcredentials
+        #
+        # @return [Integer] number of written bytes
+        def create_credentials_file(login, password, credentials_file=GLOBAL_CREDENTIALS_FILE)
+          Credentials.new(login, password, credentials_file).write
+        end
+
         # Lists all available products for a system.
         # Accepts a parameter product_ident, which scopes the result set down to all
         # products for the system that are extensions to the specified product.

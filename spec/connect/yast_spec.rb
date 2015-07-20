@@ -120,6 +120,31 @@ describe SUSE::Connect::YaST do
     end
   end
 
+  describe '.create_credentials_file' do
+    let(:login) { 'login' }
+    let(:password) { 'password' }
+    let(:credentials) { Credentials.new(login, password, subject::GLOBAL_CREDENTIALS_FILE) }
+
+    it 'creates credentials file with default parameter' do
+      credentials = Credentials.new(login, password, subject::GLOBAL_CREDENTIALS_FILE)
+
+      expect(Credentials).to receive(:new).with(login, password, subject::GLOBAL_CREDENTIALS_FILE).and_return credentials
+      expect(credentials).to receive(:write)
+
+      subject.create_credentials_file(login, password)
+    end
+
+    it 'creates credentials file with passed parameter' do
+      credentials_file = '/tmp/Credentials'
+      credentials = Credentials.new(login, password, credentials_file)
+
+      expect(Credentials).to receive(:new).with(login, password, credentials_file).and_return credentials
+      expect(credentials).to receive(:write)
+
+      subject.create_credentials_file(login, password, credentials_file)
+    end
+  end
+
   describe '#show_product' do
     let(:product) { Remote::Product.new(identifier: 'tango') }
     let(:client_params) { { :foo => 'oink' } }
