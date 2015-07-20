@@ -85,13 +85,13 @@ module SUSE
         # products for the system that are extensions to the specified product.
         # Gets the list from SCC and returns them.
         #
-        # @param product [Remote::Product] product to list extensions for
+        # @param product [OpenStruct] product to list extensions for
         # @param [Hash] client_params parameters to instantiate {Client}
         #
-        # @return [Product] {Product}s from registration server with all extensions included
+        # @return [OpenStruct] {Product}s from registration server with all extensions included
         def show_product(product, client_params = {})
           config = SUSE::Connect::Config.new.merge!(client_params)
-          Client.new(config).show_product(product)
+          Client.new(config).show_product(product).to_openstruct
         end
 
         # Checks if the given product is already activated in SCC
