@@ -2,6 +2,7 @@ module SUSE
   module Connect
 
     # Migration class is an abstraction layer for SLE migration script
+    # Migration script call this class from: https://github.com/nadvornik/zypper-migration/blob/master/zypper-migration
     class Migration
       class << self
         # Returns installed and activated products on the system
