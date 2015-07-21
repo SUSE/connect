@@ -25,7 +25,6 @@ module SUSE
           SUSE::Connect::Zypper.remove_service(service_name)
         end
 
-
       end
     end
 
