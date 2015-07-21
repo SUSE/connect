@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe SUSE::Connect::Migration do
   describe '#system_products' do
-    let(:zypper_product) { Zypper::Product.new(:name => 'SLES', :version => '12', :arch => 'x86_64') }
-    let(:remote_product) { Remote::Product.new(:identifier => 'SLES', :version => '12', :arch => 'x86_64', :release_type => 'HP-CNB') }
+    let(:zypper_product) { Zypper::Product.new(name: 'SLES', version: '12', arch: 'x86_64') }
+    let(:remote_product) { Remote::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64', release_type: 'HP-CNB') }
 
     it 'returns installed products and status activated products' do
       expect_any_instance_of(SUSE::Connect::Status).to receive(:system_products).and_return([Product.transform(zypper_product),
