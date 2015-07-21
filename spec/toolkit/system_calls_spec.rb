@@ -17,8 +17,8 @@ describe SUSE::Toolkit::SystemCalls do
 
   describe '.execute' do
     it 'should make a quiet system call' do
-      subject.should_receive(:capture3).with(shared_env_hash, 'date').and_return([date, '', success])
-      execute('date').should be nil
+      expect(subject).to receive(:capture3).with(shared_env_hash, 'date').and_return([date, '', success])
+      expect(execute('date')).to be nil
     end
 
     it 'should produce debug log output' do

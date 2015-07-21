@@ -10,7 +10,7 @@ describe SUSE::Toolkit::Utilities do
 
   describe '?token_auth' do
     it 'returns string for auth header' do
-      subject.send(:token_auth, 'lambada').should eq 'Token token=lambada'
+      expect(subject.send(:token_auth, 'lambada')).to eq 'Token token=lambada'
     end
 
     it 'not raising if no token passed, but method requested' do
@@ -22,7 +22,7 @@ describe SUSE::Toolkit::Utilities do
     it 'returns string for auth header' do
       Credentials.stub(:read => Credentials.new('bob', 'dylan'))
       base64_line = 'Basic Ym9iOmR5bGFu'
-      subject.send(:system_auth).should eq base64_line
+      expect(subject.send(:system_auth)).to eq base64_line
     end
 
     it 'raise if cannot get credentials' do
