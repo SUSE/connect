@@ -1,7 +1,11 @@
+require 'suse/toolkit/cast'
+
 module SUSE
   module Connect
     # Product class is a common class to represent all products
     class Product < OpenStruct
+      include SUSE::Toolkit::Cast
+
       def self.transform(old_product)
         product = Product.new
         product.identifier = old_product.identifier

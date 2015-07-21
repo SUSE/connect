@@ -7,10 +7,10 @@ module SUSE
       class << self
         # Returns installed and activated products on the system
         # @param [Hash] client_params parameters to instantiate {Client}
-        # @return [Array <Connect::Product>] the list of system products
+        # @return [Array <OpenStruct>] the list of system products
         def system_products(client_params = {})
           config = SUSE::Connect::Config.new.merge!(client_params)
-          Status.new(config).system_products
+          Status.new(config).system_products.map(&:to_openstruct)
         end
 
         # Forwards the service which should be added with zypper
