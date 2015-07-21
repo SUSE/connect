@@ -49,8 +49,8 @@ describe SUSE::Connect::Connection do
       it 'logs the error in the default verify_callack and returns failure' do
         context = double
         expect(context).to receive(:error_string).and_return('ERROR')
-        context.stub_chain(:current_cert, :issuer).and_return('ISSUER')
-        context.stub_chain(:current_cert, :subject).and_return('SUBJECT')
+        allow(context).to receive_message_chain(:current_cert, :issuer).and_return('ISSUER')
+        allow(context).to receive_message_chain(:current_cert, :subject).and_return('SUBJECT')
 
         logger = double
         expect(logger).to receive(:error) do |msg|
