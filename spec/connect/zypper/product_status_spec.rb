@@ -55,7 +55,7 @@ describe SUSE::Connect::Zypper::ProductStatus do
     it 'finds related activation by comparing installing and remote product' do
       activation = double('activation')
       remote_product = Remote::Product.new(:identifier => :foo, :version => 42, :arch => :wax)
-      activation.stub_chain(:service, :product).and_return remote_product
+      expect(activation).to receive_message_chain(:service, :product).and_return remote_product
       allow(status).to receive(:activations).and_return [activation]
       allow(subject).to receive(:remote_product).and_return remote_product
       expect(subject.related_activation).to eq activation

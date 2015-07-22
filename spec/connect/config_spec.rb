@@ -111,7 +111,7 @@ describe SUSE::Connect::Config do
 
     context '#write' do
       it 'writes configuration settings to YAML file' do
-        File.should_receive(:write).with(config_file, config.to_yaml).and_return(0)
+        expect(File).to receive(:write).with(config_file, config.to_yaml).and_return(0)
         config.write!
       end
     end

@@ -63,105 +63,172 @@ describe SUSE::Connect::YaST do
   describe '#activate_product' do
     let(:client_params) { { token: 'regcode' } }
     let(:product) { Remote::Product.new(identifier: 'win95') }
+    let(:openstruct_product) { product.to_openstruct }
     let(:email) { 'foo@bar.zer' }
 
-    before { Client.any_instance.stub :activate_product }
-
     it 'calls activate_product on an instance of Client' do
-      Client.any_instance.should_receive(:activate_product)
+      expect_any_instance_of(Client).to receive(:activate_product)
       subject.activate_product(nil)
     end
 
     it 'forwards all params to an instance of Client' do
-      Client.should_receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
+      expect(Client).to receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
       expect_any_instance_of(SUSE::Connect::Config).to receive(:merge!).with(client_params).and_call_original
-      Client.any_instance.should_receive(:activate_product)
-      subject.activate_product(*[product, client_params, email])
+      expect_any_instance_of(Client).to receive(:activate_product)
+
+      subject.activate_product(*[openstruct_product, client_params, email])
     end
 
     it 'falls back to use an empty Hash as params if none are specified' do
-      Client.should_receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
-      Client.any_instance.should_receive(:activate_product)
+      expect(Client).to receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
+      expect_any_instance_of(Client).to receive(:activate_product)
+
       subject.activate_product(nil)
     end
 
     it 'uses product_ident and email as parameter for Client#activate_product' do
-      Client.should_receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
-      Client.any_instance.should_receive(:activate_product).with(product, email)
-      subject.activate_product(*[product, client_params, email])
+      expect(Client).to receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
+      expect_any_instance_of(Client).to receive(:activate_product).with(openstruct_product, email)
+
+      subject.activate_product(*[openstruct_product, client_params, email])
     end
   end
 
   describe '#upgrade_product' do
     let(:product) { Remote::Product.new(identifier: 'win98') }
+    let(:openstruct_product) { product.to_openstruct }
     let(:client_params) { { :foo => 'oink' } }
 
-    before { Client.any_instance.stub :upgrade_product }
+    before { allow_any_instance_of(Client).to receive(:upgrade_product) }
 
     it 'calls upgrade_product on an instance of Client' do
-      Client.any_instance.should_receive :upgrade_product
-      subject.upgrade_product(product)
+      expect_any_instance_of(Client).to receive :upgrade_product
+      subject.upgrade_product(openstruct_product)
     end
 
     it 'forwards all params to an instance of Client' do
-      Client.should_receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
+      expect(Client).to receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
       expect_any_instance_of(SUSE::Connect::Config).to receive(:merge!).with(client_params).and_call_original
-      subject.upgrade_product product, client_params
+      subject.upgrade_product openstruct_product, client_params
     end
 
     it 'falls back to use an empty Hash as params if none are specified' do
-      Client.should_receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
-      subject.upgrade_product product
+      expect(Client).to receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
+      subject.upgrade_product openstruct_product
     end
 
     it 'forwards product_ident to Client#upgrade_product' do
-      Client.any_instance.should_receive(:upgrade_product).with(product)
-      subject.upgrade_product product
+      expect_any_instance_of(Client).to receive(:upgrade_product).with(openstruct_product)
+      subject.upgrade_product openstruct_product
+    end
+  end
+
+  describe '.credentials' do
+    let(:login) { 'login' }
+    let(:password) { 'password' }
+    let(:system_credentials) { Credentials.new(login, password, subject::GLOBAL_CREDENTIALS_FILE) }
+
+    context 'with no arguments' do
+      it 'reads system credentials file' do
+        expect(Credentials).to receive(:read).with(subject::GLOBAL_CREDENTIALS_FILE).and_return(system_credentials)
+        subject.credentials
+      end
+    end
+
+    context 'with credentials_file argument' do
+      it 'reads credentials from given path' do
+        expect(Credentials).to receive(:read).with('/tmp/credentials').and_return(system_credentials)
+        subject.credentials('/tmp/credentials')
+      end
+    end
+
+    it 'returns an OpenStruct instance' do
+      expect(Credentials).to receive(:read).with(subject::GLOBAL_CREDENTIALS_FILE).and_return(system_credentials)
+      expect(subject.credentials).to be_kind_of(OpenStruct)
+    end
+  end
+
+  describe '.create_credentials_file' do
+    let(:login) { 'login' }
+    let(:password) { 'password' }
+    let(:credentials) { Credentials.new(login, password, subject::GLOBAL_CREDENTIALS_FILE) }
+
+    it 'creates credentials file with default parameter' do
+      credentials = Credentials.new(login, password, subject::GLOBAL_CREDENTIALS_FILE)
+
+      expect(Credentials).to receive(:new).with(login, password, subject::GLOBAL_CREDENTIALS_FILE).and_return credentials
+      expect(credentials).to receive(:write)
+
+      subject.create_credentials_file(login, password)
+    end
+
+    it 'creates credentials file with passed parameter' do
+      credentials_file = '/tmp/Credentials'
+      credentials = Credentials.new(login, password, credentials_file)
+
+      expect(Credentials).to receive(:new).with(login, password, credentials_file).and_return credentials
+      expect(credentials).to receive(:write)
+
+      subject.create_credentials_file(login, password, credentials_file)
     end
   end
 
   describe '#show_product' do
     let(:product) { Remote::Product.new(identifier: 'tango') }
-    let(:client_params) { { :foo => 'oink' } }
+    let(:openstruct_product) { product.to_openstruct }
+    let(:client_params) { { foo: 'oink' } }
 
-    before { Client.any_instance.stub :show_product }
-
-    it 'calls list_products on an instance of Client' do
-      Client.any_instance.should_receive(:show_product)
-      subject.show_product product
+    it 'calls show_product on an instance of Client' do
+      expect_any_instance_of(Client).to receive(:show_product).with(openstruct_product).and_return product
+      expect(subject.show_product(product)).to eq openstruct_product
     end
 
     it 'forwards all params to an instance of Client' do
-      Client.should_receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
-      Client.any_instance.should_receive(:show_product)
-      subject.show_product product, client_params
+      config = SUSE::Connect::Config.new.merge!(client_params)
+
+      expect_any_instance_of(SUSE::Connect::Config).to receive(:merge!).with(client_params).and_call_original
+      expect(Client).to receive(:new).with(config).and_call_original
+      expect_any_instance_of(Client).to receive(:show_product).with(openstruct_product).and_return product
+
+      subject.show_product openstruct_product, client_params
     end
 
     it 'falls back to use an empty Hash as params if none are specified' do
-      Client.should_receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
-      Client.any_instance.should_receive(:show_product)
-      subject.show_product product
+      expect_any_instance_of(SUSE::Connect::Config).to receive(:merge!).with({}).and_call_original
+      expect(Client).to receive(:new).with(SUSE::Connect::Config.new).and_call_original
+      expect_any_instance_of(Client).to receive(:show_product).with(openstruct_product).and_return product
+
+      subject.show_product openstruct_product
     end
 
     it 'uses product as parameter for Client#list_products' do
-      Client.should_receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
-      Client.any_instance.should_receive(:show_product).with(product)
-      subject.show_product product
+      expect(Client).to receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
+      expect_any_instance_of(Client).to receive(:show_product).with(openstruct_product).and_return product
+
+      subject.show_product openstruct_product
+    end
+
+    it 'returns product as an instance of OpenStruct' do
+      expect(Client).to receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
+      expect_any_instance_of(Client).to receive(:show_product).with(openstruct_product).and_return product
+
+      expect(subject.show_product(openstruct_product)).to be_kind_of(OpenStruct)
     end
   end
 
   describe '#product_activated?' do
     let(:product) { Remote::Product.new(identifier: 'tango') }
+    let(:openstruct_product) { product.to_openstruct }
 
     it 'returns false if no credentials' do
       expect(System).to receive(:credentials?).and_return(false)
-      expect(subject.product_activated?(product)).to be false
+      expect(subject.product_activated?(openstruct_product)).to be false
     end
 
     it 'checks if the given product is already activated in SCC' do
       expect(System).to receive(:credentials?).and_return(true)
       expect_any_instance_of(Status).to receive(:activated_products).and_return([product])
-      expect(subject.product_activated?(product)).to be true
+      expect(subject.product_activated?(openstruct_product)).to be true
     end
 
     it 'allows to pass a Hash with params to instantiate the client' do
@@ -170,7 +237,16 @@ describe SUSE::Connect::YaST do
       params_hash = { foo: 'bar' }
       allow(status).to receive(:activated_products).and_return([product])
       expect(subject).to receive(:status).with(params_hash).and_return status
-      expect(subject.product_activated?(product, params_hash)).to be true
+      expect(subject.product_activated?(openstruct_product, params_hash)).to be true
+    end
+  end
+
+  describe '#activated_products' do
+    let(:remote_product) { Remote::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64', release_type: 'HP-CNB') }
+
+    it 'returns an array of activated system products' do
+      expect_any_instance_of(SUSE::Connect::Status).to receive(:activated_products).and_return([remote_product])
+      expect(SUSE::Connect::YaST.activated_products).to match_array([remote_product.to_openstruct])
     end
   end
 
@@ -181,62 +257,44 @@ describe SUSE::Connect::YaST do
         Remote::Product.new(:identifier => 'SUSE-Cloud', :version => '7', :arch => 'x86_64', :release_type => nil)
       ]
     end
+
+    let(:openstruct_products) { products.map(&:to_openstruct) }
+    let(:migrations) { [products] }
     let(:client_params) { { :foo => 'oink' } }
 
     it 'calls system_migrations on an instance of Client' do
       expect(Client).to receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
-      expect_any_instance_of(Client).to receive(:system_migrations)
+      expect_any_instance_of(Client).to receive(:system_migrations).and_return migrations
 
-      subject.system_migrations products, client_params
+      subject.system_migrations openstruct_products, client_params
     end
 
     it 'uses products list as parameter for Client#system_migrations' do
       expect(Client).to receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
-      expect_any_instance_of(Client).to receive(:system_migrations).with(products)
+      expect_any_instance_of(Client).to receive(:system_migrations).with(openstruct_products).and_return migrations
 
-      subject.system_migrations products, client_params
+      subject.system_migrations openstruct_products, client_params
     end
 
     it 'returns the output received from Client' do
       expected_migration = [[Remote::Product.new(identifier: 'SLES')]]
 
       expect(Client).to receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
-      expect_any_instance_of(Client).to receive(:system_migrations).with(products).and_return(expected_migration)
+      expect_any_instance_of(Client).to receive(:system_migrations).with(openstruct_products).and_return(expected_migration)
 
-      actual_migration = subject.system_migrations products, client_params
+      actual_migration = subject.system_migrations(openstruct_products, client_params)
 
       expect(actual_migration).to eq(expected_migration)
     end
-  end
 
-  describe '#system_products' do
-    let(:zypper_product) { Zypper::Product.new(:name => 'SLES', :version => '12', :arch => 'x86_64') }
-    let(:remote_product) { Remote::Product.new(:identifier => 'SLES', :version => '12', :arch => 'x86_64', :release_type => 'HP-CNB') }
+    it 'returns an array of arrays with openstruct objects' do
+      expect(Client).to receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
+      expect_any_instance_of(Client).to receive(:system_migrations).with(products).and_return(migrations)
+      migrations = subject.system_migrations products, client_params
 
-    it 'returns installed products and status activated products' do
-      expect_any_instance_of(SUSE::Connect::Status).to receive(:system_products).and_return([Product.transform(zypper_product),
-                                                                                             Product.transform(remote_product)])
-      result = SUSE::Connect::YaST.system_products
-      expect(result).to match_array([Product.transform(zypper_product), Product.transform(remote_product)])
-    end
-  end
-
-  describe '#add_service' do
-    it 'forwards to zypper add_service' do
-      service_url = 'http://bla.bla'
-      service_name = 'bla'
-      expect(SUSE::Connect::Zypper).to receive(:add_service).with(service_url, service_name)
-
-      SUSE::Connect::YaST.add_service(service_url, service_name)
-    end
-  end
-
-  describe '#remove_service' do
-    it 'forwards to zypper remove_service' do
-      service_name = 'bla'
-      expect(SUSE::Connect::Zypper).to receive(:remove_service).with(service_name)
-
-      SUSE::Connect::YaST.remove_service(service_name)
+      expect(migrations).to be_kind_of Array
+      expect(migrations.first).to be_kind_of Array
+      expect(migrations.first.first).to be_kind_of OpenStruct
     end
   end
 

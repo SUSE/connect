@@ -12,8 +12,8 @@ SimpleCov.start do
 end
 
 require 'rspec'
-require 'ap'
 require 'byebug'
+require 'awesome_print'
 require 'webmock/rspec'
 require 'suse/connect'
 

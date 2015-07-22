@@ -94,4 +94,13 @@ describe SUSE::Connect::Credentials do
       expect(credentials_str).to include(file)
     end
   end
+
+  describe '#to_h' do
+    it 'returns a hash representation of the object' do
+      hash = Credentials.new('USER', '*eiW0yie2*', 'FOO_credentials').to_h
+      expect(hash.values).to include('USER')
+      expect(hash.values).to include('*eiW0yie2*')
+      expect(hash.values).to include('FOO_credentials')
+    end
+  end
 end

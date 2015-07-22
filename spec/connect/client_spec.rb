@@ -13,7 +13,7 @@ describe SUSE::Connect::Client do
   describe '.new' do
     context :empty_opts do
       it 'should set url to default_url' do
-        subject.config.url.should eq SUSE::Connect::Config::DEFAULT_URL
+        expect(subject.config.url).to eq SUSE::Connect::Config::DEFAULT_URL
       end
     end
 
@@ -196,8 +196,8 @@ describe SUSE::Connect::Client do
 
     it 'returns service object' do
       service = subject.activate_product(product_ident)
-      service.name.should eq 'kinkat'
-      service.url.should eq 'kinkaturl'
+      expect(service.name).to eq 'kinkat'
+      expect(service.url).to eq 'kinkaturl'
     end
   end
 
@@ -223,8 +223,8 @@ describe SUSE::Connect::Client do
 
     it 'returns service object' do
       service = subject.upgrade_product(product_ident)
-      service.name.should eq 'tongobongo'
-      service.url.should eq 'tongobongourl'
+      expect(service.name).to eq 'tongobongo'
+      expect(service.url).to eq 'tongobongourl'
     end
   end
 
@@ -310,7 +310,7 @@ describe SUSE::Connect::Client do
 
     it 'returns array of extension products returned from api' do
       subject.api.should_receive(:show_product).with('Basic: encodedstring', product).and_return stubbed_response
-      subject.show_product(product).should be_kind_of Remote::Product
+      expect(subject.show_product(product)).to be_kind_of Remote::Product
     end
   end
 

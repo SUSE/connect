@@ -89,7 +89,7 @@ describe SUSE::Connect::Status do
         status = Zypper::ProductStatus.new(Zypper::Product.new({}), subject)
         status.stub(:registration_status) { 'test' }
         status.stub(:remote_product) { true }
-        status.stub_chain(:remote_product, :free).and_return(false)
+        expect(status).to receive_message_chain(:remote_product, :free).and_return(false)
         activation = SUSE::Connect::Remote::Activation.new('service' => { 'product' => {} })
         status.stub(:related_activation).and_return(activation)
 
@@ -132,7 +132,7 @@ describe SUSE::Connect::Status do
 
     describe '?products_from_zypper' do
       it 'uses zypper output to collect info' do
-        Zypper.stub_chain(:installed_products).and_return [1, 2, 3]
+        expect(Zypper).to receive_message_chain(:installed_products).and_return [1, 2, 3]
         expect(subject.send(:products_from_zypper)).to eq [1, 2, 3]
       end
     end
@@ -142,7 +142,7 @@ describe SUSE::Connect::Status do
         fake_client = double('client')
         allow(Client).to receive(:new).and_return(fake_client)
         SUSE::Connect::System.stub(:credentials?) { true }
-        fake_client.stub_chain(:system_activations, :body, :map).and_return [1, 2, 3]
+        expect(fake_client).to receive_message_chain(:system_activations, :body, :map).and_return [1, 2, 3]
         expect(subject.send(:products_from_activations)).to eq [1, 2, 3]
       end
     end

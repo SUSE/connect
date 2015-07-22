@@ -43,7 +43,7 @@ module SUSE
         # Requires a token / regcode except for free products/extensions.
         # Returns a service object for the activated product.
         #
-        # @param [Remote::Product] product with identifier, arch and version defined
+        # @param [OpenStruct] product with identifier, arch and version defined
         # @param [Hash] client_params parameters to instantiate {Client}
         # @param [String] email email to which this activation should be connected to
         #
@@ -59,7 +59,7 @@ module SUSE
         # product was registered with, or be a free product.
         # Returns a service object for the new activated product.
         #
-        # @param [Remote::Product] product with identifier, arch and version defined
+        # @param [OpenStruct] product with identifier, arch and version defined
         # @param [Hash] client_params parameters to instantiate {Client}
         #
         # @return [Service] Service
@@ -68,28 +68,58 @@ module SUSE
           Client.new(config).upgrade_product(product)
         end
 
+        # Reads credentials file.
+        # Returns the credentials object with login, password and credentials file
+        #
+        # @param [String] Path to credentials file - defaults to /etc/zypp/credentials.d/SCCcredentials
+        #
+        # @return [OpenStruct] Credentials object as openstruct
+        def credentials(credentials_file = GLOBAL_CREDENTIALS_FILE)
+          Credentials.read(credentials_file).to_openstruct
+        end
+
+        # Creates the system or zypper service credentials file with given login and password.
+        # Returns the number of bytes written.
+        #
+        # @param [String] system login - return value of announce_system method
+        # @param [String] system password - return value of announce_system method
+        # @param [String] credentials_file - defaults to /etc/zypp/credentials.d/SCCcredentials
+        #
+        # @return [Integer] number of written bytes
+        def create_credentials_file(login, password, credentials_file = GLOBAL_CREDENTIALS_FILE)
+          Credentials.new(login, password, credentials_file).write
+        end
+
         # Lists all available products for a system.
         # Accepts a parameter product_ident, which scopes the result set down to all
         # products for the system that are extensions to the specified product.
         # Gets the list from SCC and returns them.
         #
-        # @param product [Remote::Product] product to list extensions for
+        # @param [OpenStruct] product to list extensions for
         # @param [Hash] client_params parameters to instantiate {Client}
         #
-        # @return [Product] {Product}s from registration server with all extensions included
+        # @return [OpenStruct] {Product} from registration server with all extensions included
         def show_product(product, client_params = {})
           config = SUSE::Connect::Config.new.merge!(client_params)
-          Client.new(config).show_product(product)
+          Client.new(config).show_product(product).to_openstruct
         end
 
         # Checks if the given product is already activated in SCC
-        # @param product [Remote::Product] product
+        # @param [OpenStruct] product
         # @param [Hash] client_params parameters to instantiate {Client}
         #
         # @return Boolean
         def product_activated?(product, client_params = {})
           return false unless SUSE::Connect::System.credentials?
-          status(client_params).activated_products.include?(product)
+          status(client_params).activated_products.map(&:to_openstruct).include?(product)
+        end
+
+        # Returns activated products on the system
+        # @param [Hash] client_params parameters to instantiate {Client}
+        # @return [Array <OpenStruct>] the list of activated products
+        def activated_products(client_params = {})
+          config = SUSE::Connect::Config.new.merge!(client_params)
+          Status.new(config).activated_products.map(&:to_openstruct)
         end
 
         # Lists all available upgrade paths for a given list of products
@@ -97,35 +127,14 @@ module SUSE
         # upgrade paths. An upgrade path is a list of products that may
         # be upgraded.
         #
-        # @param [Array <Remote::Product>] the list of currently installed {Product}s in the system
+        # @param [Array <OpenStruct>] the list of currently installed {Product}s in the system
         # @param [Hash] client_params parameters to instantiate {Client}
         #
-        # @return [Array <Array <Remote::Product>>] the list of possible upgrade paths for the given {Product}s,
+        # @return [Array <Array <OpenStruct>>] the list of possible upgrade paths for the given {Product}s,
         #   where an upgrade path is an array of Remote::Product object.
         def system_migrations(products, client_params = {})
           config = SUSE::Connect::Config.new.merge!(client_params)
-          Client.new(config).system_migrations(products)
-        end
-
-        # Returns installed and activated products on the system
-        # @param [Hash] client_params parameters to instantiate {Client}
-        # @return [Array <Connect::Product>] the list of system products
-        def system_products(client_params = {})
-          config = SUSE::Connect::Config.new.merge!(client_params)
-          Status.new(config).system_products
-        end
-
-        # Forwards the service which should be added with zypper
-        # @param [String] service_url the url from the service to add
-        # @param [String] service_name the name of the service to add
-        def add_service(service_url, service_name)
-          SUSE::Connect::Zypper.add_service(service_url, service_name)
-        end
-
-        # Forwards the service names which should be removed with zypper
-        # @param [String] service_name the name of the service to remove
-        def remove_service(service_name)
-          SUSE::Connect::Zypper.remove_service(service_name)
+          Client.new(config).system_migrations(products).map {|a| a.map(&:to_openstruct) }
         end
 
         # Writes the config file with the given parameters, overwriting any existing contents
