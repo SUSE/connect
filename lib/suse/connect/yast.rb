@@ -43,7 +43,7 @@ module SUSE
         # Requires a token / regcode except for free products/extensions.
         # Returns a service object for the activated product.
         #
-        # @param [Remote::Product] product with identifier, arch and version defined
+        # @param [OpenStruct] product with identifier, arch and version defined
         # @param [Hash] client_params parameters to instantiate {Client}
         # @param [String] email email to which this activation should be connected to
         #
@@ -59,7 +59,7 @@ module SUSE
         # product was registered with, or be a free product.
         # Returns a service object for the new activated product.
         #
-        # @param [Remote::Product] product with identifier, arch and version defined
+        # @param [OpenStruct] product with identifier, arch and version defined
         # @param [Hash] client_params parameters to instantiate {Client}
         #
         # @return [Service] Service
@@ -95,7 +95,7 @@ module SUSE
         # products for the system that are extensions to the specified product.
         # Gets the list from SCC and returns them.
         #
-        # @param product [OpenStruct] product to list extensions for
+        # @param [OpenStruct] product to list extensions for
         # @param [Hash] client_params parameters to instantiate {Client}
         #
         # @return [OpenStruct] {Product} from registration server with all extensions included
@@ -105,13 +105,13 @@ module SUSE
         end
 
         # Checks if the given product is already activated in SCC
-        # @param product [Remote::Product] product
+        # @param [OpenStruct] product
         # @param [Hash] client_params parameters to instantiate {Client}
         #
         # @return Boolean
         def product_activated?(product, client_params = {})
           return false unless SUSE::Connect::System.credentials?
-          status(client_params).activated_products.include?(product)
+          status(client_params).activated_products.map(&:to_openstruct).include?(product)
         end
 
         # Returns activated products on the system
@@ -127,14 +127,14 @@ module SUSE
         # upgrade paths. An upgrade path is a list of products that may
         # be upgraded.
         #
-        # @param [Array <Remote::Product>] the list of currently installed {Product}s in the system
+        # @param [Array <OpenStruct>] the list of currently installed {Product}s in the system
         # @param [Hash] client_params parameters to instantiate {Client}
         #
-        # @return [Array <Array <Remote::Product>>] the list of possible upgrade paths for the given {Product}s,
+        # @return [Array <Array <OpenStruct>>] the list of possible upgrade paths for the given {Product}s,
         #   where an upgrade path is an array of Remote::Product object.
         def system_migrations(products, client_params = {})
           config = SUSE::Connect::Config.new.merge!(client_params)
-          Client.new(config).system_migrations(products)
+          Client.new(config).system_migrations(products).map {|a| a.map(&:to_openstruct) }
         end
 
         # Writes the config file with the given parameters, overwriting any existing contents
