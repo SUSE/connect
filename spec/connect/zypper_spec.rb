@@ -2,11 +2,8 @@ require 'spec_helper'
 
 describe SUSE::Connect::Zypper do
   before(:each) do
-    Object.stub(system: true)
-  end
-
-  after(:each) do
-    SUSE::Connect::System.filesystem_root = nil
+    allow(SUSE::Connect::System).to receive(:filesystem_root).and_return nil
+    allow(Object).to receive(:system).and_return true
   end
 
   subject { SUSE::Connect::Zypper }
@@ -142,7 +139,7 @@ describe SUSE::Connect::Zypper do
     end
 
     it 'calls zypper with proper arguments --root case' do
-      SUSE::Connect::System.filesystem_root = '/path/to/root'
+      allow(SUSE::Connect::System).to receive(:filesystem_root).and_return '/path/to/root'
 
       args = "zypper --root '/path/to/root' --non-interactive addservice -t ris http://example.com 'branding'"
       autorefresh_args = "zypper --root '/path/to/root' --non-interactive modifyservice -r http://example.com"
@@ -163,7 +160,7 @@ describe SUSE::Connect::Zypper do
     end
 
     it 'calls zypper with proper arguments --root case' do
-      SUSE::Connect::System.filesystem_root = '/path/to/root'
+      allow(SUSE::Connect::System).to receive(:filesystem_root).and_return '/path/to/root'
 
       args = "zypper --root '/path/to/root' --non-interactive removeservice 'branding'"
       expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
@@ -244,7 +241,7 @@ describe SUSE::Connect::Zypper do
     end
 
     it 'calls zypper with proper arguments --root case' do
-      SUSE::Connect::System.filesystem_root = '/path/to/root'
+      allow(SUSE::Connect::System).to receive(:filesystem_root).and_return '/path/to/root'
 
       expect(Open3).to receive(:capture3).with(shared_env_hash, "zypper --root '/path/to/root' --non-interactive refresh")
         .and_return(['', '', status])
@@ -259,7 +256,7 @@ describe SUSE::Connect::Zypper do
     end
 
     it 'calls zypper with proper arguments' do
-      SUSE::Connect::System.filesystem_root = '/path/to/root'
+      allow(SUSE::Connect::System).to receive(:filesystem_root).and_return '/path/to/root'
 
       expect(Open3).to receive(:capture3).with(shared_env_hash, "zypper --root '/path/to/root' --non-interactive refresh-services -r")
         .and_return(['', '', status])
@@ -295,7 +292,7 @@ describe SUSE::Connect::Zypper do
     mock_dry_file
 
     before do
-      Credentials.any_instance.stub(:write)
+      allow_any_instance_of(Credentials).to receive(:write).and_return true
     end
 
     it 'should call write_base_credentials_file' do
@@ -329,10 +326,10 @@ describe SUSE::Connect::Zypper do
     end
 
     it 'return zypper targetos output --root case' do
+      allow(SUSE::Connect::System).to receive(:filesystem_root).and_return '/path/to/root'
+
       args = "zypper --root '/path/to/root' targetos"
       Open3.should_receive(:capture3).with(shared_env_hash, args).and_return(['openSUSE-13.1-x86_64', '', status])
-
-      SUSE::Connect::System.filesystem_root = '/path/to/root'
       expect(Zypper.distro_target).to eq 'openSUSE-13.1-x86_64'
     end
   end
