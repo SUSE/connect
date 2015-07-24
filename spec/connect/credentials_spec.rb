@@ -31,16 +31,16 @@ describe SUSE::Connect::Credentials do
     end
 
     it 'raises an error when username cannot be parsed' do
-      File.stub(:exist?).and_return(true)
-      File.stub(:read).with(credentials_file).and_return("me\nfe")
+      expect(File).to receive(:exist?).and_return(true)
+      expect(File).to receive(:read).with(credentials_file).and_return("me\nfe")
       expect { Credentials.read(credentials_file) }.to raise_error(
         MalformedSccCredentialsFile,
         'Cannot parse credentials file')
     end
 
     it 'raises an error when the password cannot be parsed' do
-      File.stub(:exist?).with(credentials_file).and_return(true)
-      File.stub(:read).with(credentials_file).and_return("username=me\nfe")
+      expect(File).to receive(:exist?).and_return(true)
+      expect(File).to receive(:read).with(credentials_file).and_return("me\nfe")
       expect { Credentials.read(credentials_file) }.to raise_error(
         MalformedSccCredentialsFile,
         'Cannot parse credentials file')
