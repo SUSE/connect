@@ -69,6 +69,36 @@ describe SUSE::Connect::Zypper do
     end
   end
 
+  describe '#enable_repository' do
+    let(:repository) { 'repository' }
+
+    it 'enables zypper repository' do
+      expect(Open3).to receive(:capture3).with(shared_env_hash, "zypper --non-interactive modifyrepo -e #{repository}").and_return(['', '', status])
+      subject.enable_repository(repository)
+    end
+
+    it 'raise an exception if repository not found' do
+      exception = "SUSE::Connect::ZypperError: Repository #{repository} not found."
+      expect(Open3).to receive(:capture3).with(shared_env_hash, "zypper --non-interactive modifyrepo -e #{repository}").and_raise(exception)
+      expect{subject.enable_repository(repository)}.to raise_error("SUSE::Connect::ZypperError: Repository #{repository} not found.")
+    end
+  end
+
+  describe '#disable_repository' do
+    let(:repository) { 'repository' }
+
+    it 'enables zypper repository' do
+      expect(Open3).to receive(:capture3).with(shared_env_hash, "zypper --non-interactive modifyrepo -d #{repository}").and_return(['', '', status])
+      subject.disable_repository(repository)
+    end
+
+    it 'raise an exception if repository not found' do
+      exception = "SUSE::Connect::ZypperError: Repository #{repository} not found."
+      expect(Open3).to receive(:capture3).with(shared_env_hash, "zypper --non-interactive modifyrepo -d #{repository}").and_raise(exception)
+      expect{subject.disable_repository(repository)}.to raise_error("SUSE::Connect::ZypperError: Repository #{repository} not found.")
+    end
+  end
+
   describe '.add_service' do
     describe 'calls zypper with proper arguments' do
       it 'adds service' do
