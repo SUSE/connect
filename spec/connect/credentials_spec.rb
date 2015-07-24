@@ -32,18 +32,17 @@ describe SUSE::Connect::Credentials do
 
     it 'raises an error when username cannot be parsed' do
       expect(File).to receive(:exist?).and_return(true)
-      expect(File).to receive(:read).with(credentials_file).and_return("me\nfe")
-      expect { Credentials.read(credentials_file) }.to raise_error(
-        MalformedSccCredentialsFile,
-        'Cannot parse credentials file')
+      allow(File).to receive(:read).with(credentials_file).and_return("me\nfe")
+      expect { Credentials.read(credentials_file) }.to raise_error(MalformedSccCredentialsFile, 'Cannot parse credentials file')
     end
 
     it 'raises an error when the password cannot be parsed' do
+      allow_any_instance_of(String).to receive(:match).with(/^\s*username\s*=\s*(\S+)\s*$/).and_return(true)
+      allow_any_instance_of(String).to receive(:match).with(/^\s*password\s*=\s*(\S+)\s*$/).and_return(false)
+
       expect(File).to receive(:exist?).and_return(true)
       expect(File).to receive(:read).with(credentials_file).and_return("me\nfe")
-      expect { Credentials.read(credentials_file) }.to raise_error(
-        MalformedSccCredentialsFile,
-        'Cannot parse credentials file')
+      expect { Credentials.read(credentials_file) }.to raise_error(MalformedSccCredentialsFile, 'Cannot parse credentials file')
     end
   end
 
