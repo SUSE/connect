@@ -13,25 +13,6 @@ describe SUSE::Connect::Migration do
     end
   end
 
-  # Forwards the repository which should be enabled with zypper
-  # @param [String] repository name to enable
-  def enable_repository(name)
-    Zypper.enable_repository(name)
-  end
-
-  # Forwards the repository which should be disabled with zypper
-  # @param [String] repository name to disable
-  def disable_repository(name)
-    Zypper.disable_repository(name)
-  end
-
-  # Returns the list of available repositories
-  # @return [Array <OpenStruct>] the list of zypper repositories
-  def repositories
-    # INFO: use block instead of .map(&:to_openstruct) see https://bugs.ruby-lang.org/issues/9786
-    Zypper.repositories.map {|r| r.to_openstruct }
-  end
-
   describe '.enable_repository' do
     it 'enables zypper repository' do
       expect(SUSE::Connect::Zypper).to receive(:enable_repository).with('repository_name')
@@ -55,6 +36,16 @@ describe SUSE::Connect::Migration do
     it 'returns an array of OpenStruct objects' do
       expect(SUSE::Connect::Zypper).to receive(:repositories).and_return([{ name: 'foo' }, { name: 'bar' }])
       expect(described_class.repositories.any? {|r| r.is_a?(OpenStruct) }).to be true
+    end
+  end
+
+  describe '.add_service' do
+    it 'forwards to zypper add_service' do
+      service_url = 'http://bla.bla'
+      service_name = 'bla'
+      expect(SUSE::Connect::Zypper).to receive(:add_service).with(service_url, service_name)
+
+      described_class.add_service(service_url, service_name)
     end
   end
 
