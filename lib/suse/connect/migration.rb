@@ -1,9 +1,13 @@
+require 'suse/connect/core_ext/hash_refinement'
+
 module SUSE
   module Connect
 
     # Migration class is an abstraction layer for SLE migration script
     # Migration script call this class from: https://github.com/nadvornik/zypper-migration/blob/master/zypper-migration
     class Migration
+      using SUSE::Connect::CoreExt::HashRefinement
+
       class << self
         # Returns installed and activated products on the system
         # @param [Hash] client_params parameters to instantiate {Client}
@@ -11,6 +15,25 @@ module SUSE
         def system_products(client_params = {})
           config = SUSE::Connect::Config.new.merge!(client_params)
           Status.new(config).system_products.map(&:to_openstruct)
+        end
+
+        # Forwards the repository which should be enabled with zypper
+        # @param [String] repository name to enable
+        def enable_repository(name)
+          Zypper.enable_repository(name)
+        end
+
+        # Forwards the repository which should be disabled with zypper
+        # @param [String] repository name to disable
+        def disable_repository(name)
+          Zypper.disable_repository(name)
+        end
+
+        # Returns the list of available repositories
+        # @return [Array <OpenStruct>] the list of zypper repositories
+        def repositories
+          # INFO: use block instead of .map(&:to_openstruct) see https://bugs.ruby-lang.org/issues/9786
+          Zypper.repositories.map{|r| r.to_openstruct }
         end
 
         # Forwards the service which should be added with zypper
