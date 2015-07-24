@@ -29,7 +29,7 @@ describe SUSE::Connect::Migration do
   # @return [Array <OpenStruct>] the list of zypper repositories
   def repositories
     # INFO: use block instead of .map(&:to_openstruct) see https://bugs.ruby-lang.org/issues/9786
-    Zypper.repositories.map{|r| r.to_openstruct }
+    Zypper.repositories.map {|r| r.to_openstruct }
   end
 
   describe '.enable_repository' do
@@ -53,8 +53,8 @@ describe SUSE::Connect::Migration do
     end
 
     it 'returns an array of OpenStruct objects' do
-      expect(SUSE::Connect::Zypper).to receive(:repositories).and_return([{name: 'foo'}, {name: 'bar'}])
-      expect(described_class.repositories.any?{|r| r.is_a?(OpenStruct)}).to be true
+      expect(SUSE::Connect::Zypper).to receive(:repositories).and_return([{ name: 'foo' }, { name: 'bar' }])
+      expect(described_class.repositories.any? {|r| r.is_a?(OpenStruct) }).to be true
     end
   end
 

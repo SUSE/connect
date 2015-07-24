@@ -33,7 +33,7 @@ module SUSE
         # @return [Array <OpenStruct>] the list of zypper repositories
         def repositories
           # INFO: use block instead of .map(&:to_openstruct) see https://bugs.ruby-lang.org/issues/9786
-          Zypper.repositories.map{|r| r.to_openstruct }
+          Zypper.repositories.map {|r| r.to_openstruct }
         end
 
         # Forwards the service which should be added with zypper
