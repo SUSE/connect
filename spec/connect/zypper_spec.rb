@@ -69,7 +69,7 @@ describe SUSE::Connect::Zypper do
     end
   end
 
-  describe '#enable_repository' do
+  describe '.enable_repository' do
     let(:repository) { 'repository' }
 
     it 'enables zypper repository' do
@@ -84,7 +84,7 @@ describe SUSE::Connect::Zypper do
     end
   end
 
-  describe '#disable_repository' do
+  describe '.disable_repository' do
     let(:repository) { 'repository' }
 
     it 'enables zypper repository' do
@@ -96,6 +96,21 @@ describe SUSE::Connect::Zypper do
       exception = "SUSE::Connect::ZypperError: Repository #{repository} not found."
       expect(Open3).to receive(:capture3).with(shared_env_hash, "zypper --non-interactive modifyrepo -d #{repository}").and_raise(exception)
       expect{subject.disable_repository(repository)}.to raise_error("SUSE::Connect::ZypperError: Repository #{repository} not found.")
+    end
+  end
+
+  describe '.repositories' do
+    let(:zypper_output) { File.read('spec/fixtures/zypper_repositories.xml') }
+    let(:args) { 'zypper --xmlout --non-interactive repos -d' }
+
+    before do
+      expect(Open3).to receive(:capture3).with(shared_env_hash, args).at_least(1).and_return([zypper_output, '', status])
+    end
+
+    it 'lists all defined repositories' do
+      expect(subject.repositories.size).to eq 4
+      expect(subject.repositories.first.keys).to match_array([:alias, :name, :type, :priority, :enabled, :autorefresh, :gpgcheck, :url])
+      expect(subject.repositories.map {|service| service[:name] }).to match_array(['SLES12-Debuginfo-Pool', 'SLES12-Debuginfo-Updates', 'SLES12-Pool', 'SLES12-Updates'])
     end
   end
 

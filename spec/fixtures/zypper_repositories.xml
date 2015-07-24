@@ -1,0 +1,17 @@
+<?xml version='1.0'?>
+  <stream>
+    <repo-list>
+      <repo alias="SUSE_Linux_Enterprise_Server_12_x86_64:SLES12-Debuginfo-Pool" name="SLES12-Debuginfo-Pool" type="rpm-md" priority="99" enabled="0" autorefresh="0" gpgcheck="1">
+        <url>https://updates.suse.com/SUSE/Products/SLE-SERVER/12/x86_64/product_debug</url>
+      </repo>
+      <repo alias="SUSE_Linux_Enterprise_Server_12_x86_64:SLES12-Debuginfo-Updates" name="SLES12-Debuginfo-Updates" type="rpm-md" priority="99" enabled="0" autorefresh="1" gpgcheck="1">
+        <url>https://updates.suse.com/SUSE/Updates/SLE-SERVER/12/x86_64/update_debug</url>
+      </repo>
+      <repo alias="SUSE_Linux_Enterprise_Server_12_x86_64:SLES12-Pool" name="SLES12-Pool" type="rpm-md" priority="99" enabled="1" autorefresh="0" gpgcheck="1">
+        <url>https://updates.suse.com/SUSE/Products/SLE-SERVER/12/x86_64/product</url>
+      </repo>
+      <repo alias="SUSE_Linux_Enterprise_Server_12_x86_64:SLES12-Updates" name="SLES12-Updates" type="rpm-md" priority="99" enabled="1" autorefresh="1" gpgcheck="1">
+        <url>https://updates.suse.com/SUSE/Updates/SLE-SERVER/12/x86_64/update?</url>
+      </repo>
+    </repo-list>
+</stream>
