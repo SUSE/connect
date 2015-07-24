@@ -45,7 +45,7 @@ module SUSE
         def repositories
           zypper_out = call('--xmlout --non-interactive repos -d', false)
           xml_doc = REXML::Document.new(zypper_out, compress_whitespace: [])
-          xml_doc.elements.each('stream/repo-list/repo'){}.map{|r| r.to_hash.merge!(url: r.elements['url'].text) }
+          xml_doc.elements.each('stream/repo-list/repo') {}.map {|r| r.to_hash.merge!(url: r.elements['url'].text) }
         end
 
         # @param service_url [String] url to appropriate repomd.xml to be fed to zypper
