@@ -305,23 +305,23 @@ describe SUSE::Connect::Zypper do
     mock_dry_file
 
     before do
-      Credentials.any_instance.stub(:write)
+      allow_any_instance_of(Credentials).to receive(:write).and_return true
     end
 
     it 'extracts username and password from system credentials' do
-      System.should_receive(:credentials)
+      expect(System).to receive(:credentials)
       subject.write_service_credentials('turbo')
     end
 
     it 'creates a file with source name' do
-      Credentials.should_receive(:new).with('dummy', 'tummy', 'turbo').and_call_original
+      expect(Credentials).to receive(:new).with('dummy', 'tummy', 'turbo').and_call_original
       subject.write_service_credentials('turbo')
     end
   end
 
   describe '.distro_target' do
     it 'return zypper targetos output' do
-      Open3.should_receive(:capture3).with(shared_env_hash, 'zypper targetos').and_return(['openSUSE-13.1-x86_64', '', status])
+      expect(Open3).to receive(:capture3).with(shared_env_hash, 'zypper targetos').and_return(['openSUSE-13.1-x86_64', '', status])
       expect(Zypper.distro_target).to eq 'openSUSE-13.1-x86_64'
     end
 
@@ -329,7 +329,7 @@ describe SUSE::Connect::Zypper do
       allow(SUSE::Connect::System).to receive(:filesystem_root).and_return '/path/to/root'
 
       args = "zypper --root '/path/to/root' targetos"
-      Open3.should_receive(:capture3).with(shared_env_hash, args).and_return(['openSUSE-13.1-x86_64', '', status])
+      expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['openSUSE-13.1-x86_64', '', status])
       expect(Zypper.distro_target).to eq 'openSUSE-13.1-x86_64'
     end
   end
