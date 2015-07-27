@@ -210,15 +210,12 @@ describe SUSE::Connect::Api do
   describe 'upgrade_product' do
     let(:api_endpoint) { '/connect/systems/products' }
     let(:system_auth) { 'basic_auth_mock' }
-    let(:product) { Remote::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64') }
+    let(:product) { Remote::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64', release_type: 'aaaa') }
+    let(:openstruct_product) { product.to_openstruct }
 
     it 'calls ConnectAPI with basic auth and params and receives a JSON in return' do
-      stub_upgrade_call
-      Connection.any_instance.should_receive(:put)
-        .with(api_endpoint, auth: system_auth, params: product.to_params)
-        .and_call_original
-      response = subject.new(client).upgrade_product(system_auth, product)
-      expect(response.body['sources'].keys.first).to include('SUSE')
+      expect_any_instance_of(Connection).to receive(:put).with(api_endpoint, auth: system_auth, params: openstruct_product.to_params)
+      subject.new(client).upgrade_product(system_auth, openstruct_product)
     end
   end
 
@@ -265,7 +262,8 @@ describe SUSE::Connect::Api do
         ]
       end
 
-      let(:query) { { installed_products: products.map(&:to_params) } }
+      let(:openstruct_products) { products.map(&:to_openstruct) }
+      let(:query) { { installed_products: openstruct_products.map(&:to_params) } }
 
       it 'is authenticated via basic auth' do
         payload = [
@@ -277,17 +275,17 @@ describe SUSE::Connect::Api do
           .with(*payload)
           .and_call_original
 
-        subject.new(client).system_migrations('Basic: encodedgibberish', products)
+        subject.new(client).system_migrations('Basic: encodedgibberish', openstruct_products)
       end
 
       it 'responds with proper status code' do
-        response = subject.new(client).system_migrations('Basic: encodedgibberish', products)
+        response = subject.new(client).system_migrations('Basic: encodedgibberish', openstruct_products)
 
         expect(response.code).to eq 200
       end
 
       it 'returns array of arrays of product hashes' do
-        body = subject.new(client).system_migrations('Basic: encodedgibberish', products).body
+        body = subject.new(client).system_migrations('Basic: encodedgibberish', openstruct_products).body
 
         expect(body.first).to include('identifier' => 'SLES', 'version' => '12.1', 'arch' => 'x86_64', 'release_type' => 'HP-CNB')
         expect(body.first).to include('identifier' => 'SUSE-Cloud', 'version' => '8', 'arch' => 'x86_64', 'release_type' => nil)
@@ -300,9 +298,10 @@ describe SUSE::Connect::Api do
       end
 
       let(:products) { [Remote::Product.new(identifier: 'SLES', version: 'not-upgradeable', arch: 'x86_64', release_type: nil)] }
+      let(:openstruct_products) { products.map(&:to_openstruct) }
 
       it 'returns an empty array' do
-        body = subject.new(client).system_migrations('Basic: encodedgibberish', products).body
+        body = subject.new(client).system_migrations('Basic: encodedgibberish', openstruct_products).body
 
         expect(body).to match_array([])
       end
