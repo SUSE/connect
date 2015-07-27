@@ -29,7 +29,6 @@ describe SUSE::Toolkit::Cast do
   end
 end
 
-
 describe OpenStruct do
   describe '#to_params' do
     it 'responds to .to_params method (alias method for .to_h)' do
