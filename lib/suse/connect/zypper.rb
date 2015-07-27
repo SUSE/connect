@@ -33,6 +33,21 @@ module SUSE
           call('targetos', false)
         end
 
+        def enable_repository(name)
+          call("--non-interactive modifyrepo -e #{name}")
+        end
+
+        def disable_repository(name)
+          call("--non-interactive modifyrepo -d #{name}")
+        end
+
+        # Returns an array of hashes of all available repositories
+        def repositories
+          zypper_out = call('--xmlout --non-interactive repos -d', false)
+          xml_doc = REXML::Document.new(zypper_out, compress_whitespace: [])
+          xml_doc.elements.each('stream/repo-list/repo') {}.map {|r| r.to_hash.merge!(url: r.elements['url'].text) }
+        end
+
         # @param service_url [String] url to appropriate repomd.xml to be fed to zypper
         # @param service_name [String] Alias-mnemonic with which zypper should add this service
         # @return [TrueClass]

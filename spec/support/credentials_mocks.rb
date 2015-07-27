@@ -1,8 +1,8 @@
 def mock_dry_file
   let :source_cred_file do
     opened_file = double('me_file')
-    opened_file.stub(:puts => true)
-    opened_file.stub(:close => true)
+    allow(opened_file).to receive(:puts).and_return true
+    allow(opened_file).to receive(:close).and_return true
     opened_file
   end
 
@@ -12,10 +12,10 @@ def mock_dry_file
 
   # TODO: Mock it explicitly by path
   before(:each) do
-    File.stub(:open => source_cred_file)
-    File.any_instance.stub(:puts => true)
-    Dir.stub(:mkdir => true)
-    SUSE::Connect::System.stub(:credentials => Credentials.new('dummy', 'tummy'))
+    allow(File).to receive(:open).and_return source_cred_file
+    allow_any_instance_of(File).to receive(:puts).and_return true
+    allow(Dir).to receive(:mkdir).and_return true
+    allow(SUSE::Connect::System).to receive(:credentials).and_return Credentials.new('dummy', 'tummy')
   end
 end
 
