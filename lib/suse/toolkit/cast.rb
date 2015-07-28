@@ -23,3 +23,11 @@ module SUSE
     end
   end
 end
+
+# INFO: We have to convert OpenStruct instance to hash in order to be able to send it's attributes as a parameters
+# https://github.com/SUSE/connect/blob/master/lib/suse/connect/api.rb#L97
+# https://github.com/SUSE/connect/blob/master/lib/suse/connect/api.rb#L105
+# https://github.com/SUSE/connect/blob/master/lib/suse/connect/api.rb#L161
+class OpenStruct
+  alias_method :to_params, :to_h
+end
