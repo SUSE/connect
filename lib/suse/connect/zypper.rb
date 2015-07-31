@@ -65,6 +65,14 @@ module SUSE
           remove_service_credentials(service_name)
         end
 
+        # @param product identifier [String]
+        # Returns an array of hashes of all solvable products
+        def find_products(identifier)
+          zypper_out = call("--xmlout --non-interactive search -s -t product #{identifier}", false)
+          xml_doc = REXML::Document.new(zypper_out, compress_whitespace: [])
+          xml_doc.elements.each('stream/search-result/solvable-list/solvable'){}.map(&:to_hash)
+        end
+
         ##
         # Remove all installed SUSE services
         def remove_all_suse_services
