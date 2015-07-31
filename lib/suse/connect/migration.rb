@@ -2,7 +2,6 @@ require 'suse/connect/core_ext/hash_refinement'
 
 module SUSE
   module Connect
-
     # Migration class is an abstraction layer for SLE migration script
     # Migration script call this class from: https://github.com/nadvornik/zypper-migration/blob/master/zypper-migration
     class Migration
@@ -49,8 +48,12 @@ module SUSE
           SUSE::Connect::Zypper.remove_service(service_name)
         end
 
+        # Finds the solvable products available on the system
+        # @param [String] identifier e.g. SLES
+        def find_products(identifier)
+          SUSE::Connect::Zypper.find_products(identifier)
+        end
       end
     end
-
   end
 end

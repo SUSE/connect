@@ -58,4 +58,11 @@ describe SUSE::Connect::Migration do
     end
   end
 
+  describe '.find_products' do
+    it 'finds the solvable products available on the system' do
+      product_identifier = 'SLES'
+      expect(SUSE::Connect::Zypper).to receive(:find_products).with(product_identifier)
+      described_class.find_products(product_identifier)
+    end
+  end
 end
