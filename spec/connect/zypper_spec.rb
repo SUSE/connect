@@ -180,7 +180,7 @@ describe SUSE::Connect::Zypper do
     it 'finds products by identifier' do
       products = subject.find_products('SLES')
       expect(products.size).to eq 2
-      expect(products.map{|p| p[:repository]}).to match_array(['SLES-12', 'SLES12-Pool'])
+      expect(products.map {|p| p[:repository] }).to match_array(%w{SLES-12 SLES12-Pool})
     end
   end
 
