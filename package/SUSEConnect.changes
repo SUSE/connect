@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Fri Jul 31 07:18:45 UTC 2015 - vlewin@suse.com
+
+- Update to version 0.2.19
+  - Introduction of migration abstraction layer for migration script
+  - Clean up and re-factoring of yast abstraction layer
+
+-------------------------------------------------------------------
 Mon Jun 15 11:17:45 UTC 2015 - vlewin@suse.com
 
 - Update to version 0.2.18
