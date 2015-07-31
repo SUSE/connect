@@ -50,8 +50,10 @@ module SUSE
 
         # Finds the solvable products available on the system
         # @param [String] identifier e.g. SLES
+        # @return [Array <OpenStruct>] the list of solvable products available on the system
         def find_products(identifier)
-          SUSE::Connect::Zypper.find_products(identifier)
+          # INFO: use block instead of .map(&:to_openstruct) see https://bugs.ruby-lang.org/issues/9786
+          SUSE::Connect::Zypper.find_products(identifier).map{ |p| p.to_openstruct }
         end
       end
     end
