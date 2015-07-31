@@ -70,7 +70,7 @@ module SUSE
         def find_products(identifier)
           zypper_out = call("--xmlout --non-interactive search -s -t product #{identifier}", false)
           xml_doc = REXML::Document.new(zypper_out, compress_whitespace: [])
-          xml_doc.elements.each('stream/search-result/solvable-list/solvable'){ }.map(&:to_hash)
+          xml_doc.elements.each('stream/search-result/solvable-list/solvable') {}.map(&:to_hash)
         end
 
         ##
