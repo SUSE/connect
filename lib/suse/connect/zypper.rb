@@ -41,6 +41,10 @@ module SUSE
           call("--non-interactive modifyrepo -d #{name}")
         end
 
+        def refresh
+          call('--non-interactive refresh')
+        end
+
         # Returns an array of hashes of all available repositories
         def repositories
           zypper_out = call('--xmlout --non-interactive repos -d', false)
@@ -54,9 +58,12 @@ module SUSE
         #
         # @todo TODO: introduce Product class
         def add_service(service_url, service_name)
-          service = "#{Shellwords.escape(service_url)} '#{Shellwords.escape(service_name)}'"
-          call("--non-interactive addservice -t ris #{service}")
-          call("--non-interactive modifyservice -r #{Shellwords.escape(service_url)}")
+          # INFO: Remove old service which could be modified by a customer
+          remove_service(service_name)
+          call("--non-interactive addservice -t ris #{Shellwords.escape(service_url)} '#{Shellwords.escape(service_name)}'")
+          enable_service_autorefresh(service_name)
+          write_service_credentials(service_name)
+          refresh_services
         end
 
         # @param service_name [String] Alias-mnemonic with which zypper should remove this service
@@ -83,13 +90,13 @@ module SUSE
           end
         end
 
-        # @param service_name [String] Alias-mnemonic with which service credentials file should be removed
-        def remove_service_credentials(service_name)
-          service_credentials_file = File.join(SUSE::Connect::Credentials::DEFAULT_CREDENTIALS_DIR, service_name)
+        # @param service_name [String] Alias-mnemonic with which zypper should enable service autorefresh
+        def enable_service_autorefresh(service_name)
+          call("--non-interactive modifyservice -r #{Shellwords.escape(service_name)}")
+        end
 
-          if File.exist?(service_credentials_file)
-            File.delete service_credentials_file
-          end
+        def refresh_services
+          call('--non-interactive refresh-services -r')
         end
 
         ##
@@ -100,19 +107,20 @@ module SUSE
           xml_doc.elements.to_a('stream/service-list/service').map(&:to_hash)
         end
 
-        def refresh
-          call('--non-interactive refresh')
-        end
-
-        def refresh_services
-          call('--non-interactive refresh-services -r')
-        end
-
         def write_service_credentials(service_name)
           login = System.credentials.username
           password = System.credentials.password
           credentials = Credentials.new(login, password, service_name)
           credentials.write
+        end
+
+        # @param service_name [String] Alias-mnemonic with which service credentials file should be removed
+        def remove_service_credentials(service_name)
+          service_credentials_file = File.join(SUSE::Connect::Credentials::DEFAULT_CREDENTIALS_DIR, service_name)
+
+          if File.exist?(service_credentials_file)
+            File.delete service_credentials_file
+          end
         end
 
         def write_base_credentials(login, password)

@@ -112,41 +112,54 @@ describe SUSE::Connect::Zypper do
   end
 
   describe '.add_service' do
-    describe 'calls zypper with proper arguments' do
-      it 'adds service' do
-        addservice_args = "zypper --non-interactive addservice -t ris http://example.com 'branding'"
-        autorefresh_args = 'zypper --non-interactive modifyservice -r http://example.com'
-        expect(Open3).to receive(:capture3).with(shared_env_hash, addservice_args).and_return(['', '', status])
-        allow(Open3).to receive(:capture3).with(shared_env_hash, autorefresh_args).and_return(['', '', status])
-        subject.add_service('http://example.com', 'branding')
-      end
+    let(:service_name) { 'valid_service' }
+    let(:service_url)  { 'http://example.com' }
+    let(:args) { "zypper --non-interactive addservice -t ris #{service_url} '#{service_name}'" }
 
-      it 'sets autorefresh flag' do
-        addservice_args = "zypper --non-interactive addservice -t ris http://example.com 'branding'"
-        autorefresh_args = 'zypper --non-interactive modifyservice -r http://example.com'
-        allow(Open3).to receive(:capture3).with(shared_env_hash, addservice_args).and_return(['', '', status])
-        expect(Open3).to receive(:capture3).with(shared_env_hash, autorefresh_args).and_return(['', '', status])
-        subject.add_service('http://example.com', 'branding')
-      end
+    before :each do
+      allow(Zypper).to receive(:remove_service).with(service_name)
+      allow(Zypper).to receive(:enable_service_autorefresh).with(service_name)
+      allow(Zypper).to receive(:write_service_credentials).with(service_name)
+      allow(Zypper).to receive(:refresh_services)
     end
 
-    it 'escapes shell parameters' do
-      args = "zypper --non-interactive addservice -t ris http://example.com\\;id 'branding'"
-      autorefresh_args = 'zypper --non-interactive modifyservice -r http://example.com\\;id'
-      allow(Open3).to receive(:capture3).with(shared_env_hash, autorefresh_args).and_return(['', '', status])
+    it 'adds service' do
+      expect(Zypper).to receive(:remove_service).with(service_name)
       expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
-      subject.add_service('http://example.com;id', 'branding')
+      expect(Zypper).to receive(:enable_service_autorefresh).with(service_name)
+      expect(Zypper).to receive(:write_service_credentials).with(service_name)
+      expect(Zypper).to receive(:refresh_services)
+
+      subject.add_service(service_url, service_name)
+    end
+
+    it 'sets autorefresh flag' do
+      expect(Zypper).to receive(:enable_service_autorefresh).with(service_name)
+      expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
+      subject.add_service(service_url, service_name)
     end
 
     it 'calls zypper with proper arguments --root case' do
+      args = "zypper --root '/path/to/root' --non-interactive addservice -t ris #{service_url} '#{service_name}'"
+
       allow(SUSE::Connect::System).to receive(:filesystem_root).and_return '/path/to/root'
-
-      args = "zypper --root '/path/to/root' --non-interactive addservice -t ris http://example.com 'branding'"
-      autorefresh_args = "zypper --root '/path/to/root' --non-interactive modifyservice -r http://example.com"
-      allow(Open3).to receive(:capture3).with(shared_env_hash, autorefresh_args).and_return(['', '', status])
       expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
+      subject.add_service(service_url, service_name)
+    end
 
-      subject.add_service('http://example.com', 'branding')
+    it 'escapes shell parameters' do
+      malformed_service_url = "#{service_url};id"
+      malformed_service_name = "#{service_name};id"
+      escaped_service_url = Shellwords.escape(malformed_service_url)
+      escaped_service_name = Shellwords.escape(malformed_service_name)
+
+      args = "zypper --non-interactive addservice -t ris #{escaped_service_url} '#{escaped_service_name}'"
+
+      expect(Zypper).to receive(:remove_service).with(malformed_service_name)
+      expect(Zypper).to receive(:enable_service_autorefresh).with(malformed_service_name)
+      expect(Zypper).to receive(:write_service_credentials).with(malformed_service_name)
+      expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
+      subject.add_service(malformed_service_url, malformed_service_name)
     end
   end
 
@@ -264,6 +277,22 @@ describe SUSE::Connect::Zypper do
     end
   end
 
+  describe '.enable_service_autorefresh' do
+    let(:service_name) { 'zypper_service' }
+    it 'calls zypper with proper arguments' do
+      args = "zypper --non-interactive modifyservice -r #{service_name}"
+      expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
+      subject.enable_service_autorefresh service_name
+    end
+
+    it 'calls zypper with proper arguments' do
+      allow(SUSE::Connect::System).to receive(:filesystem_root).and_return '/path/to/root'
+      args = "zypper --root '/path/to/root' --non-interactive modifyservice -r #{service_name}"
+      expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
+      subject.enable_service_autorefresh service_name
+    end
+  end
+
   describe '.refresh_services' do
     it 'calls zypper with proper arguments' do
       expect(Open3).to receive(:capture3).with(shared_env_hash, 'zypper --non-interactive refresh-services -r').and_return(['', '', status])
@@ -311,7 +340,7 @@ describe SUSE::Connect::Zypper do
     end
 
     it 'should call write_base_credentials_file' do
-      Credentials.should_receive(:new).with('dummy', 'tummy', Credentials::GLOBAL_CREDENTIALS_FILE).and_call_original
+      expect(Credentials).to receive(:new).with('dummy', 'tummy', Credentials::GLOBAL_CREDENTIALS_FILE).and_call_original
       subject.write_base_credentials('dummy', 'tummy')
     end
   end

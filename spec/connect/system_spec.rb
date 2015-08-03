@@ -110,10 +110,7 @@ describe SUSE::Connect::System do
     end
 
     it 'adds zypper service to the system' do
-      Zypper.should_receive(:remove_service).with('JiYoKo')
-      Zypper.should_receive(:add_service).with('furl', 'JiYoKo')
-      Zypper.should_receive(:write_service_credentials).with('JiYoKo')
-      Zypper.should_receive(:refresh_services).exactly(1).times
+      expect(Zypper).to receive(:add_service).with('furl', 'JiYoKo')
       subject.add_service mock_service
     end
 
