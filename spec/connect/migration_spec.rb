@@ -58,4 +58,16 @@ describe SUSE::Connect::Migration do
     end
   end
 
+  describe '.find_products' do
+    it 'finds the solvable products available on the system' do
+      product_identifier = 'SLES'
+      expect(SUSE::Connect::Zypper).to receive(:find_products).with(product_identifier).and_return([])
+      described_class.find_products(product_identifier)
+    end
+
+    it 'returns an array of OpenStruct objects' do
+      expect(SUSE::Connect::Zypper).to receive(:find_products).and_return([{ name: 'foo' }, { name: 'bar' }])
+      expect(described_class.find_products('identifier').any? {|r| r.is_a?(OpenStruct) }).to be true
+    end
+  end
 end

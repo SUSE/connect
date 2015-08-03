@@ -1,0 +1,13 @@
+<?xml version='1.0'?>
+<stream>
+  <message type="info">Refreshing service &apos;SUSE_Linux_Enterprise_Server_12_x86_64&apos;.</message>
+  <message type="info">Loading repository data...</message>
+  <message type="info">Reading installed packages...</message>
+
+  <search-result version="0.0">
+    <solvable-list>
+      <solvable status="installed" name="SLES" kind="product" edition="12-0" arch="x86_64" repository="SLES-12"/>
+      <solvable status="installed" name="SLES" kind="product" edition="12-0" arch="x86_64" repository="SLES12-Pool"/>
+    </solvable-list>
+  </search-result>
+</stream>

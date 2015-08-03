@@ -169,6 +169,21 @@ describe SUSE::Connect::Zypper do
     end
   end
 
+  describe '.find_products' do
+    let(:zypper_sles_product_search) { File.read('spec/fixtures/zypper_sles_product_search.xml') }
+    let(:args) { 'zypper --xmlout --non-interactive search -s -t product SLES' }
+
+    before do
+      expect(Open3).to receive(:capture3).with(shared_env_hash, args).at_least(1).and_return([zypper_sles_product_search, '', status])
+    end
+
+    it 'finds products by identifier' do
+      products = subject.find_products('SLES')
+      expect(products.size).to eq 2
+      expect(products.map {|p| p[:repository] }).to match_array(%w{SLES-12 SLES12-Pool})
+    end
+  end
+
   describe '.remove_all_suse_services' do
     let(:zypper_services_output) { File.read('spec/fixtures/zypper_services.xml') }
     let(:service_args) { 'zypper --xmlout --non-interactive services -d' }
@@ -273,8 +288,8 @@ describe SUSE::Connect::Zypper do
     end
 
     before do
-      subject.stub(installed_products: parsed_products)
-      Credentials.any_instance.stub(:write)
+      allow(subject).to receive(:installed_products).and_return parsed_products
+      allow_any_instance_of(Credentials).to receive(:write).and_return true
     end
 
     it 'should return first product from installed product which is base' do
