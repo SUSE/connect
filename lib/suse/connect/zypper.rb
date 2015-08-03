@@ -58,12 +58,9 @@ module SUSE
         #
         # @todo TODO: introduce Product class
         def add_service(service_url, service_name)
-          service_url = Shellwords.escape(service_url)
-          service_name = Shellwords.escape(service_name)
-
           # INFO: Remove old service which could be modified by a customer
           remove_service(service_name)
-          call("--non-interactive addservice -t ris #{service_url} '#{service_name}'")
+          call("--non-interactive addservice -t ris #{Shellwords.escape(service_url)} '#{Shellwords.escape(service_name)}'")
           enable_service_autorefresh(service_name)
           write_service_credentials(service_name)
           refresh_services

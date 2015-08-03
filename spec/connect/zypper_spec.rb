@@ -155,9 +155,9 @@ describe SUSE::Connect::Zypper do
 
       args = "zypper --non-interactive addservice -t ris #{escaped_service_url} '#{escaped_service_name}'"
 
-      expect(Zypper).to receive(:remove_service).with(escaped_service_name)
-      expect(Zypper).to receive(:enable_service_autorefresh).with(escaped_service_name)
-      expect(Zypper).to receive(:write_service_credentials).with(escaped_service_name)
+      expect(Zypper).to receive(:remove_service).with(malformed_service_name)
+      expect(Zypper).to receive(:enable_service_autorefresh).with(malformed_service_name)
+      expect(Zypper).to receive(:write_service_credentials).with(malformed_service_name)
       expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
       subject.add_service(malformed_service_url, malformed_service_name)
     end
