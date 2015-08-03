@@ -44,10 +44,7 @@ module SUSE
 
         def add_service(service)
           raise ArgumentError, 'only Remote::Service accepted' unless service.is_a? Remote::Service
-          Zypper.remove_service(service.name)
           Zypper.add_service(service.url, service.name)
-          Zypper.write_service_credentials(service.name)
-          Zypper.refresh_services
           service
         end
 

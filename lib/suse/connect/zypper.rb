@@ -54,9 +54,20 @@ module SUSE
         #
         # @todo TODO: introduce Product class
         def add_service(service_url, service_name)
-          service = "#{Shellwords.escape(service_url)} '#{Shellwords.escape(service_name)}'"
-          call("--non-interactive addservice -t ris #{service}")
-          call("--non-interactive modifyservice -r #{Shellwords.escape(service_url)}")
+          service_url = Shellwords.escape(service_url)
+          service_name = Shellwords.escape(service_name)
+
+          # INFO: Remove old service which could be modified by a customer
+          remove_service(service_name)
+          call("--non-interactive addservice -t ris #{service_url} '#{service_name}'")
+          enable_service_autorefresh(service_name)
+          write_service_credentials(service_name)
+          refresh_services
+        end
+
+        # @param service_name [String] Alias-mnemonic with which zypper should enable service autorefresh
+        def enable_service_autorefresh(service_name)
+          call("--non-interactive modifyservice -r #{Shellwords.escape(service_name)}")
         end
 
         # @param service_name [String] Alias-mnemonic with which zypper should remove this service
