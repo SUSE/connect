@@ -262,6 +262,22 @@ describe SUSE::Connect::Zypper do
     end
   end
 
+  describe '.enable_service_autorefresh' do
+    let(:service_name) { 'zypper_service' }
+    it 'calls zypper with proper arguments' do
+      args = "zypper --non-interactive modifyservice -r #{service_name}"
+      expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
+      subject.enable_service_autorefresh service_name
+    end
+
+    it 'calls zypper with proper arguments' do
+      allow(SUSE::Connect::System).to receive(:filesystem_root).and_return '/path/to/root'
+      args = "zypper --root '/path/to/root' --non-interactive modifyservice -r #{service_name}"
+      expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
+      subject.enable_service_autorefresh service_name
+    end
+  end
+
   describe '.refresh_services' do
     it 'calls zypper with proper arguments' do
       expect(Open3).to receive(:capture3).with(shared_env_hash, 'zypper --non-interactive refresh-services -r').and_return(['', '', status])
