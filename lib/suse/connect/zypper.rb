@@ -45,7 +45,7 @@ module SUSE
         def repositories
           zypper_out = call('--xmlout --non-interactive repos -d', false)
           xml_doc = REXML::Document.new(zypper_out, compress_whitespace: [])
-          xml_doc.elements.each('stream/repo-list/repo') {}.map {|r| r.to_hash.merge!(url: r.elements['url'].text) }
+          xml_doc.elements.to_a('stream/repo-list/repo').map {|r| r.to_hash.merge!(url: r.elements['url'].text) }
         end
 
         # @param service_url [String] url to appropriate repomd.xml to be fed to zypper
@@ -70,7 +70,7 @@ module SUSE
         def find_products(identifier)
           zypper_out = call("--xmlout --non-interactive search -s -t product #{identifier}", false)
           xml_doc = REXML::Document.new(zypper_out, compress_whitespace: [])
-          xml_doc.elements.each('stream/search-result/solvable-list/solvable') {}.map(&:to_hash)
+          xml_doc.elements.to_a('stream/search-result/solvable-list/solvable').map(&:to_hash)
         end
 
         ##
@@ -97,7 +97,7 @@ module SUSE
         def services
           zypper_out = call('--xmlout --non-interactive services -d', false)
           xml_doc = REXML::Document.new(zypper_out, compress_whitespace: [])
-          xml_doc.elements.each('stream/service-list/service') {}.map(&:to_hash)
+          xml_doc.elements.to_a('stream/service-list/service').map(&:to_hash)
         end
 
         def refresh
