@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Tue Aug  4 06:25:51 UTC 2015 - vlewin@suse.com
+
+- Update to version 0.2.20
+  - Add find_products method to migration abstraction layer
+  - Fix add_service method which also creates the credentials files 
+
+-------------------------------------------------------------------
 Fri Jul 31 07:18:45 UTC 2015 - vlewin@suse.com
 
 - Update to version 0.2.19
