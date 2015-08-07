@@ -34,11 +34,11 @@ module SUSE
         end
 
         def enable_repository(name)
-          call("--non-interactive modifyrepo -e #{name}")
+          call("--non-interactive modifyrepo -e #{Shellwords.escape(name)}")
         end
 
         def disable_repository(name)
-          call("--non-interactive modifyrepo -d #{name}")
+          call("--non-interactive modifyrepo -d #{Shellwords.escape(name)}")
         end
 
         def refresh
@@ -75,7 +75,7 @@ module SUSE
         # @param product identifier [String]
         # Returns an array of hashes of all solvable products
         def find_products(identifier)
-          zypper_out = call("--xmlout --non-interactive search -s -t product #{identifier}", false)
+          zypper_out = call("--xmlout --non-interactive search -s -t product #{Shellwords.escape(identifier)}", false)
           xml_doc = REXML::Document.new(zypper_out, compress_whitespace: [])
           xml_doc.elements.to_a('stream/search-result/solvable-list/solvable').map(&:to_hash)
         end
