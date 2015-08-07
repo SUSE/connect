@@ -60,7 +60,7 @@ module SUSE
             " Check #{@options[:url] || 'https://scc.suse.com'} whether your system appears there." \
             ' If it does not, please call SUSEConnect --cleanup and re-register this system.'
           else
-            log.fatal 'Error: Provided registration code is not recognized by registration server.'
+            log.fatal "Error: SCC returned '#{e.message}' (#{e.code})"
           end
         else
           log.fatal "Error: SCC returned '#{e.message}' (#{e.code})"

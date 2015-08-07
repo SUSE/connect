@@ -44,10 +44,14 @@ describe SUSE::Connect::Cli do
 
       context 'system has no proper credentials file' do
         it 'should suggest re-registration if ApiError 401 encountered' do
-          response = Net::HTTPResponse.new('1.1', 401, 'Test')
+          response = Net::HTTPResponse.new('1.1', 401, 'Invalid registration code')
+          # INFO: Use double instead of HTTPResponse mock https://www.ruby-forum.com/topic/4407036
+          response = double(code: 401, body: { 'localized_error' => 'Invalid registration code'})
           allow(System).to receive(:credentials?).and_return false
           expect_any_instance_of(Client).to receive(:register!).and_raise ApiError.new(response)
-          expect(string_logger).to receive(:fatal).with('Error: Provided registration code is not recognized by registration server.')
+
+          error_message = "Error: SCC returned 'Invalid registration code' (401)"
+          expect(string_logger).to receive(:fatal).with(error_message)
           cli.execute!
         end
       end
