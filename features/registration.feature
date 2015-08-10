@@ -20,3 +20,20 @@ Feature: Registration
   Scenario: passed token parameter without argument
     When I run `SUSEConnect --regcode --url http://localhost:3000`
     And the exit status should be 1
+
+  Scenario: passed invalid regcode
+    When I run `SUSEConnect --regcode foo --url http://localhost:3000`
+    Then the output should inform us that the regcode was invalid
+    And the exit status should be 1
+
+  Scenario: passed not yet active regcode
+    When I run `SUSEConnect --regcode foo --url http://localhost:3000`
+    Then the output should inform us that the regcode needs to be activated
+    And the exit status should be 1
+
+  Scenario: passed expired regcode
+    When I run `SUSEConnect --regcode foo --url http://localhost:3000`
+    Then the output should inform us that the regcode has expired
+    And the exit status should be 1
+
+
