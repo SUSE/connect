@@ -95,13 +95,36 @@ Feature: SUSEConnect full stack integration testing
 
 
   Scenario: Client provides meaningful message in case of invalid reg-code
-    When I call SUSEConnect with '--regcode invalid' arguments
+    When I call SUSEConnect with '--regcode INVALID' arguments
+    Then the exit status should be 67
+    And the output should contain:
+    """
+    Invalid registration code.
+    """
+
+  Scenario: passed invalid regcode
+    When I run `SUSEConnect --regcode foo --url http://localhost:3000`
     Then the exit status should be 67
     And the output should contain:
     """
     Error: Provided registration code is not recognized by registration server.
     """
 
+  Scenario: Client provides meaningful message in case of not yet active regcode
+    When I call SUSEConnect with '--regcode NOTYETACTIVATED' arguments
+    Then the exit status should be 67
+    And the output should contain:
+    """
+    Not yet activated registration code. Please visit https://scc.suse.com to activate it.
+    """
+
+  Scenario: Client provides meaningful message in case of expired regcode
+    When I call SUSEConnect with '--regcode EXPIRED' arguments
+    Then the exit status should be 67
+    And the output should contain:
+    """
+    Expired registration code.
+    """
 
   Scenario: Remove all registration leftovers
     When System cleanup
