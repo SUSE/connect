@@ -1,3 +1,5 @@
+# FIXME: These tests are not used! Can we remove them?
+
 Feature: Registration
 
   In order to register a system we should provide a functionality to pass
