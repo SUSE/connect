@@ -7,7 +7,7 @@ end
 
 Then(/^Prepare SUSEConnect client with a valid regcode/) do
   step 'Set regcode and url options'
-  @client = SUSE::Connect::Client.new(SUSE::Connect::Config.new.merge!(url: @url, regcode: @regcode))
+  @client = SUSE::Connect::Client.new(SUSE::Connect::Config.new.merge!(url: @url, regcode: @valid_regcode))
 end
 
 Then(/^I call SUSEConnect with '(.*)' arguments$/) do |args|
@@ -17,17 +17,17 @@ Then(/^I call SUSEConnect with '(.*)' arguments$/) do |args|
 
   case options['regcode']
   when 'INVALID'
-    @regcode = 'INVALID_REGCODE'
+    regcode = 'INVALID_REGCODE'
   when 'EXPIRED'
-    @regcode = @expired_regcode
+    regcode = @expired_regcode
   when 'NOTYETACTIVATED'
-    @regcode = @notyetactivated_regcode
+    regcode = @notyetactivated_regcode
   when 'VALID'
-    @regcode = @valid_regcode
+    regcode = @valid_regcode
   end
 
   connect = "SUSEConnect --url #{@url}"
-  connect << " -r #{@regcode}" if options['regcode']
+  connect << " -r #{regcode}" if options['regcode']
   connect << " -p #{options['product']}" if options['product']
   connect << ' -s' if options['status']
   connect << ' --cleanup' if options['cleanup']
@@ -81,7 +81,7 @@ end
 Then(/^SUSEConnect library should respect API headers$/) do
   step 'Prepare SUSEConnect client with a valid regcode'
 
-  response = SUSE::Connect::Api.new(@client).announce_system("Token token=#{@regcode}")
+  response = SUSE::Connect::Api.new(@client).announce_system("Token token=#{@valid_regcode}")
   expect(response.headers['scc-api-version'].first).to eq(SUSE::Connect::Api::VERSION)
 end
 
