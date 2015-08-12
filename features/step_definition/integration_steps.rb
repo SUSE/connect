@@ -1,7 +1,7 @@
 Then(/^Set regcode and url options$/) do
   @valid_regcode =  ENV['REGCODE'] || YAML.load_file('/root/.regcode')['code']
-  @expired_regcode = YAML.load_file('/root/.regcode')['expired_code']
-  @notyetactivated_regcode = YAML.load_file('/root/.regcode')['g']
+  @expired_regcode = YAML.load_file('/root/.regcode')['expired_code'] || "regcode file does not contain 'expired_code'!!"
+  @notyetactivated_regcode = YAML.load_file('/root/.regcode')['notyetactivated_code'] || "regcode file does not contain 'notyetactivated_code'!!"
   @url = ENV['URL'] || SUSE::Connect::Config::DEFAULT_URL
 end
 
