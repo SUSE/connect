@@ -17,6 +17,7 @@ Then(/^I call SUSEConnect with '(.*)' arguments$/) do |args|
   step 'Set regcode and url options'
 
   regcode = case options['regcode']
+            when nil
             when 'INVALID'
               'INVALID_REGCODE'
             when 'EXPIRED'
