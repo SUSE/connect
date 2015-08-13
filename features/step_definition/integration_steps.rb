@@ -17,14 +17,14 @@ Then(/^I call SUSEConnect with '(.*)' arguments$/) do |args|
   step 'Set regcode and url options'
 
   regcode = case options['regcode']
-  when 'INVALID'
-    'INVALID_REGCODE'
-  when 'EXPIRED'
-     @expired_regcode
-  when 'NOTYETACTIVATED'
-    @notyetactivated_regcode
-  when 'VALID'
-    @valid_regcode
+            when 'INVALID'
+              'INVALID_REGCODE'
+            when 'EXPIRED'
+              @expired_regcode
+            when 'NOTYETACTIVATED'
+              @notyetactivated_regcode
+            when 'VALID'
+              @valid_regcode
   end
 
   connect = "SUSEConnect --url #{@url}"
