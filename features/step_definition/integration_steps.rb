@@ -25,6 +25,8 @@ Then(/^I call SUSEConnect with '(.*)' arguments$/) do |args|
               @notyetactivated_regcode
             when 'VALID'
               @valid_regcode
+            else
+              @options['regcode']
   end
 
   connect = "SUSEConnect --url #{@url}"
