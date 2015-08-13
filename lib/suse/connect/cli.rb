@@ -53,15 +53,10 @@ module SUSE
         log.fatal 'Error: Cannot parse response from server'
         exit 66
       rescue ApiError => e
-        case e.code
-        when 401
-          if System.credentials?
-            log.fatal 'Error: Invalid system credentials, probably because the registered system was deleted in SUSE Customer Center.' \
-            " Check #{@options[:url] || 'https://scc.suse.com'} whether your system appears there." \
-            ' If it does not, please call SUSEConnect --cleanup and re-register this system.'
-          else
-            log.fatal "Error: SCC returned '#{e.message}' (#{e.code})"
-          end
+        if e.code == 401 && System.credentials?
+          log.fatal 'Error: Invalid system credentials, probably because the registered system was deleted in SUSE Customer Center.' \
+          " Check #{@options[:url] || 'https://scc.suse.com'} whether your system appears there." \
+          ' If it does not, please call SUSEConnect --cleanup and re-register this system.'
         else
           log.fatal "Error: SCC returned '#{e.message}' (#{e.code})"
         end
