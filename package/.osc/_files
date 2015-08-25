@@ -1,7 +1,7 @@
-<directory name="SUSEConnect" rev="71" srcmd5="5feb61e69a2c12ec3a573b15ccec5612" vrev="1">
+<directory name="SUSEConnect" rev="72" srcmd5="d54e7bd8e6196292635cceaa6f142c60" vrev="2">
   <entry md5="c7b7ded3efb5e2dfd83614f937daef75" mtime="1438669834" name="SUSEConnect.5.gz" size="693" />
   <entry md5="6773f5e0c65399d29855111291ed5512" mtime="1438669834" name="SUSEConnect.8.gz" size="1669" />
-  <entry md5="142c9b32c6cf5d3a5c5a5550c71f9783" mtime="1438669834" name="SUSEConnect.changes" size="11204" />
+  <entry md5="64ca5f92f6a64940cfd015ec1f3d21e1" mtime="1438860264" name="SUSEConnect.changes" size="11215" />
   <entry md5="0ec806db52d249028059602f052dad98" mtime="1407413878" name="SUSEConnect.example" size="377" />
   <entry md5="0eed57401c7bd0961aad071d04fdc2c2" mtime="1438669834" name="SUSEConnect.spec" size="3841" />
   <entry md5="ab573b068a4c9ec9fe72bc1087f46998" mtime="1409929419" name="gem2rpm.yml" size="3509" />
