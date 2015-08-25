@@ -4,3 +4,4 @@ rvm:
 script:
   - 'bundle exec rspec spec'
   - 'bundle exec rubocop'
+sudo: false
