@@ -219,6 +219,18 @@ describe SUSE::Connect::Api do
     end
   end
 
+  describe 'downgrade_product' do
+    let(:api_endpoint) { '/connect/systems/products' }
+    let(:system_auth) { 'basic_auth_mock' }
+    let(:product) { Remote::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64', release_type: 'aaaa') }
+    let(:openstruct_product) { product.to_openstruct }
+
+    it 'ensure downgrade_product works in the same way as upgrade_product (alias_method)' do
+      expect_any_instance_of(Connection).to receive(:put).with(api_endpoint, auth: system_auth, params: openstruct_product.to_params)
+      subject.new(client).upgrade_product(system_auth, openstruct_product)
+    end
+  end
+
   describe 'system products' do
     before do
       stub_show_product_call
