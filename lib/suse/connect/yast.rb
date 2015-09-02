@@ -68,6 +68,18 @@ module SUSE
           Client.new(config).upgrade_product(product)
         end
 
+        # Downgrades a product on SCC / the registration server.
+        # Expects product_ident parameter to be a hash identifying the new product.
+        # Token / regcode is not required. The new product needs to be available to the regcode the old
+        # product was registered with, or be a free product.
+        # Returns a service object for the new activated product.
+        #
+        # @param [OpenStruct] product with identifier, arch and version defined
+        # @param [Hash] client_params parameters to instantiate {Client}
+        #
+        # @return [Service] Service
+        alias_method :downgrade_product, :upgrade_product
+
         # Reads credentials file.
         # Returns the credentials object with login, password and credentials file
         #

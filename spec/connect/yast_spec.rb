@@ -123,6 +123,12 @@ describe SUSE::Connect::YaST do
     end
   end
 
+  describe '#downgrade_product' do
+    it 'is an alias method for upgrade_product' do
+      expect(subject).to respond_to(:downgrade_product)
+    end
+  end
+
   describe '.credentials' do
     let(:login) { 'login' }
     let(:password) { 'password' }
