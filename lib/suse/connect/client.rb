@@ -77,6 +77,13 @@ module SUSE
         Remote::Service.new(result)
       end
 
+      # Downgrade a product
+      # System downgrade (eg SLES12 SP1 -> SLES12) without regcode
+      #
+      # @param product [Remote::Product] desired product to be upgraded
+      # @returns: Service for this product
+      alias_method :downgrade_product, :upgrade_product
+
       # @param product [Remote::Product] product to query extensions for
       def show_product(product)
         result = @api.show_product(system_auth, product).body

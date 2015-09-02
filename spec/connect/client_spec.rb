@@ -228,6 +228,12 @@ describe SUSE::Connect::Client do
     end
   end
 
+  describe '#downgrade_product' do
+    it 'is an alias method for upgrade_product' do
+      expect(subject).to respond_to(:downgrade_product)
+    end
+  end
+
   describe '#register!' do
     before do
       Zypper.stub(base_product: Zypper::Product.new(name: 'SLE_BASE'))
