@@ -219,9 +219,21 @@ describe SUSE::Connect::Api do
     end
   end
 
-  describe '#downgrade_product' do
+  describe '.downgrade_product' do
     it 'is an alias method for upgrade_product' do
       expect(subject).to respond_to(:downgrade_product)
+    end
+  end
+
+  describe '.synchronize' do
+    let(:api_endpoint) { '/connect/systems/products/synchronize' }
+    let(:system_auth) { 'basic_auth_mock' }
+    let(:products) { [SUSE::Connect::Remote::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64', release_type: nil).to_h] }
+    let(:openstruct_product) { product.to_openstruct }
+
+    it 'syncs activated system products with SCC' do
+      expect_any_instance_of(Connection).to receive(:post).with(api_endpoint, auth: system_auth, params: products)
+      subject.new(client).synchronize(system_auth, products)
     end
   end
 

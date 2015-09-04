@@ -105,6 +105,16 @@ module SUSE
       # @param product [SUSE::Connect::Remote::Product] product
       alias_method :downgrade_product, :upgrade_product
 
+
+      # Synchronize activated system products with the registration server (SCC).
+      # Expects product list parameter to be a list of hashes.
+      #
+      # @param products [Array] product with identifier, arch and version defined
+      #
+      def synchronize(auth, products)
+        @connection.post('/connect/systems/products/synchronize', auth: auth, params: products)
+      end
+
       # Show details of an (activated) product including repositories and available extensions
       #
       # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
