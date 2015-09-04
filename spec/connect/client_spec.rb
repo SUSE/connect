@@ -234,6 +234,21 @@ describe SUSE::Connect::Client do
     end
   end
 
+  describe '#synchronize' do
+    let(:products) { [{ identifier: 'SLES', version: '12', arch: 'x86_64' }] }
+    let(:system_auth) { 'secretsecret' }
+
+    before do
+      allow_any_instance_of(Api).to receive(:synchronize).and_return(OpenStruct.new(body: {}))
+      expect(subject).to receive(:system_auth).and_return system_auth
+    end
+
+    it 'calls underlying api with proper parameters' do
+      expect_any_instance_of(Api).to receive(:synchronize).with(system_auth, products)
+      subject.synchronize(products)
+    end
+  end
+
   describe '#register!' do
     before do
       Zypper.stub(base_product: Zypper::Product.new(name: 'SLE_BASE'))

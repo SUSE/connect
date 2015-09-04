@@ -105,7 +105,6 @@ module SUSE
       # @param product [SUSE::Connect::Remote::Product] product
       alias_method :downgrade_product, :upgrade_product
 
-
       # Synchronize activated system products with the registration server (SCC).
       # Expects product list parameter to be a list of hashes.
       #

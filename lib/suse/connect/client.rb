@@ -84,6 +84,13 @@ module SUSE
       # @returns: Service for this product
       alias_method :downgrade_product, :upgrade_product
 
+      # Synchronize system products with registration server
+      #
+      # @param products [Array] List of activated system products to synchronize
+      def synchronize(products)
+        @api.synchronize(system_auth, products).body
+      end
+
       # @param product [Remote::Product] product to query extensions for
       def show_product(product)
         result = @api.show_product(system_auth, product).body
