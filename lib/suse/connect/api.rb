@@ -111,7 +111,7 @@ module SUSE
       # @param products [Array] product with identifier, arch and version defined
       #
       def synchronize(auth, products)
-        @connection.post('/connect/systems/products/synchronize', auth: auth, params: products)
+        @connection.post('/connect/systems/products/synchronize', auth: auth, params: { products: products })
       end
 
       # Show details of an (activated) product including repositories and available extensions
