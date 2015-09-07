@@ -220,8 +220,16 @@ describe SUSE::Connect::Api do
   end
 
   describe '.downgrade_product' do
+    let(:system_auth) { 'basic_auth_mock' }
+    let(:product) { Remote::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64', release_type: 'aaaa') }
+
     it 'is an alias method for upgrade_product' do
-      expect(subject).to respond_to(:downgrade_product)
+      expect(subject.new(client)).to respond_to(:downgrade_product)
+    end
+
+    it 'is accepts parameters' do
+      allow_any_instance_of(Connection).to receive(:put).and_return true
+      subject.new(client).downgrade_product(system_auth, product)
     end
   end
 
