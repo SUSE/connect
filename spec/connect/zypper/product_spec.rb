@@ -70,4 +70,11 @@ describe SUSE::Connect::Zypper::Product do
       end
     end
   end
+
+  describe '#to_params' do
+    it "returns a hash with the product's identifier, version, arch and release_type" do
+      product = subject.new(identifier: 'SLES', version: '12', arch: 'x86_64', release_type: 'OEM')
+      expect(product.to_params).to eq(identifier: product.identifier, version: product.version, arch: product.arch, release_type: product.release_type)
+    end
+  end
 end
