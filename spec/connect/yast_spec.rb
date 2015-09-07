@@ -14,7 +14,7 @@ describe SUSE::Connect::YaST do
     end
   end
 
-  describe '#announce_system' do
+  describe '.announce_system' do
     let(:params) { [{}, 'sles12-x86_64'] }
     before { Client.any_instance.stub :announce_system }
 
@@ -41,7 +41,7 @@ describe SUSE::Connect::YaST do
     end
   end
 
-  describe '#update_system' do
+  describe '.update_system' do
     before { Client.any_instance.stub :update_system }
 
     it 'calls update_system on an instance of Client' do
@@ -60,7 +60,7 @@ describe SUSE::Connect::YaST do
     end
   end
 
-  describe '#activate_product' do
+  describe '.activate_product' do
     let(:client_params) { { token: 'regcode' } }
     let(:product) { Remote::Product.new(identifier: 'win95') }
     let(:openstruct_product) { product.to_openstruct }
@@ -94,7 +94,7 @@ describe SUSE::Connect::YaST do
     end
   end
 
-  describe '#upgrade_product' do
+  describe '.upgrade_product' do
     let(:product) { Remote::Product.new(identifier: 'win98') }
     let(:openstruct_product) { product.to_openstruct }
     let(:client_params) { { :foo => 'oink' } }
@@ -123,9 +123,21 @@ describe SUSE::Connect::YaST do
     end
   end
 
-  describe '#downgrade_product' do
+  describe '.downgrade_product' do
     it 'is an alias method for upgrade_product' do
       expect(subject).to respond_to(:downgrade_product)
+    end
+  end
+
+  describe '.synchronize' do
+    let(:client_params) { {} }
+    let(:products) { [{ identifier: 'SLES', version: '12', arch: 'x86_64', release_type: nil }] }
+    let(:config) { SUSE::Connect::Config.new }
+    before { allow_any_instance_of(Client).to receive(:upgrade_product) }
+
+    it 'calls synchronize on an instance of Client' do
+      expect_any_instance_of(Client).to receive(:synchronize).with(products)
+      subject.synchronize(products, client_params)
     end
   end
 
@@ -179,7 +191,7 @@ describe SUSE::Connect::YaST do
     end
   end
 
-  describe '#show_product' do
+  describe '.show_product' do
     let(:product) { Remote::Product.new(identifier: 'tango') }
     let(:openstruct_product) { product.to_openstruct }
     let(:client_params) { { foo: 'oink' } }
@@ -222,7 +234,7 @@ describe SUSE::Connect::YaST do
     end
   end
 
-  describe '#product_activated?' do
+  describe '.product_activated?' do
     let(:product) { Remote::Product.new(identifier: 'tango') }
     let(:openstruct_product) { product.to_openstruct }
 
@@ -247,7 +259,7 @@ describe SUSE::Connect::YaST do
     end
   end
 
-  describe '#activated_products' do
+  describe '.activated_products' do
     let(:remote_product) { Remote::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64', release_type: 'HP-CNB') }
 
     it 'returns an array of activated system products' do
@@ -256,7 +268,7 @@ describe SUSE::Connect::YaST do
     end
   end
 
-  describe '#system_migrations' do
+  describe '.system_migrations' do
     let(:products) do
       [
         Remote::Product.new(:identifier => 'SLES', :version => '12', :arch => 'x86_64', :release_type => 'HP-CNB'),
@@ -304,7 +316,7 @@ describe SUSE::Connect::YaST do
     end
   end
 
-  describe '#write_config' do
+  describe '.write_config' do
     let(:params) { { url: 'http://scc.foo.com' } }
 
     it 'merges passed params into config' do
@@ -320,28 +332,28 @@ describe SUSE::Connect::YaST do
     end
   end
 
-  describe '#import_certificate' do
+  describe '.import_certificate' do
     it 'calls import certificate method from SSLCertificate class' do
       expect(SSLCertificate).to receive(:import).with(:foo)
       subject.import_certificate(:foo)
     end
   end
 
-  describe '#cert_sha1_fingerprint' do
+  describe '.cert_sha1_fingerprint' do
     it 'calls cert_sha1_fingerprint method from SSLCertificate class' do
       expect(SSLCertificate).to receive(:sha1_fingerprint).with(:foo)
       subject.cert_sha1_fingerprint(:foo)
     end
   end
 
-  describe '#cert_sha256_fingerprint' do
+  describe '.cert_sha256_fingerprint' do
     it 'calls cert_sha256_fingerprint method from SSLCertificate class' do
       expect(SSLCertificate).to receive(:sha256_fingerprint).with(:foo)
       subject.cert_sha256_fingerprint(:foo)
     end
   end
 
-  describe '#status' do
+  describe '.status' do
     it 'merges passed parameters with config' do
       params = { insecure: true }
       expect_any_instance_of(SUSE::Connect::Config).to receive(:merge!).with(params)

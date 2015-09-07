@@ -80,6 +80,17 @@ module SUSE
         # @return [Service] Service
         alias_method :downgrade_product, :upgrade_product
 
+        # Synchronize activated system products with registration server.
+        # Returns the status code 200 in case of successful sync and 304 if everything is in sync
+        #
+        # @param [OpenStruct] products - list of activated system products e.g. [{ identifier: 'SLES', version: '12', arch: 'x86_64', release: nil }]
+        # @param [Hash] client_params parameters to instantiate {Client}
+        def synchronize(products, client_params = {})
+          config = SUSE::Connect::Config.new.merge!(client_params)
+          puts 'Call client sync'
+          Client.new(config).synchronize(products)
+        end
+
         # Reads credentials file.
         # Returns the credentials object with login, password and credentials file
         #
