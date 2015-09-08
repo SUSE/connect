@@ -19,20 +19,20 @@ module SUSE
         # Forwards the repository which should be enabled with zypper
         # @param [String] repository name to enable
         def enable_repository(name)
-          Zypper.enable_repository(name)
+          SUSE::Connect::Zypper.enable_repository(name)
         end
 
         # Forwards the repository which should be disabled with zypper
         # @param [String] repository name to disable
         def disable_repository(name)
-          Zypper.disable_repository(name)
+          SUSE::Connect::Zypper.disable_repository(name)
         end
 
         # Returns the list of available repositories
         # @return [Array <OpenStruct>] the list of zypper repositories
         def repositories
           # INFO: use block instead of .map(&:to_openstruct) see https://bugs.ruby-lang.org/issues/9786
-          Zypper.repositories.map {|r| r.to_openstruct }
+          SUSE::Connect::Zypper.repositories.map {|r| r.to_openstruct }
         end
 
         # Forwards the service which should be added with zypper
@@ -54,6 +54,12 @@ module SUSE
         def find_products(identifier)
           # INFO: use block instead of .map(&:to_openstruct) see https://bugs.ruby-lang.org/issues/9786
           SUSE::Connect::Zypper.find_products(identifier).map {|p| p.to_openstruct }
+        end
+
+        # Installs the product release package
+        # @param [String] identifier e.g. SLES
+        def install_release_package(identifier)
+          SUSE::Connect::Zypper.install_release_package(identifier)
         end
       end
     end

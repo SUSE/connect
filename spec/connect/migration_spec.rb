@@ -70,4 +70,12 @@ describe SUSE::Connect::Migration do
       expect(described_class.find_products('identifier').any? {|r| r.is_a?(OpenStruct) }).to be true
     end
   end
+
+  describe '.install_release_package' do
+    it 'installs release package by calling underlying method of Zypper class' do
+      product_identifier = 'SLES'
+      expect(SUSE::Connect::Zypper).to receive(:install_release_package).with(product_identifier).and_return([])
+      described_class.install_release_package(product_identifier)
+    end
+  end
 end
