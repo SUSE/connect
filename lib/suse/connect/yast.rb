@@ -86,7 +86,6 @@ module SUSE
         # @param [Hash] client_params parameters to instantiate {Client}
         def synchronize(products, client_params = {})
           config = SUSE::Connect::Config.new.merge!(client_params)
-          puts 'Call client sync'
           Client.new(config).synchronize(products)
         end
 
