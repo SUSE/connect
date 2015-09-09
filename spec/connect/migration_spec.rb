@@ -13,6 +13,33 @@ describe SUSE::Connect::Migration do
     end
   end
 
+  describe '.rollback' do
+    let(:config) { SUSE::Connect::Config.new }
+    let(:client) { SUSE::Connect::Client.new(config) }
+    let(:status) { SUSE::Connect::Status.new(config) }
+    let(:installed_products) do
+      [
+        Zypper::Product.new(name: 'SLES', version: '12', arch: 'x86_64'),
+        Zypper::Product.new(name: 'sle-module-legacy', version: '12', arch: 'x86_64')
+      ]
+    end
+
+    let(:products) { installed_products.map(&:to_params) }
+
+    it 'restores a state of the system before migration' do
+      expect(SUSE::Connect::Config).to receive(:new).and_return config
+      expect(SUSE::Connect::Client).to receive(:new).with(config).at_least(:once).and_return client
+      expect(SUSE::Connect::Status).to receive(:new).with(config).and_return status
+
+      expect(status).to receive(:installed_products).at_least(:once).and_return installed_products
+      expect(client).to receive(:downgrade_product).twice
+
+      expect(client).to receive(:synchronize).with(products).and_return true
+
+      described_class.rollback
+    end
+  end
+
   describe '.enable_repository' do
     it 'enables zypper repository' do
       expect(SUSE::Connect::Zypper).to receive(:enable_repository).with('repository_name')

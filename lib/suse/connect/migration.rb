@@ -16,6 +16,20 @@ module SUSE
           Status.new(config).system_products.map(&:to_openstruct)
         end
 
+        # Restores a state of the system before migration
+        def rollback(client_params = {})
+          config = SUSE::Connect::Config.new.merge!(client_params)
+          client = Client.new(config)
+          status = Status.new(config)
+
+          status.installed_products.each do |product|
+            client.downgrade_product(product)
+          end
+
+          # Sysnchronize installed products with SCC activations (removes obsolete activations)
+          client.synchronize(status.installed_products.map(&:to_params))
+        end
+
         # Forwards the repository which should be enabled with zypper
         # @param [String] repository name to enable
         def enable_repository(name)
