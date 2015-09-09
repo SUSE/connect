@@ -26,8 +26,8 @@ module SUSE
         announce_or_update
         product = @config.product || Zypper.base_product
         service = activate_product(product, @config.email)
-        Zypper.install_release_package(product.identifier) if @config.product
         System.add_service(service)
+        Zypper.install_release_package(product.identifier) if @config.product
         print_success_message product
       end
 

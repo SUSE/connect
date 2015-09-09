@@ -292,6 +292,13 @@ describe SUSE::Connect::Client do
       subject.register!
     end
 
+    it 'installs release package on product activation' do
+      subject.config.product = Remote::Product.new(identifier: 'SLES')
+      allow(System).to receive(:credentials?).and_return true
+      expect(Zypper).to receive(:install_release_package).with(subject.config.product.identifier)
+      subject.register!
+    end
+
     it 'prints message on successful register' do
       product = Zypper::Product.new(name: 'SLES', version: 12, arch: 's390')
       merged_config = config.merge!(url: 'http://dummy:42', email: 'asd@asd.de', product: product, filesystem_root: '/test', language: 'EN')
