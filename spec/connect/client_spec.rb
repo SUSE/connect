@@ -251,12 +251,13 @@ describe SUSE::Connect::Client do
 
   describe '#register!' do
     before do
-      Zypper.stub(base_product: Zypper::Product.new(name: 'SLE_BASE'))
-      System.stub(add_service: true)
-      Zypper.stub(:write_base_credentials)
-      Credentials.any_instance.stub(:write)
-      subject.stub(:activate_product)
-      subject.stub(:update_system)
+      allow(Zypper).to receive(:base_product).and_return Zypper::Product.new(name: 'SLE_BASE')
+      allow(System).to receive(:add_service).and_return true
+      allow(Zypper).to receive(:write_base_credentials)
+      allow_any_instance_of(Credentials).to receive(:write)
+      allow(subject).to receive(:activate_product)
+      allow(subject).to receive(:update_system)
+      allow(Zypper).to receive(:install_release_package)
     end
 
     it 'should call announce if system not registered' do
