@@ -19,7 +19,7 @@ class SUSE::Connect::HwInfo::S390 < SUSE::Connect::HwInfo::Base
 
     def sockets
       sockets = output['VM00 IFLs'] || output['LPAR CPUs IFL']
-      sockets.to_i
+      sockets.to_s.strip.to_i
     end
 
     def hypervisor
