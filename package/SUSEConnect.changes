@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Aug  7 14:25:51 UTC 2015 - vlewin@suse.com
+
+- Update to version 0.2.21
+  - Escape parameters of remove and add_repository methods
+
+-------------------------------------------------------------------
 Tue Aug  4 06:25:51 UTC 2015 - vlewin@suse.com
 
 - Update to version 0.2.20
