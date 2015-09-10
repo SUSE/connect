@@ -21,8 +21,13 @@ class SUSE::Connect::HwInfo::S390 < SUSE::Connect::HwInfo::Base
     end
 
     def hypervisor
-      # Strip and remove recurring whitespaces e.g. " z/VM    6.1.0" => "z/VM 6.1.0"
-      output['VM00 Control Program'].strip.gsub(/\s+/, ' ')
+      if output['VM00 Control Program']
+        # Strip and remove recurring whitespaces e.g. " z/VM    6.1.0" => "z/VM 6.1.0"
+        output['VM00 Control Program'].strip.gsub(/\s+/, ' ')
+      else
+        log.debug("Unable to find 'VM00 Control Program'. This system probably runs on an LPAR.")
+        nil
+      end
     end
 
     def uuid

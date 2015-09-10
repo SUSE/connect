@@ -5,6 +5,7 @@ describe SUSE::Connect::HwInfo::S390 do
   subject { SUSE::Connect::HwInfo::S390 }
   let(:success) { double('Process Status', :exitstatus => 0) }
   let(:read_values) { File.read(File.join(fixtures_dir, 'read_values_s.txt')) }
+  let(:read_values_lpar) { File.read(File.join(fixtures_dir, 'read_values_s_lpar.txt')) }
   include_context 'shared lets'
 
   before :each do
@@ -15,9 +16,10 @@ describe SUSE::Connect::HwInfo::S390 do
 
   after(:each) do
     SUSE::Connect::HwInfo::Base.instance_variable_set('@arch', nil)
+    SUSE::Connect::HwInfo::S390.instance_variable_set('@output', nil)
   end
 
-  it 'returns a hwinfo hash for x86/x86_64 systems' do
+  it 'returns a hwinfo hash for s390 systems' do
     expect(Open3).to receive(:capture3).with(shared_env_hash, 'read_values -u').and_return(['', '', success])
 
     hwinfo = subject.hwinfo
@@ -39,6 +41,11 @@ describe SUSE::Connect::HwInfo::S390 do
 
   it 'returns system hypervisor' do
     expect(subject.hypervisor).to eql 'z/VM 6.1.0'
+  end
+
+  it 'returns no hypervisor when running on an LPAR' do
+    allow(Open3).to receive(:capture3).with(shared_env_hash, 'read_values -s').and_return([read_values_lpar, '', success])
+    expect(SUSE::Connect::HwInfo::S390.hypervisor).to be nil
   end
 
   describe '#uuid' do
