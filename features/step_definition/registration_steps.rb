@@ -21,3 +21,15 @@ end
 Then(/^outputs should not contain info about required port param$/) do
   assert_no_partial_output('Please provide port parameter', all_output.chomp)
 end
+
+Then(/^the output should inform us that the regcode was invalid$/) do
+  assert_expired_output('Invalid registration code.', all_output.chomp)
+end
+
+Then(/^the output should inform us that the regcode needs to be activated$/) do
+  assert_exact_output('Not yet activated registration code. Please visit https://scc.suse.com to activate it.', all_output.chomp)
+end
+
+Then(/^the output should inform us that the regcode has expired$/) do
+  assert_partial_output('Expired registration code.', all_output.chomp)
+end
