@@ -13,11 +13,13 @@ class SUSE::Connect::HwInfo::S390 < SUSE::Connect::HwInfo::Base
     end
 
     def cpus
-      output['VM00 CPUs Total'].to_i
+      cpus = output['VM00 CPUs Total'] || output['LPAR CPUs Total']
+      cpus.to_s.strip.to_i
     end
 
     def sockets
-      output['VM00 IFLs'].to_i
+      sockets = output['VM00 IFLs'] || output['LPAR CPUs IFL']
+      sockets.to_i
     end
 
     def hypervisor
