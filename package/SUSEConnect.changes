@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Mon Sep 14 12:57:50 UTC 2015 - vlewin@suse.com
+
+- Update to version 0.2.23
+  - Improve hwinfo detection on physical s390 systems
+  - Bug 939293 - [S390] Error: Registration failed. Undefined method 'strip' for nil:NilClass (bnc#939293)
+
+-------------------------------------------------------------------
 Mon Sep 14 07:19:26 UTC 2015 - vlewin@suse.com
 
 - Update to version 0.2.22
