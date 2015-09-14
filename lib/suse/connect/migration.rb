@@ -26,7 +26,7 @@ module SUSE
             client.downgrade_product(product)
           end
 
-          # Sysnchronize installed products with SCC activations (removes obsolete activations)
+          # Synchronize installed products with SCC activations (removes obsolete activations)
           client.synchronize(status.installed_products.map(&:to_params))
         end
 
