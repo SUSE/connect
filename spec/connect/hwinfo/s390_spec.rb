@@ -31,13 +31,6 @@ describe SUSE::Connect::HwInfo::S390 do
   end
 
   context 'Virtual' do
-    it 'parses output of read_values and returns hash' do
-      expect(subject.send(:output)).to be_kind_of Hash
-      expect(subject.send(:output)).to include 'VM00 CPUs Total'
-      expect(subject.send(:output)).to include 'VM00 IFLs'
-      expect(subject.send(:output)).to include 'VM00 Control Program'
-    end
-
     it 'returns a hwinfo hash for virtual s390 systems' do
       expect(Open3).to receive(:capture3).with(shared_env_hash, 'read_values -u').and_return(['', '', success])
 
@@ -61,13 +54,6 @@ describe SUSE::Connect::HwInfo::S390 do
     before :each do
       allow(Open3).to receive(:capture3).with(shared_env_hash, 'read_values -s').and_return([read_values, '', success])
       allow(Open3).to receive(:capture3).with(shared_env_hash, 'read_values -u').and_return(['', '', success])
-    end
-
-    it 'parses output of read_values and returns hash' do
-      expect(subject.send(:output)).to be_kind_of Hash
-      expect(subject.send(:output)).not_to include 'VM00 CPUs Total'
-      expect(subject.send(:output)).not_to include 'VM00 IFLs'
-      expect(subject.send(:output)).not_to include 'VM00 Control Program'
     end
 
     it 'returns a hwinfo hash for physical s390 systems' do
