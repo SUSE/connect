@@ -68,6 +68,27 @@ module SUSE
           Client.new(config).upgrade_product(product)
         end
 
+        # Downgrades a product on SCC / the registration server.
+        # Expects product_ident parameter to be a hash identifying the new product.
+        # Token / regcode is not required. The new product needs to be available to the regcode the old
+        # product was registered with, or be a free product.
+        # Returns a service object for the new activated product.
+        #
+        # @param [OpenStruct] product with identifier, arch and version defined
+        # @param [Hash] client_params parameters to instantiate {Client}
+        #
+        # @return [Service] Service
+        alias_method :downgrade_product, :upgrade_product
+
+        # Synchronize activated system products with registration server.
+        #
+        # @param [OpenStruct] products - list of activated system products e.g. [{ identifier: 'SLES', version: '12', arch: 'x86_64', release: nil }]
+        # @param [Hash] client_params parameters to instantiate {Client}
+        def synchronize(products, client_params = {})
+          config = SUSE::Connect::Config.new.merge!(client_params)
+          Client.new(config).synchronize(products)
+        end
+
         # Reads credentials file.
         # Returns the credentials object with login, password and credentials file
         #

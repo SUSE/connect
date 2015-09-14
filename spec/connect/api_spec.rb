@@ -219,6 +219,31 @@ describe SUSE::Connect::Api do
     end
   end
 
+  describe '.downgrade_product' do
+    let(:system_auth) { 'basic_auth_mock' }
+    let(:product) { Remote::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64', release_type: 'aaaa') }
+
+    it 'is an alias method for upgrade_product' do
+      expect(subject.new(client)).to respond_to(:downgrade_product)
+    end
+
+    it 'is accepts parameters' do
+      allow_any_instance_of(Connection).to receive(:put).and_return true
+      subject.new(client).downgrade_product(system_auth, product)
+    end
+  end
+
+  describe '.synchronize' do
+    let(:api_endpoint) { '/connect/systems/products/synchronize' }
+    let(:system_auth) { 'basic_auth_mock' }
+    let(:products) { [SUSE::Connect::Zypper::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64', release_type: nil).to_params] }
+
+    it 'syncs activated system products with SCC' do
+      expect_any_instance_of(Connection).to receive(:post).with(api_endpoint, auth: system_auth, params: { products: products })
+      subject.new(client).synchronize(system_auth, products)
+    end
+  end
+
   describe 'system products' do
     before do
       stub_show_product_call

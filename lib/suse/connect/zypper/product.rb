@@ -13,6 +13,15 @@ class SUSE::Connect::Zypper::Product
     @summary       = product_hash[:summary]
   end
 
+  def to_params
+    {
+      identifier: identifier,
+      version: version,
+      arch: arch,
+      release_type: release_type
+    }
+  end
+
   private
 
   def determine_release_type(product_hash)
@@ -25,4 +34,5 @@ class SUSE::Connect::Zypper::Product
       return product_hash[:registerrelease]
     end
   end
+
 end

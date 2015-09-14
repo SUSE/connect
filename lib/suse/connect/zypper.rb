@@ -107,6 +107,10 @@ module SUSE
           xml_doc.elements.to_a('stream/service-list/service').map(&:to_hash)
         end
 
+        def install_release_package(identifier)
+          call("--non-interactive install #{identifier}-release") if identifier
+        end
+
         def write_service_credentials(service_name)
           login = System.credentials.username
           password = System.credentials.password

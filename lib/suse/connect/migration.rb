@@ -16,23 +16,37 @@ module SUSE
           Status.new(config).system_products.map(&:to_openstruct)
         end
 
+        # Restores a state of the system before migration
+        def rollback(client_params = {})
+          config = SUSE::Connect::Config.new.merge!(client_params)
+          client = Client.new(config)
+          status = Status.new(config)
+
+          status.installed_products.each do |product|
+            client.downgrade_product(product)
+          end
+
+          # Synchronize installed products with SCC activations (removes obsolete activations)
+          client.synchronize(status.installed_products.map(&:to_params))
+        end
+
         # Forwards the repository which should be enabled with zypper
         # @param [String] repository name to enable
         def enable_repository(name)
-          Zypper.enable_repository(name)
+          SUSE::Connect::Zypper.enable_repository(name)
         end
 
         # Forwards the repository which should be disabled with zypper
         # @param [String] repository name to disable
         def disable_repository(name)
-          Zypper.disable_repository(name)
+          SUSE::Connect::Zypper.disable_repository(name)
         end
 
         # Returns the list of available repositories
         # @return [Array <OpenStruct>] the list of zypper repositories
         def repositories
           # INFO: use block instead of .map(&:to_openstruct) see https://bugs.ruby-lang.org/issues/9786
-          Zypper.repositories.map {|r| r.to_openstruct }
+          SUSE::Connect::Zypper.repositories.map {|r| r.to_openstruct }
         end
 
         # Forwards the service which should be added with zypper
@@ -54,6 +68,12 @@ module SUSE
         def find_products(identifier)
           # INFO: use block instead of .map(&:to_openstruct) see https://bugs.ruby-lang.org/issues/9786
           SUSE::Connect::Zypper.find_products(identifier).map {|p| p.to_openstruct }
+        end
+
+        # Installs the product release package
+        # @param [String] identifier e.g. SLES
+        def install_release_package(identifier)
+          SUSE::Connect::Zypper.install_release_package(identifier)
         end
       end
     end

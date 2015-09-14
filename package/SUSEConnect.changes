@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Mon Sep 14 07:19:26 UTC 2015 - vlewin@suse.com
+
+- Update to version 0.2.22
+  - Migration rollback (fate#319114)
+  - [Migration rollback] zypper migrate: baseproduct mismatch (bnc#941303)
+ 
+
+-------------------------------------------------------------------
 Fri Aug  7 14:25:51 UTC 2015 - vlewin@suse.com
 
 - Update to version 0.2.21

@@ -228,14 +228,36 @@ describe SUSE::Connect::Client do
     end
   end
 
+  describe '#downgrade_product' do
+    it 'is an alias method for upgrade_product' do
+      expect(subject).to respond_to(:downgrade_product)
+    end
+  end
+
+  describe '#synchronize' do
+    let(:products) { [{ identifier: 'SLES', version: '12', arch: 'x86_64' }] }
+    let(:system_auth) { 'secretsecret' }
+
+    before do
+      allow_any_instance_of(Api).to receive(:synchronize).and_return(OpenStruct.new(body: {}))
+      expect(subject).to receive(:system_auth).and_return system_auth
+    end
+
+    it 'calls underlying api with proper parameters' do
+      expect_any_instance_of(Api).to receive(:synchronize).with(system_auth, products)
+      subject.synchronize(products)
+    end
+  end
+
   describe '#register!' do
     before do
-      Zypper.stub(base_product: Zypper::Product.new(name: 'SLE_BASE'))
-      System.stub(add_service: true)
-      Zypper.stub(:write_base_credentials)
-      Credentials.any_instance.stub(:write)
-      subject.stub(:activate_product)
-      subject.stub(:update_system)
+      allow(Zypper).to receive(:base_product).and_return Zypper::Product.new(name: 'SLE_BASE')
+      allow(System).to receive(:add_service).and_return true
+      allow(Zypper).to receive(:write_base_credentials)
+      allow_any_instance_of(Credentials).to receive(:write)
+      allow(subject).to receive(:activate_product)
+      allow(subject).to receive(:update_system)
+      allow(Zypper).to receive(:install_release_package)
     end
 
     it 'should call announce if system not registered' do
@@ -267,6 +289,13 @@ describe SUSE::Connect::Client do
     it 'adds service after product activation' do
       System.stub(credentials?: true)
       System.should_receive(:add_service)
+      subject.register!
+    end
+
+    it 'installs release package on product activation' do
+      subject.config.product = Remote::Product.new(identifier: 'SLES')
+      allow(System).to receive(:credentials?).and_return true
+      expect(Zypper).to receive(:install_release_package).with(subject.config.product.identifier)
       subject.register!
     end
 
