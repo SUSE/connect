@@ -1,11 +1,14 @@
 Then(/^Set regcode and url options$/) do
-  @regcode = ENV['REGCODE'] || YAML.load_file('/root/.regcode')['code']
+  test_regcodes = YAML.load_file('/root/.regcode')
+  @valid_regcode =  ENV['REGCODE'] || test_regcodes['code']
+  @expired_regcode = test_regcodes['expired_code'] || "regcode file does not contain 'expired_code'!!"
+  @notyetactivated_regcode = test_regcodes['notyetactivated_code'] || "regcode file does not contain 'notyetactivated_code'!!"
   @url = ENV['URL'] || SUSE::Connect::Config::DEFAULT_URL
 end
 
 Then(/^Prepare SUSEConnect client with a valid regcode/) do
   step 'Set regcode and url options'
-  @client = SUSE::Connect::Client.new(SUSE::Connect::Config.new.merge!(url: @url, regcode: @regcode))
+  @client = SUSE::Connect::Client.new(SUSE::Connect::Config.new.merge!(url: @url, regcode: @valid_regcode))
 end
 
 Then(/^I call SUSEConnect with '(.*)' arguments$/) do |args|
@@ -13,10 +16,22 @@ Then(/^I call SUSEConnect with '(.*)' arguments$/) do |args|
 
   step 'Set regcode and url options'
 
-  @regcode = 'INVALID_REGCODE' unless options['regcode'] == 'VALID'
+  regcode = case options['regcode']
+            when nil
+            when 'INVALID'
+              'INVALID_REGCODE'
+            when 'EXPIRED'
+              @expired_regcode
+            when 'NOTYETACTIVATED'
+              @notyetactivated_regcode
+            when 'VALID'
+              @valid_regcode
+            else
+              @options['regcode']
+  end
 
   connect = "SUSEConnect --url #{@url}"
-  connect << " -r #{@regcode}" if options['regcode']
+  connect << " -r #{regcode}" if options['regcode']
   connect << " -p #{options['product']}" if options['product']
   connect << ' -s' if options['status']
   connect << ' --cleanup' if options['cleanup']
@@ -70,7 +85,7 @@ end
 Then(/^SUSEConnect library should respect API headers$/) do
   step 'Prepare SUSEConnect client with a valid regcode'
 
-  response = SUSE::Connect::Api.new(@client).announce_system("Token token=#{@regcode}")
+  response = SUSE::Connect::Api.new(@client).announce_system("Token token=#{@valid_regcode}")
   expect(response.headers['scc-api-version'].first).to eq(SUSE::Connect::Api::VERSION)
 end
 
