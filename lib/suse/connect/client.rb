@@ -27,6 +27,7 @@ module SUSE
         product = @config.product || Zypper.base_product
         service = activate_product(product, @config.email)
         System.add_service(service)
+        Zypper.install_release_package(product.identifier) if @config.product
         print_success_message product
       end
 
@@ -75,6 +76,20 @@ module SUSE
       def upgrade_product(product)
         result = @api.upgrade_product(system_auth, product).body
         Remote::Service.new(result)
+      end
+
+      # Downgrade a product
+      # System downgrade (eg SLES12 SP1 -> SLES12) without regcode
+      #
+      # @param product [Remote::Product] desired product to be upgraded
+      # @returns: Service for this product
+      alias_method :downgrade_product, :upgrade_product
+
+      # Synchronize system products with registration server
+      #
+      # @param products [Array] List of activated system products to synchronize
+      def synchronize(products)
+        @api.synchronize(system_auth, products).body
       end
 
       # @param product [Remote::Product] product to query extensions for

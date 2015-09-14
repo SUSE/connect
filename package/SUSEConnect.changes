@@ -1,4 +1,32 @@
 -------------------------------------------------------------------
+Mon Sep 14 07:19:26 UTC 2015 - vlewin@suse.com
+
+- Update to version 0.2.22
+  - Migration rollback (fate#319114)
+  - [Migration rollback] zypper migrate: baseproduct mismatch (bnc#941303)
+ 
+
+-------------------------------------------------------------------
+Fri Aug  7 14:25:51 UTC 2015 - vlewin@suse.com
+
+- Update to version 0.2.21
+  - Escape parameters of remove and add_repository methods
+
+-------------------------------------------------------------------
+Tue Aug  4 06:25:51 UTC 2015 - vlewin@suse.com
+
+- Update to version 0.2.20
+  - Add find_products method to migration abstraction layer fate#319140
+  - Fix add_service method which also creates the credentials files
+
+-------------------------------------------------------------------
+Fri Jul 31 07:18:45 UTC 2015 - vlewin@suse.com
+
+- Update to version 0.2.19
+  - Introduction of migration abstraction layer for migration script
+  - Clean up and re-factoring of yast abstraction layer
+
+-------------------------------------------------------------------
 Mon Jun 15 11:17:45 UTC 2015 - vlewin@suse.com
 
 - Update to version 0.2.18

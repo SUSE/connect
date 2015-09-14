@@ -31,19 +31,18 @@ describe SUSE::Connect::Credentials do
     end
 
     it 'raises an error when username cannot be parsed' do
-      File.stub(:exist?).and_return(true)
-      File.stub(:read).with(credentials_file).and_return("me\nfe")
-      expect { Credentials.read(credentials_file) }.to raise_error(
-        MalformedSccCredentialsFile,
-        'Cannot parse credentials file')
+      expect(File).to receive(:exist?).and_return(true)
+      allow(File).to receive(:read).with(credentials_file).and_return("me\nfe")
+      expect { Credentials.read(credentials_file) }.to raise_error(MalformedSccCredentialsFile, 'Cannot parse credentials file')
     end
 
     it 'raises an error when the password cannot be parsed' do
-      File.stub(:exist?).with(credentials_file).and_return(true)
-      File.stub(:read).with(credentials_file).and_return("username=me\nfe")
-      expect { Credentials.read(credentials_file) }.to raise_error(
-        MalformedSccCredentialsFile,
-        'Cannot parse credentials file')
+      allow_any_instance_of(String).to receive(:match).with(/^\s*username\s*=\s*(\S+)\s*$/).and_return(true)
+      allow_any_instance_of(String).to receive(:match).with(/^\s*password\s*=\s*(\S+)\s*$/).and_return(false)
+
+      expect(File).to receive(:exist?).and_return(true)
+      expect(File).to receive(:read).with(credentials_file).and_return("me\nfe")
+      expect { Credentials.read(credentials_file) }.to raise_error(MalformedSccCredentialsFile, 'Cannot parse credentials file')
     end
   end
 
@@ -92,6 +91,15 @@ describe SUSE::Connect::Credentials do
       expect(credentials_str).not_to include(password), 'The password is logged'
       expect(credentials_str).to include(user)
       expect(credentials_str).to include(file)
+    end
+  end
+
+  describe '#to_h' do
+    it 'returns a hash representation of the object' do
+      hash = Credentials.new('USER', '*eiW0yie2*', 'FOO_credentials').to_h
+      expect(hash.values).to include('USER')
+      expect(hash.values).to include('*eiW0yie2*')
+      expect(hash.values).to include('FOO_credentials')
     end
   end
 end

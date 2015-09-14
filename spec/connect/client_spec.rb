@@ -13,7 +13,7 @@ describe SUSE::Connect::Client do
   describe '.new' do
     context :empty_opts do
       it 'should set url to default_url' do
-        subject.config.url.should eq SUSE::Connect::Config::DEFAULT_URL
+        expect(subject.config.url).to eq SUSE::Connect::Config::DEFAULT_URL
       end
     end
 
@@ -196,8 +196,8 @@ describe SUSE::Connect::Client do
 
     it 'returns service object' do
       service = subject.activate_product(product_ident)
-      service.name.should eq 'kinkat'
-      service.url.should eq 'kinkaturl'
+      expect(service.name).to eq 'kinkat'
+      expect(service.url).to eq 'kinkaturl'
     end
   end
 
@@ -223,19 +223,41 @@ describe SUSE::Connect::Client do
 
     it 'returns service object' do
       service = subject.upgrade_product(product_ident)
-      service.name.should eq 'tongobongo'
-      service.url.should eq 'tongobongourl'
+      expect(service.name).to eq 'tongobongo'
+      expect(service.url).to eq 'tongobongourl'
+    end
+  end
+
+  describe '#downgrade_product' do
+    it 'is an alias method for upgrade_product' do
+      expect(subject).to respond_to(:downgrade_product)
+    end
+  end
+
+  describe '#synchronize' do
+    let(:products) { [{ identifier: 'SLES', version: '12', arch: 'x86_64' }] }
+    let(:system_auth) { 'secretsecret' }
+
+    before do
+      allow_any_instance_of(Api).to receive(:synchronize).and_return(OpenStruct.new(body: {}))
+      expect(subject).to receive(:system_auth).and_return system_auth
+    end
+
+    it 'calls underlying api with proper parameters' do
+      expect_any_instance_of(Api).to receive(:synchronize).with(system_auth, products)
+      subject.synchronize(products)
     end
   end
 
   describe '#register!' do
     before do
-      Zypper.stub(base_product: Zypper::Product.new(name: 'SLE_BASE'))
-      System.stub(add_service: true)
-      Zypper.stub(:write_base_credentials)
-      Credentials.any_instance.stub(:write)
-      subject.stub(:activate_product)
-      subject.stub(:update_system)
+      allow(Zypper).to receive(:base_product).and_return Zypper::Product.new(name: 'SLE_BASE')
+      allow(System).to receive(:add_service).and_return true
+      allow(Zypper).to receive(:write_base_credentials)
+      allow_any_instance_of(Credentials).to receive(:write)
+      allow(subject).to receive(:activate_product)
+      allow(subject).to receive(:update_system)
+      allow(Zypper).to receive(:install_release_package)
     end
 
     it 'should call announce if system not registered' do
@@ -267,6 +289,13 @@ describe SUSE::Connect::Client do
     it 'adds service after product activation' do
       System.stub(credentials?: true)
       System.should_receive(:add_service)
+      subject.register!
+    end
+
+    it 'installs release package on product activation' do
+      subject.config.product = Remote::Product.new(identifier: 'SLES')
+      allow(System).to receive(:credentials?).and_return true
+      expect(Zypper).to receive(:install_release_package).with(subject.config.product.identifier)
       subject.register!
     end
 
@@ -310,7 +339,7 @@ describe SUSE::Connect::Client do
 
     it 'returns array of extension products returned from api' do
       subject.api.should_receive(:show_product).with('Basic: encodedstring', product).and_return stubbed_response
-      subject.show_product(product).should be_kind_of Remote::Product
+      expect(subject.show_product(product)).to be_kind_of Remote::Product
     end
   end
 

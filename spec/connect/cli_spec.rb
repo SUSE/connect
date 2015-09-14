@@ -44,10 +44,13 @@ describe SUSE::Connect::Cli do
 
       context 'system has no proper credentials file' do
         it 'should suggest re-registration if ApiError 401 encountered' do
-          response = Net::HTTPResponse.new('1.1', 401, 'Test')
+          # INFO: Use double instead of HTTPResponse mock https://www.ruby-forum.com/topic/4407036
+          response = double(code: 401, body: { 'localized_error' => 'Invalid registration code' })
           allow(System).to receive(:credentials?).and_return false
           expect_any_instance_of(Client).to receive(:register!).and_raise ApiError.new(response)
-          expect(string_logger).to receive(:fatal).with('Error: Provided registration code is not recognized by registration server.')
+
+          error_message = "Error: SCC returned 'Invalid registration code' (401)"
+          expect(string_logger).to receive(:fatal).with(error_message)
           cli.execute!
         end
       end
@@ -188,31 +191,31 @@ describe SUSE::Connect::Cli do
     it 'sets token options' do
       argv = %w{-r matoken}
       cli = subject.new(argv)
-      cli.options[:token].should eq 'matoken'
+      expect(cli.options[:token]).to eq 'matoken'
     end
 
     it 'sets product options' do
       argv = %w{--product sles/12/i386}
       cli = subject.new(argv)
-      cli.options[:product].should eq Remote::Product.new(identifier: 'sles', version: '12', arch: 'i386')
+      expect(cli.options[:product]).to eq Remote::Product.new(identifier: 'sles', version: '12', arch: 'i386')
     end
 
     it 'sets token options' do
       argv = %w{--regcode matoken}
       cli = subject.new(argv)
-      cli.options[:token].should eq 'matoken'
+      expect(cli.options[:token]).to eq 'matoken'
     end
 
     it 'sets email options' do
       argv = %w{--email me@hotmail.com}
       cli = subject.new(argv)
-      cli.options[:email].should eq 'me@hotmail.com'
+      expect(cli.options[:email]).to eq 'me@hotmail.com'
     end
 
     it 'sets url options' do
       argv = %w{--url test}
       cli = subject.new(argv)
-      cli.options[:url].should eq 'test'
+      expect(cli.options[:url]).to eq 'test'
     end
 
     it 'puts version on version flag' do
@@ -230,19 +233,19 @@ describe SUSE::Connect::Cli do
     it 'sets verbose options' do
       argv = %w{--debug}
       cli = subject.new(argv)
-      cli.options[:debug].should be true
+      expect(cli.options[:debug]).to be true
     end
 
     it 'sets deregister option' do
       argv = %w{--de-register}
       cli = subject.new(argv)
-      cli.options[:deregister].should be true
+      expect(cli.options[:deregister]).to be true
     end
 
     it 'sets root option' do
       argv = %w{--root /path/to/root}
       subject.new(argv)
-      SUSE::Connect::System.filesystem_root.should eq '/path/to/root'
+      expect(SUSE::Connect::System.filesystem_root).to eq '/path/to/root'
       SUSE::Connect::System.filesystem_root = nil
     end
 
@@ -254,7 +257,7 @@ describe SUSE::Connect::Cli do
     it 'sets write_config option' do
       argv = %w{--write-config}
       cli = subject.new(argv)
-      cli.options[:write_config].should be true
+      expect(cli.options[:write_config]).to be true
     end
   end
 

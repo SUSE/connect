@@ -85,4 +85,10 @@ describe SUSE::Connect::Remote::Product do
       expect(subject.to_params).to eq(identifier: 'SLEEK-12', version: '12', arch: 'x86_64', release_type: 'HP-CNB')
     end
   end
+
+  describe '#to_openstruct' do
+    it 'responds to to_openstruct method' do
+      expect(subject).to respond_to(:to_openstruct)
+    end
+  end
 end

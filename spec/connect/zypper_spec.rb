@@ -2,11 +2,8 @@ require 'spec_helper'
 
 describe SUSE::Connect::Zypper do
   before(:each) do
-    Object.stub(system: true)
-  end
-
-  after(:each) do
-    SUSE::Connect::System.filesystem_root = nil
+    allow(SUSE::Connect::System).to receive(:filesystem_root).and_return nil
+    allow(Object).to receive(:system).and_return true
   end
 
   subject { SUSE::Connect::Zypper }
@@ -24,19 +21,19 @@ describe SUSE::Connect::Zypper do
         end
 
         it 'returns valid list of products based on proper XML' do
-          subject.installed_products.first.identifier.should eq 'SUSE_SLES'
+          expect(subject.installed_products.first.identifier).to eq 'SUSE_SLES'
         end
 
         it 'returns valid version' do
-          subject.installed_products.first.version.should eq '11.3'
+          expect(subject.installed_products.first.version).to eq '11.3'
         end
 
         it 'returns valid arch' do
-          subject.installed_products.first.arch.should eq 'x86_64'
+          expect(subject.installed_products.first.arch).to eq 'x86_64'
         end
 
         it 'returns proper base product' do
-          subject.base_product.identifier.should eq 'SUSE_SLES'
+          expect(subject.base_product.identifier).to eq 'SUSE_SLES'
         end
       end
     end
@@ -51,60 +48,118 @@ describe SUSE::Connect::Zypper do
         end
 
         it 'returns valid name' do
-          subject.installed_products.first.identifier.should eq 'SLES'
+          expect(subject.installed_products.first.identifier).to eq 'SLES'
         end
 
         it 'returns valid version' do
-          subject.installed_products.first.version.should eq '12'
+          expect(subject.installed_products.first.version).to eq '12'
         end
 
         it 'returns valid arch' do
-          subject.installed_products.first.arch.should eq 'x86_64'
+          expect(subject.installed_products.first.arch).to eq 'x86_64'
         end
 
         it 'returns proper base product' do
-          subject.base_product.identifier.should eq 'SLES'
+          expect(subject.base_product.identifier).to eq 'SLES'
         end
       end
     end
   end
 
-  describe '.add_service' do
-    describe 'calls zypper with proper arguments' do
-      it 'adds service' do
-        addservice_args = "zypper --non-interactive addservice -t ris http://example.com 'branding'"
-        autorefresh_args = 'zypper --non-interactive modifyservice -r http://example.com'
-        expect(Open3).to receive(:capture3).with(shared_env_hash, addservice_args).and_return(['', '', status])
-        allow(Open3).to receive(:capture3).with(shared_env_hash, autorefresh_args).and_return(['', '', status])
-        subject.add_service('http://example.com', 'branding')
-      end
+  describe '.enable_repository' do
+    let(:repository) { 'repository' }
 
-      it 'sets autorefresh flag' do
-        addservice_args = "zypper --non-interactive addservice -t ris http://example.com 'branding'"
-        autorefresh_args = 'zypper --non-interactive modifyservice -r http://example.com'
-        allow(Open3).to receive(:capture3).with(shared_env_hash, addservice_args).and_return(['', '', status])
-        expect(Open3).to receive(:capture3).with(shared_env_hash, autorefresh_args).and_return(['', '', status])
-        subject.add_service('http://example.com', 'branding')
-      end
+    it 'enables zypper repository' do
+      expect(Open3).to receive(:capture3).with(shared_env_hash, "zypper --non-interactive modifyrepo -e #{repository}").and_return(['', '', status])
+      subject.enable_repository(repository)
     end
 
-    it 'escapes shell parameters' do
-      args = "zypper --non-interactive addservice -t ris http://example.com\\;id 'branding'"
-      autorefresh_args = 'zypper --non-interactive modifyservice -r http://example.com\\;id'
-      allow(Open3).to receive(:capture3).with(shared_env_hash, autorefresh_args).and_return(['', '', status])
+    it 'raise an exception if repository not found' do
+      exception = "SUSE::Connect::ZypperError: Repository #{repository} not found."
+      expect(Open3).to receive(:capture3).with(shared_env_hash, "zypper --non-interactive modifyrepo -e #{repository}").and_raise(exception)
+      expect { subject.enable_repository(repository) }.to raise_error("SUSE::Connect::ZypperError: Repository #{repository} not found.")
+    end
+  end
+
+  describe '.disable_repository' do
+    let(:repository) { 'repository' }
+
+    it 'enables zypper repository' do
+      expect(Open3).to receive(:capture3).with(shared_env_hash, "zypper --non-interactive modifyrepo -d #{repository}").and_return(['', '', status])
+      subject.disable_repository(repository)
+    end
+
+    it 'raise an exception if repository not found' do
+      exception = "SUSE::Connect::ZypperError: Repository #{repository} not found."
+      expect(Open3).to receive(:capture3).with(shared_env_hash, "zypper --non-interactive modifyrepo -d #{repository}").and_raise(exception)
+      expect { subject.disable_repository(repository) }.to raise_error("SUSE::Connect::ZypperError: Repository #{repository} not found.")
+    end
+  end
+
+  describe '.repositories' do
+    let(:zypper_output) { File.read('spec/fixtures/zypper_repositories.xml') }
+    let(:args) { 'zypper --xmlout --non-interactive repos -d' }
+
+    before do
+      expect(Open3).to receive(:capture3).with(shared_env_hash, args).at_least(1).and_return([zypper_output, '', status])
+    end
+
+    it 'lists all defined repositories' do
+      expect(subject.repositories.size).to eq 4
+      expect(subject.repositories.first.keys).to match_array([:alias, :name, :type, :priority, :enabled, :autorefresh, :gpgcheck, :url])
+      expect(subject.repositories.map {|service| service[:name] }).to match_array(%w{SLES12-Debuginfo-Pool SLES12-Debuginfo-Updates SLES12-Pool SLES12-Updates})
+    end
+  end
+
+  describe '.add_service' do
+    let(:service_name) { 'valid_service' }
+    let(:service_url)  { 'http://example.com' }
+    let(:args) { "zypper --non-interactive addservice -t ris #{service_url} '#{service_name}'" }
+
+    before :each do
+      allow(Zypper).to receive(:remove_service).with(service_name)
+      allow(Zypper).to receive(:enable_service_autorefresh).with(service_name)
+      allow(Zypper).to receive(:write_service_credentials).with(service_name)
+      allow(Zypper).to receive(:refresh_services)
+    end
+
+    it 'adds service' do
+      expect(Zypper).to receive(:remove_service).with(service_name)
       expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
-      subject.add_service('http://example.com;id', 'branding')
+      expect(Zypper).to receive(:enable_service_autorefresh).with(service_name)
+      expect(Zypper).to receive(:write_service_credentials).with(service_name)
+      expect(Zypper).to receive(:refresh_services)
+
+      subject.add_service(service_url, service_name)
+    end
+
+    it 'sets autorefresh flag' do
+      expect(Zypper).to receive(:enable_service_autorefresh).with(service_name)
+      expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
+      subject.add_service(service_url, service_name)
     end
 
     it 'calls zypper with proper arguments --root case' do
-      SUSE::Connect::System.filesystem_root = '/path/to/root'
+      args = "zypper --root '/path/to/root' --non-interactive addservice -t ris #{service_url} '#{service_name}'"
 
-      args = "zypper --root '/path/to/root' --non-interactive addservice -t ris http://example.com 'branding'"
-      autorefresh_args = "zypper --root '/path/to/root' --non-interactive modifyservice -r http://example.com"
-      allow(Open3).to receive(:capture3).with(shared_env_hash, autorefresh_args).and_return(['', '', status])
+      allow(SUSE::Connect::System).to receive(:filesystem_root).and_return '/path/to/root'
       expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
+      subject.add_service(service_url, service_name)
+    end
 
-      subject.add_service('http://example.com', 'branding')
+    it 'escapes shell parameters' do
+      malformed_service_url = "#{service_url};id"
+      malformed_service_name = "#{service_name};id"
+      escaped_service_url = Shellwords.escape(malformed_service_url)
+      escaped_service_name = Shellwords.escape(malformed_service_name)
+
+      args = "zypper --non-interactive addservice -t ris #{escaped_service_url} '#{escaped_service_name}'"
+
+      expect(Zypper).to receive(:remove_service).with(malformed_service_name)
+      expect(Zypper).to receive(:enable_service_autorefresh).with(malformed_service_name)
+      expect(Zypper).to receive(:write_service_credentials).with(malformed_service_name)
+      expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
+      subject.add_service(malformed_service_url, malformed_service_name)
     end
   end
 
@@ -118,12 +173,27 @@ describe SUSE::Connect::Zypper do
     end
 
     it 'calls zypper with proper arguments --root case' do
-      SUSE::Connect::System.filesystem_root = '/path/to/root'
+      allow(SUSE::Connect::System).to receive(:filesystem_root).and_return '/path/to/root'
 
       args = "zypper --root '/path/to/root' --non-interactive removeservice 'branding'"
       expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
 
       subject.remove_service('branding')
+    end
+  end
+
+  describe '.find_products' do
+    let(:zypper_sles_product_search) { File.read('spec/fixtures/zypper_sles_product_search.xml') }
+    let(:args) { 'zypper --xmlout --non-interactive search -s -t product SLES' }
+
+    before do
+      expect(Open3).to receive(:capture3).with(shared_env_hash, args).at_least(1).and_return([zypper_sles_product_search, '', status])
+    end
+
+    it 'finds products by identifier' do
+      products = subject.find_products('SLES')
+      expect(products.size).to eq 2
+      expect(products.map {|p| p[:repository] }).to match_array(%w{SLES-12 SLES12-Pool})
     end
   end
 
@@ -199,11 +269,27 @@ describe SUSE::Connect::Zypper do
     end
 
     it 'calls zypper with proper arguments --root case' do
-      SUSE::Connect::System.filesystem_root = '/path/to/root'
+      allow(SUSE::Connect::System).to receive(:filesystem_root).and_return '/path/to/root'
 
       expect(Open3).to receive(:capture3).with(shared_env_hash, "zypper --root '/path/to/root' --non-interactive refresh")
         .and_return(['', '', status])
       subject.refresh
+    end
+  end
+
+  describe '.enable_service_autorefresh' do
+    let(:service_name) { 'zypper_service' }
+    it 'calls zypper with proper arguments' do
+      args = "zypper --non-interactive modifyservice -r #{service_name}"
+      expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
+      subject.enable_service_autorefresh service_name
+    end
+
+    it 'calls zypper with proper arguments' do
+      allow(SUSE::Connect::System).to receive(:filesystem_root).and_return '/path/to/root'
+      args = "zypper --root '/path/to/root' --non-interactive modifyservice -r #{service_name}"
+      expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
+      subject.enable_service_autorefresh service_name
     end
   end
 
@@ -214,7 +300,7 @@ describe SUSE::Connect::Zypper do
     end
 
     it 'calls zypper with proper arguments' do
-      SUSE::Connect::System.filesystem_root = '/path/to/root'
+      allow(SUSE::Connect::System).to receive(:filesystem_root).and_return '/path/to/root'
 
       expect(Open3).to receive(:capture3).with(shared_env_hash, "zypper --root '/path/to/root' --non-interactive refresh-services -r")
         .and_return(['', '', status])
@@ -231,12 +317,12 @@ describe SUSE::Connect::Zypper do
     end
 
     before do
-      subject.stub(installed_products: parsed_products)
-      Credentials.any_instance.stub(:write)
+      allow(subject).to receive(:installed_products).and_return parsed_products
+      allow_any_instance_of(Credentials).to receive(:write).and_return true
     end
 
     it 'should return first product from installed product which is base' do
-      subject.base_product.should eq(parsed_products.first)
+      expect(subject.base_product).to eq(parsed_products.first)
     end
 
     it 'raises CannotDetectBaseProduct if cant get base system from list of installed products' do
@@ -246,15 +332,23 @@ describe SUSE::Connect::Zypper do
     end
   end
 
+  describe '.install_release_package' do
+    it 'installs the product release package' do
+      identifier = 'opensuse'
+      expect(Open3).to receive(:capture3).with(shared_env_hash, "zypper --non-interactive install #{identifier}-release").and_return(['', '', status])
+      subject.install_release_package(identifier)
+    end
+  end
+
   describe '.write_base_credentials' do
     mock_dry_file
 
     before do
-      Credentials.any_instance.stub(:write)
+      allow_any_instance_of(Credentials).to receive(:write).and_return true
     end
 
     it 'should call write_base_credentials_file' do
-      Credentials.should_receive(:new).with('dummy', 'tummy', Credentials::GLOBAL_CREDENTIALS_FILE).and_call_original
+      expect(Credentials).to receive(:new).with('dummy', 'tummy', Credentials::GLOBAL_CREDENTIALS_FILE).and_call_original
       subject.write_base_credentials('dummy', 'tummy')
     end
   end
@@ -263,32 +357,32 @@ describe SUSE::Connect::Zypper do
     mock_dry_file
 
     before do
-      Credentials.any_instance.stub(:write)
+      allow_any_instance_of(Credentials).to receive(:write).and_return true
     end
 
     it 'extracts username and password from system credentials' do
-      System.should_receive(:credentials)
+      expect(System).to receive(:credentials)
       subject.write_service_credentials('turbo')
     end
 
     it 'creates a file with source name' do
-      Credentials.should_receive(:new).with('dummy', 'tummy', 'turbo').and_call_original
+      expect(Credentials).to receive(:new).with('dummy', 'tummy', 'turbo').and_call_original
       subject.write_service_credentials('turbo')
     end
   end
 
   describe '.distro_target' do
     it 'return zypper targetos output' do
-      Open3.should_receive(:capture3).with(shared_env_hash, 'zypper targetos').and_return(['openSUSE-13.1-x86_64', '', status])
-      Zypper.distro_target.should eq 'openSUSE-13.1-x86_64'
+      expect(Open3).to receive(:capture3).with(shared_env_hash, 'zypper targetos').and_return(['openSUSE-13.1-x86_64', '', status])
+      expect(Zypper.distro_target).to eq 'openSUSE-13.1-x86_64'
     end
 
     it 'return zypper targetos output --root case' do
-      args = "zypper --root '/path/to/root' targetos"
-      Open3.should_receive(:capture3).with(shared_env_hash, args).and_return(['openSUSE-13.1-x86_64', '', status])
+      allow(SUSE::Connect::System).to receive(:filesystem_root).and_return '/path/to/root'
 
-      SUSE::Connect::System.filesystem_root = '/path/to/root'
-      Zypper.distro_target.should eq 'openSUSE-13.1-x86_64'
+      args = "zypper --root '/path/to/root' targetos"
+      expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['openSUSE-13.1-x86_64', '', status])
+      expect(Zypper.distro_target).to eq 'openSUSE-13.1-x86_64'
     end
   end
 end

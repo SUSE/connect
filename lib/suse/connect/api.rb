@@ -97,6 +97,23 @@ module SUSE
         @connection.put('/connect/systems/products', auth: auth, params: product.to_params)
       end
 
+      # Downgrade a product and receive the updated service for the system.
+      # INFO: Upgrade and Downgrade methods point to the same API endpoint
+      #
+      # @param auth [String] authorization string which will be injected in 'Authorization' header in request.
+      #   In this case we expect Base64 encoded string with login and password
+      # @param product [SUSE::Connect::Remote::Product] product
+      alias_method :downgrade_product, :upgrade_product
+
+      # Synchronize activated system products with the registration server (SCC).
+      # Expects product list parameter to be a list of hashes.
+      #
+      # @param products [Array] product with identifier, arch and version defined
+      #
+      def synchronize(auth, products)
+        @connection.post('/connect/systems/products/synchronize', auth: auth, params: { products: products })
+      end
+
       # Show details of an (activated) product including repositories and available extensions
       #
       # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
