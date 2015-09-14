@@ -23,7 +23,12 @@ module SUSE
           status = Status.new(config)
 
           status.installed_products.each do |product|
-            client.downgrade_product(product)
+            service = client.downgrade_product(product)
+            # INFO: Remove old product service e.g. SLES 12
+            remove_service service.name
+
+            # INFO: Add new service for the same product but with new/valid service url
+            add_service service.url, service.name
           end
 
           # Synchronize installed products with SCC activations (removes obsolete activations)
