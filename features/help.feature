@@ -25,12 +25,6 @@ Feature: Help output
       --help
       """
 
-  Scenario: help should contain dry mode option
-    Then the output should contain:
-      """
-      -d, --dry-run
-      """
-
   Scenario: help should contain version option
     Then the output should contain:
       """
