@@ -20,20 +20,20 @@ describe SUSE::Toolkit::Utilities do
 
   describe '?basic_auth' do
     it 'returns string for auth header' do
-      Credentials.stub(:read => Credentials.new('bob', 'dylan'))
+      allow(Credentials).to receive_messages(:read => Credentials.new('bob', 'dylan'))
       base64_line = 'Basic Ym9iOmR5bGFu'
       expect(subject.send(:system_auth)).to eq base64_line
     end
 
     it 'raise if cannot get credentials' do
-      Credentials.stub(:read).and_raise(Errno::ENOENT)
+      allow(Credentials).to receive(:read).and_raise(Errno::ENOENT)
       expect { subject.send(:system_auth) }
         .to raise_error CannotBuildBasicAuth,
                         "Cannot read username and password from #{SUSE::Connect::Credentials::GLOBAL_CREDENTIALS_FILE}"
     end
 
     it 'raise if nil credentials' do
-      Credentials.stub(:read).and_return(Credentials.new(nil, nil))
+      allow(Credentials).to receive(:read).and_return(Credentials.new(nil, nil))
       expect { subject.send(:system_auth) }
         .to raise_error CannotBuildBasicAuth,
                         "Cannot read username and password from #{SUSE::Connect::Credentials::GLOBAL_CREDENTIALS_FILE}"

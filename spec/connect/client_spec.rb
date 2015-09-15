@@ -43,7 +43,7 @@ describe SUSE::Connect::Client do
       end
 
       before do
-        SUSE::Connect::Config.any_instance.stub(:read).and_return(
+        allow_any_instance_of(SUSE::Connect::Config).to receive(:read).and_return(
           'url'      => 'https://localsmt.domain.local',
           'language' => 'RU',
           'insecure' => true
@@ -73,37 +73,37 @@ describe SUSE::Connect::Client do
 
       before do
         api_response = double('api_response')
-        api_response.stub(body: { 'login' => 'lg', 'password' => 'pw' })
-        Api.any_instance.stub(announce_system: api_response)
-        subject.stub(token_auth: 'auth')
+        allow(api_response).to receive_messages(body: { 'login' => 'lg', 'password' => 'pw' })
+        allow_any_instance_of(Api).to receive_messages(announce_system: api_response)
+        allow(subject).to receive_messages(token_auth: 'auth')
       end
 
       it 'calls underlying api' do
-        Zypper.stub :write_base_credentials
-        Api.any_instance.should_receive :announce_system
+        allow(Zypper).to receive :write_base_credentials
+        expect_any_instance_of(Api).to receive :announce_system
         subject.announce_system
       end
 
       it 'forwards the optional parameter "distro_target" to the API' do
         optional_target = 'optional_target'
-        Api.any_instance.should_receive(:announce_system).with('auth', optional_target, nil)
+        expect_any_instance_of(Api).to receive(:announce_system).with('auth', optional_target, nil)
         subject.announce_system(optional_target)
       end
 
       it 'forwards the optional parameter "namespace" to the API' do
         optional_namespace = 'namespace'
-        Api.any_instance.should_receive(:announce_system).with('auth', optional_namespace, nil)
+        expect_any_instance_of(Api).to receive(:announce_system).with('auth', optional_namespace, nil)
         subject.announce_system(optional_namespace)
       end
 
       it 'reads instance_data_file and passes content the API' do
         instance_file_path = 'spec/fixtures/instance_data.xml'
-        Api.any_instance.should_receive(:announce_system).with('auth', nil, File.read(instance_file_path))
+        expect_any_instance_of(Api).to receive(:announce_system).with('auth', nil, File.read(instance_file_path))
         subject.announce_system(nil, instance_file_path)
       end
 
       it 'fails on unavailable instance_data_file' do
-        File.should_receive(:readable?).with('/test').and_return(false)
+        expect(File).to receive(:readable?).with('/test').and_return(false)
         expect { subject.announce_system(nil, '/test') }.to raise_error(FileError, 'File not found')
       end
     end
@@ -113,30 +113,30 @@ describe SUSE::Connect::Client do
         subject { SUSE::Connect::Client.new(config) }
 
         before do
-          subject.stub(system_auth: 'auth')
-          Api.any_instance.stub(:update_system)
+          allow(subject).to receive_messages(system_auth: 'auth')
+          allow_any_instance_of(Api).to receive(:update_system)
         end
 
         it 'calls underlying api' do
-          Api.any_instance.should_receive(:update_system).with('auth', nil, nil)
+          expect_any_instance_of(Api).to receive(:update_system).with('auth', nil, nil)
           subject.update_system
         end
 
         it 'forwards distro_target to api' do
-          Api.any_instance.should_receive(:update_system).with('auth', 'my-distro-target', nil)
+          expect_any_instance_of(Api).to receive(:update_system).with('auth', 'my-distro-target', nil)
           subject.update_system('my-distro-target')
         end
 
         it 'forwards the optional parameter "namespace" to the API' do
           optional_namespace = 'namespace'
-          Api.any_instance.should_receive(:update_system).with('auth', optional_namespace, nil)
+          expect_any_instance_of(Api).to receive(:update_system).with('auth', optional_namespace, nil)
 
           subject.update_system(optional_namespace)
         end
 
         it 'forwards instance_data_file to api' do
-          System.should_receive(:read_file).with('filepath').and_return('')
-          Api.any_instance.should_receive(:update_system).with('auth', 'my-distro-target', '')
+          expect(System).to receive(:read_file).with('filepath').and_return('')
+          expect_any_instance_of(Api).to receive(:update_system).with('auth', 'my-distro-target', '')
           subject.update_system('my-distro-target', 'filepath')
         end
       end
@@ -150,10 +150,10 @@ describe SUSE::Connect::Client do
 
       before do
         api_response = double('api_response')
-        api_response.stub(body: { 'login' => 'lg', 'password' => 'pw' })
-        Zypper.stub(:write_base_credentials).with('lg', 'pw')
-        Api.any_instance.stub(announce_system: api_response)
-        subject.stub(token_auth: true)
+        allow(api_response).to receive_messages(body: { 'login' => 'lg', 'password' => 'pw' })
+        allow(Zypper).to receive(:write_base_credentials).with('lg', 'pw')
+        allow_any_instance_of(Api).to receive_messages(announce_system: api_response)
+        allow(subject).to receive_messages(token_auth: true)
       end
 
       it 'not raising exception if regcode is absent' do
@@ -161,8 +161,8 @@ describe SUSE::Connect::Client do
       end
 
       it 'calls underlying api' do
-        Zypper.stub :write_base_credentials
-        Api.any_instance.should_receive :announce_system
+        allow(Zypper).to receive :write_base_credentials
+        expect_any_instance_of(Api).to receive :announce_system
         subject.announce_system
       end
     end
@@ -173,24 +173,24 @@ describe SUSE::Connect::Client do
 
     before do
       api_response = double('api_response')
-      api_response.stub(body: { 'name' => 'kinkat', 'url' => 'kinkaturl', 'product' => {} })
-      Api.any_instance.stub(activate_product: api_response)
-      subject.stub(system_auth: 'secretsecret')
+      allow(api_response).to receive_messages(body: { 'name' => 'kinkat', 'url' => 'kinkaturl', 'product' => {} })
+      allow_any_instance_of(Api).to receive_messages(activate_product: api_response)
+      allow(subject).to receive_messages(system_auth: 'secretsecret')
     end
 
     it 'gets login and password from system' do
-      subject.should_receive(:system_auth)
+      expect(subject).to receive(:system_auth)
       subject.activate_product(product_ident)
     end
 
     it 'calls underlying api with proper parameters' do
-      Api.any_instance.should_receive(:activate_product).with('secretsecret', product_ident, nil)
+      expect_any_instance_of(Api).to receive(:activate_product).with('secretsecret', product_ident, nil)
       subject.activate_product(product_ident)
     end
 
     it 'allows to pass an optional parameter "email"' do
       email = 'email@domain.com'
-      Api.any_instance.should_receive(:activate_product).with('secretsecret', product_ident, email)
+      expect_any_instance_of(Api).to receive(:activate_product).with('secretsecret', product_ident, email)
       subject.activate_product(product_ident, email)
     end
 
@@ -206,18 +206,18 @@ describe SUSE::Connect::Client do
 
     before do
       api_response = double('api_response')
-      api_response.stub(body: { 'name' => 'tongobongo', 'url' => 'tongobongourl', 'product' => {} })
-      Api.any_instance.stub(upgrade_product: api_response)
-      subject.stub(system_auth: 'secretsecret')
+      allow(api_response).to receive_messages(body: { 'name' => 'tongobongo', 'url' => 'tongobongourl', 'product' => {} })
+      allow_any_instance_of(Api).to receive_messages(upgrade_product: api_response)
+      allow(subject).to receive_messages(system_auth: 'secretsecret')
     end
 
     it 'gets login and password from system' do
-      subject.should_receive(:system_auth)
+      expect(subject).to receive(:system_auth)
       subject.upgrade_product(product_ident)
     end
 
     it 'calls underlying api with proper parameters' do
-      Api.any_instance.should_receive(:upgrade_product).with('secretsecret', product_ident)
+      expect_any_instance_of(Api).to receive(:upgrade_product).with('secretsecret', product_ident)
       subject.upgrade_product(product_ident)
     end
 
@@ -261,34 +261,34 @@ describe SUSE::Connect::Client do
     end
 
     it 'should call announce if system not registered' do
-      System.stub(credentials?: false)
-      subject.should_receive(:announce_system)
+      allow(System).to receive_messages(credentials?: false)
+      expect(subject).to receive(:announce_system)
       subject.register!
     end
 
     it 'should not call announce but update on api if system registered' do
-      System.stub(credentials?: true)
-      subject.should_not_receive(:announce_system)
-      subject.should_receive(:update_system)
+      allow(System).to receive_messages(credentials?: true)
+      expect(subject).not_to receive(:announce_system)
+      expect(subject).to receive(:update_system)
       subject.register!
     end
 
     it 'should call activate_product on api' do
-      System.stub(credentials?: true)
-      subject.should_receive(:activate_product)
+      allow(System).to receive_messages(credentials?: true)
+      expect(subject).to receive(:activate_product)
       subject.register!
     end
 
     it 'writes credentials file' do
-      System.stub(credentials?: false)
-      subject.stub(announce_system: %w{ lg pw })
-      Credentials.should_receive(:new).with('lg', 'pw', Credentials::GLOBAL_CREDENTIALS_FILE).and_call_original
+      allow(System).to receive_messages(credentials?: false)
+      allow(subject).to receive_messages(announce_system: %w{ lg pw })
+      expect(Credentials).to receive(:new).with('lg', 'pw', Credentials::GLOBAL_CREDENTIALS_FILE).and_call_original
       subject.register!
     end
 
     it 'adds service after product activation' do
-      System.stub(credentials?: true)
-      System.should_receive(:add_service)
+      allow(System).to receive_messages(credentials?: true)
+      expect(System).to receive(:add_service)
       subject.register!
     end
 
@@ -303,15 +303,15 @@ describe SUSE::Connect::Client do
       product = Zypper::Product.new(name: 'SLES', version: 12, arch: 's390')
       merged_config = config.merge!(url: 'http://dummy:42', email: 'asd@asd.de', product: product, filesystem_root: '/test', language: 'EN')
       client = Client.new(merged_config)
-      client.stub(:announce_or_update)
-      client.stub(:activate_product)
-      Zypper.stub(base_product: product)
+      allow(client).to receive(:announce_or_update)
+      allow(client).to receive(:activate_product)
+      allow(Zypper).to receive_messages(base_product: product)
       SUSE::Connect::GlobalLogger.instance.log = string_logger
 
-      string_logger.should_receive(:info).with('Registered SLES 12 s390')
-      string_logger.should_receive(:info).with('To server: http://dummy:42')
-      string_logger.should_receive(:info).with('Using E-Mail: asd@asd.de')
-      string_logger.should_receive(:info).with('Rooted at: /test')
+      expect(string_logger).to receive(:info).with('Registered SLES 12 s390')
+      expect(string_logger).to receive(:info).with('To server: http://dummy:42')
+      expect(string_logger).to receive(:info).with('Using E-Mail: asd@asd.de')
+      expect(string_logger).to receive(:info).with('Rooted at: /test')
       client.register!
       SUSE::Connect::GlobalLogger.instance.log = default_logger
     end
@@ -329,16 +329,16 @@ describe SUSE::Connect::Client do
     let(:product) { Remote::Product.new(identifier: 'text_identifier')  }
 
     before do
-      subject.stub(system_auth: 'Basic: encodedstring')
+      allow(subject).to receive_messages(system_auth: 'Basic: encodedstring')
     end
 
     it 'collects data from api response' do
-      subject.api.should_receive(:show_product).with('Basic: encodedstring', product).and_return stubbed_response
+      expect(subject.api).to receive(:show_product).with('Basic: encodedstring', product).and_return stubbed_response
       subject.show_product(product)
     end
 
     it 'returns array of extension products returned from api' do
-      subject.api.should_receive(:show_product).with('Basic: encodedstring', product).and_return stubbed_response
+      expect(subject.api).to receive(:show_product).with('Basic: encodedstring', product).and_return stubbed_response
       expect(subject.show_product(product)).to be_kind_of Remote::Product
     end
   end
@@ -368,7 +368,7 @@ describe SUSE::Connect::Client do
     end
 
     before do
-      subject.stub(:system_auth => 'Basic: encodedstring')
+      allow(subject).to receive_messages(:system_auth => 'Basic: encodedstring')
     end
 
     it 'collects data from the API response' do
@@ -378,7 +378,7 @@ describe SUSE::Connect::Client do
     end
 
     it 'returns a list of upgrade paths (array of Products) returned from the API' do
-      subject.api.should_receive(:system_migrations).with('Basic: encodedstring', products).and_return stubbed_response
+      expect(subject.api).to receive(:system_migrations).with('Basic: encodedstring', products).and_return stubbed_response
       upgrade_paths = subject.system_migrations(products)
 
       expect(upgrade_paths).to be_kind_of Array
@@ -388,7 +388,7 @@ describe SUSE::Connect::Client do
 
     context 'when no upgrades are available' do
       it 'returns an empty array' do
-        subject.api.should_receive(:system_migrations).with('Basic: encodedstring', products).and_return empty_response
+        expect(subject.api).to receive(:system_migrations).with('Basic: encodedstring', products).and_return empty_response
         upgrade_paths = subject.system_migrations(products)
         expect(upgrade_paths).to match_array([])
       end
@@ -405,7 +405,7 @@ describe SUSE::Connect::Client do
     end
 
     before do
-      subject.stub(system_auth: 'Basic: encodedstring')
+      allow(subject).to receive_messages(system_auth: 'Basic: encodedstring')
     end
 
     it 'calls underlying api and removes credentials file' do
@@ -426,7 +426,7 @@ describe SUSE::Connect::Client do
     end
 
     before do
-      subject.stub(system_auth: 'Basic: encodedstring')
+      allow(subject).to receive_messages(system_auth: 'Basic: encodedstring')
     end
 
     it 'calls underlying api and removes credentials file' do
@@ -445,7 +445,7 @@ describe SUSE::Connect::Client do
     end
 
     before do
-      subject.stub(system_auth: 'Basic: encodedstring')
+      allow(subject).to receive_messages(system_auth: 'Basic: encodedstring')
     end
 
     it 'calls underlying api and removes credentials file' do
@@ -464,7 +464,7 @@ describe SUSE::Connect::Client do
     end
 
     before do
-      subject.stub(system_auth: 'Basic: encodedstring')
+      allow(subject).to receive_messages(system_auth: 'Basic: encodedstring')
     end
 
     it 'calls underlying api with system_activations call' do

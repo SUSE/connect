@@ -87,11 +87,11 @@ describe SUSE::Connect::Status do
     context 'json format' do
       it 'outputs the system status in json format' do
         status = Zypper::ProductStatus.new(Zypper::Product.new({}), subject)
-        status.stub(:registration_status) { 'test' }
-        status.stub(:remote_product) { true }
+        allow(status).to receive(:registration_status) { 'test' }
+        allow(status).to receive(:remote_product) { true }
         expect(status).to receive_message_chain(:remote_product, :free).and_return(false)
         activation = SUSE::Connect::Remote::Activation.new('service' => { 'product' => {} })
-        status.stub(:related_activation).and_return(activation)
+        allow(status).to receive(:related_activation).and_return(activation)
 
         expect(subject).to receive(:product_statuses).and_return [status]
         expect(subject).to receive(:puts)
@@ -141,7 +141,7 @@ describe SUSE::Connect::Status do
       it 'uses clients response to collect info' do
         fake_client = double('client')
         allow(Client).to receive(:new).and_return(fake_client)
-        SUSE::Connect::System.stub(:credentials?) { true }
+        allow(SUSE::Connect::System).to receive(:credentials?).and_return true
         expect(fake_client).to receive_message_chain(:system_activations, :body, :map).and_return [1, 2, 3]
         expect(subject.send(:products_from_activations)).to eq [1, 2, 3]
       end
@@ -149,7 +149,7 @@ describe SUSE::Connect::Status do
 
     describe '?activations_from_server' do
       it 'mapping system_activations response to Remote::Activations' do
-        subject.stub(:system_activations).and_return [1, 2, 3]
+        allow(subject).to receive(:system_activations).and_return([1, 2, 3])
         expect(Remote::Activation).to receive(:new).with(1)
         expect(Remote::Activation).to receive(:new).with(2)
         expect(Remote::Activation).to receive(:new).with(3)
