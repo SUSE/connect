@@ -103,6 +103,12 @@ describe SUSE::Connect::Cli do
         cli.execute!
       end
 
+      it 'does not require --regcode or --url when specifying a product (eg. an extension)' do
+        cli = subject.new(%w{-p sle-module-web-scripting/12/x86_64})
+        expect_any_instance_of(Client).to receive(:register!)
+        cli.execute!
+      end
+
       it 'requires either --regcode or --url (regcode-less SMT registration) but respects config attributes' do
         config = SUSE::Connect::Config.new(config_file)
         config.url = 'https://smt.server'

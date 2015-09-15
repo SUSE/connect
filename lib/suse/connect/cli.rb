@@ -30,7 +30,7 @@ module SUSE
           if @config.instance_data_file && @config.url_default?
             log.error 'Please use --instance-data only in combination with --url pointing to your SMT server'
             exit(1)
-          elsif @config.token.nil? && @config.url_default?
+          elsif @config.product.nil? && @config.token.nil? && @config.url_default?
             log.error 'Please set the regcode parameter to register against SCC, or the url parameter to register against SMT'
             exit(1)
           elsif @config.token && @config.instance_data_file
@@ -98,7 +98,6 @@ module SUSE
                  '  product to be registered.',
                  '  Relates that product to the specified subscription,',
                  '  and enables software repositories for that product') do |opt|
-          check_if_param(opt, 'Please provide a registration code parameter')
           @options[:token] = opt
         end
 
