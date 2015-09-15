@@ -97,13 +97,13 @@ describe SUSE::Connect::Cli do
         cli.execute!
       end
 
-      it 'requires either --token or --url (regcode-less SMT registration)' do
+      it 'requires either --regcode or --url (regcode-less SMT registration)' do
         expect(string_logger).to receive(:error)
           .with('Please set the regcode parameter to register against SCC, or the url parameter to register against SMT')
         cli.execute!
       end
 
-      it 'requires either --token or --url (regcode-less SMT registration) but respects config attributes' do
+      it 'requires either --regcode or --url (regcode-less SMT registration) but respects config attributes' do
         config = SUSE::Connect::Config.new(config_file)
         config.url = 'https://smt.server'
         allow(SUSE::Connect::Config).to receive(:new).and_return(config)
@@ -122,10 +122,10 @@ describe SUSE::Connect::Cli do
         cli.execute!
       end
 
-      it '--instance-data is mutually exclusive with --token' do
+      it '--instance-data is mutually exclusive with --regcode' do
         cli = subject.new(%w{-r 123 --instance-data /tmp/test --url test})
         expect(string_logger).to receive(:error)
-          .with('Please use either --token or --instance-data')
+          .with('Please use either --regcode or --instance-data')
         cli.execute!
       end
 

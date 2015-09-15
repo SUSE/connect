@@ -34,7 +34,7 @@ module SUSE
             log.error 'Please set the regcode parameter to register against SCC, or the url parameter to register against SMT'
             exit(1)
           elsif @config.token && @config.instance_data_file
-            log.error 'Please use either --token or --instance-data'
+            log.error 'Please use either --regcode or --instance-data'
             exit(1)
           else
             Client.new(@config).register!
