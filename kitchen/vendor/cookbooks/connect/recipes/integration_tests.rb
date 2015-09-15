@@ -6,7 +6,7 @@ remote_file '/root/.regcode' do
 end
 
 execute 'integration testing' do
-  command 'cucumber /tmp/connect/features/integration.feature'
+  command 'cucumber'
   cwd node[:connect][:project]
   user 'root'
   group 'root'
