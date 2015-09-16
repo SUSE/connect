@@ -13,16 +13,23 @@ class SUSE::Connect::HwInfo::S390 < SUSE::Connect::HwInfo::Base
     end
 
     def cpus
-      output['VM00 CPUs Total'].to_i
+      cpus = output['VM00 CPUs Total'] || output['LPAR CPUs Total']
+      cpus.to_s.strip.to_i
     end
 
     def sockets
-      output['VM00 IFLs'].to_i
+      sockets = output['VM00 IFLs'] || output['LPAR CPUs IFL']
+      sockets.to_s.strip.to_i
     end
 
     def hypervisor
-      # Strip and remove recurring whitespaces e.g. " z/VM    6.1.0" => "z/VM 6.1.0"
-      output['VM00 Control Program'].strip.gsub(/\s+/, ' ')
+      if output['VM00 Control Program']
+        # Strip and remove recurring whitespaces e.g. " z/VM    6.1.0" => "z/VM 6.1.0"
+        output['VM00 Control Program'].strip.gsub(/\s+/, ' ')
+      else
+        log.debug("Unable to find 'VM00 Control Program'. This system probably runs on an LPAR.")
+        nil
+      end
     end
 
     def uuid
