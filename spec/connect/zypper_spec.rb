@@ -17,7 +17,7 @@ describe SUSE::Connect::Zypper do
 
         before do
           args = 'zypper --no-refresh --xmlout --non-interactive products -i'
-          Open3.should_receive(:capture3).with(shared_env_hash, args).and_return([xml, '', status])
+          expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return([xml, '', status])
         end
 
         it 'returns valid list of products based on proper XML' do
@@ -44,7 +44,7 @@ describe SUSE::Connect::Zypper do
 
         before do
           args = 'zypper --no-refresh --xmlout --non-interactive products -i'
-          Open3.should_receive(:capture3).with(shared_env_hash, args).and_return([xml, '', status])
+          expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return([xml, '', status])
         end
 
         it 'returns valid name' do

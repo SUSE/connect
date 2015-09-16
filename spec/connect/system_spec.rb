@@ -20,22 +20,22 @@ describe SUSE::Connect::System do
     context :credentials_exist do
       let :stub_ncc_cred_file do
         stub_creds_file = double('me_file')
-        stub_creds_file.stub(:close)
+        allow(stub_creds_file).to receive(:close)
         stub_creds_file
       end
 
       before do
-        File.stub(:exist?).with(credentials_file).and_return(true)
+        allow(File).to receive(:exist?).with(credentials_file).and_return(true)
       end
 
       it 'should raise MalformedSccCredentialsFile if cannot parse lines' do
-        File.stub(:read).with(credentials_file).and_return("me\nfe")
+        allow(File).to receive(:read).with(credentials_file).and_return("me\nfe")
         expect { subject.credentials }
           .to raise_error MalformedSccCredentialsFile, 'Cannot parse credentials file'
       end
 
       it 'should return username and password' do
-        File.stub(:read).with(credentials_file).and_return("username=bill\npassword=nevermore")
+        allow(File).to receive(:read).with(credentials_file).and_return("username=bill\npassword=nevermore")
 
         expect(subject.credentials.username).to eq 'bill'
         expect(subject.credentials.password).to eq 'nevermore'
@@ -44,7 +44,7 @@ describe SUSE::Connect::System do
 
     context :credentials_not_exist do
       before(:each) do
-        File.should_receive(:exist?).with(credentials_file).and_return(false)
+        expect(File).to receive(:exist?).with(credentials_file).and_return(false)
       end
 
       it 'should produce log message' do
@@ -54,8 +54,8 @@ describe SUSE::Connect::System do
 
     context :remove_credentials do
       before(:each) do
-        subject.should_receive(:credentials?).and_return(true)
-        File.should_receive(:delete).with(credentials_file).and_return(true)
+        expect(subject).to receive(:credentials?).and_return(true)
+        expect(File).to receive(:delete).with(credentials_file).and_return(true)
       end
 
       it 'should remove credentials file' do
@@ -66,31 +66,31 @@ describe SUSE::Connect::System do
 
   describe '.credentials?' do
     it 'returns false if no credentials' do
-      subject.stub(credentials: nil)
+      allow(subject).to receive_messages(credentials: nil)
       expect(subject.credentials?).to be false
     end
 
     it 'returns true if credentials exist' do
-      subject.stub(credentials: Credentials.new('123456789', 'ABCDEF'))
+      allow(subject).to receive_messages(credentials: Credentials.new('123456789', 'ABCDEF'))
       expect(subject.credentials?).to be true
     end
   end
 
   describe '.activated_base_product?' do
     it 'returns false if sytem does not have a credentials' do
-      subject.stub(:credentials? => false)
+      allow(subject).to receive_messages(:credentials? => false)
       expect(subject.activated_base_product?).to be false
     end
 
     it 'returns false if sytem has credentials but not activated' do
-      subject.stub(credentials?: true)
-      Zypper.stub(:base_product)
+      allow(subject).to receive_messages(credentials?: true)
+      allow(Zypper).to receive(:base_product)
       expect(SUSE::Connect::Status).to receive(:activated_products).and_return([])
       expect(subject.activated_base_product?).to be false
     end
 
     it 'returns true if sytem has credentials and activated' do
-      subject.stub(credentials?: true)
+      allow(subject).to receive_messages(credentials?: true)
       product = Zypper::Product.new name: 'OpenSUSE'
 
       expect(Zypper).to receive(:base_product).and_return(product)
@@ -101,8 +101,8 @@ describe SUSE::Connect::System do
 
   describe '.add_service' do
     before(:each) do
-      Zypper.stub(:write_service_credentials)
-      Credentials.any_instance.stub(:write)
+      allow(Zypper).to receive(:write_service_credentials)
+      allow_any_instance_of(Credentials).to receive(:write)
     end
 
     let :mock_service do
@@ -131,7 +131,7 @@ describe SUSE::Connect::System do
   describe '.hostname' do
     context :hostname_detected do
       it 'returns hostname' do
-        Socket.stub(:gethostname => 'vargan')
+        allow(Socket).to receive_messages(:gethostname => 'vargan')
         expect(subject.hostname).to eq 'vargan'
       end
     end
@@ -139,8 +139,8 @@ describe SUSE::Connect::System do
     context :hostname_nil do
       it 'returns first private ip' do
         stubbed_ip_address_list = [Addrinfo.ip('127.0.0.1'), Addrinfo.ip('192.168.42.100'), Addrinfo.ip('192.168.42.42')]
-        Socket.stub(:ip_address_list => stubbed_ip_address_list)
-        Socket.stub(:gethostname => nil)
+        allow(Socket).to receive_messages(:ip_address_list => stubbed_ip_address_list)
+        allow(Socket).to receive_messages(:gethostname => nil)
         expect(subject.hostname).to eq '192.168.42.100'
       end
     end
@@ -148,8 +148,8 @@ describe SUSE::Connect::System do
     context :hostname_is_none do
       it 'returns first private ip' do
         stubbed_ip_address_list = [Addrinfo.ip('127.0.0.1'), Addrinfo.ip('192.168.42.42')]
-        Socket.stub(:ip_address_list => stubbed_ip_address_list)
-        Socket.stub(:gethostname => '(none)')
+        allow(Socket).to receive_messages(:ip_address_list => stubbed_ip_address_list)
+        allow(Socket).to receive_messages(:gethostname => '(none)')
         expect(subject.hostname).to eq '192.168.42.42'
       end
     end
@@ -157,8 +157,8 @@ describe SUSE::Connect::System do
     context 'hostname and private ip is nil' do
       it 'returns nil' do
         stubbed_ip_address_list = [Addrinfo.ip('127.0.0.1'), Addrinfo.ip('44.0.0.69')]
-        Socket.stub(:ip_address_list => stubbed_ip_address_list)
-        Socket.stub(:gethostname => nil)
+        allow(Socket).to receive_messages(:ip_address_list => stubbed_ip_address_list)
+        allow(Socket).to receive_messages(:gethostname => nil)
         expect(subject.hostname).to eq nil
       end
     end

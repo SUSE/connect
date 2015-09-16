@@ -16,41 +16,41 @@ describe SUSE::Connect::YaST do
 
   describe '.announce_system' do
     let(:params) { [{}, 'sles12-x86_64'] }
-    before { Client.any_instance.stub :announce_system }
+    before { allow_any_instance_of(Client).to receive :announce_system }
 
     it 'calls announce_system on an instance of Client' do
-      Client.any_instance.should_receive(:announce_system)
+      expect_any_instance_of(Client).to receive(:announce_system)
       subject.announce_system({}, nil)
     end
 
     it 'passes distro_target parameter to announce' do
-      Client.any_instance.should_receive(:announce_system).with(params.last)
+      expect_any_instance_of(Client).to receive(:announce_system).with(params.last)
       subject.announce_system(*params)
     end
 
     it 'forwards all params to an instance of Client' do
-      Client.should_receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
-      Client.any_instance.should_receive(:announce_system)
+      expect(Client).to receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
+      expect_any_instance_of(Client).to receive(:announce_system)
       subject.announce_system(*params)
     end
 
     it 'falls back to use an empty Hash as params if none are specified' do
-      Client.should_receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
-      Client.any_instance.should_receive(:announce_system)
+      expect(Client).to receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
+      expect_any_instance_of(Client).to receive(:announce_system)
       subject.announce_system
     end
   end
 
   describe '.update_system' do
-    before { Client.any_instance.stub :update_system }
+    before { allow_any_instance_of(Client).to receive :update_system }
 
     it 'calls update_system on an instance of Client' do
-      Client.any_instance.should_receive(:update_system)
+      expect_any_instance_of(Client).to receive(:update_system)
       subject.update_system
     end
 
     it 'forwards distro_target parameter to client' do
-      Client.any_instance.should_receive(:update_system).with('my-distro-target')
+      expect_any_instance_of(Client).to receive(:update_system).with('my-distro-target')
       subject.update_system({}, 'my-distro-target')
     end
 

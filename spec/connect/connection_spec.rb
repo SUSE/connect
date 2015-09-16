@@ -92,34 +92,34 @@ describe SUSE::Connect::Connection do
     end
 
     before do
-      connection.http.should_receive(:request).and_return(OpenStruct.new(:body => 'bodyofostruct'))
-      JSON.stub(:parse => { '1' => '2' })
+      expect(connection.http).to receive(:request).and_return(OpenStruct.new(:body => 'bodyofostruct'))
+      allow(JSON).to receive_messages(:parse => { '1' => '2' })
     end
 
     context :get_request do
       it 'takes Net::HTTP::Get class to build request' do
-        Net::HTTP::Get.should_receive(:new).and_call_original
+        expect(Net::HTTP::Get).to receive(:new).and_call_original
         connection.send(:json_request, :get, '/api/v1/megusta')
       end
     end
 
     context :post_request do
       it 'takes Net::HTTP::Post class to build request' do
-        Net::HTTP::Post.should_receive(:new).and_call_original
+        expect(Net::HTTP::Post).to receive(:new).and_call_original
         connection.send(:json_request, :post, '/api/v1/megusta')
       end
     end
 
     context :put_request do
       it 'takes Net::HTTP::Put class to build request' do
-        Net::HTTP::Put.should_receive(:new).and_call_original
+        expect(Net::HTTP::Put).to receive(:new).and_call_original
         connection.send(:json_request, :put, '/api/v1/megusta')
       end
     end
 
     context :delete_request do
       it 'takes Net::HTTP::Delete class to build request' do
-        Net::HTTP::Delete.should_receive(:new).and_call_original
+        expect(Net::HTTP::Delete).to receive(:new).and_call_original
         connection.send(:json_request, :delete, '/api/v1/megusta')
       end
     end
@@ -257,7 +257,7 @@ describe SUSE::Connect::Connection do
         :body => { 'error' => 'These are not the droids you were looking for' }
       )
 
-      connection.should_receive(:json_request).and_return parsed_output
+      expect(connection).to receive(:json_request).and_return parsed_output
       expect { connection.post('/api/v1/test', :auth   => 'Token token=zulu', :params => {}) }
         .to raise_error(ApiError) do |error|
         expect(error.code).to eq 422
