@@ -15,4 +15,4 @@ ADD lib/suse/connect/version.rb /tmp/connect/lib/suse/connect/
 WORKDIR /tmp/connect
 RUN bundle -j8
 ADD . /tmp/connect
-RUN chown nobody /tmp/connect/coverage
+RUN chown nobody /tmp/connect/coverage || true
