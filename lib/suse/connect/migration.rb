@@ -23,7 +23,7 @@ module SUSE
           status = Status.new(config)
 
           # FIXME: Sort products and ensure the base product is the first one in the list
-          status.installed_products.sort_by{|p| p.isbase ? 0 : 1 }.each do |product|
+          status.installed_products.sort_by {|p| p.isbase ? 0 : 1 }.each do |product|
             service = client.downgrade_product(product)
             # INFO: Remove old product service e.g. SLES 12
             remove_service service.name
