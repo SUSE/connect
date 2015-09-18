@@ -21,3 +21,25 @@ rake console  # Run console loaded with gem
 rake rubocop  # Run Rubocop
 rake spec     # Run RSpec
 ```
+
+# Docker usage
+
+Build an image (and everytime to change code)
+
+* `docker build -t connect .`
+
+Run RSpec 
+
+* `docker run --privileged -t connect su nobody -c rspec`
+
+Run Cucumber 
+
+* `docker run --privileged -t connect cucumber`
+
+Run Rubocop 
+
+* `docker run --privileged -t connect su nobody -c rubocop`
+
+Or run whole set of tests together 
+
+* `docker run --privileged -t connect sh docker/runall.sh`

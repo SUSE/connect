@@ -15,4 +15,5 @@ ADD lib/suse/connect/version.rb /tmp/connect/lib/suse/connect/
 WORKDIR /tmp/connect
 RUN bundle -j8
 ADD . /tmp/connect
-RUN chown nobody /tmp/connect/coverage || true
+RUN chown -R nobody /tmp/connect
+RUN chmod +x /tmp/connect/docker/runall.sh
