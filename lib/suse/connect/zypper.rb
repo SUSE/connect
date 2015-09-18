@@ -63,13 +63,19 @@ module SUSE
           call("--non-interactive addservice -t ris #{Shellwords.escape(service_url)} '#{Shellwords.escape(service_name)}'")
           enable_service_autorefresh(service_name)
           write_service_credentials(service_name)
-          refresh_services
+
+          refresh_service(service_name)
         end
 
         # @param service_name [String] Alias-mnemonic with which zypper should remove this service
         def remove_service(service_name)
           call("--non-interactive removeservice '#{Shellwords.escape(service_name)}'")
           remove_service_credentials(service_name)
+        end
+
+        # @param service_name [String] Alias-mnemonic with which zypper should refresh a service
+        def refresh_service(service_name)
+          call("--non-interactive refs #{Shellwords.escape(service_name)}")
         end
 
         # @param product identifier [String]

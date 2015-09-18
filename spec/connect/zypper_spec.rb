@@ -120,7 +120,7 @@ describe SUSE::Connect::Zypper do
       allow(Zypper).to receive(:remove_service).with(service_name)
       allow(Zypper).to receive(:enable_service_autorefresh).with(service_name)
       allow(Zypper).to receive(:write_service_credentials).with(service_name)
-      allow(Zypper).to receive(:refresh_services)
+      allow(Zypper).to receive(:refresh_service)
     end
 
     it 'adds service' do
@@ -128,7 +128,7 @@ describe SUSE::Connect::Zypper do
       expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
       expect(Zypper).to receive(:enable_service_autorefresh).with(service_name)
       expect(Zypper).to receive(:write_service_credentials).with(service_name)
-      expect(Zypper).to receive(:refresh_services)
+      expect(Zypper).to receive(:refresh_service).with(service_name)
 
       subject.add_service(service_url, service_name)
     end
@@ -179,6 +179,14 @@ describe SUSE::Connect::Zypper do
       expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
 
       subject.remove_service('branding')
+    end
+  end
+
+  describe '.refresh_service' do
+    it 'calls zypper with proper arguments' do
+      service_name = 'SLES'
+      expect(Open3).to receive(:capture3).with(shared_env_hash, "zypper --non-interactive refs #{service_name}").and_return(['', '', status])
+      subject.refresh_service service_name
     end
   end
 
