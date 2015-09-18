@@ -25,16 +25,21 @@ rake spec     # Run RSpec
 # Docker usage
 
 Build an image (and everytime to change code)
+
 * `docker build -t connect .`
 
-Run RSpec
+Run RSpec 
+
 * `docker run --privileged -t connect su nobody -c rspec`
 
-Run Cucumber
+Run Cucumber 
+
 * `docker run --privileged -t connect cucumber`
 
-Run Rubocop
+Run Rubocop 
+
 * `docker run --privileged -t connect su nobody -c rubocop`
 
-Or run whole set of tests together
+Or run whole set of tests together 
+
 * `docker run --privileged -t connect sh docker/runall.sh`
