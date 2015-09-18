@@ -182,6 +182,14 @@ describe SUSE::Connect::Zypper do
     end
   end
 
+  describe '.refresh_service' do
+    it 'calls zypper with proper arguments' do
+      service_name = 'SLES'
+      expect(Open3).to receive(:capture3).with(shared_env_hash, "zypper --non-interactive refs #{service_name}").and_return(['', '', status])
+      subject.refresh_service service_name
+    end
+  end
+
   describe '.find_products' do
     let(:zypper_sles_product_search) { File.read('spec/fixtures/zypper_sles_product_search.xml') }
     let(:args) { 'zypper --xmlout --non-interactive search -s -t product SLES' }
