@@ -26,6 +26,18 @@ module SUSE
         @known_activations ||= activations_from_server
       end
 
+      def print_extensions_list
+        file = File.read File.join(File.dirname(__FILE__), 'templates/extensions_list.text.erb')
+        template = ERB.new(file, 0, '-<>')
+        puts template.result(binding).gsub('\e', "\e")
+      end
+
+      # Gather all extensions that can be installed on this system
+      def available_system_extensions
+        base = @client.show_product(Zypper.base_product)
+        extract_extensions(base)
+      end
+
       def print_product_statuses(format = :text)
         case format
         when :text
@@ -44,6 +56,28 @@ module SUSE
       end
 
       private
+
+      def extract_extensions(product)
+        extensions = []
+        product.extensions.each do |extension|
+          extensions << {
+            activation_code: build_product_activation_code(extension),
+            name: extension.friendly_name,
+            free: extension.free,
+            extensions: extract_extensions(extension)
+          }
+
+        end if product.extensions
+        extensions
+      end
+
+      def grouped_extensions
+        @grouped_extensions ||= available_system_extensions.group_by {|ext| ext[:free] }
+      end
+
+      def build_product_activation_code(product)
+        "#{product.identifier}/#{product.version}/#{product.arch}"
+      end
 
       def text_product_status
         file = File.read File.join(File.dirname(__FILE__), 'templates/product_statuses.text.erb')

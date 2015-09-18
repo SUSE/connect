@@ -1,0 +1,27 @@
+{
+  "extensions": [
+    {
+      "identifier": "sle-sdk",
+      "version": "12",
+      "arch": "ppc64le",
+      "friendly_name": "SUSE Linux Enterprise Software Development Kit 12 ppc64le",
+      "free": true
+    },
+    {
+      "identifier": "sle-live-patching",
+      "version": "12",
+      "arch": "ppc64le",
+      "friendly_name": "SUSE Linux Enterprise Live Patching Module 12 ppc64le",
+      "free": false,
+      "extensions": [
+        {
+          "identifier": "sle-unreal",
+          "version": "12",
+          "arch": "ppc64le",
+          "friendly_name": "SUSE Linux Enterprise Unreal Module 12 ppc64le",
+          "free": true
+        }
+      ]
+    }
+  ]
+}

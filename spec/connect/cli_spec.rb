@@ -183,6 +183,15 @@ describe SUSE::Connect::Cli do
       end
     end
 
+    describe 'list extensions subcommand' do
+      it '--list-extensions lists all available extensions on the system' do
+        cli = subject.new(%w{--list-extensions})
+        expect_any_instance_of(Client).not_to receive(:register!)
+        expect_any_instance_of(Status).to receive(:print_extensions_list)
+        cli.execute!
+      end
+    end
+
     describe 'config write' do
       it 'writes config if appropriate cli param been passed' do
         cli = subject.new(%w{--write-config --status})
