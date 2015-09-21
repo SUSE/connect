@@ -116,7 +116,7 @@ describe SUSE::Connect::Status do
       expect { subject.print_extensions_list }.to output(%r{sle-live-patching/12/ppc64le}).to_stdout
       expect { subject.print_extensions_list }.to output(/SUSE Linux Enterprise Unreal Module 12 ppc64le/).to_stdout
       expect { subject.print_extensions_list }.to output(%r{sle-unreal/12/ppc64le}).to_stdout
-
+      expect { subject.print_extensions_list }.not_to output(/Unavailable/).to_stdout
     end
   end
 

@@ -22,6 +22,14 @@
           "free": true
         }
       ]
+    },
+    {
+      "identifier": "Unavailable",
+      "version": "12",
+      "arch": "ppc64le",
+      "friendly_name": "Unavailable Module 12 ppc64le",
+      "free": true,
+      "available": false
     }
   ]
 }

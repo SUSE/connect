@@ -60,13 +60,14 @@ module SUSE
       def extract_extensions(product)
         extensions = []
         product.extensions.each do |extension|
+          # Skip products which have `available: false` set by SMT.
+          next if extension.available == false
           extensions << {
             activation_code: build_product_activation_code(extension),
             name: extension.friendly_name,
             free: extension.free,
             extensions: extract_extensions(extension)
           }
-
         end if product.extensions
         extensions
       end
