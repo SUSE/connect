@@ -57,7 +57,7 @@ describe SUSE::Connect::Status do
     end
   end
 
-  describe '.print_product_statuses' do
+  describe '#print_product_statuses' do
     context 'text format' do
       it 'reads template from erb file' do
         expect(File).to receive(:read).with(include('templates/product_statuses.text.erb')).and_return '111'
@@ -103,6 +103,45 @@ describe SUSE::Connect::Status do
       it 'errors out on unsupported format' do
         expect { subject.print_product_statuses(:xml) }.to raise_error(UnsupportedStatusFormat, "Unsupported output format 'xml'")
       end
+    end
+  end
+
+  describe '#print_extensions_list' do
+    it 'outputs the list of extensions available on the system' do
+      allow(Zypper).to receive(:base_product).and_return Zypper::Product.new(:name => 'SLES', :version => '12', :arch => 'x86_64')
+      allow(client_double).to receive(:show_product).with(Zypper.base_product).and_return(Remote::Product.new(dummy_product_data))
+      expect { subject.print_extensions_list }.to output(/SUSE Linux Enterprise Software Development Kit 12 ppc64le/).to_stdout
+      expect { subject.print_extensions_list }.to output(%r{sle-sdk/12/ppc64le}).to_stdout
+      expect { subject.print_extensions_list }.to output(/SUSE Linux Enterprise Live Patching Module 12 ppc64le/).to_stdout
+      expect { subject.print_extensions_list }.to output(%r{sle-live-patching/12/ppc64le}).to_stdout
+      expect { subject.print_extensions_list }.to output(/SUSE Linux Enterprise Unreal Module 12 ppc64le/).to_stdout
+      expect { subject.print_extensions_list }.to output(%r{sle-unreal/12/ppc64le}).to_stdout
+      expect { subject.print_extensions_list }.not_to output(/Unavailable/).to_stdout
+    end
+  end
+
+  describe '#available_system_extensions' do
+    it 'returns a list of all available extensions on this system' do
+      allow(Zypper).to receive(:base_product).and_return Zypper::Product.new(:name => 'SLES', :version => '12', :arch => 'x86_64')
+      allow(client_double).to receive(:show_product).with(Zypper.base_product).and_return(Remote::Product.new(dummy_product_data))
+      expect(subject.available_system_extensions).to match_array([
+        {
+          activation_code: 'sle-sdk/12/ppc64le',
+          name: 'SUSE Linux Enterprise Software Development Kit 12 ppc64le',
+          free: true,
+          extensions: []
+        },
+        {
+          activation_code: 'sle-live-patching/12/ppc64le',
+          name: 'SUSE Linux Enterprise Live Patching Module 12 ppc64le',
+          free: false,
+          extensions: [{
+            activation_code: 'sle-unreal/12/ppc64le',
+            name: 'SUSE Linux Enterprise Unreal Module 12 ppc64le',
+            free: true,
+            extensions: []
+          }]
+        }])
     end
   end
 
@@ -156,5 +195,9 @@ describe SUSE::Connect::Status do
         subject.send(:activations_from_server)
       end
     end
+  end
+
+  def dummy_product_data
+    JSON.parse(File.read('spec/fixtures/product_with_extensions.json'))
   end
 end

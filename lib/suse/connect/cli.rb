@@ -26,6 +26,8 @@ module SUSE
           Client.new(@config).deregister!
         elsif @config.cleanup
           System.cleanup!
+        elsif @config.list_extensions
+          Status.new(@config).print_extensions_list
         else
           if @config.instance_data_file && @config.url_default?
             log.error 'Please use --instance-data only in combination with --url pointing to your SMT server'
@@ -135,6 +137,10 @@ module SUSE
 
         @opts.on('--status-text', 'get current system registration status in text format') do |_opt|
           @options[:status_text] = true
+        end
+
+        @opts.on('--list-extensions', 'list all extensions available for install on this system') do |_opt|
+          @options[:list_extensions] = true
         end
 
         @opts.on('--write-config', 'write options to config file at /etc/SUSEConnect') do |_opt|

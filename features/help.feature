@@ -11,11 +11,18 @@ Feature: Help output
       --url [URL]
       """
 
-  Scenario: help should contain token parameter
+  Scenario: help should contain regcode parameter
     Then the output should contain:
       """
       -r, --regcode [REGCODE]
       """
+
+  Scenario: help should contain the list-extensions option
+    Then the output should contain:
+      """
+      --list-extensions
+      """
+
 
   # Common Options
 
