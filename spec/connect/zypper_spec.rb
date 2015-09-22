@@ -348,6 +348,14 @@ describe SUSE::Connect::Zypper do
     end
   end
 
+  describe '.set_release_version' do
+    it 'sets the release version' do
+      release_version = '5'
+      expect(Open3).to receive(:capture3).with(shared_env_hash, "zypper --non-interactive --releasever #{release_version} ref -f").and_return(['', '', status])
+      subject.set_release_version(release_version)
+    end
+  end
+
   describe '.write_base_credentials' do
     mock_dry_file
 

@@ -17,11 +17,13 @@ describe SUSE::Connect::Migration do
     let(:config) { SUSE::Connect::Config.new }
     let(:client) { SUSE::Connect::Client.new(config) }
     let(:status) { SUSE::Connect::Status.new(config) }
-    let(:service) { SUSE::Connect::Remote::Service.new(name: 'SLES12', obsoleted_service_name: 'SLES11',
-                                                       url: 'https://scc.suse.com', 'product' => { identifier: 'SLES' }) }
+    let(:service) do
+      SUSE::Connect::Remote::Service.new(name: 'SLES12', obsoleted_service_name: 'SLES11',
+                                         url: 'https://scc.suse.com', 'product' => { identifier: 'SLES' })
+    end
     let(:installed_products) do
       [
-        Zypper::Product.new(name: 'SLES', version: '12', arch: 'x86_64'),
+        Zypper::Product.new(name: 'SLES', version: '12', arch: 'x86_64', isbase: 'true'),
         Zypper::Product.new(name: 'sle-module-legacy', version: '12', arch: 'x86_64')
       ]
     end
@@ -41,6 +43,7 @@ describe SUSE::Connect::Migration do
       end
 
       expect(client).to receive(:synchronize).with(installed_products).and_return true
+      expect(SUSE::Connect::Zypper).to receive(:set_release_version).with('12').and_return true
       described_class.rollback
     end
   end

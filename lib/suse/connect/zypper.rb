@@ -117,6 +117,11 @@ module SUSE
           call("--non-interactive install #{identifier}-release") if identifier
         end
 
+        # rubocop:disable AccessorMethodName
+        def set_release_version(version)
+          call("--non-interactive --releasever #{version} ref -f")
+        end
+
         def write_service_credentials(service_name)
           login = System.credentials.username
           password = System.credentials.password

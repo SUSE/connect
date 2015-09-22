@@ -36,6 +36,10 @@ module SUSE
 
           # Synchronize installed products with SCC activations (removes obsolete activations)
           client.synchronize(status.installed_products)
+
+          # Set releasever to the new baseproduct version
+          target_version = status.installed_products.detect(&:isbase).version
+          SUSE::Connect::Zypper.set_release_version(target_version)
         end
 
         # Forwards the repository which should be enabled with zypper
@@ -54,6 +58,7 @@ module SUSE
         # @return [Array <OpenStruct>] the list of zypper repositories
         def repositories
           # INFO: use block instead of .map(&:to_openstruct) see https://bugs.ruby-lang.org/issues/9786
+          # rubocop:disable SymbolProc
           SUSE::Connect::Zypper.repositories.map {|r| r.to_openstruct }
         end
 
@@ -75,6 +80,7 @@ module SUSE
         # @return [Array <OpenStruct>] the list of solvable products available on the system
         def find_products(identifier)
           # INFO: use block instead of .map(&:to_openstruct) see https://bugs.ruby-lang.org/issues/9786
+          # rubocop:disable SymbolProc
           SUSE::Connect::Zypper.find_products(identifier).map {|p| p.to_openstruct }
         end
 

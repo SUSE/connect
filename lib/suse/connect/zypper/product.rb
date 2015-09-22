@@ -34,5 +34,4 @@ class SUSE::Connect::Zypper::Product
       return product_hash[:registerrelease]
     end
   end
-
 end
