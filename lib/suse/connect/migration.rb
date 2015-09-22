@@ -38,7 +38,7 @@ module SUSE
           client.synchronize(status.installed_products)
 
           # Set releasever to the new baseproduct version
-          target_version = status.installed_products.detect(&:isbase).version
+          target_version = status.installed_products.find(&:isbase).version
           SUSE::Connect::Zypper.set_release_version(target_version)
         end
 
