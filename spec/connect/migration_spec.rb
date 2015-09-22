@@ -25,8 +25,6 @@ describe SUSE::Connect::Migration do
       ]
     end
 
-    let(:products) { installed_products.map(&:to_params) }
-
     it 'restores a state of the system before migration' do
       expect(SUSE::Connect::Config).to receive(:new).and_return config
       expect(SUSE::Connect::Client).to receive(:new).with(config).at_least(:once).and_return client
@@ -40,7 +38,7 @@ describe SUSE::Connect::Migration do
         expect(described_class).to receive(:add_service).with(service.url, service.name)
       end
 
-      expect(client).to receive(:synchronize).with(products).and_return true
+      expect(client).to receive(:synchronize).with(installed_products).and_return true
       described_class.rollback
     end
   end

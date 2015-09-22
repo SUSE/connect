@@ -82,7 +82,7 @@ module SUSE
 
         # Synchronize activated system products with registration server.
         #
-        # @param [OpenStruct] products - list of activated system products e.g. [{ identifier: 'SLES', version: '12', arch: 'x86_64', release: nil }]
+        # @param [OpenStruct] products - list of activated system products with identifier, arch and version defined
         # @param [Hash] client_params parameters to instantiate {Client}
         def synchronize(products, client_params = {})
           config = SUSE::Connect::Config.new.merge!(client_params)

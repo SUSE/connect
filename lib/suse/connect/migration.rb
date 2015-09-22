@@ -33,7 +33,7 @@ module SUSE
           end
 
           # Synchronize installed products with SCC activations (removes obsolete activations)
-          client.synchronize(status.installed_products.map(&:to_params))
+          client.synchronize(status.installed_products)
         end
 
         # Forwards the repository which should be enabled with zypper
