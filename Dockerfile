@@ -6,7 +6,7 @@ RUN zypper --non-interactive ar http://download.suse.de/ibs/SUSE:/SLE-12:/GA/sta
 
 RUN wget http://username:password@gaffer.suse.de:9999/files/.regcode -O /root/.regcode
 
-RUN rm /etc/gemrc && \
+RUN echo 'gem: --no-ri --no-rdoc' > /etc/gemrc && \
     gem install bundler --no-document
 RUN mkdir /tmp/connect && mkdir -p /tmp/connect/lib/suse/connect
 ADD Gemfile /tmp/connect/
