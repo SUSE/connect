@@ -17,7 +17,8 @@ describe SUSE::Connect::Migration do
     let(:config) { SUSE::Connect::Config.new }
     let(:client) { SUSE::Connect::Client.new(config) }
     let(:status) { SUSE::Connect::Status.new(config) }
-    let(:service) { SUSE::Connect::Remote::Service.new(name: 'SLES12', url: 'https://scc.suse.com', 'product' => { identifier: 'SLES' }) }
+    let(:service) { SUSE::Connect::Remote::Service.new(name: 'SLES12', obsoleted_service_name: 'SLES11',
+                                                       url: 'https://scc.suse.com', 'product' => { identifier: 'SLES' }) }
     let(:installed_products) do
       [
         Zypper::Product.new(name: 'SLES', version: '12', arch: 'x86_64'),
@@ -35,6 +36,7 @@ describe SUSE::Connect::Migration do
       installed_products.each do |product|
         expect(client).to receive(:downgrade_product).with(product).and_return service
         expect(described_class).to receive(:remove_service).with(service.name)
+        expect(described_class).to receive(:remove_service).with(service.obsoleted_service_name)
         expect(described_class).to receive(:add_service).with(service.url, service.name)
       end
 
