@@ -84,7 +84,7 @@ module SUSE
           zypper_out = call("--xmlout --non-interactive search -s -t product #{Shellwords.escape(identifier)}", false)
           xml_doc = REXML::Document.new(zypper_out, compress_whitespace: [])
           xml_doc.elements.to_a('stream/search-result/solvable-list/solvable').map(&:to_hash)
-        rescue
+        rescue Connect::ZypperError
           []
         end
 

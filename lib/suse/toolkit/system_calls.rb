@@ -13,7 +13,8 @@ module SUSE
 
         # Catching interactive failures of zypper. --non-interactive always returns with exit code 0 here
         if !status.exitstatus.zero? || error.include?('ABORT request')
-          log.error("command '#{cmd}' failed")
+          # Don't print the error message when zypper exits with 104, which means that it did not find a product.
+          log.error("command '#{cmd}' failed") unless cmd.include?('zypper') && status.exitstatus == 104
           log.debug("Error: '#{error.strip}'") unless error.empty?
           # NOTE: zypper with formatter option will return output instead of error
           # e.g. command 'zypper --xmlout --non-interactive products -i' failed

@@ -211,15 +211,22 @@ describe SUSE::Connect::Zypper do
 
     context 'when product does not exist' do
       let(:identifier) { 'fake' }
-      let(:failed_status) { double('Process Status', exitstatus: 1) }
+      # zypper exits with status 104 when it doesn't find a product
+      let(:failed_status) { double('Process Status', exitstatus: 104) }
 
       before do
+        $stdout = StringIO.new
         expect(Open3).to receive(:capture3).with(shared_env_hash, args).at_least(1).and_return([zypper_sles_product_search_not_found, '', failed_status])
+      end
+
+      after(:all) do
+        $stdout = STDOUT
       end
 
       it 'returns an empty array' do
         products = subject.find_products(identifier)
         expect(products).to match_array([])
+        expect($stdout.string).not_to match(/command '#{args}' failed/)
       end
     end
   end
