@@ -1,0 +1,6 @@
+<?xml version='1.0'?>
+<stream>
+  <message type="info">Loading repository data...</message>
+  <message type="info">Reading installed packages...</message>
+  <message type="info">No packages found.</message>
+</stream>

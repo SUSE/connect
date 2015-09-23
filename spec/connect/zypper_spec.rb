@@ -192,16 +192,42 @@ describe SUSE::Connect::Zypper do
 
   describe '.find_products' do
     let(:zypper_sles_product_search) { File.read('spec/fixtures/zypper_sles_product_search.xml') }
-    let(:args) { 'zypper --xmlout --non-interactive search -s -t product SLES' }
+    let(:zypper_sles_product_search_not_found) { File.read('spec/fixtures/zypper_sles_product_search_not_found.xml') }
+    let(:args) { "zypper --xmlout --non-interactive search -s -t product #{identifier}" }
 
-    before do
-      expect(Open3).to receive(:capture3).with(shared_env_hash, args).at_least(1).and_return([zypper_sles_product_search, '', status])
+    context 'when product exists' do
+      let(:identifier) { 'SLES' }
+
+      before do
+        expect(Open3).to receive(:capture3).with(shared_env_hash, args).at_least(1).and_return([zypper_sles_product_search, '', status])
+      end
+
+      it 'finds products by identifier' do
+        products = subject.find_products(identifier)
+        expect(products.size).to eq 2
+        expect(products.map {|p| p[:repository] }).to match_array(%w{SLES-12 SLES12-Pool})
+      end
     end
 
-    it 'finds products by identifier' do
-      products = subject.find_products('SLES')
-      expect(products.size).to eq 2
-      expect(products.map {|p| p[:repository] }).to match_array(%w{SLES-12 SLES12-Pool})
+    context 'when product does not exist' do
+      let(:identifier) { 'fake' }
+      # zypper exits with status 104 when it doesn't find a product
+      let(:failed_status) { double('Process Status', exitstatus: 104) }
+
+      before do
+        $stdout = StringIO.new
+        expect(Open3).to receive(:capture3).with(shared_env_hash, args).at_least(1).and_return([zypper_sles_product_search_not_found, '', failed_status])
+      end
+
+      after(:all) do
+        $stdout = STDOUT
+      end
+
+      it 'returns an empty array' do
+        products = subject.find_products(identifier)
+        expect(products).to match_array([])
+        expect($stdout.string).not_to match(/command '#{args}' failed/)
+      end
     end
   end
 
