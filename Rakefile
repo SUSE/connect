@@ -36,7 +36,7 @@ task :build do
   sh "mv #{gemfilename} package/"
   Dir.chdir('package')
   # NB this requires rubygem-gem2rpm from devel:languages:ruby:extensions in OBS, or SLE12 for the --config support
-  sh "/usr/bin/gem2rpm --config gem2rpm.yml -l -o SUSEConnect.spec -t /usr/share/doc/packages/ruby2.1-rubygem-gem2rpm/sles12.spec.erb #{gemfilename}"
+  sh "/usr/bin/gem2rpm --config gem2rpm.yml -l -o SUSEConnect.spec -t sles12.spec.erb #{gemfilename}"
   sh 'ronn --roff --manual SUSEConnect --pipe SUSEConnect.8.ronn > SUSEConnect.8 && gzip -f SUSEConnect.8'
   sh 'ronn --roff --manual SUSEConnect --pipe SUSEConnect.5.ronn > SUSEConnect.5 && gzip -f SUSEConnect.5'
   sh 'osc -A https://api.suse.de build SLE_12 x86_64 --no-verify'
