@@ -25,15 +25,21 @@ module SUSE
           # FIXME: Sort products and ensure the base product is the first one in the list
           status.installed_products.sort_by {|p| p.isbase ? 0 : 1 }.each do |product|
             service = client.downgrade_product(product)
-            # INFO: Remove old product service e.g. SLES 12
+            # INFO: Remove old and new service because this could be called after filesystem rollback or
+            # from inside a failed migration
             remove_service service.name
+            remove_service service.obsoleted_service_name
 
             # INFO: Add new service for the same product but with new/valid service url
             add_service service.url, service.name
           end
 
           # Synchronize installed products with SCC activations (removes obsolete activations)
-          client.synchronize(status.installed_products.map(&:to_params))
+          client.synchronize(status.installed_products)
+
+          # Set releasever to the new baseproduct version
+          target_version = status.installed_products.find(&:isbase).version
+          SUSE::Connect::Zypper.set_release_version(target_version)
         end
 
         # Forwards the repository which should be enabled with zypper
@@ -52,6 +58,7 @@ module SUSE
         # @return [Array <OpenStruct>] the list of zypper repositories
         def repositories
           # INFO: use block instead of .map(&:to_openstruct) see https://bugs.ruby-lang.org/issues/9786
+          # rubocop:disable SymbolProc
           SUSE::Connect::Zypper.repositories.map {|r| r.to_openstruct }
         end
 
@@ -73,6 +80,7 @@ module SUSE
         # @return [Array <OpenStruct>] the list of solvable products available on the system
         def find_products(identifier)
           # INFO: use block instead of .map(&:to_openstruct) see https://bugs.ruby-lang.org/issues/9786
+          # rubocop:disable SymbolProc
           SUSE::Connect::Zypper.find_products(identifier).map {|p| p.to_openstruct }
         end
 

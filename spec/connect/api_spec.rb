@@ -236,10 +236,10 @@ describe SUSE::Connect::Api do
   describe '.synchronize' do
     let(:api_endpoint) { '/connect/systems/products/synchronize' }
     let(:system_auth) { 'basic_auth_mock' }
-    let(:products) { [SUSE::Connect::Zypper::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64', release_type: nil).to_params] }
+    let(:products) { [SUSE::Connect::Zypper::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64', release_type: nil)] }
 
     it 'syncs activated system products with SCC' do
-      expect_any_instance_of(Connection).to receive(:post).with(api_endpoint, auth: system_auth, params: { products: products })
+      expect_any_instance_of(Connection).to receive(:post).with(api_endpoint, auth: system_auth, params: { products: products.map(&:to_params) })
       subject.new(client).synchronize(system_auth, products)
     end
   end

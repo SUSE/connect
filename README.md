@@ -30,16 +30,16 @@ Build an image (and everytime to change code)
 
 Run RSpec 
 
-* `docker run --privileged -t connect su nobody -c rspec`
+* `docker run --privileged --rm -t connect su nobody -c rspec`
 
 Run Cucumber 
 
-* `docker run --privileged -t connect cucumber`
+* `docker run --privileged --rm -t connect cucumber`
 
 Run Rubocop 
 
-* `docker run --privileged -t connect su nobody -c rubocop`
+* `docker run --privileged --rm -t connect su nobody -c rubocop`
 
 Or run whole set of tests together 
 
-* `docker run --privileged -t connect sh docker/runall.sh`
+* `docker run --privileged --rm -t connect sh docker/runall.sh`

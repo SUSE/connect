@@ -1,6 +1,5 @@
 module SUSE
   module Connect
-
     # YaST class provides methods emulating SCC's API.
     # YaST call this class from:
     # https://github.com/yast/yast-registration/blob/master/src/lib/registration/registration.rb
@@ -81,8 +80,9 @@ module SUSE
         alias_method :downgrade_product, :upgrade_product
 
         # Synchronize activated system products with registration server.
+        # This will remove obsolete activations on the server after all installed products went through a downgrade().
         #
-        # @param [OpenStruct] products - list of activated system products e.g. [{ identifier: 'SLES', version: '12', arch: 'x86_64', release: nil }]
+        # @param [OpenStruct] products - list of activated system products with identifier, arch and version defined
         # @param [Hash] client_params parameters to instantiate {Client}
         def synchronize(products, client_params = {})
           config = SUSE::Connect::Config.new.merge!(client_params)
@@ -193,9 +193,7 @@ module SUSE
           config = SUSE::Connect::Config.new.merge!(client_params)
           Status.new(config)
         end
-
       end
     end
-
   end
 end

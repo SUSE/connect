@@ -17,15 +17,16 @@ describe SUSE::Connect::Migration do
     let(:config) { SUSE::Connect::Config.new }
     let(:client) { SUSE::Connect::Client.new(config) }
     let(:status) { SUSE::Connect::Status.new(config) }
-    let(:service) { SUSE::Connect::Remote::Service.new(name: 'SLES12', url: 'https://scc.suse.com', 'product' => { identifier: 'SLES' }) }
+    let(:service) do
+      SUSE::Connect::Remote::Service.new(name: 'SLES12', obsoleted_service_name: 'SLES11',
+                                         url: 'https://scc.suse.com', 'product' => { identifier: 'SLES' })
+    end
     let(:installed_products) do
       [
-        Zypper::Product.new(name: 'SLES', version: '12', arch: 'x86_64'),
+        Zypper::Product.new(name: 'SLES', version: '12', arch: 'x86_64', isbase: 'true'),
         Zypper::Product.new(name: 'sle-module-legacy', version: '12', arch: 'x86_64')
       ]
     end
-
-    let(:products) { installed_products.map(&:to_params) }
 
     it 'restores a state of the system before migration' do
       expect(SUSE::Connect::Config).to receive(:new).and_return config
@@ -37,10 +38,12 @@ describe SUSE::Connect::Migration do
       installed_products.each do |product|
         expect(client).to receive(:downgrade_product).with(product).and_return service
         expect(described_class).to receive(:remove_service).with(service.name)
+        expect(described_class).to receive(:remove_service).with(service.obsoleted_service_name)
         expect(described_class).to receive(:add_service).with(service.url, service.name)
       end
 
-      expect(client).to receive(:synchronize).with(products).and_return true
+      expect(client).to receive(:synchronize).with(installed_products).and_return true
+      expect(SUSE::Connect::Zypper).to receive(:set_release_version).with('12').and_return true
       described_class.rollback
     end
   end
