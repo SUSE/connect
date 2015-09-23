@@ -1,4 +1,13 @@
 -------------------------------------------------------------------
+Wed Sep 23 11:55:31 UTC 2015 - hschmidt@suse.com
+
+- Update to version 0.2.24
+  - Bug 943451 - [Migration] failure when "zypper search" returns empty list
+  - Bug 946488 - Synchronization API call returns "no implicit conversion of Symbol into Integer" error
+  - Bug 941565 - zypper migration not using --releasever
+  - Bug 945462 - zypper migration extremly slow with lot of modules and extensions registered
+
+-------------------------------------------------------------------
 Mon Sep 14 12:57:50 UTC 2015 - vlewin@suse.com
 
 - Update to version 0.2.23
