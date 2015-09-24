@@ -81,8 +81,8 @@
   %define rb_build_versions %{rb_default_ruby}
   Requires: rubygem(%{rb_default_ruby_abi}:%{mod_name}) = %{version}
   Requires: coreutils, util-linux, net-tools, hwinfo, zypper, ca-certificates-mozilla
-  Requires: yast2-registration >= 3.1.129.7, zypper >= 1.11.32
-  Conflicts: suseRegister
+  Requires: zypper >= 1.11.32
+  Conflicts: suseRegister, yast2-registration < 3.1.129.7
   %ifarch x86_64
   PreReq: dmidecode
   %endif
