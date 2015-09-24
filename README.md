@@ -47,7 +47,7 @@ Or run whole set of tests together
 
 # Submit Maintenance Request
 
-To submit a maintenance request, issue this command in the cosole:
+To submit a maintenance request, issue this command in the console:
 
 ```
 osc mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12:Update --no-cleanup
