@@ -76,8 +76,6 @@ describe SUSE::Connect::Status do
     end
   end
 
-
-
   describe '#print_product_statuses' do
     context 'text format' do
       it 'reads template from erb file' do
