@@ -26,6 +26,11 @@ module SUSE
         @known_activations ||= activations_from_server
       end
 
+      # Checks if system activations includes base product
+      def activated_base_product?
+        System.credentials? && activated_products.include?(Zypper.base_product)
+      end
+
       def print_extensions_list
         file = File.read File.join(File.dirname(__FILE__), 'templates/extensions_list.text.erb')
         template = ERB.new(file, 0, '-<>')
