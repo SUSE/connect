@@ -2,7 +2,7 @@ FROM registry.scc.suse.de/sles12_base
 
 RUN zypper --non-interactive ar http://download.suse.de/ibs/SUSE:/SLE-12:/GA/standard/ SLE-12-standard &&\
     zypper --non-interactive --gpg-auto-import-keys ref &&\
-    zypper --no-gpg-checks --non-interactive install git-core ruby-devel make gcc gcc-c++ build wget dmidecode
+    zypper --no-gpg-checks --non-interactive install git-core ruby-devel make gcc gcc-c++ build wget dmidecode vi
 
 RUN wget http://username:password@gaffer.suse.de:9999/files/.regcode -O /root/.regcode
 

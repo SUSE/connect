@@ -55,7 +55,7 @@ Then(/^zypper should contain a service for (base|sdk|wsm) product$/) do |product
   step 'the exit status should be 0'
 end
 
-Then(/^zypper should contain a repositories for (base|sdk|wsm) product$/) do |product|
+Then(/^zypper should contain the repositories for (base|sdk|wsm) product$/) do |product|
   if product == 'base'
     repositories = [
       'SUSE_Linux_Enterprise_Server_12_x86_64:SLES12-Pool',
