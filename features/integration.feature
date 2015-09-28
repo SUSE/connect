@@ -4,6 +4,12 @@ Feature: SUSEConnect full stack integration testing
   This means we have to register a test machine against production server and examine all relevant data
 
   ### SUSEConnect cmd checks ###
+  Scenario: System registration requires a regcode
+    When I call SUSEConnect with '' arguments
+    Then the exit status should be 1
+    And the output should contain "Please register your system"
+
+
   Scenario: System registration
     When I call SUSEConnect with '--regcode VALID' arguments
     Then the exit status should be 0
@@ -16,12 +22,6 @@ Feature: SUSEConnect full stack integration testing
 
     And zypper should contain a service for base product
     And zypper should contain a repositories for base product
-
-
-  Scenario: System registration requires a regcode
-    When I call SUSEConnect with '' arguments
-    Then the exit status should be 1
-    And the output should contain "Please set the regcode parameter"
 
 
   Scenario: Free extension activation does not require regcode and activates the extension

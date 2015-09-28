@@ -14,6 +14,7 @@ describe SUSE::Connect::Cli do
     allow_any_instance_of(subject).to receive(:exit)
     allow_any_instance_of(subject).to receive_messages(puts: true)
     SUSE::Connect::GlobalLogger.instance.log = string_logger
+    allow_any_instance_of(Status).to receive(:activated_base_product?).and_return(true)
   end
 
   after do
@@ -97,16 +98,33 @@ describe SUSE::Connect::Cli do
         cli.execute!
       end
 
-      it 'requires either --regcode or --url (regcode-less SMT registration)' do
-        expect(string_logger).to receive(:error)
-          .with('Please set the regcode parameter to register against SCC, or the url parameter to register against SMT')
-        cli.execute!
-      end
-
       it 'does not require --regcode or --url when specifying a product (eg. an extension)' do
         cli = subject.new(%w{-p sle-module-web-scripting/12/x86_64})
         expect_any_instance_of(Client).to receive(:register!)
         cli.execute!
+      end
+
+      context 'when the system has no activated base product' do
+        it 'requires --regcode or --url' do
+          expect_any_instance_of(Status).to receive(:activated_base_product?).and_return(false)
+          expect_any_instance_of(Client).not_to receive(:register!)
+          expect(string_logger).to receive(:error)
+            .with('Please register your system using the --regcode parameter, or provide the --url parameter to register against SMT.')
+          cli.execute!
+        end
+
+        it 'registers the system if --regcode was provided' do
+          cli = subject.new(%w{-r 456})
+          expect_any_instance_of(Client).to receive(:register!)
+          cli.execute!
+        end
+
+        it 'registers the system if --url was provided' do
+          cli = subject.new(%w{--url http://somewhere.com})
+          expect_any_instance_of(Client).to receive(:register!)
+          cli.execute!
+        end
+
       end
 
       it 'requires either --regcode or --url (regcode-less SMT registration) but respects config attributes' do

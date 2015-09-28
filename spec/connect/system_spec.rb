@@ -76,29 +76,6 @@ describe SUSE::Connect::System do
     end
   end
 
-  describe '.activated_base_product?' do
-    it 'returns false if sytem does not have a credentials' do
-      allow(subject).to receive_messages(:credentials? => false)
-      expect(subject.activated_base_product?).to be false
-    end
-
-    it 'returns false if sytem has credentials but not activated' do
-      allow(subject).to receive_messages(credentials?: true)
-      allow(Zypper).to receive(:base_product)
-      expect(SUSE::Connect::Status).to receive(:activated_products).and_return([])
-      expect(subject.activated_base_product?).to be false
-    end
-
-    it 'returns true if sytem has credentials and activated' do
-      allow(subject).to receive_messages(credentials?: true)
-      product = Zypper::Product.new name: 'OpenSUSE'
-
-      expect(Zypper).to receive(:base_product).and_return(product)
-      expect(SUSE::Connect::Status).to receive(:activated_products).and_return([product])
-      expect(subject.activated_base_product?).to be true
-    end
-  end
-
   describe '.add_service' do
     before(:each) do
       allow(Zypper).to receive(:write_service_credentials)
