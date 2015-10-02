@@ -11,17 +11,13 @@ describe SUSE::Connect::Status do
     allow(Client).to receive(:new).and_return(client_double)
   end
 
-  describe '.client' do
-    it 'sets client class variable' do
+  describe '#client' do
+    it 'returns the client' do
       expect(subject.client).to eq client_double
-    end
-
-    it 'memoizes client class variable to avoid reinstantiation' do
-      expect(subject.client).to be client_double
     end
   end
 
-  describe '.activated_products' do
+  describe '#activated_products' do
     it 'memoizes activated_products by the first call' do
       allow(subject).to receive(:products_from_activations).and_return(:foobazbar)
       expect(subject.activated_products).to be subject.activated_products
@@ -33,7 +29,7 @@ describe SUSE::Connect::Status do
     end
   end
 
-  describe '.installed_products' do
+  describe '#installed_products' do
     it 'memoizes installed_products by the first call' do
       allow(subject).to receive(:products_from_zypper).and_return(:barbarbaz)
       expect(subject.installed_products).to be subject.installed_products
@@ -45,8 +41,8 @@ describe SUSE::Connect::Status do
     end
   end
 
-  describe '.known_activations' do
-    it 'memoizes known_activations by the first call' do
+  describe '#activations' do
+    it 'memoizes activations by the first call' do
       allow(subject).to receive(:activations_from_server).and_return(:superdo)
       expect(subject.activations).to be subject.activations
     end
@@ -54,6 +50,29 @@ describe SUSE::Connect::Status do
     it 'calls products_from_zypper from Status class' do
       expect(subject).to receive(:activations_from_server)
       subject.activations
+    end
+  end
+
+  describe '#activated_base_product?' do
+    it 'returns false if sytem does not have credentials' do
+      allow(System).to receive(:credentials?).and_return(false)
+      # We should not call activated_products if we don't have credentials
+      expect(subject).not_to receive(:activated_products)
+      expect(subject.activated_base_product?).to be false
+    end
+
+    it 'returns false if sytem has credentials but not activated' do
+      allow(System).to receive(:credentials?).and_return(true)
+      allow(Zypper).to receive(:base_product).and_return('base_product')
+      expect(subject).to receive(:activated_products).and_return([])
+      expect(subject.activated_base_product?).to be false
+    end
+
+    it 'returns true if sytem has credentials and activated' do
+      allow(System).to receive(:credentials?).and_return(true)
+      expect(Zypper).to receive(:base_product).and_return('base_product')
+      expect(subject).to receive(:activated_products).and_return(['base_product'])
+      expect(subject.activated_base_product?).to be true
     end
   end
 

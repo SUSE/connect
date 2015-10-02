@@ -32,11 +32,11 @@ module SUSE
           if @config.instance_data_file && @config.url_default?
             log.error 'Please use --instance-data only in combination with --url pointing to your SMT server'
             exit(1)
-          elsif @config.product.nil? && @config.token.nil? && @config.url_default?
-            log.error 'Please set the regcode parameter to register against SCC, or the url parameter to register against SMT'
-            exit(1)
           elsif @config.token && @config.instance_data_file
             log.error 'Please use either --regcode or --instance-data'
+            exit(1)
+          elsif @config.url_default? && !@config.token && !Status.new(@config).activated_base_product?
+            log.error 'Please register your system using the --regcode parameter, or provide the --url parameter to register against SMT.'
             exit(1)
           else
             Client.new(@config).register!
