@@ -6,11 +6,6 @@ Then(/^Set regcode and url options$/) do
   @url = ENV['URL'] || SUSE::Connect::Config::DEFAULT_URL
 end
 
-Then(/^Prepare SUSEConnect client with a valid regcode/) do
-  step 'Set regcode and url options'
-  @client = SUSE::Connect::Client.new(SUSE::Connect::Config.new.merge!(url: @url, regcode: @valid_regcode))
-end
-
 Then(/^I call SUSEConnect with '(.*)' arguments$/) do |args|
   options = Hash[*args.gsub('--', '').split(' ')]
 
@@ -79,16 +74,6 @@ Then(/^zypper should contain the repositories for (base|sdk|wsm) product$/) do |
     puts "zypper lr output should contain \"#{repo}\""
     step "the output should contain \"#{repo}\""
   end
-end
-
-Then(/^I deregister the system$/) do
-  step 'Prepare SUSEConnect client with a valid regcode'
-  @client.deregister!
-end
-
-Then(/^I delete the system on SCC$/) do
-  step 'Prepare SUSEConnect client with a valid regcode'
-  @client.instance_eval { @api.deregister(system_auth) }
 end
 
 Then(/^I remove local credentials$/) do

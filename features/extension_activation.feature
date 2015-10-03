@@ -1,8 +1,8 @@
 @slow_process
 Feature: Test extension/module activation
 
-Background:
-  Given I have a system with activated base product
+  Scenario: Register base system
+    Given I have a system with activated base product
 
   Scenario: Lists all possible extensions
     When I run `SUSEConnect --list-extensions`
@@ -52,3 +52,4 @@ Background:
 
   Scenario: Remove all registration leftovers
     Then I deregister the system
+    And I run `zypper --non-interactive rm sle-sdk-release sle-sdk-release-POOL`

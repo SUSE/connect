@@ -1,8 +1,8 @@
 @slow_process
 Feature: Test localized server responses
 
-Background:
-  Given I have a system with activated base product
+  Scenario: Register base system
+    Given I have a system with activated base product
 
   Scenario: API response language check
     Given I set the environment variables to:

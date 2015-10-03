@@ -1,8 +1,8 @@
 @slow_process
 Feature: Rollback registration state to system products
 
-Background:
-  Given I have a system with activated base product
+  Scenario: Register base system
+    Given I have a system with activated base product
 
   Scenario: Migration targets
     When Prepare SUSEConnect client with a valid regcode

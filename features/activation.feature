@@ -14,7 +14,6 @@ Feature: Test product activation
     And zypper should contain the repositories for base product
 
 
-
   Scenario: System de-registration
     When I deregister the system
     Then a file named "/etc/zypp/credentials.d/SCCcredentials" should not exist
