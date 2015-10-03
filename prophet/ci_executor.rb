@@ -37,7 +37,7 @@ module SCC
     end
 
     def run!
-       steps.each(&:run!)
+      steps.each(&:run!)
     end
 
     def status
@@ -73,7 +73,6 @@ module SCC
     class << self
       attr_accessor :logger
     end
-
 
     attr_accessor  :status, :projects, :logger, :fail_message
 

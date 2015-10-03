@@ -37,7 +37,7 @@ Prophet.setup do |config|
   else
     message = "\n#{jenkins_url}console\nIf the given link has expired,"
     message += 'you can force a Prophet rerun by just deleting this comment.'
-   end
+  end
   config.comment_failure = 'Prophet reports failure.' + message
   config.comment_success = 'Well Done! Your tests are still passing.' + message
 
