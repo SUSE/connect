@@ -1,6 +1,4 @@
-Feature: exit statuses
-
-  SUSEConnect should provide expected exit statuses
+Feature: SUSEConnect should provide expected exit statuses
 
   Scenario: call for help should exit with 0
     When I run `SUSEConnect --help`

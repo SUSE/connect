@@ -7,7 +7,3 @@ def service_name
     @service_name ||= "#{identifier}_#{product.arch}"
   end
 end
-
-And(/^I wait a while$/) do
-  sleep 1
-end
