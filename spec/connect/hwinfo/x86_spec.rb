@@ -77,6 +77,14 @@ describe SUSE::Connect::HwInfo::X86 do
         expect(subject.uuid).to be nil
       end
 
+      it 'returns nil if calling dmidecode fails' do
+        allow(subject).to receive(:execute).with('dmidecode -s system-uuid', false) do
+          raise SUSE::Connect::ZypperError.new(1, '/sys/firmware/efi/systab: SMBIOS entry point missing')
+        end
+
+        expect(subject.uuid).to be nil
+      end
+
       context 'SLES for EC2' do
         it 'extracts uuid from /sys/hypervisor/uuid file' do
           uuid_file = '/sys/hypervisor/uuid'
