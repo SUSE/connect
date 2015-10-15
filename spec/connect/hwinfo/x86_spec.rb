@@ -79,7 +79,7 @@ describe SUSE::Connect::HwInfo::X86 do
 
       it 'returns nil if calling dmidecode fails' do
         allow(subject).to receive(:execute).with('dmidecode -s system-uuid', false) do
-          raise SUSE::Connect::ZypperError.new(1, '/sys/firmware/efi/systab: SMBIOS entry point missing')
+          raise Connect::SystemCallError, '/sys/firmware/efi/systab: SMBIOS entry point missing'
         end
 
         expect(subject.uuid).to be nil
