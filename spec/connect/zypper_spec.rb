@@ -193,7 +193,7 @@ describe SUSE::Connect::Zypper do
   describe '.find_products' do
     let(:zypper_sles_product_search) { File.read('spec/fixtures/zypper_sles_product_search.xml') }
     let(:zypper_sles_product_search_not_found) { File.read('spec/fixtures/zypper_sles_product_search_not_found.xml') }
-    let(:args) { "zypper --xmlout --non-interactive search -s -t product #{identifier}" }
+    let(:args) { "zypper --xmlout --no-refresh --non-interactive search -s -t product #{identifier}" }
 
     context 'when product exists' do
       let(:identifier) { 'SLES' }
@@ -369,7 +369,7 @@ describe SUSE::Connect::Zypper do
   describe '.install_release_package' do
     it 'installs the product release package' do
       identifier = 'opensuse'
-      expect(Open3).to receive(:capture3).with(shared_env_hash, "zypper --non-interactive install #{identifier}-release").and_return(['', '', status])
+      expect(Open3).to receive(:capture3).with(shared_env_hash, "zypper --no-refresh --non-interactive install #{identifier}-release").and_return(['', '', status])
       subject.install_release_package(identifier)
     end
   end
