@@ -369,7 +369,8 @@ describe SUSE::Connect::Zypper do
   describe '.install_release_package' do
     it 'installs the product release package' do
       identifier = 'opensuse'
-      expect(Open3).to receive(:capture3).with(shared_env_hash, "zypper --no-refresh --non-interactive install #{identifier}-release").and_return(['', '', status])
+      zypper_cmd = "zypper --no-refresh --non-interactive install #{identifier}-release"
+      expect(Open3).to receive(:capture3).with(shared_env_hash, zypper_cmd).and_return(['', '', status])
       subject.install_release_package(identifier)
     end
   end
@@ -377,7 +378,8 @@ describe SUSE::Connect::Zypper do
   describe '.set_release_version' do
     it 'sets the release version' do
       release_version = '5'
-      expect(Open3).to receive(:capture3).with(shared_env_hash, "zypper --non-interactive --releasever #{release_version} ref -f").and_return(['', '', status])
+      zypper_cmd = "zypper --non-interactive --releasever #{release_version} ref -f"
+      expect(Open3).to receive(:capture3).with(shared_env_hash, zypper_cmd).and_return(['', '', status])
       subject.set_release_version(release_version)
     end
   end
