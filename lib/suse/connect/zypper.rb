@@ -81,7 +81,7 @@ module SUSE
         # @param product identifier [String]
         # Returns an array of hashes of all solvable products
         def find_products(identifier)
-          zypper_out = call("--xmlout --non-interactive search -s -t product #{Shellwords.escape(identifier)}", false)
+          zypper_out = call("--xmlout --no-refresh --non-interactive search -s -t product #{Shellwords.escape(identifier)}", false)
           xml_doc = REXML::Document.new(zypper_out, compress_whitespace: [])
           xml_doc.elements.to_a('stream/search-result/solvable-list/solvable').map(&:to_hash)
         rescue Connect::ZypperError
@@ -116,7 +116,7 @@ module SUSE
         end
 
         def install_release_package(identifier)
-          call("--non-interactive install #{identifier}-release") if identifier
+          call("--no-refresh --non-interactive install #{identifier}-release") if identifier
         end
 
         # rubocop:disable AccessorMethodName
