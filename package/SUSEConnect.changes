@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Oct 15 13:45:25 UTC 2015 - hschmidt@suse.com
+
+- Update to version 0.2.25
+  - Solves Allow registration without system uid (dmidecode fails on qemu system) (bnc#934582)
+
+-------------------------------------------------------------------
 Wed Sep 23 11:55:31 UTC 2015 - hschmidt@suse.com
 
 - Update to version 0.2.24
