@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Oct 21 07:54:38 UTC 2015 - vlewin@suse.com
+
+- Update to version 0.2.26
+  - zypper migration extremly slow with lot of modules and extensions registered (bnc#945462)
+
+-------------------------------------------------------------------
 Thu Oct 15 13:45:25 UTC 2015 - hschmidt@suse.com
 
 - Update to version 0.2.25
