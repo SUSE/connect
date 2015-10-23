@@ -210,6 +210,14 @@ describe SUSE::Connect::Cli do
       end
     end
 
+    context 'rollback subcommand' do
+      it '--rollback calls SUSE::Connect::Migration.rollback' do
+        expect_any_instance_of(Client).not_to receive(:register!)
+        expect(SUSE::Connect::Migration).to receive(:rollback)
+        subject.new(%w{--rollback})
+      end
+    end
+
     describe 'config write' do
       it 'writes config if appropriate cli param been passed' do
         cli = subject.new(%w{--write-config --status})
