@@ -214,7 +214,7 @@ describe SUSE::Connect::Cli do
       it '--rollback calls SUSE::Connect::Migration.rollback' do
         expect_any_instance_of(Client).not_to receive(:register!)
         expect(SUSE::Connect::Migration).to receive(:rollback)
-        cli = subject.new(%w{--rollback})
+        subject.new(%w{--rollback})
       end
     end
 
