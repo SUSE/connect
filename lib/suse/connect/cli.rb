@@ -151,12 +151,10 @@ module SUSE
           @options[:cleanup] = true
         end
 
-        @opts.on('--rollback', 'revert state of the system if case of failed migration') do |_opt|
-          log.info('> Beginning rollback. This can take some time...')
+        @opts.on('--rollback', 'revert the registration state in case of a failed migration') do |_opt|
+          log.info('> Beginning registration rollback. This can take some time...')
           SUSE::Connect::Migration.rollback
           exit 0
-
-          puts '> Rollback completed.'
         end
 
         @opts.separator ''
