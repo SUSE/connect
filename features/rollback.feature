@@ -1,9 +1,11 @@
 @slow_process
 Feature: Rollback registration state to system products
 
+  Scenario: Register base system
+    Given I have a system with activated base product
+
 
   Scenario: Migration targets
-    Given I have a system with activated base product
     When Prepare SUSEConnect client with a valid regcode
     Then I should receive 'SLES12-SP1' as a migration target
 
