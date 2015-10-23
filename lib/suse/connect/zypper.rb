@@ -116,7 +116,7 @@ module SUSE
         end
 
         def install_release_package(identifier)
-          call("--no-refresh --non-interactive install #{identifier}-release") if identifier
+          call("--no-refresh --non-interactive install --no-recommends -t product #{identifier}") if identifier
         end
 
         # rubocop:disable AccessorMethodName
