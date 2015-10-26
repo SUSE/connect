@@ -18,6 +18,12 @@ Thu Oct 15 13:45:25 UTC 2015 - hschmidt@suse.com
   - Solves Allow registration without system uid (dmidecode fails on qemu system) (bnc#934582)
 
 -------------------------------------------------------------------
+Mon Oct 12 12:50:23 UTC 2015 - achernikov@suse.de
+
+- bnc#949424 ensure version of SUSEConnect is bumped in order to be
+  able to distinct requests from affected YaST version in SCC API
+
+-------------------------------------------------------------------
 Wed Sep 23 11:55:31 UTC 2015 - hschmidt@suse.com
 
 - Update to version 0.2.24
