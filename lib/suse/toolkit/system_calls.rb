@@ -20,13 +20,8 @@ module SUSE
           # NOTE: zypper with formatter option will return output instead of error
           # e.g. command 'zypper --xmlout --non-interactive products -i' failed
           error = error.empty? ? output.strip : error.strip
-
-          if cmd.include? 'zypper'
-            e = Connect::ZypperError.new(status.exitstatus, error)
-            raise e, error
-          else
-            raise Connect::SystemCallError, error
-          end
+          e = (cmd.include? 'zypper') ? Connect::ZypperError.new(status.exitstatus, error) : Connect::SystemCallError
+          raise e, error
         end
         output.strip unless quiet
       end
