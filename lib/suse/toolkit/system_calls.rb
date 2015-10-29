@@ -11,10 +11,11 @@ module SUSE
         output, error, status = Open3.capture3({ 'LC_ALL' => 'C' }, cmd) {|_stdin, stdout, _stderr, _wait_thr| stdout.read }
         log.debug("Output: '#{output.strip}'") unless output.empty?
 
+        # Don't fail when zypper exits with 104 (no product found) or 6 (no repositories)
+        valid_exit_codes = [0, 104, 6]
         # Catching interactive failures of zypper. --non-interactive always returns with exit code 0 here
-        if !status.exitstatus.zero? || error.include?('ABORT request')
-          # Don't print the error message when zypper exits with 104, which means that it did not find a product.
-          log.error("command '#{cmd}' failed") unless cmd.include?('zypper') && status.exitstatus == 104
+        if !valid_exit_codes.include?(status.exitstatus) || error.include?('ABORT request')
+          log.error("command '#{cmd}' failed")
           log.debug("Error: '#{error.strip}'") unless error.empty?
           # NOTE: zypper with formatter option will return output instead of error
           # e.g. command 'zypper --xmlout --non-interactive products -i' failed

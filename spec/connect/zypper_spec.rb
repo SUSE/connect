@@ -97,17 +97,21 @@ describe SUSE::Connect::Zypper do
   end
 
   describe '.repositories' do
-    let(:zypper_output) { File.read('spec/fixtures/zypper_repositories.xml') }
+    let(:zypper_repo_output) { File.read('spec/fixtures/zypper_repositories.xml') }
+    let(:zypper_no_repo_output) { File.read('spec/fixtures/zypper_no_repositories.xml') }
     let(:args) { 'zypper --xmlout --non-interactive repos -d' }
 
-    before do
-      expect(Open3).to receive(:capture3).with(shared_env_hash, args).at_least(1).and_return([zypper_output, '', status])
-    end
-
     it 'lists all defined repositories' do
+      expect(Open3).to receive(:capture3).with(shared_env_hash, args).at_least(1).and_return([zypper_repo_output, '', status])
       expect(subject.repositories.size).to eq 4
       expect(subject.repositories.first.keys).to match_array([:alias, :name, :type, :priority, :enabled, :autorefresh, :gpgcheck, :url])
       expect(subject.repositories.map {|service| service[:name] }).to match_array(%w{SLES12-Debuginfo-Pool SLES12-Debuginfo-Updates SLES12-Pool SLES12-Updates})
+    end
+
+    it 'returns empty list when zypper has no repositories' do
+      status = double('Process Status', exitstatus: 6)
+      expect(Open3).to receive(:capture3).with(shared_env_hash, args).at_least(1).and_return([zypper_no_repo_output, '', status])
+      expect(subject.repositories.size).to eq 0
     end
   end
 
