@@ -1,7 +1,7 @@
 # SUSEConnect Packaging
 
-As a first option you can use `rake build` which will produce all the steps described before
-After you build package locally and happy with result - commit changes to IBS instance.
+You can use `rake build` to perform all the manual steps described below (no version bump will be done).
+After you've build the package locally and are happy with the result - commit the changes to IBS.
 
 ## TL;DR
 
@@ -30,8 +30,7 @@ gem build suse-connect.gemspec
 
 This gem can already be installed and used. To create a RPM from this gem you
 need to create the .spec file.  You need to use gem2rpm to do this, and using
-the specifically patched version from SLES12 or devel:languages:ruby:extensions, because this supports
-the SLES12 gem packaging standard via the --config option.
+the specifically patched version from SLES12 or openSUSE 13.2+, because only those support the --config option.
 
 ```bash
 cp suse-connect-*.gem package/
