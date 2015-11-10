@@ -54,7 +54,7 @@ class SUSE::Connect::HwInfo::X86 < SUSE::Connect::HwInfo::Base
     def output
       @output ||= execute('lscpu', false).split("\n").each_with_object({}) do |line, hash|
         k, v = line.split(':')
-        hash[k] = v.strip
+        hash[k] = v.strip if v
       end
     end
   end
