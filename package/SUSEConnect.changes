@@ -1,8 +1,14 @@
 -------------------------------------------------------------------
+Fri Nov 10 14:43:08 UTC 2015 - kpimenov@suse.com
+
+- Update to version 0.2.29
+  - bnc#954266 Silently ignore malformed lscpu lines instead of failing
+
+-------------------------------------------------------------------
 Fri Oct 30 11:55:56 UTC 2015 - tschmidt@suse.com
 
 - Update to version 0.2.28
-  - Properly handle empty repository lists from zypper 
+  - Properly handle empty repository lists from zypper
 
 -------------------------------------------------------------------
 Fri Oct 23 13:34:59 UTC 2015 - tschmidt@suse.com
@@ -51,7 +57,7 @@ Mon Sep 14 07:19:26 UTC 2015 - vlewin@suse.com
 - Update to version 0.2.22
   - Migration rollback (fate#319114)
   - [Migration rollback] zypper migrate: baseproduct mismatch (bnc#941303)
- 
+
 
 -------------------------------------------------------------------
 Fri Aug  7 14:25:51 UTC 2015 - vlewin@suse.com
