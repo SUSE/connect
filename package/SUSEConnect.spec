@@ -28,7 +28,8 @@ Release:        0
 %define mod_full_name %{mod_name}-%{version}
 
 # Revisit if just depending on `ruby` is enough
-Requires: coreutils, util-linux, net-tools, hwinfo, zypper, ca-certificates-mozilla, ruby
+Requires: coreutils, util-linux, net-tools, hwinfo, zypper, ca-certificates-mozilla
+Requires: ruby >= 2.0
 Requires: zypper >= 1.11.32
 Conflicts: suseRegister, yast2-registration < 3.1.129.7
 
