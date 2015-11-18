@@ -22,7 +22,7 @@
 #
 
 Name:           SUSEConnect
-Version:        0.2.29
+Version:        0.2.30
 Release:        0
 %define mod_name suse-connect
 %define mod_full_name %{mod_name}-%{version}
