@@ -93,15 +93,11 @@ Manage subscriptions at [SUSE Customer Center][scc]
 ### AFTER
   `SUSEConnect --url <registration-server-url> -r <regcode> >> <logfile>`
 
-  TBD
-
 ## USE WITH SMT
   SUSEConnect can also be used to register systems with a local SUSE
   Subscription Management Tool, instead of the SUSE Customer Center.
   Use `SUSEConnect --url <smt-server-url>` to register systems with SMT and set
   [proxies][ENVIRONMENT] as required.
-
-  TBD
 
 ## IMPLEMENTATION
   SUSEConnect is implemented in Ruby 2.0.  It communicates with the registration
@@ -114,8 +110,6 @@ Manage subscriptions at [SUSE Customer Center][scc]
   * `/etc/SUSEConnect`:
     Configuration file containing server URL, regcode and language for
     registration
-
-    TBD
 
 ## AUTHOR
   SUSE Linux Products GmbH <scc-feedback@suse.de>
