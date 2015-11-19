@@ -103,6 +103,5 @@ if update-alternatives --config SUSEConnect  &> /dev/null ; then
   ln -s SUSEConnect.%{rb_default_ruby_suffix} %{_bindir}/SUSEConnect
 fi
 
-
 %changelog
 
