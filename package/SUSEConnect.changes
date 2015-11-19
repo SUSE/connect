@@ -2,7 +2,7 @@
 Thu Nov 19 15:36:56 UTC 2015 - kpimenov@suse.com
 
 - Update to version 0.2.30
-  - New packaging spec. One `SUSEConnect` package to tule them all
+  - New packaging spec. One `SUSEConnect` package to rule them all
   - Update manpages to match the latest CLI options
 
 -------------------------------------------------------------------
