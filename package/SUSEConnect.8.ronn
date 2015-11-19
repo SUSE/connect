@@ -13,7 +13,8 @@ and allows online management of subscriptions and organizations.
 
 By default, SUSEConnect registers the base SUSE Linux Enterprise product
 installed on a system by querying zypper.  It can also be used to register
-extensions that have been installed after system installation from physical media.
+extensions that have been installed after system installation from physical
+media.
 
 To register extensions, use the `--product <PRODUCT-IDENTIFIER>` option together
 with the product identifier of the extension, obtained with `zypper products`
@@ -32,6 +33,10 @@ Manage subscriptions at [SUSE Customer Center][scc]
     Relates that product to the specified subscription and enables software
     repositories for that product.
 
+  * `-d`, `--de-register`:
+    De-registers a system in order to not consume a subscription slot in SCC
+    anymore and removes all services installed by SUSEConnect.
+
   * `--instance-data <path to file>`:
     Path to the XML file holding the public key and instance data
     for cloud registration with SMT`
@@ -42,13 +47,26 @@ Manage subscriptions at [SUSE Customer Center][scc]
   * `--url <URL>`:
     URL of registration server (e.g. https://scc.suse.com).
 
+  * `--namespace <NAMESPACE>`:
+    namespace option for use with SMT staging environments.
+
   * `-s`, `--status`:
-    Print current registration status of all products installed
+    get current system registration status in json format.
+
+  * `--status-text`:
+    get current system registration status in text format.
 
   * `--write-config`:
     Write options to config file at /etc/SUSEConnect.
 
-  * `--root [PATH]`:
+  * `--cleanup`:
+    remove old system credentials and all zypper services installed by
+    SUSEConnect.
+
+  * `--rollback`:
+    revert the registration state in case of a failed migration.
+
+  * `--root <PATH>`:
     Path to the root folder, uses the same parameter for zypper.
 
   * `--version`:
@@ -56,10 +74,6 @@ Manage subscriptions at [SUSE Customer Center][scc]
 
   * `--debug`:
     Provide debug output
-
-  * `-l <LANG>`, `--language <LANG>`:
-    translate error messages into one of LANG which is a comma-separated list
-    of ISO 639-1 codes
 
   * `-h`, `--help`:
     show help message
@@ -82,19 +96,25 @@ Manage subscriptions at [SUSE Customer Center][scc]
   TBD
 
 ## USE WITH SMT
-  SUSEConnect can also be used to register systems with a local SUSE Subscription Management Tool, instead of the SUSE Customer Center.  Use `SUSEConnect --url <smt-server-url>` to register systems with SMT and set [proxies][ENVIRONMENT] as required.
+  SUSEConnect can also be used to register systems with a local SUSE
+  Subscription Management Tool, instead of the SUSE Customer Center.
+  Use `SUSEConnect --url <smt-server-url>` to register systems with SMT and set
+  [proxies][ENVIRONMENT] as required.
 
   TBD
 
 ## IMPLEMENTATION
-  SUSEConnect is implemented in Ruby 2.0.  It communicates with the registration server using a RESTful JSON API over HTTP using TLS encryption.
+  SUSEConnect is implemented in Ruby 2.0.  It communicates with the registration
+  server using a RESTful JSON API over HTTP using TLS encryption.
 
 ## ENVIRONMENT
   SUSEConnect respects the HTTP_PROXY and HTTPS_PROXY environment variables.
 
 ## FILES
   * `/etc/SUSEConnect`:
-    Configuration file containing server URL, regcode and language for registration
+    Configuration file containing server URL, regcode and language for
+    registration
+
     TBD
 
 ## AUTHOR
