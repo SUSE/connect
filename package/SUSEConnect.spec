@@ -12,13 +12,7 @@
 # license that conforms to the Open Source Definition (Version 1.9)
 # published by the Open Source Initiative.
 
-# Please submit bugfixes or comments via http://bugs.opensuse.org/
-#
-#
-# This file was generated with a gem2rpm.yml and not just plain gem2rpm.
-# All sections marked as MANUAL, license headers, summaries and descriptions
-# can be maintained in that file. Please consult this file before editing any
-# of those fields
+# Please submit bugfixes or comments via https://bugzilla.suse.com/
 #
 
 Name:           SUSEConnect
@@ -65,9 +59,7 @@ done
 %build
 
 %install
-gem install --verbose --local --build-root=%{buildroot} \
-  --no-rdoc --no-ri \
-  %{mod_full_name}.gem
+gem install --verbose --local --build-root=%{buildroot} --no-rdoc --no-ri %{mod_full_name}.gem
 
 
 install -D -m 644 %_sourcedir/SUSEConnect.5.gz %{buildroot}%_mandir/man5/SUSEConnect.5.gz
