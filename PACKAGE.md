@@ -34,10 +34,6 @@ the specifically patched version from SLES12 or openSUSE 13.2+, because only tho
 
 ```bash
 cp suse-connect-*.gem package/
-cd package
-gem2rpm --config gem2rpm.yml -l -o SUSEConnect.spec \
-    -t /usr/share/doc/packages/ruby2.1-rubygem-gem2rpm/sles12.spec.erb \
-    suse-connect-*.gem
 ```
 
 To create the man page do:
@@ -62,6 +58,3 @@ iosc status / osc -A 'https://api.suse.de'
 check for new commits flagged with 'M'
 iosc commit / osc -A 'https://api.suse.de' commit
 ```
-
-
-
