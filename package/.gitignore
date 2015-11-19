@@ -6,6 +6,5 @@
 .osc/*.spec.erb
 .osc/ncc_scc_migrate.sh
 .osc/gem2rpm.yml
-SUSEConnect.spec
 SUSEConnect.*.gz
 SUSEConnect-*.rpm
