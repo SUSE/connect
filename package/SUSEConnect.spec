@@ -1,5 +1,5 @@
 #
-# spec file for package rubygem-suse-connect
+# spec file for package SUSEConnect
 #
 # Copyright (c) 2015 SUSE LINUX Products GmbH, Nuernberg, Germany.
 #
@@ -27,11 +27,12 @@ Release:        0
 %define mod_name suse-connect
 %define mod_full_name %{mod_name}-%{version}
 
-# Revisit if just depending on `ruby` is enough
 Requires: coreutils, util-linux, net-tools, hwinfo, zypper, ca-certificates-mozilla
-Requires: ruby >= 2.0
 Requires: zypper >= 1.11.32
 Conflicts: suseRegister, yast2-registration < 3.1.129.7
+
+Obsoletes: ruby2.1-rubygem-suse-connect < %{version}
+Provides: %{rb_default_ruby_suffix}-rubygem-suse-connect = %{version}
 
 %ifarch x86_64
 Requires: dmidecode
@@ -68,22 +69,18 @@ gem install --verbose --local --build-root=%{buildroot} \
   --no-rdoc --no-ri \
   %{mod_full_name}.gem
 
-ln -s %{_bindir}/SUSEConnect.%{rb_default_ruby_suffix} %{buildroot}%{_bindir}/SUSEConnect
 
-# Maybe we should mark these as docs with a special macro?
 install -D -m 644 %_sourcedir/SUSEConnect.5.gz %{buildroot}%_mandir/man5/SUSEConnect.5.gz
 install -D -m 644 %_sourcedir/SUSEConnect.8.gz %{buildroot}%_mandir/man8/SUSEConnect.8.gz
 install -D -m 644 %_sourcedir/SUSEConnect.example %{buildroot}%_sysconfdir/SUSEConnect.example
 
-# Why no 5.gz here?
+ln -s SUSEConnect.5.gz %{buildroot}%_mandir/man8/SUSEConnect-%{version}.5.gz
 ln -s SUSEConnect.8.gz %{buildroot}%_mandir/man8/SUSEConnect-%{version}.8.gz
-mkdir %{buildroot}%{_sbindir}
-ln -s %{_bindir}/SUSEConnect %{buildroot}%{_sbindir}/SUSEConnect
+ln -s SUSEConnect.%{rb_default_ruby_suffix} %{buildroot}%{_bindir}/SUSEConnect
 
 %files
 %defattr(-,root,root,-)
 %{_bindir}/SUSEConnect
-%{_sbindir}/SUSEConnect
 %{_bindir}/SUSEConnect.%{rb_default_ruby_suffix}
 %{gem_base}/gems/%{mod_full_name}/
 %{gem_base}/cache/%{mod_full_name}.gem
@@ -108,4 +105,12 @@ if [ -s /etc/suseRegister.conf ]; then
     fi
 fi
 
+# remove update-alternatives config for SUSEConnect
+if update-alternatives --config SUSEConnect  &> /dev/null ; then
+  update-alternatives --quiet --remove-all SUSEConnect
+  ln -s SUSEConnect.%{rb_default_ruby_suffix} %{_bindir}/SUSEConnect
+fi
+
+
 %changelog
+
