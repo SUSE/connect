@@ -66,8 +66,8 @@ install -D -m 644 %_sourcedir/SUSEConnect.5.gz %{buildroot}%_mandir/man5/SUSECon
 install -D -m 644 %_sourcedir/SUSEConnect.8.gz %{buildroot}%_mandir/man8/SUSEConnect.8.gz
 install -D -m 644 %_sourcedir/SUSEConnect.example %{buildroot}%_sysconfdir/SUSEConnect.example
 
-ln -s SUSEConnect.5.gz %{buildroot}%_mandir/man8/SUSEConnect-%{version}.5.gz
-ln -s SUSEConnect.8.gz %{buildroot}%_mandir/man8/SUSEConnect-%{version}.8.gz
+ln -s SUSEConnect.5.gz %{buildroot}%_mandir/man5/SUSEConnect.%{rb_default_ruby_suffix}.5.gz
+ln -s SUSEConnect.8.gz %{buildroot}%_mandir/man8/SUSEConnect.%{rb_default_ruby_suffix}.8.gz
 ln -s SUSEConnect.%{rb_default_ruby_suffix} %{buildroot}%{_bindir}/SUSEConnect
 
 %files
@@ -80,7 +80,7 @@ ln -s SUSEConnect.%{rb_default_ruby_suffix} %{buildroot}%{_bindir}/SUSEConnect
 
 %{_mandir}/man5/SUSEConnect*
 %{_mandir}/man8/SUSEConnect*
-%{_sysconfdir}/SUSEConnect.example
+%config %{_sysconfdir}/SUSEConnect.example
 
 %post
 if [ -s /etc/zypp/credentials.d/NCCcredentials ] && [ ! -e /etc/zypp/credentials.d/SCCcredentials ]; then
