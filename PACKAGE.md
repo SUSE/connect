@@ -53,6 +53,11 @@ To submit the package:
 cd package
 (optional in .bashrc) alias iosc="osc -A https://api.suse.de"
 iosc status / osc -A 'https://api.suse.de'
-check for new commits flagged with 'M'
+```
+
+Check for new commits flagged with 'M'.
+If should typically be enough to run `osc ar` to add new and delet removed files from the subsequent osc checkin.
+
+```bash
 iosc commit / osc -A 'https://api.suse.de' commit
 ```
