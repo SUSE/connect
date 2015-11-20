@@ -16,7 +16,7 @@
 #
 
 Name:           SUSEConnect
-Version:        0.2.30
+Version:        0.2.31
 Release:        0
 %define mod_name suse-connect
 %define mod_full_name %{mod_name}-%{version}
@@ -33,6 +33,7 @@ Requires: dmidecode
 %endif
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
+BuildRequires:  ruby-macros >= 5
 BuildRequires:  %{ruby >= 2.0}
 
 Url:            https://github.com/SUSE/connect
@@ -45,6 +46,7 @@ Source3:       %{name}.example
 Summary:        SUSE Connect utility to register a system with the SUSE Customer
 License:        LGPL-2.1
 Group:          Development/Languages/Ruby
+PreReq:         update-alternatives
 
 %description
 This package provides a command line tool and rubygem library for connecting a
@@ -52,35 +54,18 @@ client system to the SUSE Customer Center. It will connect the system to your
 product subscriptions and enable the product repositories/services locally.
 
 %prep
-for s in %{sources}; do
-    cp -p $s .
-done
+cp %{S:3} .
 
 %build
 
 %install
-gem install --verbose --local --build-root=%{buildroot} --no-rdoc --no-ri %{mod_full_name}.gem
-
+%gem_install -f --no-ri --no-rdoc
 
 install -D -m 644 %_sourcedir/SUSEConnect.5.gz %{buildroot}%_mandir/man5/SUSEConnect.5.gz
 install -D -m 644 %_sourcedir/SUSEConnect.8.gz %{buildroot}%_mandir/man8/SUSEConnect.8.gz
 install -D -m 644 %_sourcedir/SUSEConnect.example %{buildroot}%_sysconfdir/SUSEConnect.example
 
-ln -s SUSEConnect.5.gz %{buildroot}%_mandir/man5/SUSEConnect.%{rb_default_ruby_suffix}.5.gz
-ln -s SUSEConnect.8.gz %{buildroot}%_mandir/man8/SUSEConnect.%{rb_default_ruby_suffix}.8.gz
-ln -s SUSEConnect.%{rb_default_ruby_suffix} %{buildroot}%{_bindir}/SUSEConnect
-
-%files
-%defattr(-,root,root,-)
-%{_bindir}/SUSEConnect
-%{_bindir}/SUSEConnect.%{rb_default_ruby_suffix}
-%{gem_base}/gems/%{mod_full_name}/
-%{gem_base}/cache/%{mod_full_name}.gem
-%{gem_base}/specifications/%{mod_full_name}.gemspec
-
-%{_mandir}/man5/SUSEConnect*
-%{_mandir}/man8/SUSEConnect*
-%config %{_sysconfdir}/SUSEConnect.example
+touch %{buildroot}%_sysconfdir/SUSEConnect
 
 %post
 if [ -s /etc/zypp/credentials.d/NCCcredentials ] && [ ! -e /etc/zypp/credentials.d/SCCcredentials ]; then
@@ -103,5 +88,17 @@ if update-alternatives --config SUSEConnect  &> /dev/null ; then
   ln -s SUSEConnect.%{rb_default_ruby_suffix} %{_bindir}/SUSEConnect
 fi
 
-%changelog
+%files
+%defattr(-,root,root,-)
+%{_bindir}/SUSEConnect
+%{gem_base}/gems/%{mod_full_name}/
+%{gem_base}/cache/%{mod_full_name}.gem
+%{gem_base}/specifications/%{mod_full_name}.gemspec
 
+%{_mandir}/man5/SUSEConnect.5.gz
+%{_mandir}/man8/SUSEConnect.8.gz
+
+%config(noreplace) %ghost %{_sysconfdir}/SUSEConnect
+%config %{_sysconfdir}/SUSEConnect.example
+
+%changelog
