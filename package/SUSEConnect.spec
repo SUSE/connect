@@ -43,7 +43,7 @@ Source1:        %{name}.5.gz
 Source2:        %{name}.8.gz
 Source3:        %{name}.example
 
-Summary:        SUSE Connect utility to register a system with the SUSE Customer
+Summary:        Utility to register a system with the SUSE Customer Centre
 License:        LGPL-2.1
 Group:          Development/Languages/Ruby
 PreReq:         update-alternatives
