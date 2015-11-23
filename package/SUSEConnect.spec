@@ -43,7 +43,7 @@ Source1:        %{name}.5.gz
 Source2:        %{name}.8.gz
 Source3:        %{name}.example
 
-Summary:        Utility to register a system with the SUSE Customer Centre
+Summary:        Utility to register a system with the SUSE Customer Center
 License:        LGPL-2.1
 Group:          System/Management
 PreReq:         update-alternatives
