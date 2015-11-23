@@ -95,8 +95,8 @@ fi
 %{gem_base}/cache/%{mod_full_name}.gem
 %{gem_base}/specifications/%{mod_full_name}.gemspec
 
-%{_mandir}/man5/SUSEConnect.5.gz
-%{_mandir}/man8/SUSEConnect.8.gz
+%doc %{_mandir}/man5/SUSEConnect.5.gz
+%doc %{_mandir}/man8/SUSEConnect.8.gz
 
 %config(noreplace) %ghost %{_sysconfdir}/SUSEConnect
 %config %{_sysconfdir}/SUSEConnect.example
