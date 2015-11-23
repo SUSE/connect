@@ -1,9 +1,9 @@
 -------------------------------------------------------------------
 Fri Nov 20 15:59:16 UTC 2015 - kpimenov@novell.com
 
-- Update ti version 0.2.31
-  - Even more improvements for SUSEConnect.spec
+- Update to version 0.2.31
   - Drop url-implies-writeconfig.diff; it is included in upstream since commit 2ef5aa
+  - Further packaging improvements
 
 -------------------------------------------------------------------
 Thu Nov 19 15:36:56 UTC 2015 - kpimenov@suse.com
