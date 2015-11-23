@@ -102,8 +102,8 @@ fi
 
 %config(noreplace) %ghost %{_sysconfdir}/SUSEConnect
 %config %{_sysconfdir}/SUSEConnect.example
-%dir %{_sysconfdir}/zypp/
-%dir %{_sysconfdir}/zypp/credentials.d/
-%ghost %{_sysconfdir}/zypp/credentials.d/SCCcredentials
+%config %dir %{_sysconfdir}/zypp/
+%config %dir %{_sysconfdir}/zypp/credentials.d/
+%config(noreplace) %ghost %{_sysconfdir}/zypp/credentials.d/SCCcredentials
 
 %changelog
