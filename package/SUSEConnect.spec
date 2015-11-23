@@ -66,6 +66,8 @@ install -D -m 644 %_sourcedir/SUSEConnect.8.gz %{buildroot}%_mandir/man8/SUSECon
 install -D -m 644 %_sourcedir/SUSEConnect.example %{buildroot}%_sysconfdir/SUSEConnect.example
 
 touch %{buildroot}%_sysconfdir/SUSEConnect
+mkdir -p %{buildroot}%_sysconfdir/zypp/credentials.d/
+touch %{buildroot}%_sysconfdir/zypp/credentials.d/SCCcredentials
 
 %post
 if [ -s /etc/zypp/credentials.d/NCCcredentials ] && [ ! -e /etc/zypp/credentials.d/SCCcredentials ]; then
@@ -100,5 +102,8 @@ fi
 
 %config(noreplace) %ghost %{_sysconfdir}/SUSEConnect
 %config %{_sysconfdir}/SUSEConnect.example
+%dir %{_sysconfdir}/zypp/
+%dir %{_sysconfdir}/zypp/credentials.d/
+%ghost %{_sysconfdir}/zypp/credentials.d/SCCcredentials
 
 %changelog
