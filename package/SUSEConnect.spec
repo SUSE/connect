@@ -16,35 +16,37 @@
 #
 
 Name:           SUSEConnect
-Version:        0.2.30
+Version:        0.2.31
 Release:        0
 %define mod_name suse-connect
 %define mod_full_name %{mod_name}-%{version}
 
-Requires: coreutils, util-linux, net-tools, hwinfo, zypper, ca-certificates-mozilla
-Requires: zypper >= 1.11.32
-Conflicts: suseRegister, yast2-registration < 3.1.129.7
+Requires:       coreutils, util-linux, net-tools, hwinfo, zypper, ca-certificates-mozilla
+Requires:       zypper >= 1.11.32
+Conflicts:      suseRegister, yast2-registration < 3.1.129.7
 
-Obsoletes: ruby2.1-rubygem-suse-connect < %{version}
-Provides: %{rb_default_ruby_suffix}-rubygem-suse-connect = %{version}
+Obsoletes:      ruby2.1-rubygem-suse-connect < %{version}
+Provides:       %{rb_default_ruby_suffix}-rubygem-suse-connect = %{version}
 
 %ifarch x86_64
-Requires: dmidecode
+Requires:       dmidecode
 %endif
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
+BuildRequires:  ruby-macros >= 5
 BuildRequires:  %{ruby >= 2.0}
 
 Url:            https://github.com/SUSE/connect
 
-Source:        %{mod_full_name}.gem
-Source1:       %{name}.5.gz
-Source2:       %{name}.8.gz
-Source3:       %{name}.example
+Source:         %{mod_full_name}.gem
+Source1:        %{name}.5.gz
+Source2:        %{name}.8.gz
+Source3:        %{name}.example
 
-Summary:        SUSE Connect utility to register a system with the SUSE Customer
+Summary:        Utility to register a system with the SUSE Customer Center
 License:        LGPL-2.1
-Group:          Development/Languages/Ruby
+Group:          System/Management
+PreReq:         update-alternatives
 
 %description
 This package provides a command line tool and rubygem library for connecting a
@@ -52,35 +54,20 @@ client system to the SUSE Customer Center. It will connect the system to your
 product subscriptions and enable the product repositories/services locally.
 
 %prep
-for s in %{sources}; do
-    cp -p $s .
-done
+cp %{S:3} .
 
 %build
 
 %install
-gem install --verbose --local --build-root=%{buildroot} --no-rdoc --no-ri %{mod_full_name}.gem
-
+%gem_install -f --no-ri --no-rdoc
 
 install -D -m 644 %_sourcedir/SUSEConnect.5.gz %{buildroot}%_mandir/man5/SUSEConnect.5.gz
 install -D -m 644 %_sourcedir/SUSEConnect.8.gz %{buildroot}%_mandir/man8/SUSEConnect.8.gz
 install -D -m 644 %_sourcedir/SUSEConnect.example %{buildroot}%_sysconfdir/SUSEConnect.example
 
-ln -s SUSEConnect.5.gz %{buildroot}%_mandir/man5/SUSEConnect.%{rb_default_ruby_suffix}.5.gz
-ln -s SUSEConnect.8.gz %{buildroot}%_mandir/man8/SUSEConnect.%{rb_default_ruby_suffix}.8.gz
-ln -s SUSEConnect.%{rb_default_ruby_suffix} %{buildroot}%{_bindir}/SUSEConnect
-
-%files
-%defattr(-,root,root,-)
-%{_bindir}/SUSEConnect
-%{_bindir}/SUSEConnect.%{rb_default_ruby_suffix}
-%{gem_base}/gems/%{mod_full_name}/
-%{gem_base}/cache/%{mod_full_name}.gem
-%{gem_base}/specifications/%{mod_full_name}.gemspec
-
-%{_mandir}/man5/SUSEConnect*
-%{_mandir}/man8/SUSEConnect*
-%config %{_sysconfdir}/SUSEConnect.example
+touch %{buildroot}%_sysconfdir/SUSEConnect
+mkdir -p %{buildroot}%_sysconfdir/zypp/credentials.d/
+touch %{buildroot}%_sysconfdir/zypp/credentials.d/SCCcredentials
 
 %post
 if [ -s /etc/zypp/credentials.d/NCCcredentials ] && [ ! -e /etc/zypp/credentials.d/SCCcredentials ]; then
@@ -97,11 +84,26 @@ if [ -s /etc/suseRegister.conf ]; then
     fi
 fi
 
-# remove update-alternatives config for SUSEConnect
+# remove stale update-alternatives config left by previous split, versioned packaging of SUSEConnect
 if update-alternatives --config SUSEConnect  &> /dev/null ; then
   update-alternatives --quiet --remove-all SUSEConnect
   ln -s SUSEConnect.%{rb_default_ruby_suffix} %{_bindir}/SUSEConnect
 fi
 
-%changelog
+%files
+%defattr(-,root,root,-)
+%{_bindir}/SUSEConnect
+%{gem_base}/gems/%{mod_full_name}/
+%{gem_base}/cache/%{mod_full_name}.gem
+%{gem_base}/specifications/%{mod_full_name}.gemspec
 
+%doc %{_mandir}/man5/SUSEConnect.5.gz
+%doc %{_mandir}/man8/SUSEConnect.8.gz
+
+%config(noreplace) %ghost %{_sysconfdir}/SUSEConnect
+%config %{_sysconfdir}/SUSEConnect.example
+%config %dir %{_sysconfdir}/zypp/
+%config %dir %{_sysconfdir}/zypp/credentials.d/
+%config(noreplace) %ghost %{_sysconfdir}/zypp/credentials.d/SCCcredentials
+
+%changelog
