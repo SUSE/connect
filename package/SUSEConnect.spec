@@ -33,7 +33,6 @@ Requires:       dmidecode
 %endif
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
-BuildRequires:  ruby-macros >= 5
 BuildRequires:  %{ruby >= 2.0}
 
 Url:            https://github.com/SUSE/connect
@@ -54,12 +53,15 @@ client system to the SUSE Customer Center. It will connect the system to your
 product subscriptions and enable the product repositories/services locally.
 
 %prep
-cp %{S:3} .
+for s in %{sources}; do
+    cp -p $s .
+done
 
 %build
 
 %install
-%gem_install -f --no-ri --no-rdoc
+gem install --verbose --local --build-root=%{buildroot} -f --no-ri --no-rdoc ./%{mod_full_name}.gem
+mv %{buildroot}%{_bindir}/%{name}.%{rb_default_ruby_suffix} %{buildroot}%{_bindir}/%{name}
 
 install -D -m 644 %_sourcedir/SUSEConnect.5.gz %{buildroot}%_mandir/man5/SUSEConnect.5.gz
 install -D -m 644 %_sourcedir/SUSEConnect.8.gz %{buildroot}%_mandir/man8/SUSEConnect.8.gz
