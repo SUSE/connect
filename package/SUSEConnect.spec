@@ -45,7 +45,7 @@ Source3:        %{name}.example
 
 Summary:        Utility to register a system with the SUSE Customer Centre
 License:        LGPL-2.1
-Group:          Development/Languages/Ruby
+Group:          System/Management
 PreReq:         update-alternatives
 
 %description
