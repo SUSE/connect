@@ -24,9 +24,15 @@ rake spec     # Run RSpec
 
 # Docker usage
 
-Build an image (and everytime to change code)
+Build an image (and everytime you change code)
+
+For SLES12SP0
 
 * `docker build -t connect .`
+
+For SLES12SP1
+
+* `docker build -t connect_sp1 -f Dockerfile.sp1 .`
 
 Run RSpec 
 
