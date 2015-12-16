@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Dec 16 17:16:06 UTC 2015 - tschmidt@suse.com
+
+- Update to version 0.2.32: Remove unneeded link in %post which caused a warning
+
+-------------------------------------------------------------------
 Fri Nov 20 15:59:16 UTC 2015 - kpimenov@novell.com
 
 - Update to version 0.2.31
