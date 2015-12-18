@@ -22,5 +22,3 @@ group :test do
   gem 'http', '~> 0.8.12'
   gem 'aruba', '~> 0.7.4'
 end
-
-gemspec
