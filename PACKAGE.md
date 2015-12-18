@@ -61,3 +61,21 @@ If should typically be enough to run `osc ar` to add new and delet removed files
 ```bash
 iosc commit / osc -A 'https://api.suse.de' commit
 ```
+
+
+## Submit Maintenance Request
+
+To get the maintenance request accepted, each changelog entry needs to reference a bug or feature 
+request with `bnc#123` or `fate#123`.
+
+To submit a maintenance request, issue this command in the console:
+
+```
+osc mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12:Update --no-cleanup
+```
+
+and for SP1: 
+
+```
+osc mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP1:Update --no-cleanup
+```

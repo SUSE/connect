@@ -49,13 +49,3 @@ Run Rubocop
 Or run whole set of tests together 
 
 * `docker run --privileged --rm -t connect sh docker/runall.sh`
-
-
-# Submit Maintenance Request
-
-To submit a maintenance request, issue this command in the console:
-
-```
-osc mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12:Update --no-cleanup
-```
-
