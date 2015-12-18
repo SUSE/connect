@@ -1,12 +1,12 @@
 -------------------------------------------------------------------
 Wed Dec 16 17:16:06 UTC 2015 - tschmidt@suse.com
 
-- Update to version 0.2.32: Remove unneeded link in %post which caused a warning
+- Update to version 0.2.32: Remove unneeded link in %post which caused a warning (bnc#946183)
 
 -------------------------------------------------------------------
 Fri Nov 20 15:59:16 UTC 2015 - kpimenov@novell.com
 
-- Update to version 0.2.31
+- Update to version 0.2.31 (bnc#946183)
   - Drop url-implies-writeconfig.diff; it is included in upstream since commit 2ef5aa
   - Correct RPM group
   - Include SCCcredentials file as a ghost entry
@@ -16,7 +16,7 @@ Fri Nov 20 15:59:16 UTC 2015 - kpimenov@novell.com
 Thu Nov 19 15:36:56 UTC 2015 - kpimenov@suse.com
 
 - Update to version 0.2.30
-  - New packaging spec. One `SUSEConnect` package to rule them all
+  - New packaging spec. One `SUSEConnect` package to rule them all (bnc#951671)
   - Update manpages to match the latest CLI options
 
 -------------------------------------------------------------------
