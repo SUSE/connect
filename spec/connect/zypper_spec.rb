@@ -197,7 +197,7 @@ describe SUSE::Connect::Zypper do
   describe '.find_products' do
     let(:zypper_sles_product_search) { File.read('spec/fixtures/zypper_sles_product_search.xml') }
     let(:zypper_sles_product_search_not_found) { File.read('spec/fixtures/zypper_sles_product_search_not_found.xml') }
-    let(:args) { "zypper --xmlout --no-refresh --non-interactive search -s -t product #{identifier}" }
+    let(:args) { "zypper --xmlout --no-refresh --non-interactive search --match-exact -s -t product #{identifier}" }
 
     context 'when product exists' do
       let(:identifier) { 'SLES' }

@@ -1,13 +1,13 @@
-\e[1mAVAILABLE EXTENSIONS AND MODULES\e[21m
+\e[1mAVAILABLE EXTENSIONS AND MODULES\e[0m
 
 
-\e[1mFREE EXTENSIONS\e[21m
+\e[1mFREE EXTENSIONS\e[0m
 
 <% grouped_extensions[true].each do |extension| -%>
-  \e[1m<%= extension[:name] %>\e[21m
+  \e[1m<%= extension[:name] %>\e[0m
   Install with: SUSEConnect -p <%= extension[:activation_code] %>
 <% extension[:extensions].each do |additional_extension| -%>
-    \e[1m<%= additional_extension[:name] %>\e[21m
+    \e[1m<%= additional_extension[:name] %>\e[0m
     Install with: SUSEConnect -p <%= additional_extension[:activation_code] %>
 
   <% end -%>
@@ -15,20 +15,20 @@
 <% end -%>
 
 
-\e[1mPAID EXTENSIONS\e[21m
+\e[1mPAID EXTENSIONS\e[0m
 
 <% grouped_extensions[false].each do |extension| -%>
-  \e[1m<%= extension[:name] %>\e[21m
-  Install with: SUSEConnect -p <%= extension[:activation_code] %> -r \e[32m\e[1mREGCODE\e[21m\e[0m
+  \e[1m<%= extension[:name] %>\e[0m
+  Install with: SUSEConnect -p <%= extension[:activation_code] %> -r \e[32m\e[1mREGCODE\e[0m
 <% extension[:extensions].each do |additional_extension| -%>
 
-    \e[1m<%= additional_extension[:name] %>\e[21m
-    Install with: SUSEConnect -p <%= additional_extension[:activation_code] %> -r \e[32m\e[1mREGCODE\e[21m\e[0m
+    \e[1m<%= additional_extension[:name] %>\e[0m
+    Install with: SUSEConnect -p <%= additional_extension[:activation_code] %> -r \e[32m\e[1mREGCODE\e[0m
   <% end -%>
 
 <% end -%>
 
-\e[1mMORE INFORMATION\e[21m
+\e[1mMORE INFORMATION\e[0m
 
 You can find more information about available modules here:
 https://www.suse.com/products/server/features/modules.html

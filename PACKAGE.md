@@ -42,11 +42,18 @@ ronn --roff --manual SUSEConnect --pipe ../SUSEConnect.8.ronn > SUSEConnect.8  &
 ronn --roff --manual SUSEConnect --pipe ../SUSEConnect.5.ronn > SUSEConnect.5  && gzip -f SUSEConnect.5
 ```
 
-To finally build the package:
+Build the package for SLES12GA:
 
 ```bash
 osc -A https://api.suse.de build SLE_12 x86_64 --no-verify
 ```
+
+Building for SLES12SP1: 
+
+```bash
+osc -A https://api.suse.de build SUSE_SLE-12-SP1_GA_standard x86_64 --no-verify
+```
+
 
 To submit the package:
 ```bash

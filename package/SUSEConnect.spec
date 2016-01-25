@@ -16,7 +16,7 @@
 #
 
 Name:           SUSEConnect
-Version:        0.2.32
+Version:        0.2.33
 Release:        0
 %define mod_name suse-connect
 %define mod_full_name %{mod_name}-%{version}
@@ -61,7 +61,9 @@ done
 
 %install
 gem install --verbose --local --build-root=%{buildroot} -f --no-ri --no-rdoc ./%{mod_full_name}.gem
-mv %{buildroot}%{_bindir}/%{name}.%{rb_default_ruby_suffix} %{buildroot}%{_bindir}/%{name}
+mkdir %{buildroot}%{_sbindir}
+mv %{buildroot}%{_bindir}/%{name}.%{rb_default_ruby_suffix} %{buildroot}%{_sbindir}/%{name}
+ln -s %{_sbindir}/%{name} %{buildroot}%{_bindir}/%{name}
 
 install -D -m 644 %_sourcedir/SUSEConnect.5.gz %{buildroot}%_mandir/man5/SUSEConnect.5.gz
 install -D -m 644 %_sourcedir/SUSEConnect.8.gz %{buildroot}%_mandir/man8/SUSEConnect.8.gz
@@ -93,6 +95,7 @@ fi
 
 %files
 %defattr(-,root,root,-)
+%{_sbindir}/SUSEConnect
 %{_bindir}/SUSEConnect
 %{gem_base}/gems/%{mod_full_name}/
 %{gem_base}/cache/%{mod_full_name}.gem

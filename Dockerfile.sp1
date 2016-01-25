@@ -1,7 +1,8 @@
 FROM registry.scc.suse.de/suse/sles12:sp1
 
 RUN zypper --non-interactive rm container-suseconnect &&\
-    zypper --non-interactive ar http://download.suse.de/ibs/SUSE/Products/SLE-SERVER/12-SP1/x86_64/product/ SLE-12-standard &&\
+    zypper --non-interactive ar http://download.suse.de/ibs/SUSE/Products/SLE-SERVER/12-SP1/x86_64/product/ SLE-12-SP1-standard &&\
+    zypper --non-interactive ar -f http://download.suse.de/ibs/SUSE/Updates/SLE-SERVER/12-SP1/x86_64/update/ SLE-12-SP1-updates &&\
     zypper --no-gpg-checks --non-interactive ar http://download.suse.de/ibs/SUSE/Products/SLE-SDK/12-SP1/x86_64/product/ sle12sp1sdk &&\
     zypper --non-interactive --gpg-auto-import-keys ref &&\
     zypper --no-gpg-checks --non-interactive install git-core ruby-devel make gcc gcc-c++ build wget dmidecode vim
