@@ -3,6 +3,8 @@ Mon Jan 25 11:25:43 UTC 2016 - tschmidt@suse.com
 
 - Update to 0.2.33: 
   - Re-add SUSEConnect binary to /usr/sbin (bnc#963080)
+  - Use `--match-exact` when searching for a product (bnc#952804)
+  - Fix fonts on xterm (bnc#957354)
 
 -------------------------------------------------------------------
 Wed Dec 16 17:16:06 UTC 2015 - tschmidt@suse.com
