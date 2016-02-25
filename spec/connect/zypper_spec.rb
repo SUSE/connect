@@ -16,7 +16,7 @@ describe SUSE::Connect::Zypper do
         let(:xml) { File.read('spec/fixtures/product_valid_sle11sp3.xml') }
 
         before do
-          args = 'zypper --no-refresh --xmlout --non-interactive products -i'
+          args = 'zypper --no-remote --no-refresh --xmlout --non-interactive products -i'
           expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return([xml, '', status])
         end
 
@@ -43,7 +43,7 @@ describe SUSE::Connect::Zypper do
         let(:xml) { File.read('spec/fixtures/product_valid_sle12sp0.xml') }
 
         before do
-          args = 'zypper --no-refresh --xmlout --non-interactive products -i'
+          args = 'zypper --no-remote --no-refresh --xmlout --non-interactive products -i'
           expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return([xml, '', status])
         end
 
