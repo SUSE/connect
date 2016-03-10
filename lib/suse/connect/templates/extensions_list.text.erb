@@ -1,6 +1,6 @@
 \e[1mAVAILABLE EXTENSIONS AND MODULES\e[0m
 
-
+<% if grouped_extensions[true] %>
 \e[1mFREE EXTENSIONS\e[0m
 
 <% grouped_extensions[true].each do |extension| -%>
@@ -13,8 +13,9 @@
   <% end -%>
 
 <% end -%>
+<% end -%>
 
-
+<% if grouped_extensions[false] %>
 \e[1mPAID EXTENSIONS\e[0m
 
 <% grouped_extensions[false].each do |extension| -%>
@@ -26,6 +27,7 @@
     Install with: SUSEConnect -p <%= additional_extension[:activation_code] %> -r \e[32m\e[1mREGCODE\e[0m
   <% end -%>
 
+<% end -%>
 <% end -%>
 
 \e[1mMORE INFORMATION\e[0m
