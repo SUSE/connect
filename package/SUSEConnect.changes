@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu Mar 10 16:16:09 UTC 2016 - tschmidt@suse.com
+
+- Update to 0.2.34:
+  - Fix for bnc#963996: Do not crash on --list-extensions when connected to SMT
+  - Fix for bnc#968245: Do not let zypper attempt to read products from remote locations 
+
+-------------------------------------------------------------------
 Mon Jan 25 11:25:43 UTC 2016 - tschmidt@suse.com
 
 - Update to 0.2.33: 
