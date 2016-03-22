@@ -20,6 +20,7 @@ bundle exec bump patch
 The `Version:` declaration in `SUSEConnect.spec` needs to be updated manually to the new value.
 
 Please also update `SUSEConnect.changes` file with a list of new features in master since the last version update.
+You can do that with `osc vc` in the package directory.
 
 
 Then build the gem:
