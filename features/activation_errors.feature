@@ -19,7 +19,7 @@ Feature: Testing error messages of product activation
     Then the exit status should be 67
     And the output should contain:
     """
-    Invalid registration code.
+    Unknown registration code.
     """
 
   Scenario: Client provides meaningful message in case of expired regcode
