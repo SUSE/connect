@@ -91,7 +91,7 @@ fi
 # remove stale update-alternatives config left by previous split, versioned packaging of SUSEConnect
 if update-alternatives --config SUSEConnect  &> /dev/null ; then
   update-alternatives --quiet --remove-all SUSEConnect
-  ln -fs %{_sbindir}/%{name} %{_bindir}/%{name}
+  ln -fs ../sbin/%{name} %{_bindir}/%{name}
 fi
 
 %files
