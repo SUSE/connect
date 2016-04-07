@@ -16,7 +16,7 @@
 #
 
 Name:           SUSEConnect
-Version:        0.2.34
+Version:        0.2.35
 Release:        0
 %define mod_name suse-connect
 %define mod_full_name %{mod_name}-%{version}
@@ -91,6 +91,7 @@ fi
 # remove stale update-alternatives config left by previous split, versioned packaging of SUSEConnect
 if update-alternatives --config SUSEConnect  &> /dev/null ; then
   update-alternatives --quiet --remove-all SUSEConnect
+  ln -fs ../sbin/%{name} %{_bindir}/%{name}
 fi
 
 %files

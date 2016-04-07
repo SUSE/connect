@@ -1,14 +1,20 @@
 -------------------------------------------------------------------
+Thu Apr 5 13:40:00 UTC 2016 - ashaidurov@suse.com
+
+- Update to 0.2.35:
+  - Fix for bnc#973315: Direct update from <=0.2.27 does not remove /usr/bin symlink
+
+-------------------------------------------------------------------
 Thu Mar 10 16:16:09 UTC 2016 - tschmidt@suse.com
 
 - Update to 0.2.34:
   - Fix for bnc#963996: Do not crash on --list-extensions when connected to SMT
-  - Fix for bnc#968245: Do not let zypper attempt to read products from remote locations 
+  - Fix for bnc#968245: Do not let zypper attempt to read products from remote locations
 
 -------------------------------------------------------------------
 Mon Jan 25 11:25:43 UTC 2016 - tschmidt@suse.com
 
-- Update to 0.2.33: 
+- Update to 0.2.33:
   - Re-add SUSEConnect binary to /usr/sbin (bnc#963080)
   - Use `--match-exact` when searching for a product (bnc#952804)
   - Fix fonts on xterm (bnc#957354)
