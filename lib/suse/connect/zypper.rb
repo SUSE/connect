@@ -47,7 +47,8 @@ module SUSE
 
         # Returns an array of hashes of all available repositories
         def repositories
-          zypper_out = call('--xmlout --non-interactive repos -d', false)
+          # Don't fail when zypper exits with 6 (no repositories)
+          zypper_out = call('--xmlout --non-interactive repos -d', false, [0, 6])
           xml_doc = REXML::Document.new(zypper_out, compress_whitespace: [])
           xml_doc.elements.to_a('stream/repo-list/repo').map {|r| r.to_hash.merge!(url: r.elements['url'].text) }
         end
@@ -81,7 +82,8 @@ module SUSE
         # @param product identifier [String]
         # Returns an array of hashes of all solvable products
         def find_products(identifier)
-          zypper_out = call("--xmlout --no-refresh --non-interactive search --match-exact -s -t product #{Shellwords.escape(identifier)}", false)
+          # Don't fail when zypper exits with 104 (no product found) or 6 (no repositories)
+          zypper_out = call("--xmlout --no-refresh --non-interactive search --match-exact -s -t product #{Shellwords.escape(identifier)}", false, [0, 104, 6])
           xml_doc = REXML::Document.new(zypper_out, compress_whitespace: [])
           xml_doc.elements.to_a('stream/search-result/solvable-list/solvable').map(&:to_hash)
         end
@@ -108,7 +110,8 @@ module SUSE
         ##
         # Returns an array of hashes of all installed services
         def services
-          zypper_out = call('--xmlout --non-interactive services -d', false)
+          # Don't fail when zypper exits with 6 (no repositories)
+          zypper_out = call('--xmlout --non-interactive services -d', false, [0, 6])
           xml_doc = REXML::Document.new(zypper_out, compress_whitespace: [])
           xml_doc.elements.to_a('stream/service-list/service').map(&:to_hash)
         end
@@ -150,9 +153,9 @@ module SUSE
         end
 
         # NOTE: Always calls zypper in a silent mode unless quite=false option is set
-        def call(args, quiet = true)
+        def call(args, quiet = true, valid_exit_codes = [0])
           cmd  = "zypper #{root_arg}#{args}"
-          execute(cmd, quiet)
+          execute(cmd, quiet, valid_exit_codes)
         end
       end
     end
