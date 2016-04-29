@@ -6,9 +6,39 @@ require 'suse/toolkit/system_calls'
 
 module SUSE
   module Connect
+
     # Implements zypper interaction
     module Zypper
-      OEM_PATH  = '/var/lib/suseRegister/OEM'
+
+      # Contains zypper exit codes, taken from zypper 1.12.37 manpage
+      module ExitCode
+        OK = 0
+
+        # Single-digit codes denote errors
+        module Error
+          BUG          = 1 # Unexpected situation occurred, probably caused by a bug
+          SYNTAX       = 2 # zypper was invoked with an invalid command or option, or a bad syntax
+          INVALID_ARGS = 3 # Some of provided arguments were invalid. E.g. an invalid URI was provided to the addrepo command
+          ZYPP         = 4 # A problem is reported by ZYPP library
+          PRIVILEGES   = 5 # User invoking zypper has insufficient privileges for specified operation
+          NO_REPOS     = 6 # No repositories are defined
+          ZYPP_LOCKED  = 7 # The ZYPP library is locked, e.g. packagekit is running
+          COMMIT       = 8 # An error occurred during installation or removal of packages. You may run zypper verify to repair any dependency problems
+        end
+
+        # Codes from 100 and above denote additional information passing
+        module Info
+          UPDATE_NEEDED     = 100 # Returned by the patch-check command if there are patches available for installation
+          SEC_UPDATE_NEEDED = 101 # Returned by the patch-check command if there are security patches available for installation
+          REBOOT_NEEDED     = 102 # Returned after a successful installation of a patch which requires reboot of computer
+          RESTART_NEEDED    = 103 # Returned after a successful installation of a patch which requires restart of the package manager itself
+          CAP_NOT_FOUND     = 104 # install or remove command encountered arguments matching no of the available package names or capabilities
+          ON_SIGNAL         = 105 # Returned upon exiting after receiving a SIGINT or SIGTERM
+          REPOS_SKIPPED     = 106 # Some repository had to be disabled temporarily because it failed to refresh
+        end
+      end
+
+      OEM_PATH = '/var/lib/suseRegister/OEM'
 
       class << self
         include RexmlRefinement
@@ -47,7 +77,8 @@ module SUSE
 
         # Returns an array of hashes of all available repositories
         def repositories
-          zypper_out = call('--xmlout --non-interactive repos -d', false)
+          # Don't fail when zypper exits with 6 (no repositories)
+          zypper_out = call('--xmlout --non-interactive repos -d', false, [Zypper::ExitCode::OK, Zypper::ExitCode::Error::NO_REPOS])
           xml_doc = REXML::Document.new(zypper_out, compress_whitespace: [])
           xml_doc.elements.to_a('stream/repo-list/repo').map {|r| r.to_hash.merge!(url: r.elements['url'].text) }
         end
@@ -81,7 +112,9 @@ module SUSE
         # @param product identifier [String]
         # Returns an array of hashes of all solvable products
         def find_products(identifier)
-          zypper_out = call("--xmlout --no-refresh --non-interactive search --match-exact -s -t product #{Shellwords.escape(identifier)}", false)
+          # Don't fail when zypper exits with 104 (no product found) or 6 (no repositories)
+          zypper_out = call("--xmlout --no-refresh --non-interactive search --match-exact -s -t product #{Shellwords.escape(identifier)}", false,
+                            [Zypper::ExitCode::OK, Zypper::ExitCode::Info::CAP_NOT_FOUND, Zypper::ExitCode::Error::NO_REPOS])
           xml_doc = REXML::Document.new(zypper_out, compress_whitespace: [])
           xml_doc.elements.to_a('stream/search-result/solvable-list/solvable').map(&:to_hash)
         end
@@ -108,7 +141,8 @@ module SUSE
         ##
         # Returns an array of hashes of all installed services
         def services
-          zypper_out = call('--xmlout --non-interactive services -d', false)
+          # Don't fail when zypper exits with 6 (no repositories)
+          zypper_out = call('--xmlout --non-interactive services -d', false, [Zypper::ExitCode::OK, Zypper::ExitCode::Error::NO_REPOS])
           xml_doc = REXML::Document.new(zypper_out, compress_whitespace: [])
           xml_doc.elements.to_a('stream/service-list/service').map(&:to_hash)
         end
@@ -149,10 +183,10 @@ module SUSE
           "--root '#{SUSE::Connect::System.filesystem_root}' " if SUSE::Connect::System.filesystem_root
         end
 
-        # NOTE: Always calls zypper in a silent mode unless quite=false option is set
-        def call(args, quiet = true)
-          cmd  = "zypper #{root_arg}#{args}"
-          execute(cmd, quiet)
+        # NOTE: Always calls zypper in a silent mode unless quiet=false option is set
+        def call(args, quiet = true, valid_exit_codes = [0])
+          cmd = "zypper #{root_arg}#{args}"
+          execute(cmd, quiet, valid_exit_codes)
         end
       end
     end
