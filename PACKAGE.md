@@ -22,6 +22,8 @@ The `Version:` declaration in `SUSEConnect.spec` needs to be updated manually to
 Please also update `SUSEConnect.changes` file with a list of new features in master since the last version update.
 You can do that with `osc vc` in the package directory.
 
+After you've commited your sources, make sure that a new git tag (looking like `v0.2.88`) has been also created and pushed.
+
 
 Then build the gem:
 
