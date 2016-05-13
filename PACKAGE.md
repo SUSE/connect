@@ -49,7 +49,7 @@ Build the package for SLES12GA:
 osc -A https://api.suse.de build SLE_12 x86_64 --no-verify
 ```
 
-Building for SLES12SP1: 
+Building for SLES12SP1:
 
 ```bash
 osc -A https://api.suse.de build SUSE_SLE-12-SP1_GA_standard x86_64 --no-verify
@@ -73,7 +73,7 @@ iosc commit / osc -A 'https://api.suse.de' commit
 
 ## Submit Maintenance Request
 
-To get the maintenance request accepted, each changelog entry needs to reference a bug or feature 
+To get the maintenance request accepted, each changelog entry needs to reference a bug or feature
 request with `bnc#123` or `fate#123`.
 
 To submit a maintenance request, issue this command in the console:
@@ -82,8 +82,13 @@ To submit a maintenance request, issue this command in the console:
 osc mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12:Update --no-cleanup
 ```
 
-and for SP1: 
+and for SP1:
 
 ```
 osc mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP1:Update --no-cleanup
+```
+and for SP2 (until it's released):
+
+```
+osc sr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP2:GA --no-cleanup
 ```
