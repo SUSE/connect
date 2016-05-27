@@ -138,7 +138,7 @@ module SUSE
             Kernel.system "#{file} #{product.identifier}"
           end
         else
-          log.debug "Specified post-install scripts path is not a directory; skipping."
+          log.debug 'Specified post-install scripts path is not a directory; skipping.'
         end
       end
 

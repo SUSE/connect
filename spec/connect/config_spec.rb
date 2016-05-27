@@ -7,7 +7,7 @@ describe SUSE::Connect::Config do
 
   describe '.serializable_attributes' do
     let(:attrs) { %i(baz buz) }
-    subject { described_class.serializable_attributes *attrs }
+    subject { described_class.serializable_attributes(*attrs) }
     it { expect { subject }.to change(described_class, :serializable).to attrs }
 
     after { described_class.serializable_attributes :url, :insecure, :language }
