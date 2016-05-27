@@ -135,7 +135,7 @@ module SUSE
       def run_post_register_scripts(product)
         if File.directory?(config.post_register_scripts_path)
           Dir["#{config.post_register_scripts_path}/*.callback"].each do |file|
-            Kernel.system "#{file} #{product.identifier}"
+            Kernel.system file, product.identifier
           end
         else
           log.debug 'Specified post-install scripts path is not a directory; skipping.'
