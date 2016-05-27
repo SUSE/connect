@@ -6,13 +6,13 @@ describe SUSE::Connect::Cli do
 
   let(:default_logger) { SUSE::Connect::GlobalLogger.instance.log }
   let(:string_logger) { ::Logger.new(StringIO.new) }
-  let(:cli) { subject.new({}) }
+  let(:cli) { described_class.new({}) }
   let(:config_file) { File.expand_path File.join(File.dirname(__FILE__), '../fixtures/SUSEConnect') }
 
   before do
     allow(Zypper).to receive_messages(base_product: {})
-    allow_any_instance_of(subject).to receive(:exit)
-    allow_any_instance_of(subject).to receive_messages(puts: true)
+    allow_any_instance_of(described_class).to receive(:exit)
+    allow_any_instance_of(described_class).to receive_messages(puts: true)
     SUSE::Connect::GlobalLogger.instance.log = string_logger
     allow_any_instance_of(Status).to receive(:activated_base_product?).and_return(true)
   end
@@ -300,6 +300,22 @@ describe SUSE::Connect::Cli do
       cli = subject.new(argv)
       expect(cli.options[:write_config]).to be true
     end
+
+    context 'with environment varibale' do
+      before { allow(ENV).to receive(:[]).and_call_original }
+      subject { cli.config }
+
+      context 'LANG' do
+        before { allow(ENV).to receive(:[]).with('LANG').and_return('de') }
+        its('language') { is_expected.to eq 'de' }
+      end
+
+      context 'POST_REGISTER_SCRIPTS_PATH' do
+        before { allow(ENV).to receive(:[]).with('POST_REGISTER_SCRIPTS_PATH').and_return('/foo/bar') }
+
+        its('post_register_scripts_path') { is_expected.to eq '/foo/bar' }
+      end
+    end
   end
 
   describe 'errors on invalid options format' do
@@ -315,15 +331,6 @@ describe SUSE::Connect::Cli do
       expect_any_instance_of(subject).to receive(:exit)
       expect(string_logger).to receive(:error).with('Kaboom')
       subject.new({}).send(:check_if_param, nil, 'Kaboom')
-    end
-  end
-
-  describe 'reads environment variables' do
-    it 'sets language header based on LANG' do
-      # is ENV global?
-      ENV['LANG'] = 'de'
-      cli = subject.new([])
-      expect(cli.options[:language]).to eq 'de'
     end
   end
 end

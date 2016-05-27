@@ -8,8 +8,9 @@ module SUSE
     # Used by YaST already, do not refactor without consulting them!
     # Reading the config file (#url, #insecure), for writing it uses the yast.rb wrapper
     class Config < OpenStruct
-      DEFAULT_CONFIG_FILE = '/etc/SUSEConnect'
-      DEFAULT_URL = 'https://scc.suse.com'
+      DEFAULT_CONFIG_FILE = '/etc/SUSEConnect'.freeze
+      DEFAULT_URL = 'https://scc.suse.com'.freeze
+      DEFAULT_POST_REGISTER_SCRIPTS_PATH = '/etc/SUSEConnect-post_register'.freeze
 
       class << self
         attr_accessor :serializable
@@ -26,6 +27,7 @@ module SUSE
         super(read)
         self.insecure ||= false
         self.url ||= DEFAULT_URL
+        self.post_register_scripts_path ||= DEFAULT_POST_REGISTER_SCRIPTS_PATH
       end
 
       def write!

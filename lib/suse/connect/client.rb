@@ -29,6 +29,7 @@ module SUSE
         System.add_service(service)
         Zypper.install_release_package(product.identifier) if @config.product
         print_success_message product
+        run_post_register_scripts product
       end
 
       # @returns: Empty body and 204 status code
@@ -128,6 +129,16 @@ module SUSE
           upgrade_path.map do |product_attributes|
             Remote::Product.new(product_attributes)
           end
+        end
+      end
+
+      def run_post_register_scripts(product)
+        if File.directory?(config.post_register_scripts_path)
+          Dir["#{config.post_register_scripts_path}/**/*"].each do |file|
+            Kernel.system "#{file} #{product.identifier}"
+          end
+        else
+          log.debug "Specified post-install scripts path is not a directory; skipping."
         end
       end
 

@@ -9,3 +9,4 @@ suse-connect-*.gem
 .vagrant/
 .kitchen/
 Vagrantfile
+.byebug_history

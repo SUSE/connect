@@ -1,4 +1,5 @@
 ---
 regcode: regcode
-url: https://scc.suse.com
+url: https://test.scc.suse.com
 language: EN
+post_register_scripts_path: /some/path
