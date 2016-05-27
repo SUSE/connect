@@ -460,8 +460,8 @@ describe SUSE::Connect::Client do
       before { instance.config.post_register_scripts_path = File.expand_path(File.join(File.dirname(__FILE__), '../fixtures/post_install_scripts/successful')) }
 
       it 'executes everything' do
-        expect(Kernel).to receive(:system).with(/script_1 SLES/)
-        expect(Kernel).to receive(:system).with(/script_2 SLES/)
+        expect(Kernel).to receive(:system).with(/script_1.callback SLES/)
+        expect(Kernel).to receive(:system).with(/script_2.callback SLES/)
         subject
       end
 

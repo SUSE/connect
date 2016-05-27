@@ -134,7 +134,7 @@ module SUSE
 
       def run_post_register_scripts(product)
         if File.directory?(config.post_register_scripts_path)
-          Dir["#{config.post_register_scripts_path}/**/*"].each do |file|
+          Dir["#{config.post_register_scripts_path}/*.callback"].each do |file|
             Kernel.system "#{file} #{product.identifier}"
           end
         else
