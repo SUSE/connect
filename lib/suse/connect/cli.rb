@@ -184,6 +184,7 @@ module SUSE
         @opts.set_summary_width(24)
         @opts.parse(@argv)
         @options[:language] = ENV['LANG'] if ENV['LANG']
+        @options[:post_register_scripts_path] = ENV['POST_REGISTER_SCRIPTS_PATH'] if ENV['POST_REGISTER_SCRIPTS_PATH']
         log.debug("cmd options: '#{@options}'")
       end
 

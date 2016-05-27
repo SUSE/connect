@@ -104,7 +104,14 @@ Manage subscriptions at [SUSE Customer Center][scc]
   server using a RESTful JSON API over HTTP using TLS encryption.
 
 ## ENVIRONMENT
-  SUSEConnect respects the HTTP_PROXY and HTTPS_PROXY environment variables.
+
+  * `HTTP_PROXY` and `HTTPS_PROXY` environment variables are respected
+
+  * `LANG` environment variable overrides according config option
+
+  * `POST_REGISTER_SCRIPTS_PATH` overrides default post-registration callback scripts directory
+
+
 
 ## FILES
   * `/etc/SUSEConnect`:

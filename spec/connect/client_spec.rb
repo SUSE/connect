@@ -1,75 +1,23 @@
 require 'spec_helper'
 
 describe SUSE::Connect::Client do
-  let :config do
-    SUSE::Connect::Config.new
-  end
+  let(:config) { SUSE::Connect::Config.new }
+  let(:instance) { described_class.new config }
 
-  subject { SUSE::Connect::Client.new(config) }
-
-  let(:default_logger) { SUSE::Connect::GlobalLogger.instance.log }
-  let(:string_logger) { ::Logger.new(StringIO.new) }
+  subject { instance }
 
   describe '.new' do
-    context :empty_opts do
-      it 'should set url to default_url' do
-        expect(subject.config.url).to eq SUSE::Connect::Config::DEFAULT_URL
-      end
-    end
-
-    context :passed_opts do
-      it 'should set insecure flag from options if it was passed via constructor' do
-        config.insecure = true
-        client = Client.new(config)
-        expect(client.config.insecure).to be true
-      end
-
-      it 'should set write_config flag from options if it was passed via constructor' do
-        config.write_config = true
-        client = Client.new(config)
-        expect(client.config.write_config).to be true
-      end
-
-      it 'allows to pass arbitrary options' do
-        config.foo = 'bar'
-        client = Client.new(config)
-        expect(client.config.foo).to eq 'bar'
-      end
-    end
-
-    context :from_config do
-      subject do
-        SUSE::Connect::Client.new(SUSE::Connect::Config.new)
-      end
-
-      before do
-        allow_any_instance_of(SUSE::Connect::Config).to receive(:read).and_return(
-          'url'      => 'https://localsmt.domain.local',
-          'language' => 'RU',
-          'insecure' => true
-        )
-      end
-
-      it 'should set url to the config URL' do
-        expect(subject.config.url).to eq 'https://localsmt.domain.local'
-      end
-
-      it 'should set token to one from config file' do
-        expect(subject.config.insecure).to eq true
-      end
-
-      it 'should set language to one from config file' do
-        expect(subject.config.language).to eq 'RU'
-      end
+    its(:config) { is_expected.to eq config }
+    its(:api) { is_expected.to be_kind_of(Api) }
+    it 'hits log' do
+      expect(SUSE::Connect::GlobalLogger.instance.log).to receive(:debug)
+      subject
     end
   end
 
   describe '#announce_system' do
-    context :direct_connection do
-      subject do
-        config.token = 'blabla'
-        SUSE::Connect::Client.new(config)
-      end
+    context 'direct_connection' do
+      before { config.token = 'blabla' }
 
       before do
         api_response = double('api_response')
@@ -109,9 +57,7 @@ describe SUSE::Connect::Client do
     end
 
     describe '#update_system' do
-      context :direct_connection do
-        subject { SUSE::Connect::Client.new(config) }
-
+      context 'direct_connection' do
         before do
           allow(subject).to receive_messages(system_auth: 'auth')
           allow_any_instance_of(Api).to receive(:update_system)
@@ -142,13 +88,10 @@ describe SUSE::Connect::Client do
       end
     end
 
-    context :registration_proxy_connection do
-      subject do
-        config.url = 'http://smt.local'
-        SUSE::Connect::Client.new(config)
-      end
-
+    context 'registration_proxy_connection' do
       before do
+        config.url = 'http://smt.local'
+
         api_response = double('api_response')
         allow(api_response).to receive_messages(body: { 'login' => 'lg', 'password' => 'pw' })
         allow(Zypper).to receive(:write_base_credentials).with('lg', 'pw')
@@ -250,6 +193,9 @@ describe SUSE::Connect::Client do
   end
 
   describe '#register!' do
+    let(:default_logger) { SUSE::Connect::GlobalLogger.instance.log }
+    let(:string_logger) { ::Logger.new(StringIO.new) }
+
     before do
       allow(Zypper).to receive(:base_product).and_return Zypper::Product.new(name: 'SLE_BASE')
       allow(System).to receive(:add_service).and_return true
@@ -260,43 +206,62 @@ describe SUSE::Connect::Client do
       allow(Zypper).to receive(:install_release_package)
     end
 
-    it 'should call announce if system not registered' do
-      allow(System).to receive_messages(credentials?: false)
-      expect(subject).to receive(:announce_system)
-      subject.register!
+    context 'when system is registered' do
+      before { allow(System).to receive_messages(credentials?: true) }
+
+      it 'does not call announce' do
+        expect(subject).not_to receive(:announce_system)
+        subject.register!
+      end
+
+      it 'calls update on api' do
+        expect(subject).to receive(:update_system)
+        subject.register!
+      end
+
+      it 'calls activate_product on api' do
+        expect(subject).to receive(:activate_product)
+        subject.register!
+      end
+
+      it 'adds service' do
+        expect(System).to receive(:add_service)
+        subject.register!
+      end
+
+      it 'installs release package on product activation' do
+        subject.config.product = Remote::Product.new(identifier: 'SLES')
+        expect(Zypper).to receive(:install_release_package).with(subject.config.product.identifier)
+        subject.register!
+      end
+
+      it 'runs post-register scripts' do
+        expect(subject).to receive(:run_post_register_scripts)
+        subject.register!
+      end
     end
 
-    it 'should not call announce but update on api if system registered' do
-      allow(System).to receive_messages(credentials?: true)
-      expect(subject).not_to receive(:announce_system)
-      expect(subject).to receive(:update_system)
-      subject.register!
-    end
+    context 'when system is not registered' do
+      before { allow(System).to receive_messages(credentials?: false) }
 
-    it 'should call activate_product on api' do
-      allow(System).to receive_messages(credentials?: true)
-      expect(subject).to receive(:activate_product)
-      subject.register!
-    end
+      it 'should call announce if system not registered' do
+        expect(subject).to receive(:announce_system)
+        subject.register!
+      end
 
-    it 'writes credentials file' do
-      allow(System).to receive_messages(credentials?: false)
-      allow(subject).to receive_messages(announce_system: %w{ lg pw })
-      expect(Credentials).to receive(:new).with('lg', 'pw', Credentials::GLOBAL_CREDENTIALS_FILE).and_call_original
-      subject.register!
-    end
+      context 'after announce_system' do
+        before { allow(subject).to receive_messages(announce_system: %w{ lg pw }) }
 
-    it 'adds service after product activation' do
-      allow(System).to receive_messages(credentials?: true)
-      expect(System).to receive(:add_service)
-      subject.register!
-    end
+        it 'writes credentials file' do
+          expect(Credentials).to receive(:new).with('lg', 'pw', Credentials::GLOBAL_CREDENTIALS_FILE).and_call_original
+          subject.register!
+        end
 
-    it 'installs release package on product activation' do
-      subject.config.product = Remote::Product.new(identifier: 'SLES')
-      allow(System).to receive(:credentials?).and_return true
-      expect(Zypper).to receive(:install_release_package).with(subject.config.product.identifier)
-      subject.register!
+        it 'runs post-register scripts' do
+          expect(subject).to receive(:run_post_register_scripts)
+          subject.register!
+        end
+      end
     end
 
     it 'prints message on successful register' do
@@ -346,17 +311,17 @@ describe SUSE::Connect::Client do
   describe '#system_migrations' do
     let(:stubbed_response) do
       OpenStruct.new(
-        :code => 200,
-        :body => [[{ 'identifier' => 'bravo', 'version' => '12.1' }]],
-        :success => true
+        code: 200,
+        body: [[{ 'identifier' => 'bravo', 'version' => '12.1' }]],
+        success: true
       )
     end
 
     let(:empty_response) do
       OpenStruct.new(
-        :code => 200,
-        :body => [],
-        :success => true
+        code: 200,
+        body: [],
+        success: true
       )
     end
 
@@ -470,6 +435,46 @@ describe SUSE::Connect::Client do
     it 'calls underlying api with system_activations call' do
       expect(subject.api).to receive(:system_activations).with('Basic: encodedstring').and_return stubbed_response
       subject.system_activations
+    end
+  end
+
+  describe '#run_post_register_scripts' do
+    let(:product) { Zypper::Product.new name: 'SLES', version: 12, arch: 's390' }
+    subject { instance.run_post_register_scripts product }
+
+    context 'when path is absent' do
+      before { instance.config.post_register_scripts_path = '/non-existing-dir' }
+
+      it 'executes nothing' do
+        expect(Kernel).not_to receive(:system)
+        subject
+      end
+
+      it 'hits log' do
+        expect(SUSE::Connect::GlobalLogger.instance.log).to receive(:debug)
+        subject
+      end
+    end
+
+    context 'when path exists' do
+      before { instance.config.post_register_scripts_path = File.expand_path(File.join(File.dirname(__FILE__), '../fixtures/post_install_scripts/successful')) }
+
+      it 'executes everything' do
+        expect(Kernel).to receive(:system).with(/script_1.callback$/, 'SLES')
+        expect(Kernel).to receive(:system).with(/script_2.callback$/, 'SLES')
+        subject
+      end
+
+      context 'and contains failing scripts' do
+        before { instance.config.post_register_scripts_path = File.expand_path(File.join(File.dirname(__FILE__), '../fixtures/post_install_scripts/failing')) }
+
+        it { expect { subject }.not_to raise_error }
+
+        it 'executes everything' do
+          expect(Kernel).to receive(:system).twice
+          subject
+        end
+      end
     end
   end
 end
