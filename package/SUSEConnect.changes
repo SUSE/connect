@@ -1,9 +1,14 @@
 -------------------------------------------------------------------
+Fri May 27 18:00:00 UTC 2016 - ashaidurov@suse.com
+
+- Update to 0.3.0:
+  - New feature for fate#320679: SUSEConnect now executes *.callback scripts under /etc/SUSEConnect-post_register.d after product registration
+
+-------------------------------------------------------------------
 Wed May 11 16:30:00 UTC 2016 - ashaidurov@suse.com
 
 - Update to 0.2.36:
   - Fix for bnc#973851: More flexible exit codes handling in internal zypper calls
-
 
 -------------------------------------------------------------------
 Thu Apr 5 13:40:00 UTC 2016 - ashaidurov@suse.com

@@ -10,7 +10,7 @@ module SUSE
     class Config < OpenStruct
       DEFAULT_CONFIG_FILE = '/etc/SUSEConnect'.freeze
       DEFAULT_URL = 'https://scc.suse.com'.freeze
-      DEFAULT_POST_REGISTER_SCRIPTS_PATH = '/etc/SUSEConnect-post_register'.freeze
+      DEFAULT_POST_REGISTER_SCRIPTS_PATH = '/etc/SUSEConnect-post_register.d'.freeze
 
       class << self
         attr_accessor :serializable
