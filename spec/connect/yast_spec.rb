@@ -366,4 +366,19 @@ describe SUSE::Connect::YaST do
       subject.status(:foo => :bar)
     end
   end
+
+  describe '.list_installer_updates' do
+    let(:product) { Remote::Product.new(identifier: 'win95') }
+    let(:client_params) { {} }
+
+    it 'calls #list_installer_updates on an instance of Client' do
+      repos = [{ id: 2, url: 'https://suse.com/repo.xml' }]
+      expected_repos = [OpenStruct.new(id: 2, url: 'https://suse.com/repo.xml')]
+
+      expect(Client).to receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
+      expect_any_instance_of(Client).to receive(:list_installer_updates).and_return(repos)
+
+      expect(subject.list_installer_updates(product, client_params)).to eq expected_repos
+    end
+  end
 end

@@ -131,6 +131,15 @@ module SUSE
         end
       end
 
+      # List available Installer-Updates repositories for the given product
+      #
+      # @param product [Remote::Product] list repositories for this product
+      #
+      # @return [Array <Hash>] list of Installer-Updates repositories
+      def list_installer_updates(product)
+        @api.list_installer_updates(product).body
+      end
+
       private
 
       # Announces the system to the server, receiving and storing its credentials.
