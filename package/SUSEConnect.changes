@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Jun 21 10:10:12 UTC 2016 - hschmidt@suse.com
+
+- Update to 0.2.37:
+  - Add method to YaST class to get Installer-Updates repositories (fate#319716).
+
+-------------------------------------------------------------------
 Wed May 11 16:30:00 UTC 2016 - ashaidurov@suse.com
 
 - Update to 0.2.36:
