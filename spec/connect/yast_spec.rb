@@ -380,5 +380,12 @@ describe SUSE::Connect::YaST do
 
       expect(subject.list_installer_updates(product, client_params)).to eq expected_repos
     end
+
+    it 'returns an empty array when Client returns an empty array' do
+      expect(Client).to receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
+      expect_any_instance_of(Client).to receive(:list_installer_updates).and_return([])
+
+      expect(subject.list_installer_updates(product, client_params)).to eq []
+    end
   end
 end
