@@ -404,4 +404,29 @@ describe SUSE::Connect::Api do
       subject.new(client).update_system('Basic: encodedgibberish', nil, nil, namespace)
     end
   end
+
+  describe '#list_installer_updates' do
+    before { stub_list_installer_updates_call }
+
+    let(:product) { Remote::Product.new(identifier: 'SLES', version: '12.2', arch: 'x86_64')  }
+    let(:expected_body) do
+      [
+        {
+          'id' => 2101,
+          'name' => 'SLES12-SP2-Installer-Updates',
+          'distro_target' => 'sle-12-x86_64',
+          'description' => 'SLES12-SP2-Installer-Updates for sle-12-x86_64',
+          'url' => 'https://updates.suse.com/SUSE/Updates/SLE-SERVER-INSTALLER/12-SP2/x86_64/update/',
+          'enabled' => false,
+          'autorefresh' => true,
+          'installer_updates' => true
+        }
+      ]
+    end
+
+    it 'returns a list of repositories' do
+      body = subject.new(client).list_installer_updates(product).body
+      expect(body).to eq expected_body
+    end
+  end
 end

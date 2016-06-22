@@ -178,6 +178,15 @@ module SUSE
         payload = { installed_products: products.map(&:to_params) }
         @connection.post('/connect/systems/products/migrations', auth: auth, params: payload)
       end
+
+      # List available Installer-Updates repositories for the given product
+      #
+      # @param product [Remote::Product] list repositories for this product
+      #
+      # @return [Array <Hash>] list of Installer-Updates repositories
+      def list_installer_updates(product)
+        @connection.get('/connect/repositories/installer', params: product.to_params)
+      end
     end
   end
 end

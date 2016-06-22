@@ -472,4 +472,36 @@ describe SUSE::Connect::Client do
       subject.system_activations
     end
   end
+
+  describe '#list_installer_updates' do
+    let(:response_body) do
+      [
+        {
+          'id' => 2101,
+          'name' => 'SLES12-SP2-Installer-Updates',
+          'distro_target' => 'sle-12-x86_64',
+          'description' => 'SLES12-SP2-Installer-Updates for sle-12-x86_64',
+          'url' => 'https://updates.suse.com/SUSE/Updates/SLE-SERVER-INSTALLER/12-SP2/x86_64/update/',
+          'enabled' => false,
+          'autorefresh' => true,
+          'installer_updates' => true
+        }
+      ]
+    end
+
+    let(:stubbed_response) do
+      OpenStruct.new(
+        code: 200,
+        body: response_body,
+        success: true
+      )
+    end
+
+    let(:product) { Remote::Product.new(identifier: 'SLES', version: '12.2', arch: 'x86_64')  }
+
+    it 'collects data from api response' do
+      expect(subject.api).to receive(:list_installer_updates).with(product).and_return stubbed_response
+      expect(subject.list_installer_updates(product)).to eq response_body
+    end
+  end
 end

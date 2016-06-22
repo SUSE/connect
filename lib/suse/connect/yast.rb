@@ -158,6 +158,17 @@ module SUSE
           Client.new(config).system_migrations(products).map {|a| a.map(&:to_openstruct) }
         end
 
+        # List available Installer-Updates repositories for the given product
+        #
+        # @param [Remote::Product] list repositories for this product
+        # @param [Hash] client_params parameters to instantiate {Client}
+        #
+        # @return [Array <OpenStruct>] list of Installer-Updates repositories
+        def list_installer_updates(product, client_params = {})
+          config = SUSE::Connect::Config.new.merge!(client_params)
+          Client.new(config).list_installer_updates(product).map {|repo| OpenStruct.new repo }
+        end
+
         # Writes the config file with the given parameters, overwriting any existing contents
         # Only persistent connection parameters (url, insecure) are written by this method
         # Regcode, language, debug etc are not

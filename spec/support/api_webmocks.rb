@@ -126,3 +126,17 @@ def stub_empty_system_migrations_call
     .with(:headers => headers, :body => request_body.to_json)
     .to_return(:status => 200, :body => response_body, :headers => {})
 end
+
+def stub_list_installer_updates_call
+  response_body = JSON.parse(File.read('spec/fixtures/list_installer_updates_response.json')).to_json
+  headers = { 'Accept' => api_header_version }
+  request_body = {
+    identifier: 'SLES',
+    version: '12.2',
+    arch: 'x86_64',
+    release_type: nil
+  }
+  stub_request(:get, 'https://example.com/connect/repositories/installer')
+    .with(headers: headers, body: request_body.to_json)
+    .to_return(status: 200, body: response_body, headers: {})
+end
