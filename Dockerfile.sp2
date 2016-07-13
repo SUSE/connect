@@ -1,0 +1,21 @@
+FROM registry.scc.suse.de/suse/sles12:sp2
+
+RUN zypper --non-interactive ar http://download.suse.de/ibs/SUSE/Products/SLE-SERVER/12-SP2/x86_64/product/ SLE-12-SP2-standard &&\
+    zypper --non-interactive ar -f http://download.suse.de/ibs/SUSE/Updates/SLE-SERVER/12-SP2/x86_64/update/ SLE-12-SP2-updates &&\
+    zypper --no-gpg-checks --non-interactive ar http://download.suse.de/ibs/SUSE/Products/SLE-SDK/12-SP2/x86_64/product/ sle12sp2sdk &&\
+    zypper --non-interactive --gpg-auto-import-keys ref &&\
+    zypper --no-gpg-checks --non-interactive install git-core ruby-devel make gcc gcc-c++ build wget dmidecode vim
+
+RUN wget http://username:password@gaffer.suse.de:9999/files/.regcode -O /root/.regcode
+
+RUN echo 'gem: --no-ri --no-rdoc' > /etc/gemrc && \
+    gem install bundler --no-document
+RUN mkdir /tmp/connect && mkdir -p /tmp/connect/lib/suse/connect
+ADD Gemfile /tmp/connect/
+ADD suse-connect.gemspec /tmp/connect/
+ADD lib/suse/connect/version.rb /tmp/connect/lib/suse/connect/
+WORKDIR /tmp/connect
+RUN bundle -j8
+ADD . /tmp/connect
+RUN chown -R nobody /tmp/connect
+RUN chmod +x /tmp/connect/docker/runall.sh
