@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Wed Jul 27 14:28:02 UTC 2016 - igonzalezsosa@suse.com
+
+- Update to 0.2.38:
+  - Use /etc/pki/trust/anchors to store the registration
+    certificate instead of the /usr/share/pki/trust/anchors
+    counterpart (bsc#989787).
+
+-------------------------------------------------------------------
 Tue Jun 21 10:10:12 UTC 2016 - hschmidt@suse.com
 
 - Update to 0.2.37:
