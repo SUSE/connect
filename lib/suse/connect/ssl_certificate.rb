@@ -9,7 +9,7 @@ module SUSE
       extend Logger
 
       # where to save the imported certificate
-      SERVER_CERT_FILE = '/usr/share/pki/trust/anchors/registration_server.pem'
+      SERVER_CERT_FILE = '/etc/pki/trust/anchors/registration_server.pem'
 
       # script for updating the system certificates
       UPDATE_CERTIFICATES = '/usr/sbin/update-ca-certificates'
