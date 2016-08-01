@@ -457,7 +457,7 @@ describe SUSE::Connect::Api do
     context 'if server responds with XML instead of JSON' do
       before { stubbed_request.to_return(status: 404, body: File.read('spec/fixtures/old_smt_404_error.html')) }
       it "shouldn't raise an exception" do
-        expect{subject}.not_to raise_error
+        expect { subject }.not_to raise_error
       end
     end
 

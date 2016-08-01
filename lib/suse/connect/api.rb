@@ -27,6 +27,9 @@ module SUSE
         )
       end
 
+      # Checks if API endpoint is up-to-date, useful when dealing with RegistrationProxy errors
+      #
+      # @returns: `true` if the up-to-date SCC API detected, `false` otherwise
       def up_to_date?
         @connection.get('/connect/repositories/installer')
         # Should fail in any case. 422 error means that the endpoint is there and working right;

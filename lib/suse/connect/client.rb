@@ -37,13 +37,6 @@ module SUSE
         System.cleanup!
       end
 
-      # Checks if API endpoint is up-to-date, useful when dealing with RegistrationProxy errors
-      #
-      # @returns: `true` if the up-to-date SCC API detected, `false` otherwise
-      def up_to_date?
-        @api.up_to_date?
-      end
-
       # Announce system via SCC/Registration Proxy
       #
       # @returns: [Array] login, password tuple. Those credentials are given by SCC/Registration Proxy
