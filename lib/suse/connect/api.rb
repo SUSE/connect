@@ -27,6 +27,15 @@ module SUSE
         )
       end
 
+      def up_to_date?
+        @connection.get('/connect/repositories/installer')
+        # Should fail in any case. Non-404 exit code (supposedly 422) means the endpoint is there.
+        # In the unlikely case this call succeeds - the API is not implemented right, so endpoint is not up-to-date
+        return false
+      rescue ApiError => e
+        return e.code == 422
+      end
+
       # Announce a system to SCC.
       # @note https://github.com/SUSE/connect/wiki/SCC-API-(Implemented)#wiki-announce-system
       #

@@ -429,4 +429,20 @@ describe SUSE::Connect::Api do
       expect(body).to eq expected_body
     end
   end
+
+  describe 'up_to_date?' do
+    it 'sends request to the `/connect/repositories/installer` endpoint'
+    context 'if there is a 422 error' do
+      it 'should return true'
+    end
+    context 'if there is 404 error' do
+      it 'should return false'
+    end
+    context 'if something weird happens and server responds with 200 and JSON' do
+      it 'should return false'
+    end
+    context 'if server responds with XML instead of JSON' do
+      it "shouldn't throw any errors"
+    end
+  end
 end
