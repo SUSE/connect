@@ -76,7 +76,7 @@ module SUSE
 
       def complain_if_broken_smt
         unless @config.url_default? || Client.new(@config).api.up_to_date?
-          return "Your SMT server doesn't support this function. Please update it and try again."
+          return "Your Registration Proxy server doesn't support this function. Please update it and try again."
         end
       end
 
