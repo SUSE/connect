@@ -29,11 +29,15 @@ module SUSE
 
       def up_to_date?
         @connection.get('/connect/repositories/installer')
-        # Should fail in any case. Non-404 exit code (supposedly 422) means the endpoint is there.
-        # In the unlikely case this call succeeds - the API is not implemented right, so endpoint is not up-to-date
+        # Should fail in any case. 422 error means that the endpoint is there and working right;
+        # for older Registration Proxies 404 is typically expected.
+        # In the unlikely case this call succeeds - the API is not implemented right, so endpoint is not up-to-date.
         return false
       rescue ApiError => e
         return e.code == 422
+      rescue JSON::ParserError
+        # Even older Registration Proxies can return html instead of json when 404 is encountered
+        return false
       end
 
       # Announce a system to SCC.
