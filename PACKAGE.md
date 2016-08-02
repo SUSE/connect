@@ -22,7 +22,7 @@ The `Version:` declaration in `SUSEConnect.spec` needs to be updated manually to
 Please also update `SUSEConnect.changes` file with a list of new features in master since the last version update.
 You can do that with `osc vc` in the package directory.
 
-After you've commited your sources, make sure that a new git tag (looking like `v0.2.88`) has been also created and pushed.
+After you've commited your sources, make sure that a new git tag (looking like `v0.2.88`) has been also created and pushed. It is highly advised to use [signed tags](https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work); use `git tag -s v0.2.88 -m "Version 0.2.88"` to create those.
 
 
 Then build the gem:
@@ -54,8 +54,10 @@ osc -A https://api.suse.de build SLE_12 x86_64 --no-verify
 Building for SLES12SP1:
 
 ```bash
-osc -A https://api.suse.de build SUSE_SLE-12-SP1_GA_standard x86_64 --no-verify
+osc -A https://api.suse.de build SLE_12_SP1 x86_64 --no-verify
 ```
+
+Please consult the corresponding [IBS page](https://build.suse.de/project/repositories/Devel:SCC:suseconnect) for the full list of available 
 
 
 To submit the package:
@@ -66,7 +68,7 @@ iosc status / osc -A 'https://api.suse.de'
 ```
 
 Check for new commits flagged with 'M'.
-If should typically be enough to run `osc ar` to add new and delet removed files from the subsequent osc checkin.
+It should typically be enough to run `osc ar` to add new and delete removed files from the subsequent osc checkin.
 
 ```bash
 iosc commit / osc -A 'https://api.suse.de' commit
