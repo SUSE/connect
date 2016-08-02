@@ -429,4 +429,37 @@ describe SUSE::Connect::Api do
       expect(body).to eq expected_body
     end
   end
+
+  describe '#up_to_date?' do
+    subject { SUSE::Connect::Api.new(client).up_to_date? }
+    let!(:stubbed_request) { stub_request(:get, 'https://example.com/connect/repositories/installer') }
+
+    it 'sends request to the `/connect/repositories/installer` endpoint' do
+      subject
+      expect(stubbed_request).to have_been_made
+    end
+
+    context 'if there is a 422 error' do
+      before { stubbed_request.to_return(status: 422, body: '{}') }
+      it { is_expected.to be_truthy }
+    end
+
+    context 'if there is 404 error' do
+      before { stubbed_request.to_return(status: 404, body: '{}') }
+      it { is_expected.to be_falsey }
+    end
+
+    context 'if something weird happens and server responds with 200 and JSON' do
+      before { stubbed_request.to_return(status: 200, body: '{"success": true}') }
+      it { is_expected.to be_falsey }
+    end
+
+    context 'if server responds with XML instead of JSON' do
+      before { stubbed_request.to_return(status: 404, body: File.read('spec/fixtures/old_smt_404_error.html')) }
+      it "shouldn't raise an exception" do
+        expect { subject }.not_to raise_error
+      end
+    end
+
+  end
 end

@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Aug  2 09:09:55 UTC 2016 - thutterer@suse.com
+
+- Update to 0.2.38:
+  - Fix for bnc#975484: better error message if SMT is too old
+
+-------------------------------------------------------------------
 Tue Jun 21 10:10:12 UTC 2016 - hschmidt@suse.com
 
 - Update to 0.2.37:

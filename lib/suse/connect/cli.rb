@@ -52,7 +52,7 @@ module SUSE
         log.fatal "Error: Access error - #{e.message}"
         exit 65
       rescue JSON::ParserError
-        log.fatal 'Error: Cannot parse response from server'
+        log.fatal complain_if_broken_smt || 'Error: Cannot parse response from server'
         exit 66
       rescue ApiError => e
         if e.code == 401 && System.credentials?
@@ -60,7 +60,7 @@ module SUSE
           " Check #{@options[:url] || 'https://scc.suse.com'} whether your system appears there." \
           ' If it does not, please call SUSEConnect --cleanup and re-register this system.'
         else
-          log.fatal "Error: SCC returned '#{e.message}' (#{e.code})"
+          log.fatal complain_if_broken_smt || "Error: SCC returned '#{e.message}' (#{e.code})"
         end
         exit 67
       rescue FileError => e
@@ -73,6 +73,12 @@ module SUSE
       end
 
       private
+
+      def complain_if_broken_smt
+        unless @config.url_default? || Client.new(@config).api.up_to_date?
+          return "Your Registration Proxy server doesn't support this function. Please update it and try again."
+        end
+      end
 
       def extract_options # rubocop:disable MethodLength
         @opts = OptionParser.new

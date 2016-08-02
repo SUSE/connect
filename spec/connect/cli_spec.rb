@@ -56,6 +56,19 @@ describe SUSE::Connect::Cli do
         end
       end
 
+      context 'while calling the obsolete RegistrationProxy' do
+        it 'should suggest updating the Registration Proxy server' do
+          expect_any_instance_of(Client).to receive(:register!).and_raise JSON::ParserError
+          allow_any_instance_of(SUSE::Connect::Config).to receive(:url_default?).and_return(false)
+          expect_any_instance_of(Api).to receive(:up_to_date?).and_return(false)
+
+          ERROR_MESSAGE = "Your Registration Proxy server doesn't support this function. Please update it and try again."
+          expect(string_logger).to receive(:fatal).with(ERROR_MESSAGE)
+
+          cli.execute!
+        end
+      end
+
       it 'should produce log output if connection refused' do
         expect(string_logger).to receive(:fatal).with('Error: Connection refused by server https://scc.suse.com')
         allow_any_instance_of(Client).to receive(:register!).and_raise Errno::ECONNREFUSED
