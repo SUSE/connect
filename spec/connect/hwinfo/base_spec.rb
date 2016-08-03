@@ -102,4 +102,16 @@ describe SUSE::Connect::HwInfo::Base do
       expect(subject.s390?).to eql false
     end
   end
+
+  describe '#arm64?' do
+    it 'returns true if the system architecture is aarch64' do
+      expect(Open3).to receive(:capture3).with(shared_env_hash, 'uname -i').and_return(['aarch64', '', success])
+      expect(subject.arm64?).to eql true
+    end
+
+    it 'returns false if the system architecture is not aarch64' do
+      expect(Open3).to receive(:capture3).with(shared_env_hash, 'uname -i').and_return(['blob', '', success])
+      expect(subject.s390?).to eql false
+    end
+  end
 end
