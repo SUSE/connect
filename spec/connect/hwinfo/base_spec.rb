@@ -35,11 +35,10 @@ describe SUSE::Connect::HwInfo::Base do
     end
 
     context 'not supported architecture' do
-      require 'suse/connect/hwinfo/s390'
-
       it 'returns a hash with hostname and arch' do
         expect(subject).to receive(:x86?).and_return(false)
         expect(subject).to receive(:s390?).and_return(false)
+        expect(subject).to receive(:arm64?).and_return(false)
 
         expect(SUSE::Connect::System).to receive(:hostname).and_return('test')
         expect(subject).to receive(:arch).and_return('not_supported')
