@@ -11,6 +11,9 @@ module SUSE::Connect::HwInfo
         elsif s390?
           require_relative 's390'
           S390.hwinfo
+        elsif arm64?
+          require_relative 'arm64'
+          ARM64.hwinfo
         else
           {
             hostname: hostname,
@@ -34,6 +37,10 @@ module SUSE::Connect::HwInfo
 
       def x86?
         arch == 'x86_64'
+      end
+
+      def arm64?
+        arch == 'aarch64'
       end
     end
   end
