@@ -34,6 +34,20 @@ describe SUSE::Connect::HwInfo::Base do
       end
     end
 
+    context 'arm64' do
+      require 'suse/connect/hwinfo/arm64'
+
+      it 'requires and calls hwinfo class based on system architecture' do
+        expect(subject).to receive(:x86?).and_return(false)
+        expect(subject).to receive(:s390?).and_return(false)
+        expect(subject).to receive(:arm64?).and_return(true)
+
+        expect(subject).to receive(:require_relative).with('arm64')
+        expect(SUSE::Connect::HwInfo::ARM64).to receive(:hwinfo)
+        subject.info
+      end
+    end
+
     context 'not supported architecture' do
       it 'returns a hash with hostname and arch' do
         expect(subject).to receive(:x86?).and_return(false)
