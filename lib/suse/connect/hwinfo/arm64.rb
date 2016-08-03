@@ -1,4 +1,4 @@
-# Collect hardware information for arm64/aarch64 systems
+# Collect hardware information for aarch64 systems
 class SUSE::Connect::HwInfo::ARM64 < SUSE::Connect::HwInfo::Base
   class << self
     def hwinfo
@@ -59,4 +59,3 @@ class SUSE::Connect::HwInfo::ARM64 < SUSE::Connect::HwInfo::Base
     end
   end
 end
-
