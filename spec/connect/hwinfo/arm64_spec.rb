@@ -19,6 +19,7 @@ describe SUSE::Connect::HwInfo::ARM64 do
   it 'returns a hwinfo hash for aarm64 systems' do
     allow(Open3).to receive(:capture3).with(shared_env_hash, 'uname -i').and_return(['aarch64', '', success])
     expect(Open3).to receive(:capture3).with(shared_env_hash, 'dmidecode -s system-uuid').and_return(['uuid', '', success])
+    expect(Open3).to receive(:capture3).with(shared_env_hash, 'systemd-detect-virt -v').and_return(['none', '', success])
 
     hwinfo = subject.hwinfo
     expect(hwinfo[:hostname]).to eq 'test'
@@ -44,13 +45,14 @@ describe SUSE::Connect::HwInfo::ARM64 do
     expect(subject.sockets).to eql 1
   end
 
-  it 'returns nil for hypervisor' do
+  it 'returns nil for hypervisor for non-virtual systems' do
+    expect(Open3).to receive(:capture3).with(shared_env_hash, 'systemd-detect-virt -v').and_return(['none', '', success])
     expect(subject.hypervisor).to eql nil
   end
 
   it 'returns hypervisor vendor for virtual systems' do
-    expect(subject).to receive(:output).and_return('Hypervisor vendor' => 'KVM')
-    expect(subject.hypervisor).to eql 'KVM'
+    expect(Open3).to receive(:capture3).with(shared_env_hash, 'systemd-detect-virt -v').and_return(['kvm', '', success])
+    expect(subject.hypervisor).to eql 'kvm'
   end
 
   describe '.uuid' do
