@@ -34,12 +34,25 @@ describe SUSE::Connect::HwInfo::Base do
       end
     end
 
-    context 'not supported architecture' do
-      require 'suse/connect/hwinfo/s390'
+    context 'arm64' do
+      require 'suse/connect/hwinfo/arm64'
 
+      it 'requires and calls hwinfo class based on system architecture' do
+        expect(subject).to receive(:x86?).and_return(false)
+        expect(subject).to receive(:s390?).and_return(false)
+        expect(subject).to receive(:arm64?).and_return(true)
+
+        expect(subject).to receive(:require_relative).with('arm64')
+        expect(SUSE::Connect::HwInfo::ARM64).to receive(:hwinfo)
+        subject.info
+      end
+    end
+
+    context 'not supported architecture' do
       it 'returns a hash with hostname and arch' do
         expect(subject).to receive(:x86?).and_return(false)
         expect(subject).to receive(:s390?).and_return(false)
+        expect(subject).to receive(:arm64?).and_return(false)
 
         expect(SUSE::Connect::System).to receive(:hostname).and_return('test')
         expect(subject).to receive(:arch).and_return('not_supported')
@@ -85,6 +98,18 @@ describe SUSE::Connect::HwInfo::Base do
     end
 
     it 'returns false if the system architecture is not s390x' do
+      expect(Open3).to receive(:capture3).with(shared_env_hash, 'uname -i').and_return(['blob', '', success])
+      expect(subject.s390?).to eql false
+    end
+  end
+
+  describe '#arm64?' do
+    it 'returns true if the system architecture is aarch64' do
+      expect(Open3).to receive(:capture3).with(shared_env_hash, 'uname -i').and_return(['aarch64', '', success])
+      expect(subject.arm64?).to eql true
+    end
+
+    it 'returns false if the system architecture is not aarch64' do
       expect(Open3).to receive(:capture3).with(shared_env_hash, 'uname -i').and_return(['blob', '', success])
       expect(subject.s390?).to eql false
     end

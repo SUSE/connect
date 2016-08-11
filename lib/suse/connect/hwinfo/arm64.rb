@@ -1,5 +1,5 @@
-# Collect hardware information for x86/x86_64 systems
-class SUSE::Connect::HwInfo::X86 < SUSE::Connect::HwInfo::Base
+# Collect hardware information for aarch64 systems
+class SUSE::Connect::HwInfo::ARM64 < SUSE::Connect::HwInfo::Base
   class << self
     def hwinfo
       {
@@ -21,7 +21,8 @@ class SUSE::Connect::HwInfo::X86 < SUSE::Connect::HwInfo::Base
     end
 
     def hypervisor
-      output['Hypervisor vendor']
+      vendor = execute('systemd-detect-virt -v', false, [0, 1])
+      vendor == 'none' ? nil : vendor
     end
 
     def uuid

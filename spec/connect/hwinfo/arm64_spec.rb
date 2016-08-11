@@ -1,8 +1,8 @@
 require 'spec_helper'
-require 'suse/connect/hwinfo/x86'
+require 'suse/connect/hwinfo/arm64'
 
-describe SUSE::Connect::HwInfo::X86 do
-  subject { SUSE::Connect::HwInfo::X86 }
+describe SUSE::Connect::HwInfo::ARM64 do
+  subject { SUSE::Connect::HwInfo::ARM64 }
   let(:success) { double('Process Status', :exitstatus => 0) }
   let(:lscpu) { File.read(File.join(fixtures_dir, 'lscpu_phys.txt')) }
   include_context 'shared lets'
@@ -16,16 +16,17 @@ describe SUSE::Connect::HwInfo::X86 do
     SUSE::Connect::HwInfo::Base.instance_variable_set('@arch', nil)
   end
 
-  it 'returns a hwinfo hash for x86/x86_64 systems' do
-    allow(Open3).to receive(:capture3).with(shared_env_hash, 'uname -i').and_return(['x86_64', '', success])
+  it 'returns a hwinfo hash for aarm64 systems' do
+    allow(Open3).to receive(:capture3).with(shared_env_hash, 'uname -i').and_return(['aarch64', '', success])
     expect(Open3).to receive(:capture3).with(shared_env_hash, 'dmidecode -s system-uuid').and_return(['uuid', '', success])
+    expect(Open3).to receive(:capture3).with(shared_env_hash, 'systemd-detect-virt -v').and_return(['none', '', success])
 
     hwinfo = subject.hwinfo
     expect(hwinfo[:hostname]).to eq 'test'
     expect(hwinfo[:cpus]).to eq 8
     expect(hwinfo[:sockets]).to eq 1
     expect(hwinfo[:hypervisor]).to eq nil
-    expect(hwinfo[:arch]).to eq 'x86_64'
+    expect(hwinfo[:arch]).to eq 'aarch64'
     expect(hwinfo[:uuid]).to eq 'uuid'
   end
 
@@ -44,19 +45,20 @@ describe SUSE::Connect::HwInfo::X86 do
     expect(subject.sockets).to eql 1
   end
 
-  it 'returns nil for hypervisor' do
+  it 'returns nil for hypervisor for non-virtual systems' do
+    expect(Open3).to receive(:capture3).with(shared_env_hash, 'systemd-detect-virt -v').and_return(['none', '', success])
     expect(subject.hypervisor).to eql nil
   end
 
   it 'returns hypervisor vendor for virtual systems' do
-    expect(subject).to receive(:output).and_return('Hypervisor vendor' => 'KVM')
-    expect(subject.hypervisor).to eql 'KVM'
+    expect(Open3).to receive(:capture3).with(shared_env_hash, 'systemd-detect-virt -v').and_return(['kvm', '', success])
+    expect(subject.hypervisor).to eql 'kvm'
   end
 
   describe '.uuid' do
-    context :x86_64_arch do
+    context :arm64_arch do
       before :each do
-        allow(subject).to receive(:arch).and_return('x86_64')
+        allow(subject).to receive(:arch).and_return('aarch64')
       end
 
       it 'extracts uuid from dmidecode' do
