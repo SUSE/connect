@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Aug 11 11:30:17 UTC 2016 - thutterer@suse.com
+
+- Update to 0.2.39:
+  - Fix for bnc#990475: support for aarch64 hardware info
+
+-------------------------------------------------------------------
 Tue Aug  2 09:09:55 UTC 2016 - thutterer@suse.com
 
 - Update to 0.2.38:
