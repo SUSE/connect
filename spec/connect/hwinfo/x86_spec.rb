@@ -96,18 +96,5 @@ describe SUSE::Connect::HwInfo::X86 do
         end
       end
     end
-
-    context :arch_with_no_uuid_implementation do
-      it 'set uuid to nil' do
-        allow(subject).to receive(:arch).and_return('megusta')
-        expect(subject.uuid).to be nil
-      end
-
-      it 'produces debug log message' do
-        allow(subject).to receive(:arch).and_return('carbon')
-        expect(subject.log).to receive(:debug).with('Not implemented. Unable to determine UUID for carbon. Set to nil')
-        subject.uuid
-      end
-    end
   end
 end
