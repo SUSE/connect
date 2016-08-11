@@ -16,8 +16,22 @@ At first you need to update the gem version (see `bundle exec bump --help` for t
 ```bash
 bundle exec bump patch
 ```
+This also commits the version change. So `git show HEAD` shows you the new version number.
 
-The `Version:` declaration in `SUSEConnect.spec` needs to be updated manually to the new value.
+
+__Tip:__ Create an `alias iosc="osc -A https://api.suse.de"` to make your life easier.
+
+Before you start to update files in the `package` folder, make sure it is clean and updated:
+```
+osc status
+osc up
+```
+
+If you run into some merge conflict, you can delete everything in our package folder (except the `.gitignore`), then do
+`iosc checkout Devel:SCC:suseconnect` which creates a subfolder from where you can move all files to your `package` folder.
+`iosc status` afterwards to make sure you have no unwanted changes anymore.
+
+Update the `Version:` declaration in `SUSEConnect.spec` to the new value manually.
 
 Please also update `SUSEConnect.changes` file with a list of new features in master since the last version update.
 You can do that with `osc vc` in the package directory.
@@ -57,7 +71,7 @@ Building for SLES12SP1:
 osc -A https://api.suse.de build SLE_12_SP1 x86_64 --no-verify
 ```
 
-Please consult the corresponding [IBS page](https://build.suse.de/project/repositories/Devel:SCC:suseconnect) for the full list of available 
+Please consult the corresponding [IBS page](https://build.suse.de/project/repositories/Devel:SCC:suseconnect) for the full list of available targets.
 
 
 To submit the package:
