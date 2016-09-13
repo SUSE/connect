@@ -37,6 +37,9 @@ Manage subscriptions at [SUSE Customer Center][scc]
     De-registers a system in order to not consume a subscription slot in SCC
     anymore and removes all services installed by SUSEConnect.
 
+  * `--list-extensions`:
+    List all extensions and modules available for installation on this system.
+
   * `--instance-data <path to file>`:
     Path to the XML file holding the public key and instance data
     for cloud registration with SMT`
