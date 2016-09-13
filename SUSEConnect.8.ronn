@@ -17,7 +17,9 @@ extensions that have been installed after system installation from physical
 media.
 
 To register extensions, use the `--product <PRODUCT-IDENTIFIER>` option together
-with the product identifier of the extension, obtained with `zypper products`
+with the product identifier of the extension.
+You can see a list of all available extensions and modules for your system by
+using the `--list-extensions` option.
 
 Manage subscriptions at [SUSE Customer Center][scc]
 
@@ -25,7 +27,7 @@ Manage subscriptions at [SUSE Customer Center][scc]
 
   * `-p`, `--product <PRODUCT>`:
     Activate PRODUCT. Defaults to the base SUSE Linux Enterprise product
-    on this system. Product identifiers can be obtained with 'zypper products'.
+    on this system. Product identifiers can be obtained with `--list-extensions`.
     Format: <name>-<version>-<architecture>
 
   * `-r`, `--regcode <REGCODE>`:
