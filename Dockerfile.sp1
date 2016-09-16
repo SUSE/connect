@@ -1,13 +1,15 @@
 FROM registry.scc.suse.de/suse/sles12:sp1
 
-RUN zypper --non-interactive rm container-suseconnect &&\
+RUN zypper --non-interactive --no-refresh rm container-suseconnect &&\
     zypper --non-interactive ar http://download.suse.de/ibs/SUSE/Products/SLE-SERVER/12-SP1/x86_64/product/ SLE-12-SP1-standard &&\
     zypper --non-interactive ar -f http://download.suse.de/ibs/SUSE/Updates/SLE-SERVER/12-SP1/x86_64/update/ SLE-12-SP1-updates &&\
     zypper --no-gpg-checks --non-interactive ar http://download.suse.de/ibs/SUSE/Products/SLE-SDK/12-SP1/x86_64/product/ sle12sp1sdk &&\
+    zypper --non-interactive ar -f http://download.opensuse.org/repositories/openSUSE:/Tools/SLE_12_SP1/ opensuse-tools && \
     zypper --non-interactive --gpg-auto-import-keys ref &&\
-    zypper --no-gpg-checks --non-interactive install git-core ruby-devel make gcc gcc-c++ build wget dmidecode vim
+    zypper --no-gpg-checks --non-interactive install git-core ruby-devel make gcc gcc-c++ build wget dmidecode vim zypper>=1.11.32 osc ruby2.1-rubygem-gem2rpm
 
 RUN wget http://username:password@gaffer.suse.de:9999/files/.regcode -O /root/.regcode
+RUN wget --http-user=username --http-password=password http://gaffer.suse.de:9999/files/.oscrc -O /root/.oscrc
 
 RUN echo 'gem: --no-ri --no-rdoc' > /etc/gemrc && \
     gem install bundler --no-document
@@ -19,4 +21,4 @@ WORKDIR /tmp/connect
 RUN bundle -j8
 ADD . /tmp/connect
 RUN chown -R nobody /tmp/connect
-RUN chmod +x /tmp/connect/docker/runall.sh
+RUN chmod +x /tmp/connect/docker/runall.sh /tmp/connect/docker/integration.sh
