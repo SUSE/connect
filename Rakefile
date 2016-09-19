@@ -39,7 +39,7 @@ task :build, [:product] do |t, args|
   Dir.chdir('package')
   sh 'ronn --roff --manual SUSEConnect --pipe ../SUSEConnect.8.ronn > SUSEConnect.8 && gzip -f SUSEConnect.8'
   sh 'ronn --roff --manual SUSEConnect --pipe ../SUSEConnect.5.ronn > SUSEConnect.5 && gzip -f SUSEConnect.5'
-  sh "osc -A https://api.suse.de build #{product} x86_64 --no-verify"
+  sh "osc -A https://api.suse.de build #{args[:product]} x86_64 --no-verify"
 end
 
 namespace :vm do
