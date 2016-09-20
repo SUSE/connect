@@ -9,9 +9,9 @@ Feature: Test product activation
     And the file "/etc/zypp/credentials.d/SCCcredentials" should contain "SCC_"
 
     # This needs to match _SP1_, _SP2
-    And credentials for base should exist
+    And zypp credentials for base should exist
     #And a file named "/etc/zypp/credentials.d/SUSE_Linux_Enterprise_Server_12_x86_64" should exist
-    And the file "/etc/zypp/credentials.d/SUSE_Linux_Enterprise_Server_12_x86_64" should contain "SCC_"
+    And zypp credentials for base should contain "SCC_"
 
     And zypper should contain a service for base product
     And zypper should contain the repositories for base product

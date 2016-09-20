@@ -76,10 +76,16 @@ Then(/^zypper should contain the repositories for (base|sdk|wsm) product$/) do |
   end
 end
 
-Then(/zypp credentials for (base|sdk|wsm) (should|should not) exist$/) do |product, version, arch, condition|
+Then(/zypp credentials for (base|sdk|wsm) (should|should not) exist$/) do |product, condition|
   #underscore_product_cred_file = ("%s %s %s" % [product, version, arch]).tr(' ', '_')
   credentials_path = '/etc/zypp/credentials.d/'
   step "a file named #{credentials_path}#{service_name} #{condition} exist"
+end
+
+Then(/zypp credentials for (base|sdk|wsm) (should|should not) contain "(.*)"$/) do |product, condition, content|
+  #underscore_product_cred_file = ("%s %s %s" % [product, version, arch]).tr(' ', '_')
+  credentials_path = '/etc/zypp/credentials.d/'
+  step "the file \"#{credentials_path}#{service_name}\" #{condition} contain \"#{content}\""
 end
 
 Then(/^I remove local credentials$/) do
