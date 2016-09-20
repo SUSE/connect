@@ -76,6 +76,12 @@ Then(/^zypper should contain the repositories for (base|sdk|wsm) product$/) do |
   end
 end
 
+Then(/zypp credentials for (base|sdk|wsm) (should|should not) exist$/) do |product, version, arch, condition|
+  #underscore_product_cred_file = ("%s %s %s" % [product, version, arch]).tr(' ', '_')
+  credentials_path = '/etc/zypp/credentials.d/'
+  step "a file named #{credentials_path}#{service_name} #{condition} exist"
+end
+
 Then(/^I remove local credentials$/) do
   step 'Prepare SUSEConnect client with a valid regcode'
   @client.instance_eval { SUSE::Connect::System.remove_credentials }
