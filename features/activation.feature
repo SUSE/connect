@@ -46,17 +46,15 @@ Feature: Test product activation
 
   Scenario: System cleanup
     Then a file named "/etc/zypp/credentials.d/SCCcredentials" should exist
-    # This needs to match _SP1_, _SP2
-    And a file named "/etc/zypp/credentials.d/SUSE_Linux_Enterprise_Server_12_x86_64" should exist
+    And zypp credentials for base should exist
 
     And I run `zypper lr`
-    And the output should contain "SUSE_Linux_Enterprise_Server_12_x86_64"
+    And zypper should contain the repositories for base product
 
     When I call SUSEConnect with '--cleanup true' arguments
 
-    # This needs to match _SP1_, _SP2
     Then a file named "/etc/zypp/credentials.d/SCCcredentials" should not exist
-    And a file named "/etc/zypp/credentials.d/SUSE_Linux_Enterprise_Server_12_x86_64" should not exist
+    And zypp credentials for base should not exist
 
 
   Scenario: Remove all registration leftovers

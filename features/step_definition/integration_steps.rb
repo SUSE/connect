@@ -51,20 +51,31 @@ Then(/^zypper should contain a service for (base|sdk|wsm) product$/) do |product
 end
 
 Then(/^zypper should contain the repositories for (base|sdk|wsm) product$/) do |product|
+  case base_product_version
+  when '12.1'
+    version_string_uscore = '12_SP1'
+    version_string_dash = '12-SP1'
+  when '12.2'
+    version_string_uscore = '12_SP2'
+    version_string_dash= '12-SP2'
+  else
+    version_string_uscore = '12'
+    version_string = '12'
+  end
   if product == 'base'
     repositories = [
-      'SUSE_Linux_Enterprise_Server_12_x86_64:SLES12-Pool',
-      'SUSE_Linux_Enterprise_Server_12_x86_64:SLES12-Updates',
-      'SUSE_Linux_Enterprise_Server_12_x86_64:SLES12-Debuginfo-Updates'
+    "SUSE_Linux_Enterprise_Server_#{version_string_uscore}_x86_64:SLES#{version_string_dash}-Pool",
+    "SUSE_Linux_Enterprise_Server_#{version_string_uscore}_x86_64:SLES#{version_string_dash}-Updates",
+    "SUSE_Linux_Enterprise_Server_#{version_string_uscore}_x86_64:SLES#{version_string_dash}-Debuginfo-Updates"
     ]
-  elsif product == 'sdk'
+  elsif product == "sdk"
     repositories = [
-      'SUSE_Linux_Enterprise_Software_Development_Kit_12_x86_64:SLE-SDK12-Pool',
-      'SUSE_Linux_Enterprise_Software_Development_Kit_12_x86_64:SLE-SDK12-Updates'
+      "SUSE_Linux_Enterprise_Software_Development_Kit_#{version_string_uscore}_x86_64:SLE-SDK#{version_string_dash}-Pool",
+      "SUSE_Linux_Enterprise_Software_Development_Kit_#{version_string_uscore}_x86_64:SLE-SDK#{version_string_dash}-Updates"
     ]
   else
     repositories = [
-      'Web_and_Scripting_Module_12_x86_64:SLE-Module-Web-Scripting12-Pool'
+      "Web_and_Scripting_Module_#{version_string_uscore}_x86_64:SLE-Module-Web-Scripting#{version_string_dash}-Pool"
     ]
   end
 

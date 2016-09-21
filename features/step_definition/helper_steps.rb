@@ -7,3 +7,9 @@ def service_name
     @service_name ||= "#{identifier}_#{product.arch}"
   end
 end
+
+def base_product_version
+  SUSE::Connect::Zypper.base_product.version
+end
+
+
