@@ -1,32 +1,15 @@
-Then(/^Set regcode and url options$/) do
-  test_regcodes = YAML.load_file('/root/.regcode')
-  @valid_regcode =  ENV['REGCODE'] || test_regcodes['code']
-  @expired_regcode = test_regcodes['expired_code'] || "regcode file does not contain 'expired_code'!!"
-  @notyetactivated_regcode = test_regcodes['notyetactivated_code'] || "regcode file does not contain 'notyetactivated_code'!!"
+Then(/^Set url options$/) do
+
   @url = ENV['URL'] || SUSE::Connect::Config::DEFAULT_URL
 end
 
 Then(/^I call SUSEConnect with '(.*)' arguments$/) do |args|
   options = Hash[*args.gsub('--', '').split(' ')]
 
-  step 'Set regcode and url options'
-
-  regcode = case options['regcode']
-            when nil
-            when 'INVALID'
-              'INVALID_REGCODE'
-            when 'EXPIRED'
-              @expired_regcode
-            when 'NOTYETACTIVATED'
-              @notyetactivated_regcode
-            when 'VALID'
-              @valid_regcode
-            else
-              @options['regcode']
-  end
+  step 'Set url options'
 
   connect = "SUSEConnect --url #{@url}"
-  connect << " -r #{regcode}" if options['regcode']
+  connect << " -r #{regcode_for_test(options['regcode'])}" if options['regcode']
   connect << " -p #{options['product']}" if options['product']
   connect << ' -s' if options['status']
   connect << ' --cleanup' if options['cleanup']
