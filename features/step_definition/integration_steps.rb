@@ -59,8 +59,7 @@ Then(/^zypper should contain the repositories for (base|sdk|wsm) product$/) do |
     version_string_uscore = '12_SP2'
     version_string_dash= '12-SP2'
   else
-    version_string_uscore = '12'
-    version_string = '12'
+    version_string_uscore = version_string_dash = '12'
   end
   if product == 'base'
     repositories = [
