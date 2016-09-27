@@ -6,5 +6,5 @@ then
 fi
 
 rake build[$PRODUCT] &&
-zypper --non-interactive --no-gpg-checks in /var/tmp/build-root/$PRODUCT-x86_64/home/abuild/rpmbuild/RPMS/x86_64/* &&
+zypper --non-interactive --no-gpg-checks in /oscbuild/$PRODUCT-x86_64/home/abuild/rpmbuild/RPMS/x86_64/* &&
 cucumber /tmp/connect/features/activation.feature /tmp/connect/features/activation_errors.feature
