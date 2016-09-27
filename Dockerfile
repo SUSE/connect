@@ -18,3 +18,5 @@ RUN bundle -j8
 ADD . /tmp/connect
 RUN chown -R nobody /tmp/connect
 RUN chmod +x /tmp/connect/docker/runall.sh /tmp/connect/docker/integration.sh
+ADD .oscrc /root/.oscrc
+ADD .regcode /root/.regcode
