@@ -18,22 +18,24 @@ Then(/^I call SUSEConnect with '(.*)' arguments$/) do |args|
   step "I run `#{connect}`"
 end
 
-Then(/^zypper should contain a service for (base|sdk|wsm) product$/) do |product|
+Then(/^zypper (should|should not) contain a service for (base|sdk|wsm) product$/) do |condition, product|
   if product == 'base'
     service = service_name
   elsif product == 'sdk'
+    #TODO unused
     service = 'SUSE_Linux_Enterprise_Software_Development_Kit_12_x86_64'
   else
+    #TODO unused
     service = 'Web_and_Scripting_Module_12_x86_64'
   end
 
   step 'I run `zypper ls`'
-  puts "zypper ls output should contain \"#{service}\""
-  step "the output should contain \"#{service}\""
+  puts "zypper ls output #{condition} contain \"#{service}\""
+  step "the output #{condition} contain \"#{service}\""
   step 'the exit status should be 0'
 end
 
-Then(/^zypper should contain the repositories for (base|sdk|wsm) product$/) do |product|
+Then(/^zypper (should|should not) contain the repositories for (base|sdk|wsm) product$/) do |condition, product|
   case base_product_version
   when '12.1'
     version_string_uscore = '12_SP1'
@@ -64,8 +66,8 @@ Then(/^zypper should contain the repositories for (base|sdk|wsm) product$/) do |
   step 'I run `zypper lr`'
 
   repositories.each do |repo|
-    puts "zypper lr output should contain \"#{repo}\""
-    step "the output should contain \"#{repo}\""
+    puts "zypper lr output #{condition} contain \"#{repo}\""
+    step "the output #{condition} contain \"#{repo}\""
   end
 end
 
