@@ -2,15 +2,12 @@
 Feature: Test product activation
 
   Scenario: System registration
-    # This should get the base product Name and store it in a variable
     Given I have a system with activated base product
 
     Then a file named "/etc/zypp/credentials.d/SCCcredentials" should exist
     And the file "/etc/zypp/credentials.d/SCCcredentials" should contain "SCC_"
 
-    # This needs to match _SP1_, _SP2
     And zypp credentials for base should exist
-    #And a file named "/etc/zypp/credentials.d/SUSE_Linux_Enterprise_Server_12_x86_64" should exist
     And zypp credentials for base should contain "SCC_"
 
     And zypper should contain a service for base product

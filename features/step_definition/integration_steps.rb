@@ -50,7 +50,7 @@ Then(/^zypper should contain the repositories for (base|sdk|wsm) product$/) do |
     "SUSE_Linux_Enterprise_Server_#{version_string_uscore}_x86_64:SLES#{version_string_dash}-Updates",
     "SUSE_Linux_Enterprise_Server_#{version_string_uscore}_x86_64:SLES#{version_string_dash}-Debuginfo-Updates"
     ]
-  elsif product == "sdk"
+  elsif product == 'sdk'
     repositories = [
       "SUSE_Linux_Enterprise_Software_Development_Kit_#{version_string_uscore}_x86_64:SLE-SDK#{version_string_dash}-Pool",
       "SUSE_Linux_Enterprise_Software_Development_Kit_#{version_string_uscore}_x86_64:SLE-SDK#{version_string_dash}-Updates"
@@ -70,13 +70,11 @@ Then(/^zypper should contain the repositories for (base|sdk|wsm) product$/) do |
 end
 
 Then(/zypp credentials for (base|sdk|wsm) (should|should not) exist$/) do |product, condition|
-  #underscore_product_cred_file = ("%s %s %s" % [product, version, arch]).tr(' ', '_')
   credentials_path = '/etc/zypp/credentials.d/'
   step "a file named \"#{credentials_path}#{service_name}\" #{condition} exist"
 end
 
 Then(/zypp credentials for (base|sdk|wsm) (should|should not) contain "(.*)"$/) do |product, condition, content|
-  #underscore_product_cred_file = ("%s %s %s" % [product, version, arch]).tr(' ', '_')
   credentials_path = '/etc/zypp/credentials.d/'
   step "the file \"#{credentials_path}#{service_name}\" #{condition} contain \"#{content}\""
 end
