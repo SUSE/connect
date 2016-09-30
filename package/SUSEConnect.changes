@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Sep 13 12:06:22 UTC 2016 - hschmidt@suse.com
+
+- Update to 0.2.40:
+  - Update man page to include the --list-extensions option (bsc#998583)
+
+-------------------------------------------------------------------
 Thu Aug 11 11:30:17 UTC 2016 - thutterer@suse.com
 
 - Update to 0.2.39:

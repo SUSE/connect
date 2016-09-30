@@ -145,7 +145,7 @@ module SUSE
           @options[:status_text] = true
         end
 
-        @opts.on('--list-extensions', 'list all extensions available for install on this system') do |_opt|
+        @opts.on('--list-extensions', 'list all extensions available for installation on this system') do |_opt|
           @options[:list_extensions] = true
         end
 
