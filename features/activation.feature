@@ -22,9 +22,9 @@ Feature: Test product activation
     Then a file named "/etc/zypp/credentials.d/SCCcredentials" should not exist
 
     # This needs to match _SP1_, _SP2
-    And a file named "/etc/zypp/credentials.d/SUSE_Linux_Enterprise_Server_12_x86_64" should not exist
-    And a file named "/etc/zypp/credentials.d/SUSE_Linux_Enterprise_Software_Development_Kit_12_x86_64" should not exist
-    And a file named "/etc/zypp/credentials.d/Web_and_Scripting_Module_12_x86_64" should not exist
+    And zypp credentials for base should not exist
+    And zypp credentials for sdk should not exist
+    And zypp credentials for wsm should not exist
 
     And I run `zypper lr`
     And the output should not contain "SUSE_Linux_Enterprise_Server_12_x86_64"
