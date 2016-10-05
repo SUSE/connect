@@ -18,8 +18,7 @@ ADD lib/suse/connect/version.rb /tmp/connect/lib/suse/connect/
 WORKDIR /tmp/connect
 RUN bundle config jobs $(nproc) && \
     bundle install
+RUN wget http://username:password@gaffer.suse.de:9999/files/.regcode -O /root/.regcode
+RUN wget --http-user=username --http-password=password http://gaffer.suse.de:9999/files/.oscrc -O /root/.oscrc
 ADD . /tmp/connect
 RUN chown -R nobody /tmp/connect
-RUN chmod +x /tmp/connect/docker/prophet_tests.sh /tmp/connect/docker/integration.sh
-ADD .oscrc /root/.oscrc
-ADD .regcode /root/.regcode
