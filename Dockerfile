@@ -14,7 +14,8 @@ ADD Gemfile /tmp/connect/
 ADD suse-connect.gemspec /tmp/connect/
 ADD lib/suse/connect/version.rb /tmp/connect/lib/suse/connect/
 WORKDIR /tmp/connect
-RUN bundle -j8
+RUN bundle config jobs $(nproc) && \
+    bundle install
 ADD . /tmp/connect
 RUN chown -R nobody /tmp/connect
 RUN chmod +x /tmp/connect/docker/prophet_tests.sh /tmp/connect/docker/integration.sh
