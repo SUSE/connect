@@ -1,7 +1,0 @@
-site 'http://community.opscode.com/api/v1'
-cookbook 'ohai', '~> 2.0.0'
-cookbook 'dmg', '~> 2.2.0'
-cookbook 'vagrant', '~> 0.2.0'
-cookbook 'windows', '~> 1.31.0'
-cookbook 'chef_handler', '~> 1.1.5'
-cookbook 'connect', :path => 'vendor/cookbooks/connect'

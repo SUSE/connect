@@ -1,1 +1,0 @@
-ChefSpec: bundle exec rspec --color --format documentation
