@@ -2,12 +2,12 @@ FROM registry.scc.suse.de/suse/sles12:sp1
 
 # Remember to drop docker caches if any of these change
 RUN zypper --non-interactive --no-refresh rm container-suseconnect &&\
-    zypper --non-interactive ar http://download.suse.de/ibs/SUSE/Products/SLE-SERVER/12-SP1/x86_64/product/ SLE-12-SP1-standard &&\
-    zypper --non-interactive ar -f http://download.suse.de/ibs/SUSE/Updates/SLE-SERVER/12-SP1/x86_64/update/ SLE-12-SP1-updates &&\
-    zypper --no-gpg-checks --non-interactive ar http://download.suse.de/ibs/SUSE/Products/SLE-SDK/12-SP1/x86_64/product/ sle12sp1sdk &&\
-    zypper --non-interactive ar -f http://download.opensuse.org/repositories/openSUSE:/Tools/SLE_12_SP1/ opensuse-tools && \
+    zypper ar -f http://download.suse.de/ibs/SUSE/Products/SLE-SERVER/12-SP1/x86_64/product/ SLE-12-SP1-standard &&\
+    zypper ar -f http://download.suse.de/ibs/SUSE/Updates/SLE-SERVER/12-SP1/x86_64/update/ SLE-12-SP1-updates &&\
+    zypper --no-gpg-checks ar -f http://download.suse.de/ibs/SUSE/Products/SLE-SDK/12-SP1/x86_64/product/ sle12sp1sdk &&\
+    zypper ar -f http://download.opensuse.org/repositories/openSUSE:/Tools/SLE_12_SP1/ opensuse-tools && \
     zypper --non-interactive --gpg-auto-import-keys ref &&\
-    zypper --no-gpg-checks --non-interactive install git-core ruby-devel make gcc gcc-c++ build wget dmidecode vim zypper>=1.11.32 osc ruby2.1-rubygem-gem2rpm
+    zypper --non-interactive install git-core ruby-devel make gcc gcc-c++ build wget dmidecode vim zypper>=1.11.32 osc ruby2.1-rubygem-gem2rpm hwinfo libx86emu1 zypper-migration-plugin
 
 RUN echo 'gem: --no-ri --no-rdoc' > /etc/gemrc && \
     gem install bundler --no-document
