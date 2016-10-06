@@ -11,4 +11,4 @@ cucumber /tmp/connect/features/activation.feature \
          /tmp/connect/features/activation_errors.feature \
          /tmp/connect/features/help.feature \
          /tmp/connect/features/version.feature \
-         /tmp/connect/features/localization
+         /tmp/connect/features/localization.feature
