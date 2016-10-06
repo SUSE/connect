@@ -22,10 +22,10 @@ Then(/^zypper (should|should not) contain a service for (base|sdk|wsm) product$/
   if product == 'base'
     service = service_name
   elsif product == 'sdk'
-    #TODO unused
+    # TODO: unused
     service = 'SUSE_Linux_Enterprise_Software_Development_Kit_12_x86_64'
   else
-    #TODO unused
+    # TODO: unused
     service = 'Web_and_Scripting_Module_12_x86_64'
   end
 
@@ -42,15 +42,15 @@ Then(/^zypper (should|should not) contain the repositories for (base|sdk|wsm) pr
     version_string_dash = '12-SP1'
   when '12.2'
     version_string_uscore = '12_SP2'
-    version_string_dash= '12-SP2'
+    version_string_dash = '12-SP2'
   else
     version_string_uscore = version_string_dash = '12'
   end
   if product == 'base'
     repositories = [
-    "SUSE_Linux_Enterprise_Server_#{version_string_uscore}_x86_64:SLES#{version_string_dash}-Pool",
-    "SUSE_Linux_Enterprise_Server_#{version_string_uscore}_x86_64:SLES#{version_string_dash}-Updates",
-    "SUSE_Linux_Enterprise_Server_#{version_string_uscore}_x86_64:SLES#{version_string_dash}-Debuginfo-Updates"
+      "SUSE_Linux_Enterprise_Server_#{version_string_uscore}_x86_64:SLES#{version_string_dash}-Pool",
+      "SUSE_Linux_Enterprise_Server_#{version_string_uscore}_x86_64:SLES#{version_string_dash}-Updates",
+      "SUSE_Linux_Enterprise_Server_#{version_string_uscore}_x86_64:SLES#{version_string_dash}-Debuginfo-Updates"
     ]
   elsif product == 'sdk'
     repositories = [

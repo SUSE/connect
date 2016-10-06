@@ -12,16 +12,15 @@ def base_product_version
   SUSE::Connect::Zypper.base_product.version
 end
 
+# rubocop:disable CyclomaticComplexity
+# This is ugly logic, but it is this way for compatibility with the existing code
+# If the TODOs are resolved, it can become simpler.
 def regcode_for_test(regcode_kind)
   # Special case 1; shortcircuit all invalid
-  if regcode_kind == 'INVALID' || regcode_kind == nil
-    return 'INVALID_REGCODE'
-  end
+  return 'INVALID_REGCODE' if regcode_kind == 'INVALID' || regcode_kind.nil?
 
   # Special case 2; regcode in environment for valid
-  if ENV['REGCODE'] && regcode_kind == 'VALID'
-    return ENV['REGCODE']
-  end
+  return ENV['REGCODE'] if ENV['REGCODE'] && regcode_kind == 'VALID'
 
   test_regcodes = YAML.load_file('/root/.regcode')
 
@@ -38,4 +37,4 @@ def regcode_for_test(regcode_kind)
 
   test_regcodes[regcode_key] || "regcode file does not contain '#{regcode_key}'!!"
 end
-
+# rubocop:enable CyclomaticComplexity
