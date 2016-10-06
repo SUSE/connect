@@ -27,7 +27,12 @@ module SUSE
         elsif @config.cleanup
           System.cleanup!
         elsif @config.list_extensions
-          Status.new(@config).print_extensions_list
+          if Status.new(@config).activated_base_product?
+            Status.new(@config).print_extensions_list
+          else
+            log.error 'To list extensions, you must first register the base product, using: SUSEConnect -r <registration code>'
+            exit(1)
+          end
         else
           if @config.instance_data_file && @config.url_default?
             log.error 'Please use --instance-data only in combination with --url pointing to your SMT server'
