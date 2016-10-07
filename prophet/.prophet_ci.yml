@@ -2,4 +2,4 @@ projects:
 
   connect:
     docker-build-image: cd ..; docker build -t connect .
-    docker-run-tests: cd ..; docker run --privileged --rm -t connect ./docker/prophet_tests.sh
+    docker-run-tests: cd ..; docker run -e "PRODUCT=SLE_12" --privileged --rm -t connect ./docker/prophet_tests.sh
