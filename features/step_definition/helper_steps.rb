@@ -12,8 +12,8 @@ def base_product_version
   # base_product_version will fail if libzypp is locked for testing
   # so use env vars if available
   case ENV['PRODUCT']
-  when 'SLE_12'
-    '12-0'
+  when 'SLE_12', 'SLES_12' # for @libzypplocked case
+    '12'
   when 'SLE_12_SP1'
     '12.1'
   when 'SLE_12_SP2'
