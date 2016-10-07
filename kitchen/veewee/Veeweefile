@@ -1,7 +1,0 @@
-Veewee::Config.run do |config|
-
-  cwd = File.dirname(__FILE__)
-  env = config.veewee.env
-  env.iso_dir = '/tmp/veewee-isos'
-
-end
