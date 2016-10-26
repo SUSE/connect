@@ -9,3 +9,6 @@ suse-connect-*.gem
 .vagrant/
 .kitchen/
 Vagrantfile
+.oscrc
+.regcode
+
