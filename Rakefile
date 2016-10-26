@@ -24,8 +24,10 @@ task :rubocop do
   sh 'bundle exec rubocop'
 end
 
+# SLE_12, SLE_12_SP1, and SLE_12_SP2 valid products for testing; use 'osc repos' in package dir to check others.
 desc 'Build locally (prepare for pushing to ibs)'
-task :build do
+task :build, [:product] do |t, args|
+
   def gemfilename
     "suse-connect-#{SUSE::Connect::VERSION}.gem"
   end
@@ -37,7 +39,7 @@ task :build do
   Dir.chdir('package')
   sh 'ronn --roff --manual SUSEConnect --pipe ../SUSEConnect.8.ronn > SUSEConnect.8 && gzip -f SUSEConnect.8'
   sh 'ronn --roff --manual SUSEConnect --pipe ../SUSEConnect.5.ronn > SUSEConnect.5 && gzip -f SUSEConnect.5'
-  sh 'osc -A https://api.suse.de build SLE_12 x86_64 --no-verify'
+  sh "osc -A https://api.suse.de build #{args[:product]} x86_64 --no-verify --trust-all-projects"
 end
 
 namespace :vm do

@@ -1,4 +1,0 @@
-{
-  "run_list":["role[connect_test_node]"],
-  "settings": {"hostname": "suse-connect-testing", "defaultdomain": "suse.de"}
-}

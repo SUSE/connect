@@ -9,8 +9,8 @@ When(/^I call the migration rollback method$/) do
 end
 
 Then(/^Prepare SUSEConnect client with a valid regcode/) do
-  step 'Set regcode and url options'
-  @client = SUSE::Connect::Client.new(SUSE::Connect::Config.new.merge!(url: @url, regcode: @valid_regcode))
+  step 'Set url options'
+  @client = SUSE::Connect::Client.new(SUSE::Connect::Config.new.merge!(url: @url, regcode: regcode_for_test('VALID')))
 end
 
 Then(/^I deregister the system$/) do

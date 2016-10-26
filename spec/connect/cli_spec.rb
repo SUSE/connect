@@ -215,11 +215,26 @@ describe SUSE::Connect::Cli do
     end
 
     describe 'list extensions subcommand' do
-      it '--list-extensions lists all available extensions on the system' do
-        cli = subject.new(%w{--list-extensions})
-        expect_any_instance_of(Client).not_to receive(:register!)
-        expect_any_instance_of(Status).to receive(:print_extensions_list)
-        cli.execute!
+      context 'on system with registered base product' do
+        it '--list-extensions lists all available extensions on the system' do
+          cli = subject.new(%w{--list-extensions})
+          expect_any_instance_of(Client).not_to receive(:register!)
+          expect_any_instance_of(Status).to receive(:print_extensions_list)
+          cli.execute!
+        end
+      end
+
+      context 'on system with no registered base product' do
+        it '--list-extensions exits with an error explaining that a base product has to be registered first' do
+          allow_any_instance_of(Status).to receive(:activated_base_product?).and_return(false)
+          cli = subject.new(%w{--list-extensions})
+          expect_any_instance_of(Client).not_to receive(:register!)
+          expect_any_instance_of(Status).not_to receive(:print_extensions_list)
+          expect(string_logger).to receive(:error)
+            .with(/To list extensions, you must first register the base product, using: SUSEConnect -r <registration code>/)
+          expect_any_instance_of(subject).to receive(:exit)
+          cli.execute!
+        end
       end
     end
 
