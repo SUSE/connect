@@ -10,7 +10,7 @@ node('scc-jenkins-node-connect') {
 
     stage('unit tests')
     {
-      sh 'bundle exec rspec'
+      sh 'bundle.ruby2.1 exec rspec'
     }
 
     stage('build docker images') {
