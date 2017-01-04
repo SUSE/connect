@@ -13,5 +13,7 @@ node('scc-jenkins-node-connect') {
       sh 'cd prophet; ./prophet.rb'
     }
 
+  }
+
 }
 
