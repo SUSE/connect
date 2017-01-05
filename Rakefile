@@ -3,6 +3,19 @@ require 'suse/connect'
 require 'rspec/core/rake_task'
 require 'date'
 
+
+# The last_comment method has been silently removed from Rake 11.0.1,
+# then restored with a deprecation warning:
+# https://github.com/ruby/rake/blob/v11.1.2/lib/rake/task_manager.rb#L9-L12
+#
+# We currently happen to use the affected 11.0.x versions in our build pipeline, so this is really needed.
+module MonkeypatchRakeLastComment
+  def last_comment
+    last_description
+  end
+end
+Rake::Application.send :include, MonkeypatchRakeLastComment unless Rake::Application.method_defined? :last_comment
+
 task :default => [:spec, :rubocop]
 
 desc 'Run RSpec'
