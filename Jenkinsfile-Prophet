@@ -1,0 +1,20 @@
+#!groovy
+
+node('scc-jenkins-node-connect') {
+
+  ansiColor('xterm') {
+
+    stage('checkout') {
+      git 'git@github.com:SUSE/connect.git'
+    }
+
+    stage('run prophet') {
+      dir('./prophet') {
+        sh 'ruby ./prophet.rb'
+      }
+    }
+
+  }
+
+}
+
