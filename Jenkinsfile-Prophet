@@ -10,7 +10,9 @@ node('scc-jenkins-node-connect') {
 
     stage('run prophet')
     {
-      sh 'cd prophet; ruby ./prophet.rb'
+      dir('./prophet') {
+        sh 'ruby ./prophet.rb'
+      }
     }
 
   }
