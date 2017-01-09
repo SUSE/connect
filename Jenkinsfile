@@ -15,9 +15,11 @@ node('scc-jenkins-node-connect') {
     }
 
     stage('build docker images') {
-      sh 'docker build -t connect -f Dockerfile .'
-      sh 'docker build -t connect.sp1 -f Dockerfile.sp1 .'
-      sh 'docker build -t connect.sp2 -f Dockerfile.sp2 .'
+      parallel (
+        phase1: { sh 'docker build -t connect -f Dockerfile .' },
+        phase2: { sh 'docker build -t connect.sp1 -f Dockerfile.sp1 .' },
+        phase3: { sh 'docker build -t connect.sp2 -f Dockerfile.sp2 .' }
+      )
     }
 
     // Remove untagged (prior) docker images
@@ -25,9 +27,11 @@ node('scc-jenkins-node-connect') {
 
     stage('integration tests')
     {
-      sh 'docker run -e "PRODUCT=SLE_12" -v /space/oscbuild:/oscbuild --privileged --rm -t connect ./docker/integration.sh'
-      sh 'docker run -e "PRODUCT=SLE_12_SP1" -v /space/oscbuild:/oscbuild --privileged --rm -t connect.sp1 ./docker/integration.sh'
-      sh 'docker run -e "PRODUCT=SLE_12_SP2" -v /space/oscbuild:/oscbuild --privileged --rm -t connect.sp2 ./docker/integration.sh'
+      parallel (
+        phase1: { sh 'docker run -e "PRODUCT=SLE_12" -v /space/oscbuild:/oscbuild --privileged --rm -t connect ./docker/integration.sh' },
+        phase2: { sh 'docker run -e "PRODUCT=SLE_12_SP1" -v /space/oscbuild:/oscbuild --privileged --rm -t connect.sp1 ./docker/integration.sh' },
+        phase3: { sh 'docker run -e "PRODUCT=SLE_12_SP2" -v /space/oscbuild:/oscbuild --privileged --rm -t connect.sp2 ./docker/integration.sh' }
+      )
     }
 
   }
