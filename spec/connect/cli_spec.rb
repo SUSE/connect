@@ -331,8 +331,8 @@ describe SUSE::Connect::Cli do
   end
 
   describe 'errors on invalid options format' do
-    it 'error on invalid product options format' do
-      expect(string_logger).to receive(:error).with(/Please provide the product identifier in this format/)
+    it 'error on invalid product options format with hint where to find correct product identifiers' do
+      expect(string_logger).to receive(:error).with(/Please provide the product identifier in this format.*SUSEConnect --list-extensions/)
       argv = %w{--product sles}
       subject.new(argv)
     end
