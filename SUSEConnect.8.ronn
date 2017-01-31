@@ -8,16 +8,14 @@ SUSEConnect(8) - SUSE Customer Center registration tool
 ## DESCRIPTION
 
 Register SUSE Linux Enterprise installations with the SUSE Customer Center.
-Registration allows access to software repositories including updates
+Registration allows access to software repositories (including updates)
 and allows online management of subscriptions and organizations.
 
 By default, SUSEConnect registers the base SUSE Linux Enterprise product
-installed on a system by querying zypper.  It can also be used to register
-extensions that have been installed after system installation from physical
-media.
+installed on a system. It can also be used to register extensions and modules.
 
-To register extensions, use the `--product <PRODUCT-IDENTIFIER>` option together
-with the product identifier of the extension.
+To register an extension or a module, use the `--product <PRODUCT-IDENTIFIER>`
+option together with the product identifier of the extension or module.
 You can see a list of all available extensions and modules for your system by
 using the `--list-extensions` option.
 
@@ -36,8 +34,8 @@ Manage subscriptions at [SUSE Customer Center][scc]
     repositories for that product.
 
   * `-d`, `--de-register`:
-    De-registers a system in order to not consume a subscription slot in SCC
-    anymore and removes all services installed by SUSEConnect.
+    De-registers a system and removes all services installed by SUSEConnect.
+    After de-registration, the system no longer consumes a subscription slot in SCC.
 
   * `--list-extensions`:
     List all extensions and modules available for installation on this system.
@@ -47,29 +45,29 @@ Manage subscriptions at [SUSE Customer Center][scc]
     for cloud registration with SMT`
 
   * `-e`, `--email <email>`:
-    email address for product registration
+    Email address for product registration
 
   * `--url <URL>`:
     URL of registration server (e.g. https://scc.suse.com).
 
   * `--namespace <NAMESPACE>`:
-    namespace option for use with SMT staging environments.
+    Namespace option for use with SMT staging environments.
 
   * `-s`, `--status`:
-    get current system registration status in json format.
+    Get current system registration status in json format.
 
   * `--status-text`:
-    get current system registration status in text format.
+    Get current system registration status in text format.
 
   * `--write-config`:
     Write options to config file at /etc/SUSEConnect.
 
   * `--cleanup`:
-    remove old system credentials and all zypper services installed by
+    Remove old system credentials and all zypper services installed by
     SUSEConnect.
 
   * `--rollback`:
-    revert the registration state in case of a failed migration.
+    Revert the registration state in case of a failed migration.
 
   * `--root <PATH>`:
     Path to the root folder, uses the same parameter for zypper.
@@ -81,14 +79,14 @@ Manage subscriptions at [SUSE Customer Center][scc]
     Provide debug output
 
   * `-h`, `--help`:
-    show help message
+    Show help message
 
 ## EXIT CODES
   SUSEConnect sets the following exit codes:
 
   * 0:  Registration successful
   * 64: Connection refused
-  * 65: Access error, eg files not readable
+  * 65: Access error, e.g. files not readable
   * 66: Parser error: Server JSON response was not parseable
   * 67: Server responded with error: see log output
 
@@ -100,7 +98,7 @@ Manage subscriptions at [SUSE Customer Center][scc]
 
 ## USE WITH SMT
   SUSEConnect can also be used to register systems with a local SUSE
-  Subscription Management Tool, instead of the SUSE Customer Center.
+  Subscription Management Tool instead of the SUSE Customer Center.
   Use `SUSEConnect --url <smt-server-url>` to register systems with SMT and set
   [proxies][ENVIRONMENT] as required.
 
