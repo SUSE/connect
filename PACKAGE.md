@@ -100,6 +100,6 @@ __GA:__ `osc mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12:Update --no-cleanu
 
 __SP1:__ `osc mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP1:Update --no-cleanup`
 
-__SP2:__ `osc mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP1:Update --no-cleanup`
+__SP2:__ `osc mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP2:Update --no-cleanup`
 
-__SP3:__ (until it's released) `osc sr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP2:GA --no-cleanup`
+__SP3:__ (until it's released) `osc sr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP3:GA --no-cleanup`
