@@ -132,7 +132,8 @@ describe SUSE::Connect::Connection do
 
     it 'provides a user-friendly error message' do
       expect(connection.http).to receive(:request).and_raise(Zlib::BufError)
-      expect { connection.send(:json_request, :get, '/api/v1/megusta') }.to raise_error(SUSE::Connect::NetworkError, 'Network error. Try again and report a bug if it keeps happening.')
+      expect { connection.send(:json_request, :get, '/api/v1/megusta') }.to \
+        raise_error(SUSE::Connect::NetworkError, 'Network error. Try again and report a bug if it keeps happening.')
     end
   end
 
