@@ -11,4 +11,4 @@ suse-connect-*.gem
 Vagrantfile
 .oscrc
 .regcode
-
+.byebug_history
