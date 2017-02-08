@@ -68,7 +68,7 @@ module SUSE
         )
 
       rescue Zlib::Error
-        raise SUSE::Connect::NetworkError, 'Network error. Try again and report a bug if it keeps happening.'
+        raise SUSE::Connect::NetworkError, 'Check your network connection and try again. If it keeps failing, report a bug.'
       end
 
       def add_headers(request)
