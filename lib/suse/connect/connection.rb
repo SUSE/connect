@@ -66,6 +66,9 @@ module SUSE
           body: body,
           success: response.is_a?(Net::HTTPSuccess)
         )
+
+      rescue Zlib::Error
+        raise SUSE::Connect::NetworkError, 'Check your network connection and try again. If it keeps failing, report a bug.'
       end
 
       def add_headers(request)

@@ -125,6 +125,18 @@ describe SUSE::Connect::Connection do
     end
   end
 
+  context 'network error' do
+    let :connection do
+      subject.new('https://leg')
+    end
+
+    it 'provides a user-friendly error message' do
+      expect(connection.http).to receive(:request).and_raise(Zlib::BufError)
+      expect { connection.send(:json_request, :get, '/api/v1/megusta') }.to \
+        raise_error(SUSE::Connect::NetworkError, 'Check your network connection and try again. If it keeps failing, report a bug.')
+    end
+  end
+
   describe '#post' do
     let :connection do
       subject.new('https://example.com')
