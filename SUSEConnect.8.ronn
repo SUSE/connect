@@ -3,7 +3,7 @@ SUSEConnect(8) - SUSE Customer Center registration tool
 
 ## SYNOPSIS
 
-`SUSEConnect [<optional>...] -p PRODUCT
+`SUSEConnect [<optional>...] -p PRODUCT`
 
 ## DESCRIPTION
 
@@ -26,7 +26,7 @@ Manage subscriptions at [SUSE Customer Center][scc]
   * `-p`, `--product <PRODUCT>`:
     Activate PRODUCT. Defaults to the base SUSE Linux Enterprise product
     on this system. Product identifiers can be obtained with `--list-extensions`.
-    Format: <name>-<version>-<architecture>
+    Format: <name>/<version>/<architecture>
 
   * `-r`, `--regcode <REGCODE>`:
     Subscription registration code for the product to be registered.
@@ -42,10 +42,10 @@ Manage subscriptions at [SUSE Customer Center][scc]
 
   * `--instance-data <path to file>`:
     Path to the XML file holding the public key and instance data
-    for cloud registration with SMT`
+    for cloud registration with SMT.
 
   * `-e`, `--email <email>`:
-    Email address for product registration
+    Email address for product registration.
 
   * `--url <URL>`:
     URL of registration server (e.g. https://scc.suse.com).
@@ -73,13 +73,13 @@ Manage subscriptions at [SUSE Customer Center][scc]
     Path to the root folder, uses the same parameter for zypper.
 
   * `--version`:
-    Print program version
+    Print program version.
 
   * `--debug`:
-    Provide debug output
+    Provide debug output.
 
   * `-h`, `--help`:
-    Show help message
+    Show help message.
 
 ## EXIT CODES
   SUSEConnect sets the following exit codes:
@@ -112,7 +112,7 @@ Manage subscriptions at [SUSE Customer Center][scc]
 ## FILES
   * `/etc/SUSEConnect`:
     Configuration file containing server URL, regcode and language for
-    registration
+    registration.
 
 ## AUTHOR
   SUSE Linux Products GmbH <scc-feedback@suse.de>
