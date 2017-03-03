@@ -103,3 +103,5 @@ __SP1:__ `osc mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP1:Update --no-c
 __SP2:__ `osc mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP2:Update --no-cleanup`
 
 __SP3:__ (until it's released) `osc sr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP3:GA --no-cleanup`
+
+You can check the status of your requests [here](https://build.suse.de/project/requests/Devel:SCC:suseconnect).
