@@ -24,7 +24,8 @@ Manage subscriptions at [SUSE Customer Center][scc]
 ## OPTIONS
 
   * `-p`, `--product <PRODUCT>`:
-    Activate PRODUCT. Defaults to the base SUSE Linux Enterprise product
+    Activate PRODUCT. Only one product can get activated at a time.
+    Defaults to the base SUSE Linux Enterprise product
     on this system. Product identifiers can be obtained with `--list-extensions`.
     Format: <name>/<version>/<architecture>
 
