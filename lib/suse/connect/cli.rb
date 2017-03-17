@@ -95,7 +95,7 @@ module SUSE
         @opts.separator 'Manage subscriptions at https://scc.suse.com'
         @opts.separator ''
         @opts.on('-p', '--product [PRODUCT]', 'Activate PRODUCT. Defaults to the base SUSE Linux',
-                 '  Enterprise product on this system.',
+                 '  Enterprise product on this system. Only one product can get activated at a time.',
                  '  Product identifiers can be obtained with \'zypper products\'',
                  '  Format: <internal name>/<version>/<architecture>') do |opt|
           check_if_param(opt, 'Please provide a product identifier')
