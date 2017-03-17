@@ -293,9 +293,11 @@ describe SUSE::Connect::Cli do
       subject.new(argv)
     end
 
-    it 'output help on help flag' do
+    it 'outputs help on help flag with no line longer than 80 characters' do
       argv = %w{--help}
-      expect_any_instance_of(subject).to receive(:puts)
+      expect_any_instance_of(subject).to receive(:puts) do |option_parser|
+        expect(option_parser.instance_variable_get(:@opts).to_s.split("\n").map(&:length).max).to be <= 80
+      end
       subject.new(argv)
     end
 

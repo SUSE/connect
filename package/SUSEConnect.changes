@@ -1,10 +1,16 @@
 -------------------------------------------------------------------
+Fri Mar  3 09:46:25 UTC 2017 - thutterer@suse.com
+
+- Update to 0.2.42:
+  - Better error message for network request failure (bsc#982630)
+  - Fix error message for --product with malformed identifier (bsc#1018190)
+  - Fix some errors and formatting in manpages and help output
+
+-------------------------------------------------------------------
 Thu Oct  6 08:59:28 UTC 2016 - thutterer@suse.com
 
 - Update to 0.2.41:
   - Better error message for --list-extensions on unregistered systems
-  - Fix error message for --product with malformed identifier (bsc#1018190)
-  - Fix some errors and formatting in manpages
 
 -------------------------------------------------------------------
 Tue Sep 13 12:06:22 UTC 2016 - hschmidt@suse.com

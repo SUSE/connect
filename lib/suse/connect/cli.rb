@@ -89,15 +89,16 @@ module SUSE
         @opts = OptionParser.new
 
         @opts.separator 'Register SUSE Linux Enterprise installations with the SUSE Customer Center.'
-        @opts.separator 'Registration allows access to software repositories including updates,'
-        @opts.separator 'and allows online management of subscriptions and organizations'
+        @opts.separator 'Registration allows access to software repositories (including updates)'
+        @opts.separator 'and allows online management of subscriptions and organizations.'
         @opts.separator ''
         @opts.separator 'Manage subscriptions at https://scc.suse.com'
         @opts.separator ''
         @opts.on('-p', '--product [PRODUCT]', 'Activate PRODUCT. Defaults to the base SUSE Linux',
-                 '  Enterprise product on this system. Only one product can get activated at a time.',
-                 '  Product identifiers can be obtained with \'zypper products\'',
-                 '  Format: <internal name>/<version>/<architecture>') do |opt|
+                 'Enterprise product on this system. Only one product can get activated at a time.',
+                 'Product identifiers can be obtained with',
+                 '\'--list-extensions\'.',
+                 'Format: <internal name>/<version>/<architecture>') do |opt|
           check_if_param(opt, 'Please provide a product identifier')
           # rubocop:disable RegexpLiteral
           check_if_param((opt =~ /\S+\/\S+\/\S+/), 'Please provide the product identifier in this format: ' \
@@ -107,62 +108,72 @@ module SUSE
           @options[:product] = Remote::Product.new(identifier: identifier, version: version, arch: arch)
         end
 
-        @opts.on('-r', '--regcode [REGCODE]', 'Subscription registration code for the',
-                 '  product to be registered.',
-                 '  Relates that product to the specified subscription,',
-                 '  and enables software repositories for that product') do |opt|
+        @opts.on('-r', '--regcode [REGCODE]', 'Subscription registration code for the product to',
+                 'be registered.',
+                 'Relates that product to the specified subscription,',
+                 'and enables software repositories for that product.') do |opt|
           @options[:token] = opt
         end
 
-        @opts.on('-d', '--de-register', 'De-registers a system in order to not consume a subscription slot in SCC anymore',
-                 ' and removes all services installed by SUSEConnect') do |_opt|
+        @opts.on('-d', '--de-register', 'De-registers a system and removes all services',
+                 'installed by SUSEConnect. After de-registration,',
+                 'the system no longer consumes a subscription slot',
+                 'in SCC.') do |_opt|
           @options[:deregister] = true
         end
 
-        @opts.on('--instance-data  [path to file]', 'Path to the XML file holding the public key and instance data',
-                 '  for cloud registration with SMT') do |opt|
+        @opts.on('--instance-data  [path to file]', 'Path to the XML file holding the public key and',
+                 'instance data for cloud registration with SMT.') do |opt|
           check_if_param(opt, 'Please provide the path to your instance data file')
           @options[:instance_data_file] = opt
         end
 
-        @opts.on('-e', '--email <email>', 'email address for product registration') do |opt|
+        @opts.on('-e', '--email <email>', 'Email address for product registration.') do |opt|
           check_if_param(opt, 'Please provide an email address')
           @options[:email] = opt
         end
 
-        @opts.on('--url [URL]', 'URL of registration server (e.g. https://scc.suse.com).',
-                 '  Implies --write-config so that subsequent invocations use the same registration server.') do |opt|
+        @opts.on('--url [URL]', 'URL of registration server',
+                 '(e.g. https://scc.suse.com).',
+                 'Implies --write-config so that subsequent',
+                 'invocations use the same registration server.') do |opt|
           check_if_param(opt, 'Please provide registration server URL')
           @options[:url] = opt
           @options[:write_config] = true
         end
 
-        @opts.on('--namespace [NAMESPACE]', 'namespace option for use with SMT staging environments') do |opt|
+        @opts.on('--namespace [NAMESPACE]', 'Namespace option for use with SMT staging',
+                 'environments.') do |opt|
           check_if_param(opt, 'Please provide a namespace')
           @options[:namespace] = opt
         end
 
-        @opts.on('-s', '--status', 'get current system registration status in json format') do |_opt|
+        @opts.on('-s', '--status', 'Get current system registration status in json',
+                 'format.') do |_opt|
           @options[:status] = true
         end
 
-        @opts.on('--status-text', 'get current system registration status in text format') do |_opt|
+        @opts.on('--status-text', 'Get current system registration status in text',
+                 'format.') do |_opt|
           @options[:status_text] = true
         end
 
-        @opts.on('--list-extensions', 'list all extensions available for installation on this system') do |_opt|
+        @opts.on('--list-extensions', 'List all extensions and modules available for',
+                 'installation on this system.') do |_opt|
           @options[:list_extensions] = true
         end
 
-        @opts.on('--write-config', 'write options to config file at /etc/SUSEConnect') do |_opt|
+        @opts.on('--write-config', 'Write options to config file at /etc/SUSEConnect.') do |_opt|
           @options[:write_config] = true
         end
 
-        @opts.on('--cleanup', 'remove old system credentials and all zypper services installed by SUSEConnect') do |_opt|
+        @opts.on('--cleanup', 'Remove old system credentials and all zypper',
+                 'services installed by SUSEConnect.') do |_opt|
           @options[:cleanup] = true
         end
 
-        @opts.on('--rollback', 'revert the registration state in case of a failed migration') do |_opt|
+        @opts.on('--rollback', 'Revert the registration state in case of a failed',
+                 'migration.') do |_opt|
           log.info('> Beginning registration rollback. This can take some time...')
           SUSE::Connect::Migration.rollback
           exit 0
@@ -171,23 +182,24 @@ module SUSE
         @opts.separator ''
         @opts.separator 'Common options:'
 
-        @opts.on('--root [PATH]', 'Path to the root folder, uses the same parameter for zypper.') do |opt|
+        @opts.on('--root [PATH]', 'Path to the root folder, uses the same parameter',
+                 'for zypper.') do |opt|
           check_if_param(opt, 'Please provide path parameter')
           @options[:filesystem_root] = opt
           SUSE::Connect::System.filesystem_root = opt
         end
 
-        @opts.on('--version', 'print program version') do
+        @opts.on('--version', 'Print program version.') do
           puts VERSION
           exit
         end
 
-        @opts.on('--debug', 'provide debug output') do |opt|
+        @opts.on('--debug', 'Provide debug output.') do |opt|
           @options[:debug] = opt
           SUSE::Connect::GlobalLogger.instance.log.level = ::Logger::DEBUG if opt
         end
 
-        @opts.on_tail('-h', '--help', 'show this message') do
+        @opts.on_tail('-h', '--help', 'Show this message.') do
           puts @opts
           exit
         end

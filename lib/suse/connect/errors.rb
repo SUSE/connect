@@ -9,6 +9,7 @@ module SUSE
     class CannotDetectBaseProduct < StandardError; end
     class SystemCallError < StandardError; end
     class UnsupportedStatusFormat < StandardError; end
+    class NetworkError < StandardError; end
 
     # Basic error for API interactions. Collects HTTP response (which includes
     # status code and response body) for future showing to user via {Cli}
