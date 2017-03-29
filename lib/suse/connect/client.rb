@@ -34,7 +34,8 @@ module SUSE
       # @returns: Empty body and 204 status code
       def deregister!
         @api.deregister(system_auth)
-        log.info 'Successfully de-registered system.' if System.cleanup!
+        System.cleanup!
+        log.info 'Successfully de-registered system.'
       end
 
       # Announce system via SCC/Registration Proxy
