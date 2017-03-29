@@ -406,15 +406,16 @@ describe SUSE::Connect::Client do
 
     before do
       allow(subject).to receive_messages(system_auth: 'Basic: encodedstring')
-      expect(subject.api).to receive(:deregister).with('Basic: encodedstring').and_return stubbed_response
-      expect(System).to receive(:cleanup!).and_return(true)
     end
 
     it 'calls underlying api and removes credentials file' do
+      expect(subject.api).to receive(:deregister).with('Basic: encodedstring').and_return stubbed_response
+      expect(System).to receive(:cleanup!).and_return(true)
       subject.deregister!
     end
 
     it 'prints confirmation message on successful deregistration' do
+      allow(subject.api).to receive(:deregister).with('Basic: encodedstring').and_return stubbed_response
       SUSE::Connect::GlobalLogger.instance.log = string_logger
       expect(string_logger).to receive(:info).with('Successfully de-registered system.')
 
