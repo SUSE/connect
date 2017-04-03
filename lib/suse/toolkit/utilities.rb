@@ -21,8 +21,7 @@ module SUSE
 
       rescue
         raise SUSE::Connect::CannotBuildBasicAuth,
-              "\nCannot read username and password from #{SUSE::Connect::Credentials::GLOBAL_CREDENTIALS_FILE}. " \
-              "Has this system been registered already?"
+              "\nCannot read username and password from #{SUSE::Connect::Credentials::GLOBAL_CREDENTIALS_FILE}."
       end
     end
   end
