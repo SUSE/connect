@@ -161,7 +161,7 @@ module SUSE
       end
 
       def registered?
-        true if Status.new(@config).current_registration_status == "Registered"
+        System.credentials?
       end
 
       def print_success_message(product)

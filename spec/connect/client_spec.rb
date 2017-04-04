@@ -404,23 +404,40 @@ describe SUSE::Connect::Client do
       )
     end
 
-    before do
-      allow(subject).to receive_messages(system_auth: 'Basic: encodedstring')
+
+    context 'when system is registered' do
+      before do
+        allow(subject).to receive_messages(system_auth: 'Basic: encodedstring')
+        allow(subject).to receive(:registered?).and_return true
+      end
+
+      it 'calls underlying api and removes credentials file' do
+        expect(subject.api).to receive(:deregister).with('Basic: encodedstring').and_return stubbed_response
+        expect(System).to receive(:cleanup!).and_return(true)
+
+        subject.deregister!
+      end
+
+      it 'prints confirmation message on successful deregistration' do
+        allow(subject.api).to receive(:deregister).with('Basic: encodedstring').and_return stubbed_response
+        SUSE::Connect::GlobalLogger.instance.log = string_logger
+        expect(string_logger).to receive(:info).with('Successfully deregistered system.')
+
+        subject.deregister!
+      end
     end
 
-    it 'calls underlying api and removes credentials file' do
-      expect(subject.api).to receive(:deregister).with('Basic: encodedstring').and_return stubbed_response
-      expect(System).to receive(:cleanup!).and_return(true)
+    context 'when system is not registered' do
+      before do
+        allow(subject).to receive(:registered?).and_return false
+      end
 
-      subject.deregister!
-    end
-
-    it 'prints confirmation message on successful deregistration' do
-      allow(subject.api).to receive(:deregister).with('Basic: encodedstring').and_return stubbed_response
-      SUSE::Connect::GlobalLogger.instance.log = string_logger
-      expect(string_logger).to receive(:info).with('Successfully deregistered system.')
-
-      subject.deregister!
+      it 'prints warning when system was not registered before' do
+        SUSE::Connect::GlobalLogger.instance.log = string_logger
+        expect(string_logger).to receive(:fatal).with('Deregistration failed. Check if the system has been '\
+            'registered using the -s option or use the --regcode parameter to register it.')
+        subject.deregister!
+      end
     end
   end
 
