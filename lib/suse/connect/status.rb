@@ -61,6 +61,12 @@ module SUSE
         products.map {|product| Product.transform(product) }.uniq
       end
 
+      def current_registration_status
+        product_statuses.each do |product_status|
+          return product_status.registration_status
+        end
+      end
+
       private
 
       def extract_extensions(product)

@@ -33,9 +33,15 @@ module SUSE
 
       # @returns: Empty body and 204 status code
       def deregister!
-        @api.deregister(system_auth)
-        System.cleanup!
-        log.info 'Successfully de-registered system.'
+        if registered?
+          @api.deregister(system_auth)
+          System.cleanup!
+          log.info 'Successfully deregistered system.'
+        else
+          log.fatal 'Deregistration failed. Check if the system has been '\
+            'registered using the -s option or use the --regcode parameter to '\
+            'register it.'
+        end
       end
 
       # Announce system via SCC/Registration Proxy
@@ -152,6 +158,10 @@ module SUSE
           login, password = announce_system(nil, @config.instance_data_file)
           Credentials.new(login, password, Credentials.system_credentials_file).write
         end
+      end
+
+      def registered?
+        true if Status.new(@config).current_registration_status == "Registered"
       end
 
       def print_success_message(product)
