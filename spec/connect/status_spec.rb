@@ -18,7 +18,7 @@ describe SUSE::Connect::Status do
   end
 
   describe '#activated_products' do
-    it 'memoizes activated_products by the first call' do
+    it 'memorizes activated_products by the first call' do
       allow(subject).to receive(:products_from_activations).and_return(:foobazbar)
       expect(subject.activated_products).to be subject.activated_products
     end
@@ -30,7 +30,7 @@ describe SUSE::Connect::Status do
   end
 
   describe '#installed_products' do
-    it 'memoizes installed_products by the first call' do
+    it 'memorizes installed_products by the first call' do
       allow(subject).to receive(:products_from_zypper).and_return(:barbarbaz)
       expect(subject.installed_products).to be subject.installed_products
     end
@@ -42,7 +42,7 @@ describe SUSE::Connect::Status do
   end
 
   describe '#activations' do
-    it 'memoizes activations by the first call' do
+    it 'memorizes activations by the first call' do
       allow(subject).to receive(:activations_from_server).and_return(:superdo)
       expect(subject.activations).to be subject.activations
     end
