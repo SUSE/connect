@@ -404,7 +404,6 @@ describe SUSE::Connect::Client do
       )
     end
 
-
     context 'when system is registered' do
       before do
         allow(subject).to receive_messages(system_auth: 'Basic: encodedstring')
