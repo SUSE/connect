@@ -407,7 +407,7 @@ describe SUSE::Connect::Client do
     context 'when system is registered' do
       before do
         allow(subject).to receive_messages(system_auth: 'Basic: encodedstring')
-        allow(subject).to receive(:is_registered?).and_return true
+        allow(subject).to receive(:registered?).and_return true
       end
 
       it 'calls underlying api and removes credentials file' do
@@ -428,7 +428,7 @@ describe SUSE::Connect::Client do
 
     context 'when system is not registered' do
       before do
-        allow(subject).to receive(:is_registered?).and_return false
+        allow(subject).to receive(:registered?).and_return false
       end
 
       it 'prints warning when system was not registered before' do
@@ -440,16 +440,16 @@ describe SUSE::Connect::Client do
     end
   end
 
-  describe '#is_registered?' do
+  describe '#registered?' do
     it 'returns true if system credentials file exists' do
       allow(System).to receive(:credentials).and_return true
-      status = subject.send(:is_registered?)
+      status = subject.send(:registered?)
       expect(status).to be true
     end
 
     it 'returns false if system credentials file does not exist' do
       allow(System).to receive(:credentials).and_return false
-      status = subject.send(:is_registered?)
+      status = subject.send(:registered?)
       expect(status).to be false
     end
   end
