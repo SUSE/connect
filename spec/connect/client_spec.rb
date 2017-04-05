@@ -419,6 +419,7 @@ describe SUSE::Connect::Client do
 
       it 'prints confirmation message on successful deregistration' do
         allow(subject.api).to receive(:deregister).with('Basic: encodedstring').and_return stubbed_response
+        allow(System).to receive(:cleanup!).and_return(true)
         SUSE::Connect::GlobalLogger.instance.log = string_logger
         expect(string_logger).to receive(:info).with('Successfully deregistered system.')
 
