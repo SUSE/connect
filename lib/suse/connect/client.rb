@@ -33,7 +33,7 @@ module SUSE
 
       # @returns: Empty body and 204 status code
       def deregister!
-        if registered?
+        if is_registered?
           @api.deregister(system_auth)
           System.cleanup!
           log.info 'Successfully deregistered system.'
@@ -160,7 +160,7 @@ module SUSE
         end
       end
 
-      def registered?
+      def is_registered?
         System.credentials?
       end
 
