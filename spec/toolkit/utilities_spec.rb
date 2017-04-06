@@ -29,14 +29,14 @@ describe SUSE::Toolkit::Utilities do
       allow(Credentials).to receive(:read).and_raise(Errno::ENOENT)
       expect { subject.send(:system_auth) }
         .to raise_error CannotBuildBasicAuth,
-                        "\nCannot read username and password from #{SUSE::Connect::Credentials::GLOBAL_CREDENTIALS_FILE}."
+                        "\nCannot read username and password from #{SUSE::Connect::Credentials.system_credentials_file}."
     end
 
     it 'raise if nil credentials' do
       allow(Credentials).to receive(:read).and_return(Credentials.new(nil, nil))
       expect { subject.send(:system_auth) }
         .to raise_error CannotBuildBasicAuth,
-                        "\nCannot read username and password from #{SUSE::Connect::Credentials::GLOBAL_CREDENTIALS_FILE}."
+                        "\nCannot read username and password from #{SUSE::Connect::Credentials.system_credentials_file}."
     end
   end
 end
