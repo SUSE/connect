@@ -411,6 +411,7 @@ describe SUSE::Connect::Client do
         allow(subject).to receive_messages(system_auth: 'Basic: encodedstring')
         allow(subject).to receive(:registered?).and_return true
         allow(subject.api).to receive(:deregister).with('Basic: encodedstring').and_return stubbed_response
+        allow(System).to receive(:cleanup!).and_return(true)
       end
 
       it 'calls underlying api and removes credentials file' do
