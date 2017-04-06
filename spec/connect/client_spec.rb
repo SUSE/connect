@@ -442,16 +442,18 @@ describe SUSE::Connect::Client do
   end
 
   describe '#registered?' do
-    it 'returns true if system credentials file exists' do
-      allow(System).to receive(:credentials).and_return true
-      status = subject.send(:registered?)
-      expect(status).to be true
+    let(:status) { subject.send(:registered?) }
+
+    context 'system credentials file exists' do
+      before { allow(System).to receive(:credentials).and_return true }
+
+      it { expect(status).to be true }
     end
 
-    it 'returns false if system credentials file does not exist' do
-      allow(System).to receive(:credentials).and_return false
-      status = subject.send(:registered?)
-      expect(status).to be false
+    context 'system credentials file does not exist' do
+      before { allow(System).to receive(:credentials).and_return false }
+
+      it { expect(status).to be false }
     end
   end
 
