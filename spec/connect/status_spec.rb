@@ -126,23 +126,25 @@ describe SUSE::Connect::Status do
   end
 
   describe '#print_extensions_list' do
-    subject { status_instance.print_extensions_list }
+    subject { -> { status_instance.print_extensions_list } }
     before do
       allow(Zypper).to receive(:base_product).and_return Zypper::Product.new(name: 'SLES', version: '12', arch: 'x86_64')
       allow(client_double).to receive(:show_product).with(Zypper.base_product).and_return(Remote::Product.new(dummy_product_data))
     end
 
-    it { expect { subject }.to output(/^  \e\[1mSUSE Linux Enterprise Software Development Kit 12 ppc64le\e\[0m$/).to_stdout }
-    it { expect { subject }.to output(%r{sle-sdk/12/ppc64le}).to_stdout }
-    it { expect { subject }.to output(/SUSE Linux Enterprise Live Patching Module 12 ppc64le/).to_stdout }
-    it { expect { subject }.to output(%r{sle-live-patching/12/ppc64le}).to_stdout }
-    it { expect { subject }.to output(/SUSE Linux Enterprise Unreal Module 12 ppc64le/).to_stdout }
-    it { expect { subject }.to output(%r{sle-unreal/12/ppc64le}).to_stdout }
-    it { expect { subject }.not_to output(/Unavailable/).to_stdout }
+    it 'outputs the list of extensions available on the system' do
+      expect(&subject).to output(/^  \e\[1mSUSE Linux Enterprise Software Development Kit 12 ppc64le\e\[0m$/).to_stdout
+      expect(&subject).to output(%r{sle-sdk/12/ppc64le}).to_stdout
+      expect(&subject).to output(/SUSE Linux Enterprise Live Patching Module 12 ppc64le/).to_stdout
+      expect(&subject).to output(%r{sle-live-patching/12/ppc64le}).to_stdout
+      expect(&subject).to output(/SUSE Linux Enterprise Unreal Module 12 ppc64le/).to_stdout
+      expect(&subject).to output(%r{sle-unreal/12/ppc64le}).to_stdout
+      expect(&subject).not_to output(/Unavailable/).to_stdout
+    end
 
     context 'with installed module' do
       before { allow(Zypper).to receive(:installed_products).and_return [Zypper::Product.new(name: 'sle-sdk', version: '12', arch: 'ppc64le')] }
-      it { expect { subject }.to output(/^  \e\[1mSUSE Linux Enterprise Software Development Kit 12 ppc64le\e\[0m \e\[32m\(Installed\)\e\[0m$/).to_stdout }
+      it { expect(&subject).to output(/^  \e\[1mSUSE Linux Enterprise Software Development Kit 12 ppc64le\e\[0m \e\[32m\(Installed\)\e\[0m$/).to_stdout }
     end
 
     context 'with activated module' do
@@ -151,7 +153,7 @@ describe SUSE::Connect::Status do
         allow(SUSE::Connect::System).to receive(:credentials?).and_return true
       end
 
-      it { expect { subject }.to output(/^  \e\[1mSUSE Linux Enterprise Software Development Kit 12 ppc64le\e\[0m \e\[33m\(Activated\)\e\[0m$/).to_stdout }
+      it { expect(&subject).to output(/^  \e\[1mSUSE Linux Enterprise Software Development Kit 12 ppc64le\e\[0m \e\[33m\(Activated\)\e\[0m$/).to_stdout }
     end
   end
 
