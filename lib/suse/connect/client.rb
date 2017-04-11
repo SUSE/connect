@@ -34,16 +34,16 @@ module SUSE
       # @returns: Empty body and 204 status code
       def deregister!
         if registered?
-          # if @config.product
-          #   service = deactivate_product @config.product
-          #   System.remove_service service
-          #   Zypper.remove_release_package product.identifier
-          #   print_success_message product, action: 'Deregistered'
-          # else
+          if @config.product
+            service = deactivate_product @config.product
+            System.remove_service service
+            Zypper.remove_release_package product.identifier
+            print_success_message product, action: 'Deregistered'
+          else
             @api.deregister(system_auth)
             System.cleanup!
             log.info 'Successfully deregistered system.'
-          # end
+          end
         else
           log.fatal 'Deregistration failed. Check if the system has been '\
             'registered using the -s option or use the --regcode parameter to '\
@@ -79,6 +79,15 @@ module SUSE
       # @returns: Service for this product
       def activate_product(product, email = nil)
         result = @api.activate_product(system_auth, product, email).body
+        Remote::Service.new(result)
+      end
+
+      # Deactivate a product
+      #
+      # @param product [SUSE::Connect::Remote::Product]
+      # @returns: Service for this product
+      def deactivate_product(product)
+        result = @api.deactivate_product(system_auth, product).body
         Remote::Service.new(result)
       end
 

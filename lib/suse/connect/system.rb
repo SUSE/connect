@@ -43,6 +43,12 @@ module SUSE
           service
         end
 
+        def remove_service(service)
+          raise ArgumentError, 'only Remote::Service accepted' unless service.is_a? Remote::Service
+          Zypper.remove_service service.name
+          service
+        end
+
         def hostname
           hostname = Socket.gethostname
           if hostname && hostname != '(none)'
