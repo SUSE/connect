@@ -13,6 +13,7 @@ end
 
 require 'rspec'
 require 'byebug'
+require 'pry'
 require 'awesome_print'
 require 'webmock/rspec'
 require 'suse/connect'

@@ -2,10 +2,10 @@ require 'spec_helper'
 
 describe SUSE::Connect::Status do
   let(:client_double) { double('client') }
+  let(:dummy_product_data) { JSON.parse File.read('spec/fixtures/product_with_extensions.json') }
+  let(:status_instance) { described_class.new double('config') }
 
-  subject do
-    described_class.new(double('config'))
-  end
+  subject { status_instance }
 
   before do
     allow(Client).to receive(:new).and_return(client_double)
@@ -126,16 +126,32 @@ describe SUSE::Connect::Status do
   end
 
   describe '#print_extensions_list' do
-    it 'outputs the list of extensions available on the system' do
-      allow(Zypper).to receive(:base_product).and_return Zypper::Product.new(:name => 'SLES', :version => '12', :arch => 'x86_64')
+    subject { status_instance.print_extensions_list }
+    before do
+      allow(Zypper).to receive(:base_product).and_return Zypper::Product.new(name: 'SLES', version: '12', arch: 'x86_64')
       allow(client_double).to receive(:show_product).with(Zypper.base_product).and_return(Remote::Product.new(dummy_product_data))
-      expect { subject.print_extensions_list }.to output(/SUSE Linux Enterprise Software Development Kit 12 ppc64le/).to_stdout
-      expect { subject.print_extensions_list }.to output(%r{sle-sdk/12/ppc64le}).to_stdout
-      expect { subject.print_extensions_list }.to output(/SUSE Linux Enterprise Live Patching Module 12 ppc64le/).to_stdout
-      expect { subject.print_extensions_list }.to output(%r{sle-live-patching/12/ppc64le}).to_stdout
-      expect { subject.print_extensions_list }.to output(/SUSE Linux Enterprise Unreal Module 12 ppc64le/).to_stdout
-      expect { subject.print_extensions_list }.to output(%r{sle-unreal/12/ppc64le}).to_stdout
-      expect { subject.print_extensions_list }.not_to output(/Unavailable/).to_stdout
+    end
+
+    it { expect { subject }.to output(/^  \e\[1mSUSE Linux Enterprise Software Development Kit 12 ppc64le\e\[0m$/).to_stdout }
+    it { expect { subject }.to output(%r{sle-sdk/12/ppc64le}).to_stdout }
+    it { expect { subject }.to output(/SUSE Linux Enterprise Live Patching Module 12 ppc64le/).to_stdout }
+    it { expect { subject }.to output(%r{sle-live-patching/12/ppc64le}).to_stdout }
+    it { expect { subject }.to output(/SUSE Linux Enterprise Unreal Module 12 ppc64le/).to_stdout }
+    it { expect { subject }.to output(%r{sle-unreal/12/ppc64le}).to_stdout }
+    it { expect { subject }.not_to output(/Unavailable/).to_stdout }
+
+    context 'with installed module' do
+      before { allow(Zypper).to receive(:installed_products).and_return [Zypper::Product.new(name: 'sle-sdk', version: '12', arch: 'ppc64le')] }
+      it { expect { subject }.to output(/^  \e\[1mSUSE Linux Enterprise Software Development Kit 12 ppc64le\e\[0m \e\[32m\(Installed\)\e\[0m$/).to_stdout }
+    end
+
+    context 'with activated module' do
+      before do
+        allow(status_instance.client).to receive_message_chain(:system_activations, :body).and_return [{ 'service' => { 'product' => { identifier: 'sle-sdk', version: '12', arch: 'ppc64le' }} }]
+        allow(SUSE::Connect::System).to receive(:credentials?).and_return true
+      end
+
+      it { expect { subject }.to output(/^  \e\[1mSUSE Linux Enterprise Software Development Kit 12 ppc64le\e\[0m \e\[33m\(Activated\)\e\[0m$/).to_stdout }
     end
   end
 
@@ -148,16 +164,22 @@ describe SUSE::Connect::Status do
           activation_code: 'sle-sdk/12/ppc64le',
           name: 'SUSE Linux Enterprise Software Development Kit 12 ppc64le',
           free: true,
+          installed: false,
+          activated: false,
           extensions: []
         },
         {
           activation_code: 'sle-live-patching/12/ppc64le',
           name: 'SUSE Linux Enterprise Live Patching Module 12 ppc64le',
           free: false,
+          installed: false,
+          activated: false,
           extensions: [{
             activation_code: 'sle-unreal/12/ppc64le',
             name: 'SUSE Linux Enterprise Unreal Module 12 ppc64le',
             free: true,
+            installed: false,
+            activated: false,
             extensions: []
           }]
         }])
@@ -214,9 +236,5 @@ describe SUSE::Connect::Status do
         subject.send(:activations_from_server)
       end
     end
-  end
-
-  def dummy_product_data
-    JSON.parse(File.read('spec/fixtures/product_with_extensions.json'))
   end
 end

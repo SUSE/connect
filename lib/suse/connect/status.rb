@@ -1,5 +1,6 @@
 require 'time'
 require 'erb'
+require 'suse/toolkit/renderer'
 
 module SUSE
   module Connect
@@ -9,6 +10,8 @@ module SUSE
     # from the registration server. This information is merged and printed out.
     # rubocop:disable ClassLength
     class Status
+      prepend SUSE::Toolkit::Renderer
+
       attr_reader :client
 
       def initialize(config)
@@ -33,9 +36,7 @@ module SUSE
       end
 
       def print_extensions_list
-        file = File.read File.join(File.dirname(__FILE__), 'templates/extensions_list.text.erb')
-        template = ERB.new(file, 0, '-<>')
-        puts template.result(binding).gsub('\e', "\e")
+        puts render('extensions_list.text')
       end
 
       # Gather all extensions that can be installed on this system
@@ -45,15 +46,11 @@ module SUSE
       end
 
       def print_product_statuses(format = :text)
-        case format
-        when :text
-          status_output = text_product_status
-        when :json
-          status_output = json_product_status
+        if %i(text json).include?(format)
+          puts send("#{format}_product_status")
         else
           raise UnsupportedStatusFormat, "Unsupported output format '#{format}'"
         end
-        puts status_output
       end
 
       def system_products
@@ -72,6 +69,8 @@ module SUSE
             activation_code: build_product_activation_code(extension),
             name: extension.friendly_name,
             free: extension.free,
+            installed: installed_products.any? {|p| p.to_params == extension.to_params },
+            activated: activated_products.any? {|p| p.to_params == extension.to_params },
             extensions: extract_extensions(extension)
           }
         end if product.extensions

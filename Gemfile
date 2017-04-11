@@ -4,6 +4,7 @@ group :test, :development do
   gem 'byebug'
   gem 'yard'
   gem 'awesome_print'
+  gem 'pry'
 end
 
 group :development do

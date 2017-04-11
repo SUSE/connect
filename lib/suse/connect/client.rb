@@ -34,9 +34,16 @@ module SUSE
       # @returns: Empty body and 204 status code
       def deregister!
         if registered?
-          @api.deregister(system_auth)
-          System.cleanup!
-          log.info 'Successfully deregistered system.'
+          # if @config.product
+          #   service = deactivate_product @config.product
+          #   System.remove_service service
+          #   Zypper.remove_release_package product.identifier
+          #   print_success_message product, action: 'Deregistered'
+          # else
+            @api.deregister(system_auth)
+            System.cleanup!
+            log.info 'Successfully deregistered system.'
+          # end
         else
           log.fatal 'Deregistration failed. Check if the system has been '\
             'registered using the -s option or use the --regcode parameter to '\
@@ -164,8 +171,8 @@ module SUSE
         System.credentials?
       end
 
-      def print_success_message(product)
-        log.info "Registered #{product.identifier} #{product.version} #{product.arch}"
+      def print_success_message(product, action: 'Registered')
+        log.info "#{action} #{product.identifier} #{product.version} #{product.arch}"
         log.info "Rooted at: #{@config.filesystem_root}" if @config.filesystem_root
         log.info "To server: #{@config.url}" if @config.url
         log.info "Using E-Mail: #{@config.email}" if @config.email
