@@ -31,23 +31,20 @@ module SUSE
         print_success_message product
       end
 
+      # Deregisters a whole system or a single product
+      #
       # @returns: Empty body and 204 status code
       def deregister!
-        if registered?
-          if @config.product
-            service = deactivate_product @config.product
-            System.remove_service service
-            Zypper.remove_release_package product.identifier
-            print_success_message product, action: 'Deregistered'
-          else
-            @api.deregister(system_auth)
-            System.cleanup!
-            log.info 'Successfully deregistered system.'
-          end
+        raise SystemNotRegisteredError unless registered?
+        if @config.product
+          service = deactivate_product @config.product
+          System.remove_service service
+          Zypper.remove_release_package @config.product.identifier
+          print_success_message @config.product, action: 'Deregistered'
         else
-          log.fatal 'Deregistration failed. Check if the system has been '\
-            'registered using the -s option or use the --regcode parameter to '\
-            'register it.'
+          @api.deregister(system_auth)
+          System.cleanup!
+          log.info 'Successfully deregistered system.'
         end
       end
 
@@ -168,7 +165,7 @@ module SUSE
       # Announces the system to the server, receiving and storing its credentials.
       # When already announced, sends the current hardware details to the server
       def announce_or_update
-        if System.credentials?
+        if registered?
           update_system
         else
           login, password = announce_system(nil, @config.instance_data_file)

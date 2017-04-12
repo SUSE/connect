@@ -151,6 +151,10 @@ module SUSE
           call("--no-refresh --non-interactive install --no-recommends -t product #{identifier}") if identifier
         end
 
+        def remove_release_package(identifier)
+          call("--no-refresh --non-interactive remove --no-recommends -t product #{identifier}") if identifier
+        end
+
         # rubocop:disable AccessorMethodName
         def set_release_version(version)
           call("--non-interactive --releasever #{version} ref -f")

@@ -1,23 +1,21 @@
 require 'spec_helper'
 
 describe SUSE::Connect::Client do
-  let :config do
-    SUSE::Connect::Config.new
-  end
-
-  subject { SUSE::Connect::Client.new(config) }
-
+  let(:config) { SUSE::Connect::Config.new }
   let(:default_logger) { SUSE::Connect::GlobalLogger.instance.log }
   let(:string_logger) { ::Logger.new(StringIO.new) }
+  let(:client_instance) { described_class.new config }
+
+  subject { client_instance }
 
   describe '.new' do
-    context :empty_opts do
+    context 'empty opts' do
       it 'should set url to default_url' do
         expect(subject.config.url).to eq SUSE::Connect::Config::DEFAULT_URL
       end
     end
 
-    context :passed_opts do
+    context 'passed opts' do
       it 'should set insecure flag from options if it was passed via constructor' do
         config.insecure = true
         client = Client.new(config)
@@ -37,7 +35,7 @@ describe SUSE::Connect::Client do
       end
     end
 
-    context :from_config do
+    context 'from config' do
       subject do
         SUSE::Connect::Client.new(SUSE::Connect::Config.new)
       end
@@ -65,7 +63,7 @@ describe SUSE::Connect::Client do
   end
 
   describe '#announce_system' do
-    context :direct_connection do
+    context 'direct connection' do
       subject do
         config.token = 'blabla'
         SUSE::Connect::Client.new(config)
@@ -109,7 +107,7 @@ describe SUSE::Connect::Client do
     end
 
     describe '#update_system' do
-      context :direct_connection do
+      context 'direct connection' do
         subject { SUSE::Connect::Client.new(config) }
 
         before do
@@ -142,7 +140,7 @@ describe SUSE::Connect::Client do
       end
     end
 
-    context :registration_proxy_connection do
+    context 'registration proxy connection' do
       subject do
         config.url = 'http://smt.local'
         SUSE::Connect::Client.new(config)
@@ -396,54 +394,43 @@ describe SUSE::Connect::Client do
   end
 
   describe '#deregister!' do
-    let(:stubbed_response) do
-      OpenStruct.new(
-        code: 204,
-        body: nil,
-        success: true
-      )
-    end
+    let(:stubbed_response) { OpenStruct.new(code: 204, body: nil, success: true) }
+    subject { client_instance.deregister! }
 
     before { SUSE::Connect::GlobalLogger.instance.log = string_logger }
 
     context 'when system is registered' do
       before do
-        allow(subject).to receive_messages(system_auth: 'Basic: encodedstring')
-        allow(subject).to receive(:registered?).and_return true
-        allow(subject.api).to receive(:deregister).with('Basic: encodedstring').and_return stubbed_response
+        allow(client_instance).to receive_messages(system_auth: 'Basic: encodedstring')
+        allow(client_instance).to receive(:registered?).and_return true
+        allow(client_instance.api).to receive(:deregister).with('Basic: encodedstring').and_return stubbed_response
         allow(System).to receive(:cleanup!).and_return(true)
       end
 
       it 'calls underlying api and removes credentials file' do
-        expect(subject.api).to receive(:deregister).with('Basic: encodedstring').and_return stubbed_response
-        subject.deregister!
+        expect(client_instance.api).to receive(:deregister).with('Basic: encodedstring').and_return stubbed_response
+        subject
       end
 
       it 'cleans up system' do
         expect(System).to receive(:cleanup!).and_return(true)
-        subject.deregister!
+        subject
       end
 
       context 'when system is cleaned up' do
-        before do
-          allow(System).to receive(:cleanup!).and_return(true)
-        end
+        before { allow(System).to receive(:cleanup!).and_return(true) }
 
         it 'prints confirmation message' do
           expect(string_logger).to receive(:info).with('Successfully deregistered system.')
-          subject.deregister!
+          subject
         end
       end
     end
 
     context 'when system is not registered' do
-      before { allow(subject).to receive(:registered?).and_return false }
+      before { allow(::SUSE::Connect::System).to receive(:credentials).and_return(nil) }
 
-      it 'prints a warning' do
-        expect(string_logger).to receive(:fatal).with('Deregistration failed. Check if the system has been '\
-            'registered using the -s option or use the --regcode parameter to register it.')
-        subject.deregister!
-      end
+      it { expect { subject }.to raise_error(::SUSE::Connect::SystemNotRegisteredError) }
     end
   end
 

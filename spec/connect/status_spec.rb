@@ -128,6 +128,7 @@ describe SUSE::Connect::Status do
   describe '#print_extensions_list' do
     subject { -> { status_instance.print_extensions_list } }
     before do
+      allow(Zypper).to receive(:installed_products).and_return []
       allow(Zypper).to receive(:base_product).and_return Zypper::Product.new(name: 'SLES', version: '12', arch: 'x86_64')
       allow(client_double).to receive(:show_product).with(Zypper.base_product).and_return(Remote::Product.new(dummy_product_data))
     end
@@ -149,7 +150,9 @@ describe SUSE::Connect::Status do
 
     context 'with activated module' do
       before do
-        allow(status_instance.client).to receive_message_chain(:system_activations, :body).and_return [{ 'service' => { 'product' => { identifier: 'sle-sdk', version: '12', arch: 'ppc64le' }} }]
+        allow(status_instance.client).to receive_message_chain(:system_activations, :body).and_return [{ 'service' => {
+          'product' => { identifier: 'sle-sdk', version: '12', arch: 'ppc64le' }
+        } }]
         allow(SUSE::Connect::System).to receive(:credentials?).and_return true
       end
 
@@ -159,6 +162,7 @@ describe SUSE::Connect::Status do
 
   describe '#available_system_extensions' do
     it 'returns a list of all available extensions on this system' do
+      allow(Zypper).to receive(:installed_products).and_return []
       allow(Zypper).to receive(:base_product).and_return Zypper::Product.new(:name => 'SLES', :version => '12', :arch => 'x86_64')
       allow(client_double).to receive(:show_product).with(Zypper.base_product).and_return(Remote::Product.new(dummy_product_data))
       expect(subject.available_system_extensions).to match_array([

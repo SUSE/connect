@@ -10,6 +10,7 @@ module SUSE
     class SystemCallError < StandardError; end
     class UnsupportedStatusFormat < StandardError; end
     class NetworkError < StandardError; end
+    class SystemNotRegisteredError < StandardError; end
 
     # Basic error for API interactions. Collects HTTP response (which includes
     # status code and response body) for future showing to user via {Cli}
