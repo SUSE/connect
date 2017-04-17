@@ -21,4 +21,6 @@ group :test do
   gem 'webmock', '~> 1.21.0'
   gem 'http', '~> 0.8.12'
   gem 'aruba', '~> 0.7.4'
+  # for the YaST integration test
+  gem 'fast_gettext'
 end

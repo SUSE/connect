@@ -20,3 +20,9 @@ After('@libzypplocked') do
   `rm /var/run/zypp.pid`
   ENV['PRODUCT'] = @old_product_env_var_contents
 end
+
+Before('@yast') do
+  # needed only for the YaST integration tests
+  require 'yast'
+  require 'registration/registration'
+end
