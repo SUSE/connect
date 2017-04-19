@@ -152,7 +152,7 @@ module SUSE
         end
 
         def remove_release_package(identifier)
-          call("--no-refresh --non-interactive remove --no-recommends -t product #{identifier}") if identifier
+          call("--no-refresh --non-interactive remove -t product #{identifier}") if identifier
         end
 
         # rubocop:disable AccessorMethodName

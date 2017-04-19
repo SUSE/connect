@@ -1,3 +1,6 @@
+ClassLength:
+  Max: 128
+
 HashSyntax:
   Enabled: false
 

@@ -69,8 +69,8 @@ module SUSE
             activation_code: build_product_activation_code(extension),
             name: extension.friendly_name,
             free: extension.free,
-            installed: installed_products.any? {|p| p.to_params == extension.to_params },
-            activated: activated_products.any? {|p| p.to_params == extension.to_params },
+            installed: installed_products.any? {|p| p == extension },
+            activated: activated_products.any? {|p| p == extension },
             extensions: extract_extensions(extension)
           }
         end if product.extensions

@@ -75,11 +75,14 @@ module SUSE
         # Zypper errors are in the range 1-7 and 100-105 (which connect will not cause)
         log.fatal "Error: zypper returned (#{e.exitstatus}) with '#{e.output}'"
         exit e.exitstatus
-      rescue SystemNotRegisteredError => e
+      rescue SystemNotRegisteredError
         log.fatal 'Deregistration failed. Check if the system has been '\
                   'registered using the --status-text option or use the '\
                   '--regcode parameter to register it.'
         exit 69
+      rescue BaseProductDeactivationError
+        log.fatal 'Can not deregister base product. Use SUSEConnect -d to deactivate the whole system.'
+        exit 70
       end
 
       private

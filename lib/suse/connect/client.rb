@@ -37,6 +37,7 @@ module SUSE
       def deregister!
         raise SystemNotRegisteredError unless registered?
         if @config.product
+          raise BaseProductDeactivationError if @config.product == Zypper.base_product
           service = deactivate_product @config.product
           System.remove_service service
           Zypper.remove_release_package @config.product.identifier
