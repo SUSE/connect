@@ -176,7 +176,7 @@ describe SUSE::Connect::Cli do
       end
     end
 
-    context 'de-register command' do
+    describe 'de-register command' do
       let(:opts) { %w{--de-register} }
 
       it '--de-register calls deregister! method' do
@@ -190,6 +190,22 @@ describe SUSE::Connect::Cli do
         it 'dies with error' do
           expect(string_logger).to receive(:fatal).with(/Deregistration failed. Check if the system has been registered/)
           subject
+        end
+      end
+
+      context 'with product specified' do
+        let(:opts) { %w{--de-register -p foo/12/x86_64} }
+        before { allow(SUSE::Connect::System).to receive(:credentials?).and_return(true) }
+
+        context 'calling for base product' do
+          before do
+            allow(Zypper).to receive(:base_product).and_return SUSE::Connect::Zypper::Product.new(name: 'foo', version: '12', arch: 'x86_64')
+          end
+
+          it 'dies with error' do
+            expect(string_logger).to receive(:fatal).with(/Can not deregister base product/)
+            subject
+          end
         end
       end
     end

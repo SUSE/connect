@@ -5,6 +5,7 @@ describe SUSE::Connect::Client do
   let(:default_logger) { SUSE::Connect::GlobalLogger.instance.log }
   let(:string_logger) { ::Logger.new(StringIO.new) }
   let(:client_instance) { described_class.new config }
+  let(:product) { SUSE::Connect::Remote::Product.new identifier: 'SLES', version: '12', arch: 'x86_64' }
 
   subject { client_instance }
 
@@ -167,35 +168,49 @@ describe SUSE::Connect::Client do
   end
 
   describe '#activate_product' do
-    let(:product_ident) { { identifier: 'SLES', version: '12', arch: 'x86_64' } }
+    let!(:stubbed_request) { stub_request(:post, 'https://scc.suse.com/connect/systems/products').to_return status: 200, body: '{"name":"kinkat","url":"kinkaturl","product":{}}' }
+    before { allow(client_instance).to receive_messages system_auth: 'secretsecret' }
 
-    before do
-      api_response = double('api_response')
-      allow(api_response).to receive_messages(body: { 'name' => 'kinkat', 'url' => 'kinkaturl', 'product' => {} })
-      allow_any_instance_of(Api).to receive_messages(activate_product: api_response)
-      allow(subject).to receive_messages(system_auth: 'secretsecret')
-    end
+    subject { client_instance.activate_product product }
+
+    its(:name) { is_expected.to eq 'kinkat' }
+    its(:url) { is_expected.to eq 'kinkaturl' }
+    it { is_expected.to be_a SUSE::Connect::Remote::Service }
 
     it 'gets login and password from system' do
-      expect(subject).to receive(:system_auth)
-      subject.activate_product(product_ident)
+      expect(client_instance).to receive(:system_auth)
+      subject
     end
 
-    it 'calls underlying api with proper parameters' do
-      expect_any_instance_of(Api).to receive(:activate_product).with('secretsecret', product_ident, nil)
-      subject.activate_product(product_ident)
+    context 'when called' do
+      before { subject }
+      it { expect(stubbed_request).to have_been_made }
+
+      context 'with email parameter' do
+        subject { client_instance.activate_product product, 'email@domain.com' }
+        it { expect(stubbed_request).to have_been_made }
+      end
+    end
+  end
+
+  describe '#deactivate_product' do
+    let!(:stubbed_request) { stub_request(:delete, 'https://scc.suse.com/connect/systems/products').to_return status: 200, body: '{"name":"kinkat","url":"kinkaturl","product":{}}' }
+    before { allow(client_instance).to receive_messages system_auth: 'secretsecret' }
+
+    subject { client_instance.deactivate_product product }
+
+    its(:name) { is_expected.to eq 'kinkat' }
+    its(:url) { is_expected.to eq 'kinkaturl' }
+    it { is_expected.to be_a SUSE::Connect::Remote::Service }
+
+    it 'gets login and password from system' do
+      expect(client_instance).to receive(:system_auth)
+      subject
     end
 
-    it 'allows to pass an optional parameter "email"' do
-      email = 'email@domain.com'
-      expect_any_instance_of(Api).to receive(:activate_product).with('secretsecret', product_ident, email)
-      subject.activate_product(product_ident, email)
-    end
-
-    it 'returns service object' do
-      service = subject.activate_product(product_ident)
-      expect(service.name).to eq 'kinkat'
-      expect(service.url).to eq 'kinkaturl'
+    context 'when called' do
+      before { subject }
+      it { expect(stubbed_request).to have_been_made }
     end
   end
 

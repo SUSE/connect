@@ -16,6 +16,7 @@ require 'byebug'
 require 'pry'
 require 'awesome_print'
 require 'webmock/rspec'
+require 'rspec/its'
 require 'suse/connect'
 
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f }

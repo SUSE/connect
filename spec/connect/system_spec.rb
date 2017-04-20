@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe SUSE::Connect::System do
   let(:credentials_file) { Credentials::GLOBAL_CREDENTIALS_FILE }
+  let(:service) { Remote::Service.new name: 'JiYoKo', url: 'furl', 'product' => {} }
 
   before(:each) do
     allow_any_instance_of(Object).to receive(:system).and_return true
@@ -77,22 +78,26 @@ describe SUSE::Connect::System do
   end
 
   describe '.add_service' do
-    before(:each) do
-      allow(Zypper).to receive(:write_service_credentials)
-      allow_any_instance_of(Credentials).to receive(:write)
-    end
-
-    let :mock_service do
-      Remote::Service.new('name' => 'JiYoKo', 'url' => 'furl', 'product' => {})
-    end
-
     it 'adds zypper service to the system' do
       expect(Zypper).to receive(:add_service).with('furl', 'JiYoKo')
-      subject.add_service mock_service
+      subject.add_service service
     end
 
-    it 'raises an ArgumentError exception' do
-      expect { subject.add_service 'Service' }.to raise_error(ArgumentError, 'only Remote::Service accepted')
+    context 'with wrong argument' do
+      let(:service) { 'Service' }
+      it { expect { subject.add_service service }.to raise_error(ArgumentError, 'only Remote::Service accepted') }
+    end
+  end
+
+  describe '.remove_service' do
+    it 'adds zypper service to the system' do
+      expect(Zypper).to receive(:remove_service).with('JiYoKo')
+      subject.remove_service service
+    end
+
+    context 'with wrong argument' do
+      let(:service) { 'Service' }
+      it { expect { subject.remove_service service }.to raise_error(ArgumentError, 'only Remote::Service accepted') }
     end
   end
 
