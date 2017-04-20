@@ -168,7 +168,10 @@ describe SUSE::Connect::Client do
   end
 
   describe '#activate_product' do
-    let!(:stubbed_request) { stub_request(:post, 'https://scc.suse.com/connect/systems/products').to_return status: 200, body: '{"name":"kinkat","url":"kinkaturl","product":{}}' }
+    let!(:stubbed_request) do
+      stub_request(:post, 'https://scc.suse.com/connect/systems/products')
+        .to_return status: 200, body: '{"name":"kinkat","url":"kinkaturl","product":{}}'
+    end
     before { allow(client_instance).to receive_messages system_auth: 'secretsecret' }
 
     subject { client_instance.activate_product product }
@@ -194,7 +197,10 @@ describe SUSE::Connect::Client do
   end
 
   describe '#deactivate_product' do
-    let!(:stubbed_request) { stub_request(:delete, 'https://scc.suse.com/connect/systems/products').to_return status: 200, body: '{"name":"kinkat","url":"kinkaturl","product":{}}' }
+    let!(:stubbed_request) do
+      stub_request(:delete, 'https://scc.suse.com/connect/systems/products')
+        .to_return status: 200, body: '{"name":"kinkat","url":"kinkaturl","product":{}}'
+    end
     before { allow(client_instance).to receive_messages system_auth: 'secretsecret' }
 
     subject { client_instance.deactivate_product product }
@@ -413,6 +419,7 @@ describe SUSE::Connect::Client do
     subject { client_instance.deregister! }
 
     before { SUSE::Connect::GlobalLogger.instance.log = string_logger }
+    after { SUSE::Connect::GlobalLogger.instance.log = default_logger }
 
     context 'when system is registered' do
       before do
@@ -437,6 +444,29 @@ describe SUSE::Connect::Client do
 
         it 'prints confirmation message' do
           expect(string_logger).to receive(:info).with('Successfully deregistered system.')
+          subject
+        end
+      end
+
+      context 'for single product' do
+        let(:extension) { SUSE::Connect::Remote::Product.new identifier: 'SLES HA', version: '12', arch: 'x86_64' }
+        before do
+          config.product = extension
+          stub_request(:delete, 'https://scc.suse.com/connect/systems/products').to_return(body: '{"product":{}}')
+        end
+
+        it 'removes service and release package' do
+          expect(client_instance).to receive :deactivate_product
+          expect(System).to receive :remove_service
+          expect(Zypper).to receive :remove_release_package
+          subject
+        end
+
+        it 'logs success' do
+          allow(System).to receive :remove_service
+          allow(Zypper).to receive :remove_release_package
+          expect(string_logger).to receive(:info).with('Deregistered SLES HA 12 x86_64')
+          expect(string_logger).to receive(:info).with('To server: https://scc.suse.com')
           subject
         end
       end
