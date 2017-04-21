@@ -452,6 +452,7 @@ describe SUSE::Connect::Client do
         let(:extension) { SUSE::Connect::Remote::Product.new identifier: 'SLES HA', version: '12', arch: 'x86_64' }
         before do
           config.product = extension
+          allow(Zypper).to receive(:base_product).and_return(product)
           stub_request(:delete, 'https://scc.suse.com/connect/systems/products').to_return(body: '{"product":{}}')
         end
 
