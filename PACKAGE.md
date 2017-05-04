@@ -91,14 +91,6 @@ To submit a maintenance request, issue this command in the console:
 
 __OpenSUSE Factory__ `osc sr systemsmanagement:SCC SUSEConnect openSUSE:Factory --no-cleanup`
 
-After it was accepted in OpenSUSE Factory:
-
-__GA:__ `osc mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12:Update --no-cleanup`
-
-__SP1:__ `osc mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP1:Update --no-cleanup`
-
-__SP2:__ `osc mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP2:Update --no-cleanup`
-
-__SP3:__ (until it's released) `osc sr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP3:GA --no-cleanup`
-
 You can check the status of your requests [here](https://build.opensuse.org/package/requests/systemsmanagement:SCC/SUSEConnect).
+
+After it was accepted in OpenSUSE Factory, don't forget to create maintenance request on [Internal Build service](https://build.suse.de/package/show/Devel:SCC:suseconnect/SUSEConnect). 
