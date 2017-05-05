@@ -127,11 +127,11 @@ module SUSE
         end
 
         @opts.on('-d', '--de-register',
-                 'De-registers a system or a single product (if',
-                 'specified with -p) and removes all services',
-                 'installed by SUSEConnect. After de-registration,',
-                 'the system no longer consumes a subscription slot',
-                 'in SCC.') do |_opt|
+                 'De-registers the system and base product, or in',
+                 'conjunction with --product, a single extension, and',
+                 'removes all its services installed by SUSEConnect.',
+                 'After de-registration the system no longer consumes',
+                 'a subscription slot in SCC.') do |_opt|
           @options[:deregister] = true
         end
 

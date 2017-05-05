@@ -35,9 +35,10 @@ Manage subscriptions at [SUSE Customer Center][scc]
     repositories for that product.
 
   * `-d`, `--de-register`:
-    De-registers a system or a single product (if specified with -p) and
-    removes all services installed by SUSEConnect. After de-registration,
-    the system no longer consumes a subscription slot in SCC.
+    De-registers the system and base product, or in conjunction with
+    --product, a single extension, and removes all its services installed by
+    SUSEConnect. After de-registration, the system no longer consumes a
+    subscription slot in SCC.
 
   * `--list-extensions`:
     List all extensions and modules available for installation on this system.
