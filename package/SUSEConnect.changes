@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri May  5 07:41:44 UTC 2017 - andrei.shaidurov@suse.com
+
+- Update to 0.3.0:
+  - Single product deactivation feature (fate320572#)
+
+-------------------------------------------------------------------
 Tue Mar 21 15:24:58 UTC 2017 - ashaidurov@suse.com
 
 - Update to 0.2.43:
