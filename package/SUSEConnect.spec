@@ -16,7 +16,7 @@
 #
 
 Name:           SUSEConnect
-Version:        0.2.42
+Version:        0.2.43
 Release:        0
 %define mod_name suse-connect
 %define mod_full_name %{mod_name}-%{version}
@@ -26,7 +26,6 @@ Requires:       zypper >= 1.11.32
 Conflicts:      suseRegister, yast2-registration < 3.1.129.7
 
 Obsoletes:      ruby2.1-rubygem-suse-connect < %{version}
-Provides:       %{rb_default_ruby_suffix}-rubygem-suse-connect = %{version}
 
 %ifarch x86_64 aarch64
 Requires:       dmidecode
