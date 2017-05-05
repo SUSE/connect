@@ -102,12 +102,13 @@ module SUSE
         @opts.separator ''
         @opts.separator 'Manage subscriptions at https://scc.suse.com'
         @opts.separator ''
-        @opts.on('-p', '--product [PRODUCT]', 'Activate PRODUCT. Defaults to the base SUSE Linux',
-                 'Enterprise product on this system. ',
-                 'Only one product can get activated at a time.',
-                 'Product identifiers can be obtained with',
-                 '\'--list-extensions\'.',
-                 'Format: <internal name>/<version>/<architecture>') do |opt|
+        @opts.on('-p', '--product [PRODUCT]',
+                 'Specify a product for activation/deactivation. Only',
+                 'one product can be processed at a time. Defaults to',
+                 'the base SUSE Linux Enterprise product on this ',
+                 'system. Product identifiers can be obtained',
+                 'with `--list-extensions`.',
+                 'Format: <name>/<version>/<architecture>') do |opt|
           check_if_param(opt, 'Please provide a product identifier')
           # rubocop:disable RegexpLiteral
           check_if_param((opt =~ /\S+\/\S+\/\S+/), 'Please provide the product identifier in this format: ' \
@@ -117,14 +118,17 @@ module SUSE
           @options[:product] = Remote::Product.new(identifier: identifier, version: version, arch: arch)
         end
 
-        @opts.on('-r', '--regcode [REGCODE]', 'Subscription registration code for the product to',
+        @opts.on('-r', '--regcode [REGCODE]',
+                 'Subscription registration code for the product to',
                  'be registered.',
                  'Relates that product to the specified subscription,',
                  'and enables software repositories for that product.') do |opt|
           @options[:token] = opt
         end
 
-        @opts.on('-d', '--de-register', 'De-registers a system and removes all services',
+        @opts.on('-d', '--de-register',
+                 'De-registers a system or a single product (if',
+                 'specified with -p) and removes all services',
                  'installed by SUSEConnect. After de-registration,',
                  'the system no longer consumes a subscription slot',
                  'in SCC.') do |_opt|
