@@ -1,0 +1,11 @@
+\e[1m<%= extension[:name] %>\e[0m<%
+  if extension[:installed]
+    %> \e[32m(Installed)\e[0m
+  <%= '  ' if defined?(nested) %>De-Install with: <%= '  ' unless defined?(nested) %>SUSEConnect \e[31m-d\e[0m -p <%= extension[:activation_code] %><%
+  else %><%
+    if extension[:activated]
+      %> \e[33m(Activated)\e[0m<%
+    end %>
+  <%= '  ' if defined?(nested) %>Install with:    <%= '  ' unless defined?(nested) %>SUSEConnect<%= '   ' if any_installed %> -p <%= extension[:activation_code] %><% unless extension[:free] %> -r \e[32m\e[1mREGCODE\e[0m<%
+    end %><%
+  end %>

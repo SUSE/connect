@@ -104,6 +104,24 @@ module SUSE
         @connection.post('/connect/systems/products', auth: auth, params: payload)
       end
 
+      # Deactivate a product, freeing a slot for another activation. Returns the service
+      # associated to the product.
+      #
+      # @param auth [String] authorization string which will be injected in 'Authorization' header in request.
+      #   In this case we expect Base64 encoded string with login and password
+      # @param product [SUSE::Connect::Remote::Product] product to be deactivated
+      #
+      # @return [OpenStruct] responding to body(response from SCC) and code(natural HTTP response code).
+      def deactivate_product(auth, product)
+        payload = {
+          identifier:   product.identifier,
+          version:      product.version,
+          arch:         product.arch,
+          release_type: product.release_type
+        }
+        @connection.delete('/connect/systems/products', auth: auth, params: payload)
+      end
+
       # Upgrade a product and receive the updated service for the system.
       #
       # @param auth [String] authorization string which will be injected in 'Authorization' header in request.

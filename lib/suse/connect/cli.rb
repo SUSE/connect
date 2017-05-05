@@ -75,6 +75,14 @@ module SUSE
         # Zypper errors are in the range 1-7 and 100-105 (which connect will not cause)
         log.fatal "Error: zypper returned (#{e.exitstatus}) with '#{e.output}'"
         exit e.exitstatus
+      rescue SystemNotRegisteredError
+        log.fatal 'Deregistration failed. Check if the system has been '\
+                  'registered using the --status-text option or use the '\
+                  '--regcode parameter to register it.'
+        exit 69
+      rescue BaseProductDeactivationError
+        log.fatal 'Can not deregister base product. Use SUSEConnect -d to deactivate the whole system.'
+        exit 70
       end
 
       private
@@ -94,12 +102,13 @@ module SUSE
         @opts.separator ''
         @opts.separator 'Manage subscriptions at https://scc.suse.com'
         @opts.separator ''
-        @opts.on('-p', '--product [PRODUCT]', 'Activate PRODUCT. Defaults to the base SUSE Linux',
-                 'Enterprise product on this system. ',
-                 'Only one product can get activated at a time.',
-                 'Product identifiers can be obtained with',
-                 '\'--list-extensions\'.',
-                 'Format: <internal name>/<version>/<architecture>') do |opt|
+        @opts.on('-p', '--product [PRODUCT]',
+                 'Specify a product for activation/deactivation. Only',
+                 'one product can be processed at a time. Defaults to',
+                 'the base SUSE Linux Enterprise product on this ',
+                 'system. Product identifiers can be obtained',
+                 'with `--list-extensions`.',
+                 'Format: <name>/<version>/<architecture>') do |opt|
           check_if_param(opt, 'Please provide a product identifier')
           # rubocop:disable RegexpLiteral
           check_if_param((opt =~ /\S+\/\S+\/\S+/), 'Please provide the product identifier in this format: ' \
@@ -109,17 +118,20 @@ module SUSE
           @options[:product] = Remote::Product.new(identifier: identifier, version: version, arch: arch)
         end
 
-        @opts.on('-r', '--regcode [REGCODE]', 'Subscription registration code for the product to',
+        @opts.on('-r', '--regcode [REGCODE]',
+                 'Subscription registration code for the product to',
                  'be registered.',
                  'Relates that product to the specified subscription,',
                  'and enables software repositories for that product.') do |opt|
           @options[:token] = opt
         end
 
-        @opts.on('-d', '--de-register', 'De-registers a system and removes all services',
-                 'installed by SUSEConnect. After de-registration,',
-                 'the system no longer consumes a subscription slot',
-                 'in SCC.') do |_opt|
+        @opts.on('-d', '--de-register',
+                 'De-registers the system and base product, or in',
+                 'conjunction with --product, a single extension, and',
+                 'removes all its services installed by SUSEConnect.',
+                 'After de-registration the system no longer consumes',
+                 'a subscription slot in SCC.') do |_opt|
           @options[:deregister] = true
         end
 

@@ -26,7 +26,7 @@ describe SUSE::Connect::Api do
     end
   end
 
-  describe 'announce_system' do
+  describe '#announce_system' do
     let(:payload) do
       [
         '/connect/subscriptions/systems',
@@ -172,7 +172,7 @@ describe SUSE::Connect::Api do
     end
   end
 
-  describe 'activate_product' do
+  describe '#activate_product' do
     let(:api_endpoint) { '/connect/systems/products' }
     let(:system_auth) { 'basic_auth_mock' }
 
@@ -207,7 +207,7 @@ describe SUSE::Connect::Api do
     end
   end
 
-  describe 'upgrade_product' do
+  describe '#upgrade_product' do
     let(:api_endpoint) { '/connect/systems/products' }
     let(:system_auth) { 'basic_auth_mock' }
     let(:product) { Remote::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64', release_type: 'aaaa') }
@@ -219,7 +219,7 @@ describe SUSE::Connect::Api do
     end
   end
 
-  describe '.downgrade_product' do
+  describe '#downgrade_product' do
     let(:system_auth) { 'basic_auth_mock' }
     let(:product) { Remote::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64', release_type: 'aaaa') }
 
@@ -233,7 +233,7 @@ describe SUSE::Connect::Api do
     end
   end
 
-  describe '.synchronize' do
+  describe '#synchronize' do
     let(:api_endpoint) { '/connect/systems/products/synchronize' }
     let(:system_auth) { 'basic_auth_mock' }
     let(:products) { [SUSE::Connect::Zypper::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64', release_type: nil)] }
@@ -333,7 +333,7 @@ describe SUSE::Connect::Api do
     end
   end
 
-  describe 'deregister' do
+  describe '#deregister' do
     before do
       stub_deregister_call
     end
@@ -362,7 +362,7 @@ describe SUSE::Connect::Api do
     end
   end
 
-  describe 'update_system' do
+  describe '#update_system' do
     before do
       stub_update_call
       allow(System).to receive_messages(hostname: 'connect')
@@ -456,10 +456,22 @@ describe SUSE::Connect::Api do
 
     context 'if server responds with XML instead of JSON' do
       before { stubbed_request.to_return(status: 404, body: File.read('spec/fixtures/old_smt_404_error.html')) }
-      it "shouldn't raise an exception" do
-        expect { subject }.not_to raise_error
-      end
+      it { expect { subject }.not_to raise_error }
+    end
+  end
+
+  describe '#deactivate_product' do
+    let(:product) { SUSE::Connect::Remote::Product.new identifier: 'sles', version: '12', arch: 'x86_64' }
+    let!(:stubbed_request) do
+      stub_request(:delete, 'https://example.com/connect/systems/products')
+        .with(headers: { 'Authorization' => 'foo_token' }, body: "{\"identifier\":\"sles\",\"version\":\"12\",\"arch\":\"x86_64\",\"release_type\":null}")
     end
 
+    subject { SUSE::Connect::Api.new(client).deactivate_product 'foo_token', product }
+
+    it 'performs request' do
+      subject
+      expect(stubbed_request).to have_been_made
+    end
   end
 end

@@ -371,11 +371,18 @@ describe SUSE::Connect::Zypper do
   end
 
   describe '.install_release_package' do
-    it 'installs the product release package' do
-      identifier = 'opensuse'
-      zypper_cmd = "zypper --no-refresh --non-interactive install --no-recommends -t product #{identifier}"
-      expect(Open3).to receive(:capture3).with(shared_env_hash, zypper_cmd).and_return(['', '', status])
-      subject.install_release_package(identifier)
+    it 'calls the command' do
+      expect(Open3).to receive(:capture3).with(shared_env_hash, 'zypper --no-refresh --non-interactive install --no-recommends -t product opensuse')
+                                         .and_return(['', '', status])
+      subject.install_release_package('opensuse')
+    end
+  end
+
+  describe '.remove_release_package' do
+    it 'calls the command' do
+      expect(Open3).to receive(:capture3).with(shared_env_hash, 'zypper --no-refresh --non-interactive remove -t product opensuse')
+                                         .and_return(['', '', status])
+      subject.remove_release_package('opensuse')
     end
   end
 

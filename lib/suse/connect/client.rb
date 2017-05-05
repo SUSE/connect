@@ -31,16 +31,21 @@ module SUSE
         print_success_message product
       end
 
+      # Deregisters a whole system or a single product
+      #
       # @returns: Empty body and 204 status code
       def deregister!
-        if registered?
+        raise SystemNotRegisteredError unless registered?
+        if @config.product
+          raise BaseProductDeactivationError if @config.product == Zypper.base_product
+          service = deactivate_product @config.product
+          System.remove_service service
+          Zypper.remove_release_package @config.product.identifier
+          print_success_message @config.product, action: 'Deregistered'
+        else
           @api.deregister(system_auth)
           System.cleanup!
           log.info 'Successfully deregistered system.'
-        else
-          log.fatal 'Deregistration failed. Check if the system has been '\
-            'registered using the -s option or use the --regcode parameter to '\
-            'register it.'
         end
       end
 
@@ -72,6 +77,15 @@ module SUSE
       # @returns: Service for this product
       def activate_product(product, email = nil)
         result = @api.activate_product(system_auth, product, email).body
+        Remote::Service.new(result)
+      end
+
+      # Deactivate a product
+      #
+      # @param product [SUSE::Connect::Remote::Product]
+      # @returns: Service for this product
+      def deactivate_product(product)
+        result = @api.deactivate_product(system_auth, product).body
         Remote::Service.new(result)
       end
 
@@ -152,7 +166,7 @@ module SUSE
       # Announces the system to the server, receiving and storing its credentials.
       # When already announced, sends the current hardware details to the server
       def announce_or_update
-        if System.credentials?
+        if registered?
           update_system
         else
           login, password = announce_system(nil, @config.instance_data_file)
@@ -164,8 +178,8 @@ module SUSE
         System.credentials?
       end
 
-      def print_success_message(product)
-        log.info "Registered #{product.identifier} #{product.version} #{product.arch}"
+      def print_success_message(product, action: 'Registered')
+        log.info "#{action} #{product.identifier} #{product.version} #{product.arch}"
         log.info "Rooted at: #{@config.filesystem_root}" if @config.filesystem_root
         log.info "To server: #{@config.url}" if @config.url
         log.info "Using E-Mail: #{@config.email}" if @config.email

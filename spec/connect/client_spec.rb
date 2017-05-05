@@ -1,23 +1,22 @@
 require 'spec_helper'
 
 describe SUSE::Connect::Client do
-  let :config do
-    SUSE::Connect::Config.new
-  end
-
-  subject { SUSE::Connect::Client.new(config) }
-
+  let(:config) { SUSE::Connect::Config.new }
   let(:default_logger) { SUSE::Connect::GlobalLogger.instance.log }
   let(:string_logger) { ::Logger.new(StringIO.new) }
+  let(:client_instance) { described_class.new config }
+  let(:product) { SUSE::Connect::Remote::Product.new identifier: 'SLES', version: '12', arch: 'x86_64' }
+
+  subject { client_instance }
 
   describe '.new' do
-    context :empty_opts do
+    context 'empty opts' do
       it 'should set url to default_url' do
         expect(subject.config.url).to eq SUSE::Connect::Config::DEFAULT_URL
       end
     end
 
-    context :passed_opts do
+    context 'passed opts' do
       it 'should set insecure flag from options if it was passed via constructor' do
         config.insecure = true
         client = Client.new(config)
@@ -37,7 +36,7 @@ describe SUSE::Connect::Client do
       end
     end
 
-    context :from_config do
+    context 'from config' do
       subject do
         SUSE::Connect::Client.new(SUSE::Connect::Config.new)
       end
@@ -65,7 +64,7 @@ describe SUSE::Connect::Client do
   end
 
   describe '#announce_system' do
-    context :direct_connection do
+    context 'direct connection' do
       subject do
         config.token = 'blabla'
         SUSE::Connect::Client.new(config)
@@ -109,7 +108,7 @@ describe SUSE::Connect::Client do
     end
 
     describe '#update_system' do
-      context :direct_connection do
+      context 'direct connection' do
         subject { SUSE::Connect::Client.new(config) }
 
         before do
@@ -142,7 +141,7 @@ describe SUSE::Connect::Client do
       end
     end
 
-    context :registration_proxy_connection do
+    context 'registration proxy connection' do
       subject do
         config.url = 'http://smt.local'
         SUSE::Connect::Client.new(config)
@@ -169,35 +168,55 @@ describe SUSE::Connect::Client do
   end
 
   describe '#activate_product' do
-    let(:product_ident) { { identifier: 'SLES', version: '12', arch: 'x86_64' } }
-
-    before do
-      api_response = double('api_response')
-      allow(api_response).to receive_messages(body: { 'name' => 'kinkat', 'url' => 'kinkaturl', 'product' => {} })
-      allow_any_instance_of(Api).to receive_messages(activate_product: api_response)
-      allow(subject).to receive_messages(system_auth: 'secretsecret')
+    let!(:stubbed_request) do
+      stub_request(:post, 'https://scc.suse.com/connect/systems/products')
+        .to_return status: 200, body: '{"name":"kinkat","url":"kinkaturl","product":{}}'
     end
+    before { allow(client_instance).to receive_messages system_auth: 'secretsecret' }
+
+    subject { client_instance.activate_product product }
+
+    its(:name) { is_expected.to eq 'kinkat' }
+    its(:url) { is_expected.to eq 'kinkaturl' }
+    it { is_expected.to be_a SUSE::Connect::Remote::Service }
 
     it 'gets login and password from system' do
-      expect(subject).to receive(:system_auth)
-      subject.activate_product(product_ident)
+      expect(client_instance).to receive(:system_auth)
+      subject
     end
 
-    it 'calls underlying api with proper parameters' do
-      expect_any_instance_of(Api).to receive(:activate_product).with('secretsecret', product_ident, nil)
-      subject.activate_product(product_ident)
+    context 'when called' do
+      before { subject }
+      it { expect(stubbed_request).to have_been_made }
+
+      context 'with email parameter' do
+        subject { client_instance.activate_product product, 'email@domain.com' }
+        it { expect(stubbed_request).to have_been_made }
+      end
+    end
+  end
+
+  describe '#deactivate_product' do
+    let!(:stubbed_request) do
+      stub_request(:delete, 'https://scc.suse.com/connect/systems/products')
+        .to_return status: 200, body: '{"name":"kinkat","url":"kinkaturl","product":{}}'
+    end
+    before { allow(client_instance).to receive_messages system_auth: 'secretsecret' }
+
+    subject { client_instance.deactivate_product product }
+
+    its(:name) { is_expected.to eq 'kinkat' }
+    its(:url) { is_expected.to eq 'kinkaturl' }
+    it { is_expected.to be_a SUSE::Connect::Remote::Service }
+
+    it 'gets login and password from system' do
+      expect(client_instance).to receive(:system_auth)
+      subject
     end
 
-    it 'allows to pass an optional parameter "email"' do
-      email = 'email@domain.com'
-      expect_any_instance_of(Api).to receive(:activate_product).with('secretsecret', product_ident, email)
-      subject.activate_product(product_ident, email)
-    end
-
-    it 'returns service object' do
-      service = subject.activate_product(product_ident)
-      expect(service.name).to eq 'kinkat'
-      expect(service.url).to eq 'kinkaturl'
+    context 'when called' do
+      before { subject }
+      it { expect(stubbed_request).to have_been_made }
     end
   end
 
@@ -396,54 +415,68 @@ describe SUSE::Connect::Client do
   end
 
   describe '#deregister!' do
-    let(:stubbed_response) do
-      OpenStruct.new(
-        code: 204,
-        body: nil,
-        success: true
-      )
-    end
+    let(:stubbed_response) { OpenStruct.new(code: 204, body: nil, success: true) }
+    subject { client_instance.deregister! }
 
     before { SUSE::Connect::GlobalLogger.instance.log = string_logger }
+    after { SUSE::Connect::GlobalLogger.instance.log = default_logger }
 
     context 'when system is registered' do
       before do
-        allow(subject).to receive_messages(system_auth: 'Basic: encodedstring')
-        allow(subject).to receive(:registered?).and_return true
-        allow(subject.api).to receive(:deregister).with('Basic: encodedstring').and_return stubbed_response
+        allow(client_instance).to receive_messages(system_auth: 'Basic: encodedstring')
+        allow(client_instance).to receive(:registered?).and_return true
+        allow(client_instance.api).to receive(:deregister).with('Basic: encodedstring').and_return stubbed_response
         allow(System).to receive(:cleanup!).and_return(true)
       end
 
       it 'calls underlying api and removes credentials file' do
-        expect(subject.api).to receive(:deregister).with('Basic: encodedstring').and_return stubbed_response
-        subject.deregister!
+        expect(client_instance.api).to receive(:deregister).with('Basic: encodedstring').and_return stubbed_response
+        subject
       end
 
       it 'cleans up system' do
         expect(System).to receive(:cleanup!).and_return(true)
-        subject.deregister!
+        subject
       end
 
       context 'when system is cleaned up' do
-        before do
-          allow(System).to receive(:cleanup!).and_return(true)
-        end
+        before { allow(System).to receive(:cleanup!).and_return(true) }
 
         it 'prints confirmation message' do
           expect(string_logger).to receive(:info).with('Successfully deregistered system.')
-          subject.deregister!
+          subject
+        end
+      end
+
+      context 'for single product' do
+        let(:extension) { SUSE::Connect::Remote::Product.new identifier: 'SLES HA', version: '12', arch: 'x86_64' }
+        before do
+          config.product = extension
+          allow(Zypper).to receive(:base_product).and_return(product)
+          stub_request(:delete, 'https://scc.suse.com/connect/systems/products').to_return(body: '{"product":{}}')
+        end
+
+        it 'removes service and release package' do
+          expect(client_instance).to receive :deactivate_product
+          expect(System).to receive :remove_service
+          expect(Zypper).to receive :remove_release_package
+          subject
+        end
+
+        it 'logs success' do
+          allow(System).to receive :remove_service
+          allow(Zypper).to receive :remove_release_package
+          expect(string_logger).to receive(:info).with('Deregistered SLES HA 12 x86_64')
+          expect(string_logger).to receive(:info).with('To server: https://scc.suse.com')
+          subject
         end
       end
     end
 
     context 'when system is not registered' do
-      before { allow(subject).to receive(:registered?).and_return false }
+      before { allow(::SUSE::Connect::System).to receive(:credentials).and_return(nil) }
 
-      it 'prints a warning' do
-        expect(string_logger).to receive(:fatal).with('Deregistration failed. Check if the system has been '\
-            'registered using the -s option or use the --regcode parameter to register it.')
-        subject.deregister!
-      end
+      it { expect { subject }.to raise_error(::SUSE::Connect::SystemNotRegisteredError) }
     end
   end
 

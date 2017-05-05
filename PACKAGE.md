@@ -23,8 +23,8 @@ osc up
 ```
 
 If you run into some merge conflict, you can delete everything in our package folder (except the `.gitignore`), then do
-`iosc checkout Devel:SCC:suseconnect` which creates a subfolder from where you can move all files to your `package` folder.
-`iosc status` afterwards to make sure you have no unwanted changes anymore.
+`osc checkout systemsmanagement:SCC` which creates a subfolder from where you can move all files to your `package` folder.
+`osc status` afterwards to make sure you have no unwanted changes anymore.
 
 ## Step 3. Update package version
 
