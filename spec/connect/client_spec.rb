@@ -404,15 +404,62 @@ describe SUSE::Connect::Client do
       )
     end
 
-    before do
-      allow(subject).to receive_messages(system_auth: 'Basic: encodedstring')
+    before { SUSE::Connect::GlobalLogger.instance.log = string_logger }
+
+    context 'when system is registered' do
+      before do
+        allow(subject).to receive_messages(system_auth: 'Basic: encodedstring')
+        allow(subject).to receive(:registered?).and_return true
+        allow(subject.api).to receive(:deregister).with('Basic: encodedstring').and_return stubbed_response
+        allow(System).to receive(:cleanup!).and_return(true)
+      end
+
+      it 'calls underlying api and removes credentials file' do
+        expect(subject.api).to receive(:deregister).with('Basic: encodedstring').and_return stubbed_response
+        subject.deregister!
+      end
+
+      it 'cleans up system' do
+        expect(System).to receive(:cleanup!).and_return(true)
+        subject.deregister!
+      end
+
+      context 'when system is cleaned up' do
+        before do
+          allow(System).to receive(:cleanup!).and_return(true)
+        end
+
+        it 'prints confirmation message' do
+          expect(string_logger).to receive(:info).with('Successfully deregistered system.')
+          subject.deregister!
+        end
+      end
     end
 
-    it 'calls underlying api and removes credentials file' do
-      expect(subject.api).to receive(:deregister).with('Basic: encodedstring').and_return stubbed_response
-      expect(System).to receive(:cleanup!).and_return(true)
+    context 'when system is not registered' do
+      before { allow(subject).to receive(:registered?).and_return false }
 
-      subject.deregister!
+      it 'prints a warning' do
+        expect(string_logger).to receive(:fatal).with('Deregistration failed. Check if the system has been '\
+            'registered using the -s option or use the --regcode parameter to register it.')
+        subject.deregister!
+      end
+    end
+  end
+
+  describe '#registered?' do
+    let(:status) { subject.send(:registered?) }
+
+    context 'system credentials file exists' do
+      before { allow(System).to receive(:credentials).and_return true }
+
+      it { expect(status).to be true }
+    end
+
+    context 'system credentials file does not exist' do
+      before { allow(System).to receive(:credentials).and_return false }
+
+      it { expect(status).to be false }
     end
   end
 
