@@ -1,4 +1,5 @@
 FROM registry.scc.suse.de/suse/sles12:sp2
+ENV BUILT_AT "Mon May 8 16:53 CET 2017"
 
 # Remember to drop docker caches if any of these change
 RUN zypper --non-interactive ar http://download.suse.de/ibs/SUSE/Products/SLE-SERVER/12-SP2/x86_64/product/ SLE-12-SP2-standard &&\

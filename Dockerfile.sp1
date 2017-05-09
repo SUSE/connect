@@ -1,4 +1,5 @@
 FROM registry.scc.suse.de/suse/sles12:sp1
+ENV BUILT_AT "Mon May 8 16:53 CET 2017"
 
 # Remember to drop docker caches if any of these change
 RUN zypper --non-interactive --no-refresh rm container-suseconnect &&\
