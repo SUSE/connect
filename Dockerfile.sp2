@@ -1,11 +1,12 @@
 FROM registry.scc.suse.de/suse/sles12:sp2
-ENV BUILT_AT "Mon May 8 16:53 CET 2017"
+ENV BUILT_AT "Tue May 9 14:46 CET 2017"
 
 # Remember to drop docker caches if any of these change
 RUN zypper --non-interactive ar http://download.suse.de/ibs/SUSE/Products/SLE-SERVER/12-SP2/x86_64/product/ SLE-12-SP2-standard &&\
     zypper ar -f http://download.suse.de/ibs/SUSE/Updates/SLE-SERVER/12-SP2/x86_64/update/ SLE-12-SP2-updates &&\
     zypper ar http://download.suse.de/ibs/SUSE/Products/SLE-SDK/12-SP2/x86_64/product/ sle12sp2sdk &&\
-    zypper ar -f http://download.opensuse.org/repositories/openSUSE:/Tools/SLE_12_SP1/ opensuse-tools && \
+    zypper ar http://download.suse.de/ibs/SUSE/Updates/SLE-SDK/12-SP2/x86_64/update/ sle12sp2sdk-updates &&\
+    zypper ar -f http://download.opensuse.org/repositories/openSUSE:/Tools/SLE_12_SP2/ opensuse-tools && \
     zypper --non-interactive --gpg-auto-import-keys ref &&\
     zypper --non-interactive install git-core ruby-devel make gcc gcc-c++ build wget dmidecode vim zypper>=1.11.32 osc ruby2.1-rubygem-gem2rpm hwinfo libx86emu1 zypper-migration-plugin
 
