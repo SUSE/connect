@@ -28,7 +28,7 @@ Conflicts:      suseRegister, yast2-registration < 3.1.129.7
 Obsoletes:      ruby2.1-rubygem-suse-connect < %{version}
 %if ! 0%{?is_opensuse}
 Provides:       ruby2.1-rubygem-suse-connect = %{version}
-%end
+%endif
 
 %ifarch x86_64 aarch64
 Requires:       dmidecode
