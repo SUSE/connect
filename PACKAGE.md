@@ -2,7 +2,7 @@
 
 ## TL;DR
 
-You can use `rake build` to perform all the manual steps described below (no version bump will be done).
+You can use `rake build` instead of steps 2 to 5.
 After you've build the package locally and are happy with the result - commit the changes to IBS.
 
 ## Step 1. Update gem version
