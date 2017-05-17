@@ -1,0 +1,10 @@
+.osc/*.spec
+.osc/_buildconfig-*
+.osc/_buildinfo-*
+.osc/_build_repositories
+.osc/*changes
+.osc/*.spec.erb
+.osc/ncc_scc_migrate.sh
+.osc/gem2rpm.yml
+SUSEConnect.*.gz
+SUSEConnect-*.rpm
