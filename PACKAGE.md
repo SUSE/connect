@@ -102,7 +102,6 @@ request with `bnc#123` or `fate#123`.
 
 To submit a maintenance request, issue this command in the console:
 
-__OpenSUSE Factory__ 
 ```bash
 cd package_obs
 osc sr systemsmanagement:SCC SUSEConnect openSUSE:Factory --no-cleanup
