@@ -115,7 +115,7 @@ cd package_ibs
 osc mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12:Update --no-cleanup
 osc mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP1:Update --no-cleanup
 osc mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP2:Update --no-cleanup
-osc mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP3:Update --no-cleanup
+osc sr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP3:GA --no-cleanup
 ```
 
 
