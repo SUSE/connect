@@ -46,13 +46,15 @@ task :build, [:product] do |t, args|
   end
 
   sh 'rm *.gem' if Dir['*.gem'].any?
-  sh 'rm package/*.gem' if Dir['package/*.gem'].any?
   sh 'gem build suse-connect.gemspec'
-  sh "mv #{gemfilename} package/"
-  Dir.chdir('package')
-  sh 'ronn --roff --manual SUSEConnect --pipe ../SUSEConnect.8.ronn > SUSEConnect.8 && gzip -f SUSEConnect.8'
-  sh 'ronn --roff --manual SUSEConnect --pipe ../SUSEConnect.5.ronn > SUSEConnect.5 && gzip -f SUSEConnect.5'
-  sh "osc -A https://api.opensuse.org build #{args[:product]} x86_64 --no-verify --trust-all-projects"
+  %w(ibs obs).each do |build_service|
+    sh "rm package_#{build_service}/*.gem" if Dir["package_#{build_service}/*.gem"].any?Z
+    sh "cp #{gemfilename} package_#{build_service}/"
+    Dir.chdir "package_#{build_service}"
+    sh 'ronn --roff --manual SUSEConnect --pipe ../SUSEConnect.8.ronn > SUSEConnect.8 && gzip -f SUSEConnect.8'
+    sh 'ronn --roff --manual SUSEConnect --pipe ../SUSEConnect.5.ronn > SUSEConnect.5 && gzip -f SUSEConnect.5'
+    sh "osc build #{args[:product]} x86_64 --no-verify --trust-all-projects"
+  end
 end
 
 namespace :vm do
