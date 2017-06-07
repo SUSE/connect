@@ -22,7 +22,7 @@ Release:        0
 %define mod_full_name %{mod_name}-%{version}
 
 Requires:       coreutils, util-linux, net-tools, hwinfo, zypper, ca-certificates-mozilla
-Requires:       zypper >= 1.11.32
+Requires:       zypper(auto-agree-with-product-licenses)
 Conflicts:      suseRegister, yast2-registration < 3.1.129.7
 
 Obsoletes:      ruby2.1-rubygem-suse-connect < %{version}
