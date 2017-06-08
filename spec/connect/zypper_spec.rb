@@ -372,7 +372,7 @@ describe SUSE::Connect::Zypper do
 
   describe '.install_release_package' do
     it 'calls the command' do
-      expect(Open3).to receive(:capture3).with(shared_env_hash, 'zypper --no-refresh --non-interactive install --no-recommends -t product opensuse')
+      expect(Open3).to receive(:capture3).with(shared_env_hash, 'zypper --no-refresh --non-interactive install --no-recommends --auto-agree-with-product-licenses -t product opensuse')
                                          .and_return(['', '', status])
       subject.install_release_package('opensuse')
     end

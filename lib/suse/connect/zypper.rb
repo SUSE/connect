@@ -148,7 +148,7 @@ module SUSE
         end
 
         def install_release_package(identifier)
-          call("--no-refresh --non-interactive install --no-recommends -t product #{identifier}") if identifier
+          call("--no-refresh --non-interactive install --no-recommends --auto-agree-with-product-licenses -t product #{identifier}") if identifier
         end
 
         def remove_release_package(identifier)
