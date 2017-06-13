@@ -95,12 +95,14 @@ osc commit
 
 Repeat the same with `package_obs`
 
-## Step 7. Submit Maintenance Requests to OpenSUSE Factory
+## Step 7. Submit Requests to OpenSUSE Factory and IBS
 
-To get the maintenance request accepted, each changelog entry needs to reference a bug or feature
+To get a maintenance request accepted, each changelog entry needs to reference a bug or feature
 request with `bnc#123` or `fate#123`.
 
-To submit a maintenance request, issue this command in the console:
+### Factory First
+
+To submit a request to openSUSE Factory, issue this commands in the console:
 
 ```bash
 cd package_obs
@@ -108,13 +110,14 @@ osc sr systemsmanagement:SCC SUSEConnect openSUSE:Factory --no-cleanup
 ```
 
 
-## Step 8. Submit Maintenance Requests to Internal Build Service
+### Internal Build Service
 
 ```bash
 cd package_ibs
 osc mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12:Update --no-cleanup
 osc mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP1:Update --no-cleanup
 osc mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP2:Update --no-cleanup
+
 osc sr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP3:GA --no-cleanup
 ```
 
