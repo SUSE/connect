@@ -32,12 +32,10 @@ If you run into some merge conflict, you can delete everything in our package fo
 
 ## Step 3. Update package version
 
-Update the `Version:` declaration in both `SUSEConnect.spec` to the new value manually.
+Update the `Version:` declaration in `package_obs/SUSEConnect.spec` to the new value manually.
 
-Please also update `SUSEConnect.changes` file with a list of new features in master since the last version update. You can do it manually or with the command:
+Please also update `package_obs/SUSEConnect.changes` file with a list of new features in master since the last version update. You can do it manually or with the command:
 ```
-cd package_ibs
-osc vc
 cd ../package_obs
 osc vc
 ```
