@@ -19,16 +19,16 @@ module SUSE
       def execute! # rubocop:disable MethodLength, CyclomaticComplexity
         # check for parameter dependencies
         if @config.status
-          Status.new(@config).print_product_statuses(:json)
+          status.print_product_statuses(:json)
         elsif @config.status_text
-          Status.new(@config).print_product_statuses(:text)
+          status.print_product_statuses(:text)
         elsif @config.deregister
           Client.new(@config).deregister!
         elsif @config.cleanup
           System.cleanup!
         elsif @config.list_extensions
-          if Status.new(@config).activated_base_product?
-            Status.new(@config).print_extensions_list
+          if status.activated_base_product?
+            status.print_extensions_list
           else
             log.error 'To list extensions, you must first register the base product, using: SUSEConnect -r <registration code>'
             exit(1)
@@ -40,7 +40,7 @@ module SUSE
           elsif @config.token && @config.instance_data_file
             log.error 'Please use either --regcode or --instance-data'
             exit(1)
-          elsif @config.url_default? && !@config.token && !Status.new(@config).activated_base_product?
+          elsif @config.url_default? && !@config.token && !status.activated_base_product?
             log.error 'Please register your system using the --regcode parameter, or provide the --url parameter to register against SMT.'
             exit(1)
           else
@@ -228,6 +228,10 @@ module SUSE
           log.error message
           exit 1
         end
+      end
+
+      def status
+        @status ||= Status.new(@config)
       end
     end
   end
