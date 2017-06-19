@@ -49,11 +49,12 @@ task :build, [:product] do |t, args|
   sh 'gem build suse-connect.gemspec'
   %w(ibs obs).each do |build_service|
     sh "rm package_#{build_service}/*.gem" if Dir["package_#{build_service}/*.gem"].any?
-    sh "cp #{gemfilename} package_#{build_service}/"
+    sh "cp #{gemfilename} ./package_#{build_service}/"
     Dir.chdir "package_#{build_service}"
     sh 'ronn --roff --manual SUSEConnect --pipe ../SUSEConnect.8.ronn > SUSEConnect.8 && gzip -f SUSEConnect.8'
     sh 'ronn --roff --manual SUSEConnect --pipe ../SUSEConnect.5.ronn > SUSEConnect.5 && gzip -f SUSEConnect.5'
     sh "osc build #{args[:product]} x86_64 --no-verify --trust-all-projects"
+    Dir.chdir '..'
   end
 end
 

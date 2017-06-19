@@ -38,7 +38,7 @@ Feature: Test extension/module activation
   Scenario: Paid extension activation requires regcode
     When I call SUSEConnect with '--product sle-live-patching/12/x86_64' arguments
     Then the exit status should be 67
-    And the output should contain "Please provide a registration code for this product"
+    And the output should contain "Please provide a Registration Code for this product"
 
   Scenario: Free extension activation does not require regcode and activates the extension
     When I call SUSEConnect with '--product sle-sdk/12/x86_64' arguments
