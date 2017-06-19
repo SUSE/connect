@@ -11,7 +11,7 @@ Feature: Testing error messages of product activation
     Then the exit status should be 67
     And the output should contain:
     """
-    Not yet activated registration code. Please visit https://scc.suse.com to activate it.
+    Not yet activated Registration Code. Please visit https://scc.suse.com to activate it.
     """
 
   Scenario: Client provides meaningful message in case of invalid reg-code
@@ -19,7 +19,7 @@ Feature: Testing error messages of product activation
     Then the exit status should be 67
     And the output should contain:
     """
-    Unknown registration code.
+    Unknown Registration Code.
     """
 
   Scenario: Client provides meaningful message in case of expired regcode
@@ -27,5 +27,5 @@ Feature: Testing error messages of product activation
     Then the exit status should be 67
     And the output should contain:
     """
-    Expired registration code.
+    Expired Registration Code.
     """

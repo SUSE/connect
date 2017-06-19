@@ -12,7 +12,7 @@ Feature: Test localized server responses
     When I call SUSEConnect with '--regcode INVALID' arguments
     Then the exit status should be 67
 
-    And the output should contain "Keine Subscription mit diesem Registrierungscode gefunden."
+    And the output should contain "Keine Subscription mit diesem Registrierungscode gefunden"
 
 
   Scenario: Remove all registration leftovers
