@@ -121,3 +121,5 @@ osc sr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP3:GA --no-cleanup
 
 
 You can check the status of your requests [here](https://build.opensuse.org/package/requests/systemsmanagement:SCC/SUSEConnect) and [here](https://build.suse.de/package/requests/Devel:SCC:suseconnect/SUSEConnect).
+After your requests got accepted, they still have to pass maintenance testing. You can check their progress at [maintenance.suse.de](https://maintenance.suse.de/). Just enter your requests Id in the search field. Then follow the link pointing to the _incident_ in which your requests gets handled to find out more. If you still need help, [Leonardo Chiquitto](https://floor.nue.suse.com/users/255) (leonardo in IRC) is a good contact person for maintenance related questions.
+
