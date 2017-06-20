@@ -35,7 +35,7 @@ loop do
   links = process_rels(resp)
   @entities += JSON.parse(resp)
   break unless links[:next]
-  @page = + 1
+  @page += 1
   resp = get(links[:next])
 end
 
