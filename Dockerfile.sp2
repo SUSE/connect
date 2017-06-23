@@ -8,6 +8,7 @@ RUN zypper --non-interactive ar http://download.suse.de/ibs/SUSE/Products/SLE-SE
     zypper ar http://download.suse.de/ibs/SUSE/Updates/SLE-SDK/12-SP2/x86_64/update/ sle12sp2sdk-updates &&\
     zypper ar -f http://download.opensuse.org/repositories/openSUSE:/Tools/SLE_12_SP2/ opensuse-tools && \
     zypper --non-interactive --gpg-auto-import-keys ref &&\
+    zypper --non-interactive up zypper &&\
     zypper --non-interactive install git-core ruby-devel make gcc gcc-c++ build wget dmidecode vim zypper>=1.11.32 osc ruby2.1-rubygem-gem2rpm hwinfo libx86emu1 zypper-migration-plugin
 
 RUN echo 'gem: --no-ri --no-rdoc' > /etc/gemrc && \
