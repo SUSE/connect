@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu Jun  8 16:10:00 UTC 2017 - thutterer@suse.com
+
+- Update to 0.3.1:
+  - Fix license auto-agree issue (bsc#1037783)
+  - Add missing archs to SLE 12 SP3 build target
+
+-------------------------------------------------------------------
 Fri May  5 07:41:44 UTC 2017 - andrei.shaidurov@suse.com
 
 - Update to 0.3.0:

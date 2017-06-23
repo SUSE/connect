@@ -32,12 +32,10 @@ If you run into some merge conflict, you can delete everything in our package fo
 
 ## Step 3. Update package version
 
-Update the `Version:` declaration in both `SUSEConnect.spec` to the new value manually.
+Update the `Version:` declaration in `package_obs/SUSEConnect.spec` to the new value manually.
 
-Please also update `SUSEConnect.changes` file with a list of new features in master since the last version update. You can do it manually or with the command:
+Please also update `package_obs/SUSEConnect.changes` file with a list of new features in master since the last version update. You can do it manually or with the command:
 ```
-cd package_ibs
-osc vc
 cd ../package_obs
 osc vc
 ```
@@ -95,12 +93,14 @@ osc commit
 
 Repeat the same with `package_obs`
 
-## Step 7. Submit Maintenance Requests to OpenSUSE Factory
+## Step 7. Submit Requests to OpenSUSE Factory and IBS
 
-To get the maintenance request accepted, each changelog entry needs to reference a bug or feature
+To get a maintenance request accepted, each changelog entry needs to reference a bug or feature
 request with `bnc#123` or `fate#123`.
 
-To submit a maintenance request, issue this command in the console:
+### Factory First
+
+To submit a request to openSUSE Factory, issue this commands in the console:
 
 ```bash
 cd package_obs
@@ -108,15 +108,18 @@ osc sr systemsmanagement:SCC SUSEConnect openSUSE:Factory --no-cleanup
 ```
 
 
-## Step 8. Submit Maintenance Requests to Internal Build Service
+### Internal Build Service
 
 ```bash
 cd package_ibs
 osc mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12:Update --no-cleanup
 osc mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP1:Update --no-cleanup
 osc mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP2:Update --no-cleanup
+
 osc sr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP3:GA --no-cleanup
 ```
 
 
 You can check the status of your requests [here](https://build.opensuse.org/package/requests/systemsmanagement:SCC/SUSEConnect) and [here](https://build.suse.de/package/requests/Devel:SCC:suseconnect/SUSEConnect).
+After your requests got accepted, they still have to pass maintenance testing. You can check their progress at [maintenance.suse.de](https://maintenance.suse.de/). Just enter your requests Id in the search field. Then follow the link pointing to the _incident_ in which your requests gets handled to find out more. If you still need help, [Leonardo Chiquitto](https://floor.nue.suse.com/users/255) (leonardo in IRC) is a good contact person for maintenance related questions.
+
