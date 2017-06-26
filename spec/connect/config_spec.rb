@@ -8,7 +8,7 @@ describe SUSE::Connect::Config do
     subject { SUSE::Connect::Config }
 
     after do
-      subject.serializable_attributes :url, :insecure, :language
+      subject.serializable_attributes :url, :insecure, :language, :namespace
     end
 
     it '.serializable_attributes' do

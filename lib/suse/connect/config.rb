@@ -19,7 +19,7 @@ module SUSE
         end
       end
 
-      serializable_attributes :url, :insecure, :language
+      serializable_attributes :url, :insecure, :language, :namespace
 
       def initialize(file = DEFAULT_CONFIG_FILE)
         @file = file

@@ -159,6 +159,7 @@ module SUSE
                  'environments.') do |opt|
           check_if_param(opt, 'Please provide a namespace')
           @options[:namespace] = opt
+          @options[:write_config] = true
         end
 
         @opts.on('-s', '--status', 'Get current system registration status in json',
