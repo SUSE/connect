@@ -4,6 +4,7 @@ ENV BUILT_AT "Mon May 8 16:53 CET 2017"
 # Remember to drop docker caches if any of these change
 RUN zypper ar http://download.suse.de/ibs/SUSE:/SLE-12:/GA/standard/ SLE-12-standard &&\
     zypper ar -f http://download.suse.de/ibs/SUSE:/SLE-12:/Update/standard/ SLE-12-update-standard &&\
+    zypper ar -f http://download.suse.de/ibs/SUSE/Updates/SLE-SERVER/12-LTSS/x86_64/update/ SLE-12-ltss &&\
     zypper ar -f http://download.opensuse.org/repositories/openSUSE:/Tools/SLE_12/ opensuse-tools && \
     zypper --non-interactive --gpg-auto-import-keys ref &&\
     zypper --non-interactive up zypper &&\
