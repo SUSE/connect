@@ -1,3 +1,19 @@
+# Rubocop docs: http://rubocop.readthedocs.io/en/latest/
+
+inherit_gem:
+  scc-codestyle:
+    - default.yml
+
+inherit_from: .rubocop_todo.yml
+
+AllCops:
+  Exclude:
+    - kitchen/cookbooks/**/*
+    - kitchen/tmp/**/*
+    - vendor/**
+    - package_obs/**/*
+    - package_ibs/**/*
+
 ClassLength:
   Max: 128
 
@@ -18,7 +34,13 @@ SpaceInsideBlockBraces:
   EnforcedStyle: space
   SpaceBeforeBlockParameters: false
 
-EmptyLinesAroundBody:
+EmptyLinesAroundMethodBody:
+  Enabled: false
+
+EmptyLinesAroundClassBody:
+  Enabled: false
+
+EmptyLinesAroundModuleBody:
   Enabled: false
 
 SignalException:
@@ -31,21 +53,16 @@ PercentLiteralDelimiters:
   PreferredDelimiters:
     '%w': '{}'
 
-SingleSpaceBeforeFirstArg:
+SpaceBeforeFirstArg:
   Enabled: false
 
 FileName:
   Exclude:
     - SUSEConnect
+    - suse-connect.gemspec
 
 ClassAndModuleChildren:
   Enabled: false
 
 GlobalVars:
   AllowedVariables: []
-
-AllCops:
-  Exclude:
-    - kitchen/cookbooks/**/*
-    - kitchen/tmp/**/*
-    - vendor/**

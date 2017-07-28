@@ -5,6 +5,7 @@ group :test, :development do
   gem 'yard'
   gem 'awesome_print'
   gem 'pry'
+  gem 'scc-codestyle'
 end
 
 group :development do
@@ -16,7 +17,6 @@ group :development do
 end
 
 group :test do
-  gem 'rubocop', '~> 0.20.1', :require => false
   gem 'coveralls', :require => false
   gem 'rspec', '~> 3.3.0'
   gem 'rspec-its'
