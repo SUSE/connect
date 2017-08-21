@@ -38,7 +38,7 @@ Second and third parts are connected with a colon.
 
 Implementations of HMAC are linked from the footer of https://en.wikipedia.org/wiki/Hash-based_message_authentication_code
 
-We also have reference [implementation](https://github.com/SUSE/connect/wiki/OEM-API-Bash-Client) in Bash
+We also have reference [implementation](OEM-API-Bash-Client.md) in Bash
 
 ## List of Partner Orders
 
