@@ -9,7 +9,7 @@ Technical information about SUSEConnect:
   Proposals and drafts of upcoming API implementations
 - [YaST abstraction layer](YaST-abstraction-layer.md)  
   Documentation for the class [yast.rb](https://github.com/SUSE/connect/blob/master/lib/suse/connect/yast.rb) that is used by YaST when interacting with the SUSEConnect library.
-- [Migration script abstraction layer](Migration-abstraction-layer.md) <br>
+- [Migration script abstraction layer](Migration-abstraction-layer.md)  
   Documentation for the class [migration.rb](https://github.com/SUSE/connect/blob/master/lib/suse/connect/migration.rb) that is used by the zypper-migration script. 
 
 Other resources: 

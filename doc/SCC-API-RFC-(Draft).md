@@ -1,6 +1,6 @@
 <a id="home"></a>
 This page lists API calls that are currently in planning. 
-The available API is documented [here](https://github.com/SUSE/connect/wiki/SCC-API-(Implemented))
+The available API is documented [here](SCC-API-(Implemented).md)
 
   - [Organizations](#organizations)
     - [show organization](#org_show)
