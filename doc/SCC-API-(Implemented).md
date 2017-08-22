@@ -20,7 +20,7 @@ This is done by setting the accept header in the request, for example:
 ```Accept: application/vnd.scc.suse.com.v4+json```
 
 The current API version is 4. Documentation of older API versions:
-* [Version 3](SCC-API-V3)
+* [Version 3](SCC-API-V3.md)
 
 Hint: to get knowledge, with what version SCC just respond - take a look at respond header `scc-api-version`
 e.g. following clearly indicates that SCC responded with version 4 of API
