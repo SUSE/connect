@@ -1,4 +1,4 @@
-See [migration.rb](../../connect/blob/master/lib/suse/connect/migration.rb) for more details.
+See [migration.rb](../../master/lib/suse/connect/migration.rb) for more details.
 
 ## Implemented methods
 
