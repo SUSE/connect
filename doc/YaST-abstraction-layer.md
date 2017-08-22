@@ -1,4 +1,4 @@
-See [yast.rb](../../connect/blob/master/lib/suse/connect/yast.rb) for more details.
+See [yast.rb](../../master/lib/suse/connect/yast.rb) for more details.
 
 ## Implemented methods
 
