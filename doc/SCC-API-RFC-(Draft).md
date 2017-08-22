@@ -343,8 +343,7 @@ For all endpoints on this level there is no authentication needed. They are
 publicly available. Of course, that means that only publicly available resources
 will be listed.
 
-The typical use case for these calls is the
-[SLE installer](Requirement-Connect#installer).
+The typical use case for these calls is the SLES installer
 
   - [list products](#prod_list)
   - [list services](#service_list)
