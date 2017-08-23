@@ -1,4 +1,4 @@
-**This is the documentation for version 3 of the API. Please check the docs of the [latest version](SCC-API-(Implemented))!**
+**This is the documentation for version 3 of the API. Please check the docs of the [latest version](SCC-API-(Implemented).md)!**
 
 [SCC](https://scc.suse.com) provides a RESTful API interface. This essentially means that you can
 send an HTTP request (`GET`, `PUT/PATCH`, `POST`, or `DELETE`) to an endpoint,
@@ -20,12 +20,9 @@ By default, the latest available api version is used. Clients are recommended to
 hardcode a fixed version in order not to break when the SCC api changes in an incompatible way. 
 This is done by setting the accept header in the request, for example: 
 
-```Accept: application/vnd.scc.suse.com.v1+json```
+```Accept: application/vnd.scc.suse.com.v3+json```
 
-The current API version is 3. Documentation of older api versions: 
-* [Version 1](SCC-API-V1)
-* [Version 2](SCC-API-V2)
-
+The current API version is 3.
 Hint: to get knowledge, with what version SCC just respond - take a look at respond header `scc-api-version`
 e.g. following clearly indicates that SCC responded with version 3 of API
 
