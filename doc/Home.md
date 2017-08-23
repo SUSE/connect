@@ -7,9 +7,9 @@ Technical information about SUSEConnect:
   Documentation for the implemented API endpoints on SCC that are used by SUSEConnect, SMT and SUSE Manager
 - [RFC for SCC API](SCC-API-RFC-(Draft).md)  
   Proposals and drafts of upcoming API implementations
-- [YaST abstraction layer](https://github.com/SUSE/connect/wiki/YaST-abstraction-layer)  
+- [YaST abstraction layer](YaST-abstraction-layer.md)  
   Documentation for the class [yast.rb](https://github.com/SUSE/connect/blob/master/lib/suse/connect/yast.rb) that is used by YaST when interacting with the SUSEConnect library.
-- [Migration script abstraction layer](https://github.com/SUSE/connect/wiki/Migration-abstraction-layer) <br>
+- [Migration script abstraction layer](Migration-abstraction-layer.md) <br>
   Documentation for the class [migration.rb](https://github.com/SUSE/connect/blob/master/lib/suse/connect/migration.rb) that is used by the zypper-migration script. 
 
 Other resources: 
