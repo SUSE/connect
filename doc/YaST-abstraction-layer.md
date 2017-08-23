@@ -12,8 +12,6 @@ See [yast.rb](../../master/lib/suse/connect/yast.rb) for more details.
 - [check product activation](#product-activated?)
 - [system migrations](#system-migrations)
 - [activated_products](#activated-products)
-- [add service](#add-service)
-- [remove service](#remove-service)
 - [read credentials](#credentials)
 - [write credentials](#create-credentials-file)
 - [write config](#write-config)
