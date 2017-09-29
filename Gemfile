@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 group :test, :development do
-  gem 'byebug', '~> 3.1.2'
+  gem 'byebug', '~> 8.0.0'
   gem 'yard'
   gem 'awesome_print'
   gem 'pry'
