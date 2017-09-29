@@ -259,10 +259,10 @@ describe SUSE::Connect::Client do
 
     before do
       allow_any_instance_of(Api).to receive(:synchronize).and_return(OpenStruct.new(body: {}))
-      expect(subject).to receive(:system_auth).and_return system_auth
     end
 
     it 'calls underlying api with proper parameters' do
+      expect(subject).to receive(:system_auth).and_return system_auth
       expect_any_instance_of(Api).to receive(:synchronize).with(system_auth, products)
       subject.synchronize(products)
     end
