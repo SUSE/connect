@@ -14,6 +14,11 @@ node('scc-jenkins-node-connect') {
       sh 'bundle.ruby2.1 exec rspec'
     }
 
+    stage('unit tests')
+    {
+      sh 'bundle.ruby2.1 exec rubocop'
+    }
+
     stage('build docker images') {
       parallel (
         phase1: { sh 'docker build -t connect -f Dockerfile .' },
