@@ -10,6 +10,7 @@ node('scc-jenkins-node-connect') {
 
     stage('unit tests')
     {
+      sh 'rm Gemfile.lock'
       sh 'bundle install --path ~/.bundle --jobs 4'
       sh 'bundle clean'
       sh 'bundle exec rubocop'
