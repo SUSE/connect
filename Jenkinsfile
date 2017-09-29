@@ -10,13 +10,10 @@ node('scc-jenkins-node-connect') {
 
     stage('unit tests')
     {
-      sh 'bundle.ruby2.1 install --path vendor/bundle'
-      sh 'bundle.ruby2.1 exec rspec'
-    }
-
-    stage('unit tests')
-    {
-      sh 'bundle.ruby2.1 exec rubocop'
+      sh 'bundle install --path ~/.bundle --jobs 4'
+      sh 'bundle clean'
+      sh 'bundle exec rubocop'
+      sh 'bundle exec rspec'
     }
 
     stage('build docker images') {
