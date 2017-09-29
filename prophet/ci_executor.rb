@@ -29,7 +29,7 @@ module SCC
   # Project
   class Project
 
-    attr_accessor :name, :steps, :status
+    attr_accessor :name, :steps
 
     def initialize(name: nil, steps: [])
       @name = name

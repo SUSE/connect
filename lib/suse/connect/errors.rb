@@ -19,7 +19,7 @@ module SUSE
     # Used by YaST already, do not refactor without consulting them!
     # (Error handling: #response, #code, #message, #service)
     class ApiError < StandardError
-      attr_accessor :response, :message
+      attr_accessor :response
 
       # @param response [Net::HTTPResponse] the HTTP response error returned
       # by API request
