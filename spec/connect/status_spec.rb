@@ -106,8 +106,8 @@ describe SUSE::Connect::Status do
     context 'json format' do
       it 'outputs the system status in json format' do
         status = Zypper::ProductStatus.new(Zypper::Product.new({}), subject)
-        allow(status).to receive(:registration_status) { 'test' }
-        allow(status).to receive(:remote_product) { true }
+        allow(status).to receive(:registration_status).and_return('test')
+        allow(status).to receive(:remote_product).and_return(true)
         expect(status).to receive_message_chain(:remote_product, :free).and_return(false)
         activation = SUSE::Connect::Remote::Activation.new('service' => { 'product' => {} })
         allow(status).to receive(:related_activation).and_return(activation)
@@ -128,6 +128,8 @@ describe SUSE::Connect::Status do
   describe '#print_extensions_list' do
     subject { -> { status_instance.print_extensions_list } }
     before do
+      allow(File).to receive(:exist?).with(Zypper::OEM_PATH + '/').and_return false
+      allow(File).to receive(:exist?).with(Credentials.system_credentials_file).and_return false
       allow(Zypper).to receive(:installed_products).and_return []
       allow(Zypper).to receive(:base_product).and_return Zypper::Product.new(name: 'SLES', version: '12', arch: 'x86_64')
       allow(client_double).to receive(:show_product).with(Zypper.base_product).and_return(Remote::Product.new(dummy_product_data))

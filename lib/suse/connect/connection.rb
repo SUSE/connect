@@ -36,7 +36,7 @@ module SUSE
         self.verify_callback = verify_callback
       end
 
-      VERB_TO_CLASS.keys.each do |name_for_method|
+      VERB_TO_CLASS.each_key do |name_for_method|
         define_method name_for_method do |path, auth: nil, params: {}|
           @auth = auth
           response = json_request(name_for_method.downcase.to_sym, path, params)

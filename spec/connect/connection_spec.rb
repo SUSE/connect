@@ -92,7 +92,7 @@ describe SUSE::Connect::Connection do
     end
 
     before do
-      expect(connection.http).to receive(:request).and_return(OpenStruct.new(:body => 'bodyofostruct'))
+      allow(connection.http).to receive(:request).and_return(OpenStruct.new(:body => 'bodyofostruct'))
       allow(JSON).to receive_messages(:parse => { '1' => '2' })
     end
 

@@ -452,7 +452,8 @@ Status: 200 OK
     "virtual_count": null,
     "product_classes": ["SLES"],
     "families": ["sles", "sled"],
-    "systems": [{ "id": 1, "login": "login1" }]
+    "skus": ["sku1", "sku2"],
+    "systems": [{ "id": 1, "login": "login1" }] 
   }
 ]
 ```
