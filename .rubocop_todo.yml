@@ -101,6 +101,14 @@ Lint/IneffectiveAccessModifier:
   Exclude:
     - 'lib/suse/connect/credentials.rb'
 
+Lint/RescueWithoutErrorClass:
+  Exclude:
+    - 'lib/suse/connect/hwinfo/arm64.rb'
+    - 'lib/suse/connect/hwinfo/x86.rb'
+    - 'lib/suse/toolkit/curlrc_dotfile.rb'
+    - 'lib/suse/toolkit/utilities.rb'
+    - 'bin/SUSEConnect'
+
 # Offense count: 4
 # Cop supports --auto-correct.
 Lint/UnneededDisable:
