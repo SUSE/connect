@@ -690,7 +690,7 @@ GET /connect/systems/products
 
 ###### Curl:
 ```
-curl https://scc.suse.com/connect/systems/products -u<username>:<password> -d identifier=SLES -d version=11-SP2 -d arch=x86_64
+curl https://scc.suse.com/connect/systems/products -u<username>:<password> -d identifier=SLES -d version=11-SP2 -d arch=x86_64 -X GET
 ```
 
 ###### Response:
