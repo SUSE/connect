@@ -44,22 +44,16 @@ describe SUSE::Connect::System do
     end
 
     context :credentials_not_exist do
-      before(:each) do
-        expect(File).to receive(:exist?).with(credentials_file).and_return(false)
-      end
-
       it 'should produce log message' do
+        expect(File).to receive(:exist?).with(credentials_file).and_return(false)
         expect(subject.credentials).to be_nil
       end
     end
 
     context :remove_credentials do
-      before(:each) do
+      it 'should remove credentials file' do
         expect(subject).to receive(:credentials?).and_return(true)
         expect(File).to receive(:delete).with(credentials_file).and_return(true)
-      end
-
-      it 'should remove credentials file' do
         expect(subject.remove_credentials).to be true
       end
     end

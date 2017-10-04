@@ -17,7 +17,7 @@ describe SUSE::Connect::Zypper do
 
         before do
           args = 'zypper --no-remote --no-refresh --xmlout --non-interactive products -i'
-          expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return([xml, '', status])
+          allow(Open3).to receive(:capture3).with(shared_env_hash, args).and_return([xml, '', status])
         end
 
         it 'returns valid list of products based on proper XML' do
@@ -44,7 +44,7 @@ describe SUSE::Connect::Zypper do
 
         before do
           args = 'zypper --no-remote --no-refresh --xmlout --non-interactive products -i'
-          expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return([xml, '', status])
+          allow(Open3).to receive(:capture3).with(shared_env_hash, args).and_return([xml, '', status])
         end
 
         it 'returns valid name' do
@@ -203,7 +203,7 @@ describe SUSE::Connect::Zypper do
       let(:identifier) { 'SLES' }
 
       before do
-        expect(Open3).to receive(:capture3).with(shared_env_hash, args).at_least(1).and_return([zypper_sles_product_search, '', status])
+        allow(Open3).to receive(:capture3).with(shared_env_hash, args).at_least(1).and_return([zypper_sles_product_search, '', status])
       end
 
       it 'finds products by identifier' do
@@ -220,7 +220,7 @@ describe SUSE::Connect::Zypper do
 
       before do
         $stdout = StringIO.new
-        expect(Open3).to receive(:capture3).with(shared_env_hash, args).at_least(1).and_return([zypper_sles_product_search_not_found, '', failed_status])
+        allow(Open3).to receive(:capture3).with(shared_env_hash, args).at_least(1).and_return([zypper_sles_product_search_not_found, '', failed_status])
       end
 
       after(:all) do
@@ -240,7 +240,7 @@ describe SUSE::Connect::Zypper do
     let(:service_args) { 'zypper --xmlout --non-interactive services -d' }
 
     before do
-      expect(Open3).to receive(:capture3).with(shared_env_hash, service_args).at_least(1).and_return([zypper_services_output, '', status])
+      allow(Open3).to receive(:capture3).with(shared_env_hash, service_args).at_least(1).and_return([zypper_services_output, '', status])
     end
 
     it 'removes SCC installed services' do
@@ -290,7 +290,7 @@ describe SUSE::Connect::Zypper do
     let(:args) { 'zypper --xmlout --non-interactive services -d' }
 
     before do
-      expect(Open3).to receive(:capture3).with(shared_env_hash, args).at_least(1).and_return([zypper_services_output, '', status])
+      allow(Open3).to receive(:capture3).with(shared_env_hash, args).at_least(1).and_return([zypper_services_output, '', status])
     end
 
     it 'lists all defined services.' do
