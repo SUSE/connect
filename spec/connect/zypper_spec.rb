@@ -194,6 +194,13 @@ describe SUSE::Connect::Zypper do
     end
   end
 
+  describe '.refresh_all_services' do
+    it 'calls zypper with proper arguments' do
+      expect(Open3).to receive(:capture3).with(shared_env_hash, 'zypper --non-interactive refs').and_return(['', '', status])
+      subject.refresh_all_services
+    end
+  end
+
   describe '.find_products' do
     let(:zypper_sles_product_search) { File.read('spec/fixtures/zypper_sles_product_search.xml') }
     let(:zypper_sles_product_search_not_found) { File.read('spec/fixtures/zypper_sles_product_search_not_found.xml') }

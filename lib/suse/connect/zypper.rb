@@ -4,6 +4,7 @@ require 'fileutils'
 require 'suse/connect/rexml_refinement'
 require 'suse/toolkit/system_calls'
 
+# rubocop:disable Metrics/ModuleLength
 module SUSE
   module Connect
 
@@ -107,6 +108,10 @@ module SUSE
         # @param service_name [String] Alias-mnemonic with which zypper should refresh a service
         def refresh_service(service_name)
           call("--non-interactive refs #{Shellwords.escape(service_name)}")
+        end
+
+        def refresh_all_services
+          call('--non-interactive refs')
         end
 
         # @param product identifier [String]
