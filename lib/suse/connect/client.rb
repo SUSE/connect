@@ -39,7 +39,7 @@ module SUSE
         if @config.product
           raise BaseProductDeactivationError if @config.product == Zypper.base_product
           service = deactivate_product @config.product
-          System.remove_service service
+          remove_or_refresh_service(service)
           Zypper.remove_release_package @config.product.identifier
           print_success_message @config.product, action: 'Deregistered'
         else
@@ -176,6 +176,16 @@ module SUSE
 
       def registered?
         System.credentials?
+      end
+
+      # SMT provides one service for all products, removing it would remove all repositories.
+      # Refreshing the service instead to remove the repos of deregistered product.
+      def remove_or_refresh_service(service)
+        if service.name == 'SMT_DUMMY_NOREMOVE_SERVICE'
+          Zypper.refresh_all_services
+        else
+          System.remove_service service
+        end
       end
 
       def print_success_message(product, action: 'Registered')
