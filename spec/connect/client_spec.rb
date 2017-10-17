@@ -456,9 +456,20 @@ describe SUSE::Connect::Client do
           stub_request(:delete, 'https://scc.suse.com/connect/systems/products').to_return(body: '{"product":{}}')
         end
 
-        it 'removes service and release package' do
-          expect(client_instance).to receive :deactivate_product
+        it 'removes SCC service and release package' do
+          expect(client_instance).to receive(:deactivate_product) do
+            SUSE::Connect::Remote::Service.new({ 'name' => 'dummy', 'product' => {} })
+          end
           expect(System).to receive :remove_service
+          expect(Zypper).to receive :remove_release_package
+          subject
+        end
+
+        it 'refreshes SMT service and removes release package' do
+          expect(client_instance).to receive(:deactivate_product) do
+            SUSE::Connect::Remote::Service.new({ 'name' => 'SMT_DUMMY_NOREMOVE_SERVICE', 'product' => {} })
+          end
+          expect(Zypper).to receive :refresh_all_services
           expect(Zypper).to receive :remove_release_package
           subject
         end

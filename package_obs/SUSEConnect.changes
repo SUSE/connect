@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Oct 16 15:23:33 UTC 2017 - ikapelyukhin@suse.com
+
+- Properly refresh zypper services when deactivating a product on SMT (bsc#1047153)
+
+-------------------------------------------------------------------
 Mon Jun 26 10:20:22 UTC 2017 - kpimenov@suse.com
 
 - Update to 0.3.2:
