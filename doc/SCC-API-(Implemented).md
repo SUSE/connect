@@ -182,6 +182,7 @@ Status: 200 OK
     "description": "SUSE Linux Enterprise offers a comprehensive suite of products built on a single code base. The platform addresses business needs from the smallest thin-client devices to the world's most powerful high-performance computing and mainframe servers. SUSE Linux Enterprise offers common management tools and technology certifications across the platform, and each product is enterprise-class.",
     "eula_url": "https://updates.suse.com/SUSE/Products/SLE-SERVER/12/x86_64/product.license/",
     "product_type": "base",
+    "recommended": false,
     "predecessor_ids": [769, 690, 824, 814, 1300],
     "successor_ids": [1322],
     "shortname": "SLES12",
@@ -204,6 +205,7 @@ Status: 200 OK
         "eula_url": "https://updates.suse.com/SUSE/Products/Storage/2/x86_64/product.license/",
         "extensions": [ ],
         "product_type": "extension",
+        "recommended": false,
         "repositories": [
           {
             "id": 1917,
@@ -301,7 +303,7 @@ Status: 200 OK
 [
   {
     "order_number": 14,
-    "order_items": [ { 
+    "order_items": [ {
       "id": 4,
       "fulfillid": 8796,
       "subscription_id": 963214,
@@ -453,7 +455,7 @@ Status: 200 OK
     "product_classes": ["SLES"],
     "families": ["sles", "sled"],
     "skus": ["sku1", "sku2"],
-    "systems": [{ "id": 1, "login": "login1" }] 
+    "systems": [{ "id": 1, "login": "login1" }]
   }
 ]
 ```
@@ -603,6 +605,7 @@ curl -H "Authorization: Token token=12345678" "https://scc.suse.com/connect/subs
       },
     ],
     "product_type": "base",
+    "recommended": false,
     "extensions": [
       {
         "id": 238,
@@ -643,6 +646,7 @@ curl -H "Authorization: Token token=12345678" "https://scc.suse.com/connect/subs
           }
         ],
         "product_type": "extension",
+        "recommended": false,
         "extensions": []
       }
     ]
@@ -709,7 +713,8 @@ curl https://scc.suse.com/connect/systems/products -u<username>:<password> -d id
   "product_family": "sles",
   "cpe": "cpe:/o:suse:sled-addon:12.0",
   "free": false,
-  "product_type": "",
+  "product_type": "base",
+  "recommended": false,
   "description": null,
   "eula_url": "https://nu.novell.com/SUSE:/Products:/SLE-12/images/repo/SLE-12-Server-POOL-x86_64-Media.license/",
   "extensions": [
@@ -727,6 +732,7 @@ curl https://scc.suse.com/connect/systems/products -u<username>:<password> -d id
       "cpe": "cpe:/o:suse:sle-sdk:12.0",
       "free": true,
       "product_type": "extension",
+      "recommended": false,
       "description": null,
       "eula_url": "https://nu.novell.com/repo/$RCE/SLE10-SDK-SP4-Online/sles-10-x86_64.license/",
       "extensions": [ ],
@@ -757,7 +763,7 @@ curl https://scc.suse.com/connect/systems/products -u<username>:<password> -d id
 }
 ```
 
-product_type can be '' (for base products), 'module', or 'extension'
+`product_type` can be 'base', 'module', or 'extension'
 
 ##### Errors:
 422: "No product specified"
@@ -818,7 +824,8 @@ Status: 200 OK
     "description": null,
     "eula_url": "https://nu.novell.com/SUSE:/Products:/SLE-12/images/repo/SLE-12-Server-POOL-x86_64-Media.license/",
     "extensions": [ ],
-    "product_type": ""
+    "product_type": "base",
+    "recommended": false
   }  
 }
 ```
@@ -879,7 +886,8 @@ Status: 200 OK
     "description": null,
     "eula_url": "https://nu.novell.com/SUSE:/Products:/SLE-HA-12/images/repo/SLE-12-HA-POOL-x86_64-Media.license/",
     "extensions": [ ],
-    "product_type": ""
+    "product_type": "base",
+    "recommended": false
   }  
 }
 ```
@@ -936,7 +944,8 @@ curl https://scc.suse.com/connect/systems/products -X 'PUT' -u<username>:<passwo
     "description": null,
     "eula_url": "https://nu.novell.com/SUSE:/Products:/SLE-12/images/repo/SLE-12-Server-POOL-x86_64-Media.license/",
     "extensions": [ ],
-    "product_type": ""
+    "product_type": "base",
+    "recommended": false
   }  
 }
 ```
@@ -1039,7 +1048,8 @@ Status: 200 OK
       "eula_url": "https://nu.novell.com/suse/qopjp.license/",
       "enabled_repositories": [ ],
       "extensions": [ ],
-      "product_type": "",
+      "product_type": "base",
+      "recommended": false,
       "repositories": [
         {
           "id": 908,
@@ -1185,7 +1195,8 @@ Status: 200 OK
   "product_family": "sles",
   "cpe": "cpe:/o:suse:sled-addon:12.0",
   "free": false,
-  "product_type": "",
+  "product_type": "base",
+  "recommended": false,
   "description": null,
   "eula_url": "https://nu.novell.com/SUSE:/Products:/SLE-12/images/repo/SLE-12-Server-POOL-x86_64-Media.license/",
   "extensions": [
@@ -1308,7 +1319,8 @@ Status: 200 OK
         "description": "The SUSE Linux Enterprise Web and Scripting Module delivers a comprehensive suite of scripting languages, frameworks, and related tools helping developers and systems administrators accelerate the creation of stable, modern web applications, including: PHP, Ruby on Rails, Python version 3. Access to the Web and Scripting Module is included in your SUSE Linux Enterprise Server subscription. The module has a different lifecycle than SUSE Linux Enterprise Server itself; please check the Release Notes for further details.",
         "eula_url": "SLE-12-module-web-scripting-POOL-x86_64-Media1.license",
         "enabled_repositories": [1494],
-        "product_type": "",
+        "product_type": "module",
+        "recommended": false,
         "repositories": [
           {
             "id": 1494,
