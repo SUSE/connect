@@ -65,7 +65,7 @@ module SUSE
           " Check #{@options[:url] || 'https://scc.suse.com'} whether your system appears there." \
           ' If it does not, please call SUSEConnect --cleanup and re-register this system.'
         else
-          log.fatal complain_if_broken_smt || "Error: SCC returned '#{e.message}' (#{e.code})"
+          log.fatal complain_if_broken_smt || "Error: Registration server returned '#{e.message}' (#{e.code})"
         end
         exit 67
       rescue FileError => e
