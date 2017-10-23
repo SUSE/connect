@@ -27,7 +27,7 @@ describe SUSE::Connect::Cli do
       let(:opts) { %w{-r 123} }
 
       it 'should produce log output if ApiError encountered' do
-        expect(string_logger).to receive(:fatal).with("Error: SCC returned 'test' (222)")
+        expect(string_logger).to receive(:fatal).with("Error: Registration server returned 'test' (222)")
         response = Net::HTTPResponse.new('1.1', 222, 'Test')
         expect(response).to receive(:body).and_return('localized_error' => 'test')
         allow_any_instance_of(Client).to receive(:register!).and_raise ApiError.new(response)
@@ -51,7 +51,7 @@ describe SUSE::Connect::Cli do
           allow(System).to receive(:credentials?).and_return false
           expect_any_instance_of(Client).to receive(:register!).and_raise ApiError.new(response)
 
-          error_message = "Error: SCC returned 'Invalid registration code' (401)"
+          error_message = "Error: Registration server returned 'Invalid registration code' (401)"
           expect(string_logger).to receive(:fatal).with(error_message)
           cli.execute!
         end
