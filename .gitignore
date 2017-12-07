@@ -3,7 +3,11 @@
 .bundle/
 coverage/
 vendor/
-*/.osc/
+
+package/.osc/
+package/SUSEConnect.5.gz
+package/SUSEConnect.8.gz
+
 Gemfile.lock
 .yardoc/
 *.png
