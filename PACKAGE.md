@@ -59,9 +59,7 @@ ronn --roff --manual SUSEConnect --pipe ../SUSEConnect.5.ronn > SUSEConnect.5  &
 Build the package for supported SLES versions:
 
 ```bash
-osc build SLE_12 x86_64 --no-verify
-osc build SLE_12_SP1 x86_64 --no-verify
-osc build SLE_12_SP2 x86_64 --no-verify
+osc build openSUSE_Leap_42.3 x86_64 --no-verify
 osc build SLE_12_SP3 x86_64 --no-verify
 osc build SLE_15 x86_64 --no-verify
 ```

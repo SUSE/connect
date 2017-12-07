@@ -23,20 +23,23 @@ Release:        0
 
 Requires:       coreutils, util-linux, net-tools, hwinfo, zypper, ca-certificates-mozilla
 Requires:       zypper(auto-agree-with-product-licenses)
-Conflicts:      suseRegister, yast2-registration < 3.1.129.7
-
-Obsoletes:      ruby2.1-rubygem-suse-connect < %{version}
-%if ! 0%{?is_opensuse}
-Provides:       ruby2.1-rubygem-suse-connect = %{version}
-%endif
-
 %ifarch x86_64 aarch64
 Requires:       dmidecode
 %endif
+Conflicts:      suseRegister, yast2-registration < 3.1.129.7
+
+# At some point we had a seperate rubygem-suse-connect package, which we need to obsolete
+Obsoletes:      ruby2.1-rubygem-suse-connect < %{version}
+
+%define ruby_version %{rb_default_ruby_suffix}
+# FIXME: For some reason, on SLE15 %{rb_default_ruby_suffix} resolves to ruby2.4 which does not exist there
+%if (0%{?sle_version} > 0 && 0%{?sle_version} >= 150000)
+%define ruby_version ruby2.5
+%endif
+
+BuildRequires:  %{ruby_version}
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
-BuildRequires:  %{ruby >= 2.0}
-
 Url:            https://github.com/SUSE/connect
 
 Source:         %{mod_full_name}.gem
@@ -64,7 +67,7 @@ done
 %install
 gem install --verbose --local --build-root=%{buildroot} -f --no-ri --no-rdoc ./%{mod_full_name}.gem
 mkdir %{buildroot}%{_sbindir}
-mv %{buildroot}%{_bindir}/%{name}.%{rb_default_ruby_suffix} %{buildroot}%{_sbindir}/%{name}
+mv %{buildroot}%{_bindir}/%{name}.%{ruby_version} %{buildroot}%{_sbindir}/%{name}
 ln -s %{_sbindir}/%{name} %{buildroot}%{_bindir}/%{name}
 
 install -D -m 644 %_sourcedir/SUSEConnect.5.gz %{buildroot}%_mandir/man5/SUSEConnect.5.gz
