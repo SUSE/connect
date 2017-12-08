@@ -2,7 +2,7 @@
 
 ## TL;DR
 
-You can use `rake build` instead of steps 2 to 5.
+You can use for example `rake build[SLE_15]` instead of steps 2 to 5.
 After you've build the package locally and are happy with the result - commit the changes to IBS.
 
 ## Step 1. Update gem version
@@ -16,62 +16,58 @@ This also commits the version change. So `git show HEAD` shows you the new versi
 
 ## Step 2. Refresh your package
 
-Before you start to update files in the `package` folder, make sure it is clean and updated:
+The package is built in the OBS at: https://build.opensuse.org/package/show/systemsmanagement:SCC/SUSEConnect
+
+If you've never connected to OBS from you package directory, you need to initialize it first:
 ```
-cd package_ibs
-osc status
-osc up
-cd ../package_obs
-osc status
-osc up
+cd package/; rm SUSEConnect.changes SUSEConnect.example SUSEConnect.spec;
+osc co systemsmanagement:SCC SUSEConnect -o .
 ```
 
-If you run into some merge conflict, you can delete everything in our package folder (except the `.gitignore`), then do
-`osc checkout systemsmanagement:SCC` which creates a subfolder from where you can move all files to your `package` folder.
-`osc status` afterwards to make sure you have no unwanted changes anymore.
+To avoid conflicts between osc versioned files and your updates, make sure it is clean and updated from obs before making changes:
+
+```
+cd package
+osc status
+osc up
+```
 
 ## Step 3. Update package version
 
-Update the `Version:` declaration in `package_obs/SUSEConnect.spec` to the new value manually.
+Update the `Version:` declaration in `package/SUSEConnect.spec` to the new value manually.
 
-Please also update `package_obs/SUSEConnect.changes` file with a list of new features in master since the last version update. You can do it manually or with the command:
+Please also update `package/SUSEConnect.changes` file with a list of new features in master since the last version update. You can do it manually or with the command:
 ```
-cd ../package_obs
 osc vc
 ```
 
 After you've commited your sources, make sure that a new git tag (looking like `v0.3.88`) has been also created and pushed. It is highly advised to use [signed tags](https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work); use `git tag -s v0.3.88 -m "Version 0.3.88"` to create those.
 
-## Step 4. Build package files
+## Step 4. Prepare the files for building the package
 
 Then build the gem and copy it to package-building directory:
 
 ```bash
 gem build suse-connect.gemspec
-cp suse-connect-*.gem package_obs/
-cp suse-connect-*.gem package_ibs/
+cp suse-connect-*.gem package/
 ```
 
 To update the man pages for the package please do:
 
 ```bash
-cd package_ibs
-ronn --roff --manual SUSEConnect --pipe ../SUSEConnect.8.ronn > SUSEConnect.8  && gzip -f SUSEConnect.8
-ronn --roff --manual SUSEConnect --pipe ../SUSEConnect.5.ronn > SUSEConnect.5  && gzip -f SUSEConnect.5
-cd ../package_obs
+cd package
 ronn --roff --manual SUSEConnect --pipe ../SUSEConnect.8.ronn > SUSEConnect.8  && gzip -f SUSEConnect.8
 ronn --roff --manual SUSEConnect --pipe ../SUSEConnect.5.ronn > SUSEConnect.5  && gzip -f SUSEConnect.5
 ```
 
 ## Step 5. Build the package
 
-Build the package for SLES 12 versions:
+Build the package for one of the available distributions, eg:
 
 ```bash
-osc build SLE_12 x86_64 --no-verify
-osc build SLE_12_SP1 x86_64 --no-verify
-osc build SLE_12_SP2 x86_64 --no-verify
+osc build openSUSE_Leap_42.3 x86_64 --no-verify
 osc build SLE_12_SP3 x86_64 --no-verify
+osc build SLE_15 x86_64 --no-verify
 ```
 
 Please consult the corresponding [IBS page](https://build.opensuse.org/package/show/systemsmanagement:SCC/SUSEConnect) for the full list of available targets.
@@ -80,7 +76,7 @@ Please consult the corresponding [IBS page](https://build.opensuse.org/package/s
 
 To submit the package:
 ```bash
-cd package_ibs
+cd package
 osc status
 ```
 
@@ -90,8 +86,6 @@ It should typically be enough to run `osc ar` to add new and delete removed file
 ```bash
 osc commit
 ```
-
-Repeat the same with `package_obs`
 
 ## Step 7. Submit Requests to OpenSUSE Factory and IBS
 
@@ -103,23 +97,27 @@ request with `bnc#123` or `fate#123`.
 To submit a request to openSUSE Factory, issue this commands in the console:
 
 ```bash
-cd package_obs
+cd package
 osc sr systemsmanagement:SCC SUSEConnect openSUSE:Factory --no-cleanup
 ```
 
 
 ### Internal Build Service
 
-```bash
-cd package_ibs
-osc mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12:Update --no-cleanup
-osc mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP1:Update --no-cleanup
-osc mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP2:Update --no-cleanup
+To make the initial submit for a new SLES version:
 
-osc sr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP3:GA --no-cleanup
+```
+osc -A https://api.suse.de sr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP3:GA --no-cleanup
+```
+
+To submit the updated package as an update to released SLES versions:
+
+```bash
+osc -A https://api.suse.de mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12:Update --no-cleanup
+osc -A https://api.suse.de mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP1:Update --no-cleanup
+osc -A https://api.suse.de mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP2:Update --no-cleanup
 ```
 
 
 You can check the status of your requests [here](https://build.opensuse.org/package/requests/systemsmanagement:SCC/SUSEConnect) and [here](https://build.suse.de/package/requests/Devel:SCC:suseconnect/SUSEConnect).
 After your requests got accepted, they still have to pass maintenance testing. You can check their progress at [maintenance.suse.de](https://maintenance.suse.de/). Just enter your requests Id in the search field. Then follow the link pointing to the _incident_ in which your requests gets handled to find out more. If you still need help, [Leonardo Chiquitto](https://floor.nue.suse.com/users/255) (leonardo in IRC) is a good contact person for maintenance related questions.
-
