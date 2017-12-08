@@ -57,27 +57,3 @@ task :build, [:product] do |t, args|
     Dir.chdir '..'
   end
 end
-
-namespace :vm do
-  desc 'Ssh into virtual machine'
-  task :ssh, :ip do |_t, args|
-    system("echo -e | ssh vagrant@#{args[:args]}")
-  end
-
-  namespace :remotefs do
-    desc 'Mount remote connect source code'
-    task :mount, :ip do |_t, args|
-      if args[:ip]
-        options = '-o password_stdin -o uid=$(id -u) -o gid=$(id -g) -o auto_unmount'
-        system "echo vagrant | sshfs vagrant@#{args[:ip]}:/tmp/connect /tmp/remotefs #{options}"
-      else
-        puts 'ERROR: Missing VM IP address'
-      end
-    end
-
-    desc 'Umount remote connect source code'
-    task :umount do
-      system('sudo umount /tmp/remotefs')
-    end
-  end
-end
