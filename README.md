@@ -5,7 +5,7 @@
 
 # SUSEConnect
 
-is a command line tool for connecting a client system to the SUSE Customer Center.
+SUSEConnect is a command line tool for connecting a client system to the SUSE Customer Center.
 It will connect the system to your product subscriptions and enable the product repositories/services locally.
 
 SUSEConnect is distributed as RPM for all SUSE distributions and gets built in
@@ -13,7 +13,7 @@ the [openSUSE build service](https://build.opensuse.org/package/show/systemsmana
 
 Please visit https://scc.suse.com to see and manage your subscriptions.
 
-SUSEConnect is communicating with SCC over this [REST API](https://github.com/SUSE/connect/blob/master/doc/SCC-API-%28Implemented%29.md).
+SUSEConnect communicates with SCC over this [REST API](https://github.com/SUSE/connect/blob/master/doc/SCC-API-%28Implemented%29.md).
 
 # Rake tasks
 
