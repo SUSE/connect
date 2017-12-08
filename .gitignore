@@ -8,6 +8,8 @@ package/.osc/
 package/SUSEConnect.5.gz
 package/SUSEConnect.8.gz
 
+SUSEConnect.5
+SUSEConnect.8
 Gemfile.lock
 .yardoc/
 *.png
