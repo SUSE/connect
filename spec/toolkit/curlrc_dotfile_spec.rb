@@ -89,7 +89,7 @@ describe SUSE::Toolkit::CurlrcDotfile do
       end
 
       it 'returns nil if no matchin line found' do
-        allow(File).to receive(:readlines).with(curlrc_location).and_return(%w{ foo bar})
+        allow(File).to receive(:readlines).with(curlrc_location).and_return(%w[foo bar])
         expect(subject.send(:line_with_credentials)).to be nil
       end
     end

@@ -128,7 +128,7 @@ describe SUSE::Connect::Api do
         expect_any_instance_of(Connection).to receive(:get).with('/connect/systems/services', auth: 'basic_auth_string').and_call_original
         result = subject.new(client).system_services('basic_auth_string').body
         expect(result).to be_kind_of Array
-        expect(result.first.keys).to match_array %w{id name product}
+        expect(result.first.keys).to match_array %w[id name product]
       end
     end
 
@@ -147,8 +147,8 @@ describe SUSE::Connect::Api do
         result = subject.new(client).system_subscriptions('basic_auth_string').body
         expect(result).to be_kind_of Array
 
-        attr_ary = %w{id regcode name type status starts_at expires_at}
-        attr_ary += %w{system_limit systems_count virtual_count product_classes systems product_ids}
+        attr_ary = %w[id regcode name type status starts_at expires_at]
+        attr_ary += %w[system_limit systems_count virtual_count product_classes systems product_ids]
         expect(result.first.keys).to eq attr_ary
       end
     end
@@ -167,7 +167,7 @@ describe SUSE::Connect::Api do
         expect_any_instance_of(Connection).to receive(:get).with('/connect/systems/activations', auth: 'basic_auth_string').and_call_original
         result = subject.new(client).system_activations('basic_auth_string').body
         expect(result).to be_kind_of Array
-        expect(result.first.keys).to eq %w{id regcode type status starts_at expires_at system_id service}
+        expect(result.first.keys).to eq %w[id regcode type status starts_at expires_at system_id service]
       end
     end
   end

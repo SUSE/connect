@@ -21,10 +21,6 @@ SpaceInsideBlockBraces:
   EnforcedStyle: space
   SpaceBeforeBlockParameters: false
 
-PercentLiteralDelimiters:
-  PreferredDelimiters:
-    '%w': '{}'
-
 FileName:
   Exclude:
     - SUSEConnect

@@ -37,7 +37,7 @@ describe SUSE::Connect::Zypper::Product do
 
       context 'is different' do
         it 'set isbase to true if isbase key is equal true' do
-          %w{ foo aga sc 42 false}.each do |variant|
+          %w[foo aga sc 42 false].each do |variant|
             expect(subject.new(:isbase => variant).isbase).to be false
           end
         end
