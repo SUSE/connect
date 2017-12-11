@@ -14,37 +14,12 @@ AllCops:
     - package_obs/**/*
     - package_ibs/**/*
 
-ClassLength:
-  Max: 128
-
 HashSyntax:
   Enabled: false
-
-MethodLength:
-  Max: 15
-
-LineLength:
-  Max: 160
-
-SpaceBeforeBlockBraces:
-  Enabled: true
-  EnforcedStyle: space
 
 SpaceInsideBlockBraces:
   EnforcedStyle: space
   SpaceBeforeBlockParameters: false
-
-EmptyLinesAroundMethodBody:
-  Enabled: false
-
-EmptyLinesAroundModuleBody:
-  Enabled: false
-
-SignalException:
-  Enabled: false
-
-DoubleNegation:
-  Enabled: false
 
 PercentLiteralDelimiters:
   PreferredDelimiters:
@@ -57,9 +32,3 @@ FileName:
   Exclude:
     - SUSEConnect
     - suse-connect.gemspec
-
-ClassAndModuleChildren:
-  Enabled: false
-
-GlobalVars:
-  AllowedVariables: []
