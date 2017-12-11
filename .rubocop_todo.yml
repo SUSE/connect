@@ -377,43 +377,6 @@ RSpec/VerifiedDoubles:
 
 # Offense count: 1
 # Cop supports --auto-correct.
-# Configuration parameters: NilOrEmpty, NotPresent, UnlessPresent.
-Rails/Blank:
-  Exclude:
-    - 'lib/suse/connect/credentials.rb'
-
-# Offense count: 1
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-# SupportedStyles: strict, flexible
-Rails/Date:
-  Exclude:
-    - 'suse-connect.gemspec'
-
-# Offense count: 16
-# Configuration parameters: Include.
-# Include: app/**/*.rb, config/**/*.rb, lib/**/*.rb
-Rails/Exit:
-  Exclude:
-    - 'lib/**/*.rake'
-    - 'lib/suse/connect/cli.rb'
-
-# Offense count: 4
-# Configuration parameters: Include.
-# Include: app/**/*.rb, config/**/*.rb, db/**/*.rb, lib/**/*.rb
-Rails/Output:
-  Exclude:
-    - 'lib/suse/connect/cli.rb'
-    - 'lib/suse/connect/status.rb'
-
-# Offense count: 2
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-# SupportedStyles: strict, flexible
-Rails/TimeZone:
-  Exclude:
-    - 'lib/suse/connect/status.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
 Security/YAMLLoad:
   Exclude:
     - 'spec/connect/config_spec.rb'
