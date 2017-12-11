@@ -45,9 +45,13 @@ task :build, [:product] do |t, args|
   sh 'rm *.gem' if Dir['*.gem'].any?
   sh 'gem build suse-connect.gemspec'
 
-  sh 'rm package/*.gem' if Dir['package/*.gem'].any?
-  sh "cp #{gemfilename} ./package/"
   Dir.chdir 'package'
+  unless Dir['.osc'].any?
+    sh 'mkdir .tmp; mv * .tmp/'
+    sh 'osc co systemsmanagement:SCC SUSEConnect -o .'
+    sh 'mv .tmp/* .; rm -r .tmp/'
+  end
+  sh "cp ../#{gemfilename} ."
   sh 'ronn --roff --manual SUSEConnect --pipe ../SUSEConnect.8.ronn > SUSEConnect.8 && gzip -f SUSEConnect.8'
   sh 'ronn --roff --manual SUSEConnect --pipe ../SUSEConnect.5.ronn > SUSEConnect.5 && gzip -f SUSEConnect.5'
   sh "osc build #{args[:product]} x86_64 --no-verify --trust-all-projects"
