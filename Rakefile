@@ -41,43 +41,19 @@ end
 desc 'Build locally (prepare for pushing to ibs)'
 task :build, [:product] do |t, args|
 
-  def gemfilename
-    "suse-connect-#{SUSE::Connect::VERSION}.gem"
-  end
-
+  gemfilename = "suse-connect-#{SUSE::Connect::VERSION}.gem"
   sh 'rm *.gem' if Dir['*.gem'].any?
   sh 'gem build suse-connect.gemspec'
-  %w(ibs obs).each do |build_service|
-    sh "rm package_#{build_service}/*.gem" if Dir["package_#{build_service}/*.gem"].any?
-    sh "cp #{gemfilename} ./package_#{build_service}/"
-    Dir.chdir "package_#{build_service}"
-    sh 'ronn --roff --manual SUSEConnect --pipe ../SUSEConnect.8.ronn > SUSEConnect.8 && gzip -f SUSEConnect.8'
-    sh 'ronn --roff --manual SUSEConnect --pipe ../SUSEConnect.5.ronn > SUSEConnect.5 && gzip -f SUSEConnect.5'
-    sh "osc build #{args[:product]} x86_64 --no-verify --trust-all-projects"
-    Dir.chdir '..'
-  end
-end
 
-namespace :vm do
-  desc 'Ssh into virtual machine'
-  task :ssh, :ip do |_t, args|
-    system("echo -e | ssh vagrant@#{args[:args]}")
+  Dir.chdir 'package'
+  unless Dir['.osc'].any?
+    sh 'mkdir .tmp; mv * .tmp/'
+    sh 'osc co systemsmanagement:SCC SUSEConnect -o .'
+    sh 'mv .tmp/* .; rm -r .tmp/'
   end
-
-  namespace :remotefs do
-    desc 'Mount remote connect source code'
-    task :mount, :ip do |_t, args|
-      if args[:ip]
-        options = '-o password_stdin -o uid=$(id -u) -o gid=$(id -g) -o auto_unmount'
-        system "echo vagrant | sshfs vagrant@#{args[:ip]}:/tmp/connect /tmp/remotefs #{options}"
-      else
-        puts 'ERROR: Missing VM IP address'
-      end
-    end
-
-    desc 'Umount remote connect source code'
-    task :umount do
-      system('sudo umount /tmp/remotefs')
-    end
-  end
+  sh "cp ../#{gemfilename} ."
+  sh 'ronn --roff --manual SUSEConnect --pipe ../SUSEConnect.8.ronn > SUSEConnect.8 && gzip -f SUSEConnect.8'
+  sh 'ronn --roff --manual SUSEConnect --pipe ../SUSEConnect.5.ronn > SUSEConnect.5 && gzip -f SUSEConnect.5'
+  sh "osc build #{args[:product]} x86_64 --no-verify --trust-all-projects"
+  Dir.chdir '..'
 end

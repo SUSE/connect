@@ -23,4 +23,5 @@ group :test do
   gem 'webmock', '~> 1.21.0'
   gem 'http', '~> 0.8.12'
   gem 'aruba', '~> 0.7.4'
+  gem 'cucumber', '~> 2.4.0'
 end

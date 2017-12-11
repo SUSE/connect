@@ -11,8 +11,7 @@ AllCops:
     - kitchen/cookbooks/**/*
     - kitchen/tmp/**/*
     - vendor/**
-    - package_obs/**/*
-    - package_ibs/**/*
+    - package/**
 
 Rails:
   Enabled: false

@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Dec  7 17:30:23 UTC 2017 - tschmidt@suse.com
+
+- Update to version 0.3.3: 
+  - Fix SLE15 build 
+
+-------------------------------------------------------------------
 Mon Oct 16 15:23:33 UTC 2017 - ikapelyukhin@suse.com
 
 - Properly refresh zypper services when deactivating a product on SMT (bsc#1047153)
