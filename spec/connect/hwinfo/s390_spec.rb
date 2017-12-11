@@ -4,7 +4,7 @@ require 'suse/connect/hwinfo/s390'
 describe SUSE::Connect::HwInfo::S390 do
   subject { SUSE::Connect::HwInfo::S390 }
   let(:read_values) { File.read(File.join(fixtures_dir, 'read_values_s.txt')) }
-  let(:success) { double('Process Status', :exitstatus => 0) }
+  let(:success) { double('Process Status', exitstatus: 0) }
   include_context 'shared lets'
 
   before :each do

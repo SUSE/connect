@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe SUSE::Connect::HwInfo::Base do
   subject { SUSE::Connect::HwInfo::Base }
-  let(:success) { double('Process Status', :exitstatus => 0) }
+  let(:success) { double('Process Status', exitstatus: 0) }
   include_context 'shared lets'
 
   after(:each) do

@@ -107,7 +107,7 @@ describe SUSE::Connect::System do
   describe '.hostname' do
     context :hostname_detected do
       it 'returns hostname' do
-        allow(Socket).to receive_messages(:gethostname => 'vargan')
+        allow(Socket).to receive_messages(gethostname: 'vargan')
         expect(subject.hostname).to eq 'vargan'
       end
     end
@@ -115,8 +115,8 @@ describe SUSE::Connect::System do
     context :hostname_nil do
       it 'returns first private ip' do
         stubbed_ip_address_list = [Addrinfo.ip('127.0.0.1'), Addrinfo.ip('192.168.42.100'), Addrinfo.ip('192.168.42.42')]
-        allow(Socket).to receive_messages(:ip_address_list => stubbed_ip_address_list)
-        allow(Socket).to receive_messages(:gethostname => nil)
+        allow(Socket).to receive_messages(ip_address_list: stubbed_ip_address_list)
+        allow(Socket).to receive_messages(gethostname: nil)
         expect(subject.hostname).to eq '192.168.42.100'
       end
     end
@@ -124,8 +124,8 @@ describe SUSE::Connect::System do
     context :hostname_is_none do
       it 'returns first private ip' do
         stubbed_ip_address_list = [Addrinfo.ip('127.0.0.1'), Addrinfo.ip('192.168.42.42')]
-        allow(Socket).to receive_messages(:ip_address_list => stubbed_ip_address_list)
-        allow(Socket).to receive_messages(:gethostname => '(none)')
+        allow(Socket).to receive_messages(ip_address_list: stubbed_ip_address_list)
+        allow(Socket).to receive_messages(gethostname: '(none)')
         expect(subject.hostname).to eq '192.168.42.42'
       end
     end
@@ -133,8 +133,8 @@ describe SUSE::Connect::System do
     context 'hostname and private ip is nil' do
       it 'returns nil' do
         stubbed_ip_address_list = [Addrinfo.ip('127.0.0.1'), Addrinfo.ip('44.0.0.69')]
-        allow(Socket).to receive_messages(:ip_address_list => stubbed_ip_address_list)
-        allow(Socket).to receive_messages(:gethostname => nil)
+        allow(Socket).to receive_messages(ip_address_list: stubbed_ip_address_list)
+        allow(Socket).to receive_messages(gethostname: nil)
         expect(subject.hostname).to eq nil
       end
     end

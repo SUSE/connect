@@ -14,9 +14,6 @@ AllCops:
     - package_obs/**/*
     - package_ibs/**/*
 
-HashSyntax:
-  Enabled: false
-
 FileName:
   Exclude:
     - SUSEConnect

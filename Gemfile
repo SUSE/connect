@@ -17,7 +17,7 @@ group :development do
 end
 
 group :test do
-  gem 'coveralls', :require => false
+  gem 'coveralls', require: false
   gem 'rspec', '~> 3.3.0'
   gem 'rspec-its'
   gem 'webmock', '~> 1.21.0'

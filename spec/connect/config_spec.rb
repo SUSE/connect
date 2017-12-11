@@ -56,7 +56,7 @@ describe SUSE::Connect::Config do
         allow_any_instance_of(subject).to receive(:read).and_return('insecure' => :stubval)
         conf = subject.new
         expect(conf.insecure).to eq :stubval
-        conf.merge!(:insecure => :goo)
+        conf.merge!(insecure: :goo)
         expect(conf.insecure).to eq :goo
       end
 
@@ -64,7 +64,7 @@ describe SUSE::Connect::Config do
         allow_any_instance_of(subject).to receive(:read).and_return('insecure' => :base_value)
         conf = subject.new
         expect(conf.insecure).to eq :base_value
-        conf.merge!(:insecure => :goo, :logger => :base)
+        conf.merge!(insecure: :goo, logger: :base)
         expect(conf.insecure).to eq :goo
       end
 
@@ -72,10 +72,10 @@ describe SUSE::Connect::Config do
         allow_any_instance_of(subject).to receive(:read).and_return('insecure' => :base_value)
         conf = subject.new
         conf.merge!(
-          :url => 'http://smt.domain.local',
-          :language => 'DE',
-          :insecure => true,
-          :filesystem_root => '/docker/pool/2'
+          url: 'http://smt.domain.local',
+          language: 'DE',
+          insecure: true,
+          filesystem_root: '/docker/pool/2'
         )
         expect(conf.select_serializable_attributes).to eq(
           'url' => 'http://smt.domain.local',

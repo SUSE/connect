@@ -20,7 +20,7 @@ describe SUSE::Toolkit::Utilities do
 
   describe '?basic_auth' do
     it 'returns string for auth header' do
-      allow(Credentials).to receive_messages(:read => Credentials.new('bob', 'dylan'))
+      allow(Credentials).to receive_messages(read: Credentials.new('bob', 'dylan'))
       base64_line = 'Basic Ym9iOmR5bGFu'
       expect(subject.send(:system_auth)).to eq base64_line
     end

@@ -10,10 +10,10 @@ module SUSE
       include Logger
 
       VERB_TO_CLASS = {
-        :get    => Net::HTTP::Get,
-        :post   => Net::HTTP::Post,
-        :put    => Net::HTTP::Put,
-        :delete => Net::HTTP::Delete
+        get: Net::HTTP::Get,
+        post: Net::HTTP::Post,
+        put: Net::HTTP::Put,
+        delete: Net::HTTP::Delete
       }
 
       attr_accessor :debug, :http, :auth, :language

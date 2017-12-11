@@ -69,7 +69,7 @@ describe SUSE::Connect::Connection do
       let(:callback) { ->(_p1, _p2) {} }
 
       let :secure_connection do
-        subject.new('https://example.com', :insecure => true, :verify_callback => callback)
+        subject.new('https://example.com', insecure: true, verify_callback: callback)
       end
 
       it 'set ssl to true by default' do
@@ -92,8 +92,8 @@ describe SUSE::Connect::Connection do
     end
 
     before do
-      allow(connection.http).to receive(:request).and_return(OpenStruct.new(:body => 'bodyofostruct'))
-      allow(JSON).to receive_messages(:parse => { '1' => '2' })
+      allow(connection.http).to receive(:request).and_return(OpenStruct.new(body: 'bodyofostruct'))
+      allow(JSON).to receive_messages(parse: { '1' => '2' })
     end
 
     context :get_request do
@@ -144,34 +144,34 @@ describe SUSE::Connect::Connection do
 
     before do
       stub_request(:post, 'https://example.com/api/v1/test')
-        .with(:body => '', :headers => { 'Authorization' => 'Token token=zulu' })
-        .to_return(:status => 200, :body => '{}', :headers => {})
+        .with(body: '', headers: { 'Authorization' => 'Token token=zulu' })
+        .to_return(status: 200, body: '{}', headers: {})
     end
 
     it 'hits requested endpoint with parametrized request' do
-      result = connection.post('/api/v1/test', :auth => 'Token token=zulu')
+      result = connection.post('/api/v1/test', auth: 'Token token=zulu')
       expect(result.body).to eq({})
       expect(result.code).to eq 200
     end
 
     it 'sends Accept-Language header with specified language' do
       stub_request(:post, 'https://example.com/api/v1/test')
-        .with(:body => '', :headers => { 'Authorization' => 'Token token=zulu', 'Accept-Language' => 'blabla' })
-        .to_return(:status => 200, :body => '{}', :headers => {})
+        .with(body: '', headers: { 'Authorization' => 'Token token=zulu', 'Accept-Language' => 'blabla' })
+        .to_return(status: 200, body: '{}', headers: {})
 
-      connection = subject.new('https://example.com', :language => 'blabla')
-      result = connection.post('/api/v1/test', :auth => 'Token token=zulu')
+      connection = subject.new('https://example.com', language: 'blabla')
+      result = connection.post('/api/v1/test', auth: 'Token token=zulu')
       expect(result.code).to eq 200
     end
 
     it 'sends Accept header with api versioning' do
       stub_request(:post, 'https://example.com/api/v1/test')
-        .with(:body => '', :headers => { 'Authorization' => 'Token token=zulu', \
-                                         'Accept' => 'application/json,application/vnd.scc.suse.com.v1+json' })
-        .to_return(:status => 200, :body => '{}', :headers => {})
+        .with(body: '', headers: { 'Authorization' => 'Token token=zulu', \
+                                   'Accept' => 'application/json,application/vnd.scc.suse.com.v1+json' })
+        .to_return(status: 200, body: '{}', headers: {})
 
       connection = subject.new('https://example.com')
-      result = connection.post('/api/v1/test', :auth => 'Token token=zulu')
+      result = connection.post('/api/v1/test', auth: 'Token token=zulu')
       expect(result.code).to eq 200
     end
 
@@ -185,7 +185,7 @@ describe SUSE::Connect::Connection do
 
       stub_request(:post, 'https://example.com/api/v1/test')
         .with(headers: headers)
-        .to_return(:status => 200, :body => '', :headers => {})
+        .to_return(status: 200, body: '', headers: {})
 
       connection = subject.new('https://example.com')
       result = connection.post('/api/v1/test')
@@ -194,10 +194,10 @@ describe SUSE::Connect::Connection do
 
     it 'converts response into proper hash' do
       stub_request(:post, 'https://example.com/api/v1/test')
-        .with(:body => '', :headers => { 'Authorization' => 'Token token=zulu' })
-        .to_return(:status => 200, :body => "{\"keyyo\":\"vallue\"}", :headers => {})
+        .with(body: '', headers: { 'Authorization' => 'Token token=zulu' })
+        .to_return(status: 200, body: "{\"keyyo\":\"vallue\"}", headers: {})
 
-      result = connection.post('/api/v1/test', :auth => 'Token token=zulu')
+      result = connection.post('/api/v1/test', auth: 'Token token=zulu')
       expect(result.body).to eq('keyyo' => 'vallue')
       expect(result.code).to eq 200
     end
@@ -206,24 +206,24 @@ describe SUSE::Connect::Connection do
       api_version = SUSE::Connect::Api::VERSION
 
       stub_request(:post, 'https://example.com/api/v1/test')
-        .with(:body => '', :headers => { 'Authorization' => 'Token token=zulu' })
-        .to_return(:status => 200, :body => '{}', :headers => { 'scc-api-version' => api_version })
+        .with(body: '', headers: { 'Authorization' => 'Token token=zulu' })
+        .to_return(status: 200, body: '{}', headers: { 'scc-api-version' => api_version })
 
       connection = subject.new('https://example.com')
-      result = connection.post('/api/v1/test', :auth => 'Token token=zulu')
+      result = connection.post('/api/v1/test', auth: 'Token token=zulu')
       expect(result.headers['scc-api-version'].first).to eq api_version
       expect(result.code).to eq 200
     end
 
     it 'send params alongside with request' do
       stub_request(:post, 'https://example.com/api/v1/test')
-        .with(:body => "{\"foo\":\"bar\",\"bar\":[1,3,4]}", :headers => { 'Authorization' => 'Token token=zulu' })
-        .to_return(:status => 200, :body => "{\"keyyo\":\"vallue\"}", :headers => {})
+        .with(body: "{\"foo\":\"bar\",\"bar\":[1,3,4]}", headers: { 'Authorization' => 'Token token=zulu' })
+        .to_return(status: 200, body: "{\"keyyo\":\"vallue\"}", headers: {})
 
       result = connection.post(
         '/api/v1/test',
-        :auth => 'Token token=zulu',
-        :params => { :foo => 'bar', :bar => [1, 3, 4] }
+        auth: 'Token token=zulu',
+        params: { foo: 'bar', bar: [1, 3, 4] }
       )
       expect(result.body).to eq('keyyo' => 'vallue')
       expect(result.code).to eq 200
@@ -231,12 +231,12 @@ describe SUSE::Connect::Connection do
 
     it 'accepts empty request body' do
       stub_request(:delete, 'https://example.com/api/v1/test')
-        .with(:headers => { 'Authorization' => 'Token token=zulu' })
-        .to_return(:status => 204, :body => nil, :headers => {})
+        .with(headers: { 'Authorization' => 'Token token=zulu' })
+        .to_return(status: 204, body: nil, headers: {})
 
       result = connection.delete(
         '/api/v1/test',
-        :auth => 'Token token=zulu'
+        auth: 'Token token=zulu'
       )
 
       expect(result.body).to be_nil
@@ -246,31 +246,31 @@ describe SUSE::Connect::Connection do
     it 'raise an ApiError if response code anything but 200' do
       stub_request(:post, 'https://example.com/api/v1/test')
         .with(
-          :body => '',
-          :headers => { 'Authorization' => 'Token token=zulu' }
+          body: '',
+          headers: { 'Authorization' => 'Token token=zulu' }
         )
         .to_return(
-          :status => 422,
-          :body => '{}'
+          status: 422,
+          body: '{}'
         )
 
       expect do
         connection.post(
           '/api/v1/test',
-          :auth   => 'Token token=zulu',
-          :params => {}
+          auth: 'Token token=zulu',
+          params: {}
         )
       end.to raise_error ApiError
     end
 
     it 'raise an error with response from api if response code anything but 200' do
       parsed_output = OpenStruct.new(
-        :code => 422,
-        :body => { 'error' => 'These are not the droids you were looking for' }
+        code: 422,
+        body: { 'error' => 'These are not the droids you were looking for' }
       )
 
       expect(connection).to receive(:json_request).and_return parsed_output
-      expect { connection.post('/api/v1/test', :auth   => 'Token token=zulu', :params => {}) }
+      expect { connection.post('/api/v1/test', auth: 'Token token=zulu', params: {}) }
         .to raise_error(ApiError) do |error|
         expect(error.code).to eq 422
         expect(error.response.body).to eq('error' => 'These are not the droids you were looking for')

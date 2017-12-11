@@ -3,7 +3,7 @@ require 'suse/connect/hwinfo/arm64'
 
 describe SUSE::Connect::HwInfo::ARM64 do
   subject { SUSE::Connect::HwInfo::ARM64 }
-  let(:success) { double('Process Status', :exitstatus => 0) }
+  let(:success) { double('Process Status', exitstatus: 0) }
   let(:lscpu) { File.read(File.join(fixtures_dir, 'lscpu_phys.txt')) }
   include_context 'shared lets'
 
