@@ -18,7 +18,7 @@ This also commits the version change. So `git show HEAD` shows you the new versi
 
 The package is built in the OBS at: https://build.opensuse.org/package/show/systemsmanagement:SCC/SUSEConnect
 
-If you've never connected to OBS from you package directory, you need to initialize it first:
+If you've never connected to OBS from your package directory, you need to initialize it first:
 ```
 cd package/; rm SUSEConnect.changes SUSEConnect.example SUSEConnect.spec;
 osc co systemsmanagement:SCC SUSEConnect -o .

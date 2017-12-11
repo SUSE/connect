@@ -35,15 +35,15 @@ For SLES12SP0
 
 For SLES12SP1
 
-* `docker build -t connect_sp1 -f Dockerfile.sp1 .`
+* `docker build -t connect.sp1 -f Dockerfile.sp1 .`
 
 For SLES12SP2
 
-* `docker build -t connect_sp2 -f Dockerfile.sp2 .`
+* `docker build -t connect.sp2 -f Dockerfile.sp2 .`
 
 For SLES12SP3
 
-* `docker build -t connect_sp3 -f Dockerfile.sp3 .`
+* `docker build -t connect.sp3 -f Dockerfile.sp3 .`
 
 ## Run commands
 
