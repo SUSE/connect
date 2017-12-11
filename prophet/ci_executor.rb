@@ -5,7 +5,6 @@ module SCC
 
   # RunStep
   class RunStep
-
     attr_accessor :name, :command, :status, :project
 
     def initialize(name: nil, command: nil, project: project)
@@ -23,12 +22,10 @@ module SCC
     def text_status
       status ? "passed -- #{name}" : "failed -- #{name}"
     end
-
   end
 
   # Project
   class Project
-
     attr_accessor :name, :steps
 
     def initialize(name: nil, steps: [])
@@ -64,12 +61,10 @@ module SCC
         end
       end
     end
-
   end
 
   # CiExecutor
   class CiExecutor
-
     class << self
       attr_accessor :logger
     end
@@ -110,6 +105,5 @@ module SCC
     def failed_projects
       projects.select {|p| !p.status }
     end
-
   end
 end
