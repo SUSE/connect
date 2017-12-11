@@ -12,7 +12,7 @@ group :development do
   gem 'redcarpet'
   gem 'ronn'
   gem 'rake'
-  #gem 'gem2rpm', '~> 0.10.1' # TODO: let's link this to the repo that contains the --config fix from the suse package
+  # gem 'gem2rpm', '~> 0.10.1' # TODO: let's link this to the repo that contains the --config fix from the suse package
   gem 'bump'
 end
 
