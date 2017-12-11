@@ -8,7 +8,7 @@ module SUSE
       def to_openstruct
         attributes = self.attributes
         attributes.each do |key, value|
-          attributes[key] = value.map {|v| v.to_openstruct } if value.is_a?(Array) && value.any? {|v| v.is_a?(Hash) }
+          attributes[key] = value.map { |v| v.to_openstruct } if value.is_a?(Array) && value.any? { |v| v.is_a?(Hash) }
         end
         OpenStruct.new(attributes)
       end
@@ -16,7 +16,7 @@ module SUSE
       def attributes
         attributes = to_h
         attributes.each do |key, value|
-          attributes[key] = value.map(&:to_h) if value.is_a?(Array) && value.any? {|v| v.is_a?(OpenStruct) }
+          attributes[key] = value.map(&:to_h) if value.is_a?(Array) && value.any? { |v| v.is_a?(OpenStruct) }
         end
         attributes
       end

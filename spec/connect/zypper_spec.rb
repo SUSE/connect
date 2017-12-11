@@ -105,7 +105,8 @@ describe SUSE::Connect::Zypper do
       expect(Open3).to receive(:capture3).with(shared_env_hash, args).at_least(1).and_return([zypper_repo_output, '', status])
       expect(subject.repositories.size).to eq 4
       expect(subject.repositories.first.keys).to match_array([:alias, :name, :type, :priority, :enabled, :autorefresh, :gpgcheck, :url])
-      expect(subject.repositories.map {|service| service[:name] }).to match_array(%w[SLES12-Debuginfo-Pool SLES12-Debuginfo-Updates SLES12-Pool SLES12-Updates])
+      expect(subject.repositories.map { |service| service[:name] })
+        .to match_array(%w[SLES12-Debuginfo-Pool SLES12-Debuginfo-Updates SLES12-Pool SLES12-Updates])
     end
 
     it 'returns empty list when zypper has no repositories' do
@@ -216,7 +217,7 @@ describe SUSE::Connect::Zypper do
       it 'finds products by identifier' do
         products = subject.find_products(identifier)
         expect(products.size).to eq 2
-        expect(products.map {|p| p[:repository] }).to match_array(%w[SLES-12 SLES12-Pool])
+        expect(products.map { |p| p[:repository] }).to match_array(%w[SLES-12 SLES12-Pool])
       end
     end
 
@@ -303,7 +304,7 @@ describe SUSE::Connect::Zypper do
     it 'lists all defined services.' do
       expect(subject.services.size).to eq 3
       expect(subject.services.first.keys).to match_array([:alias, :autorefresh, :enabled, :name, :type, :url])
-      expect(subject.services.map {|service| service[:name] }).to match_array(%w[scc_sles12 smt_sles12 legacy_sles12])
+      expect(subject.services.map { |service| service[:name] }).to match_array(%w[scc_sles12 smt_sles12 legacy_sles12])
     end
   end
 

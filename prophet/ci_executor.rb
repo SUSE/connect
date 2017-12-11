@@ -38,7 +38,7 @@ module SCC
     end
 
     def status
-      steps.all? {|s| s.status }
+      steps.all? { |s| s.status }
     end
 
     def text_status
@@ -76,7 +76,7 @@ module SCC
       @projects = []
       YAML.load_file('.prophet_ci.yml')['projects'].each_pair do |project_name, run_steps|
         project = Project.new(name: project_name)
-        run_steps.each_pair {|name, cmd| project.steps << RunStep.new(name: name, command: cmd, project: project) }
+        run_steps.each_pair { |name, cmd| project.steps << RunStep.new(name: name, command: cmd, project: project) }
         @projects << project
       end
     end
@@ -99,11 +99,11 @@ module SCC
     end
 
     def success?
-      projects.all? {|p| p.status }
+      projects.all? { |p| p.status }
     end
 
     def failed_projects
-      projects.select {|p| !p.status }
+      projects.select { |p| !p.status }
     end
   end
 end

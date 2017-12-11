@@ -52,7 +52,7 @@ module SUSE
           zypper_out = call('--no-remote --no-refresh --xmlout --non-interactive products -i', false)
           xml_doc = REXML::Document.new(zypper_out, compress_whitespace: [])
           ary_of_products_hashes = xml_doc.root.elements['product-list'].elements.map(&:to_hash)
-          ary_of_products_hashes.map {|hash| Product.new(hash) }
+          ary_of_products_hashes.map { |hash| Product.new(hash) }
         end
 
         def base_product
@@ -81,7 +81,7 @@ module SUSE
           # Don't fail when zypper exits with 6 (no repositories)
           zypper_out = call('--xmlout --non-interactive repos -d', false, [Zypper::ExitCode::OK, Zypper::ExitCode::Error::NO_REPOS])
           xml_doc = REXML::Document.new(zypper_out, compress_whitespace: [])
-          xml_doc.elements.to_a('stream/repo-list/repo').map {|r| r.to_hash.merge!(url: r.elements['url'].text) }
+          xml_doc.elements.to_a('stream/repo-list/repo').map { |r| r.to_hash.merge!(url: r.elements['url'].text) }
         end
 
         # @param service_url [String] url to appropriate repomd.xml to be fed to zypper

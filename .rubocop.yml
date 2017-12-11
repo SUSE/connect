@@ -17,10 +17,6 @@ AllCops:
 HashSyntax:
   Enabled: false
 
-SpaceInsideBlockBraces:
-  EnforcedStyle: space
-  SpaceBeforeBlockParameters: false
-
 FileName:
   Exclude:
     - SUSEConnect

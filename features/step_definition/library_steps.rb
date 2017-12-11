@@ -1,5 +1,5 @@
 When(/^there's a file "(.+)" with a line "(.+)"$/) do |filename, line|
-  File.open(filename, 'w') {|f| f.puts(line) }
+  File.open(filename, 'w') { |f| f.puts(line) }
 end
 
 When(/^I should receive '(.*)' as a migration target$/) do |target_name|
