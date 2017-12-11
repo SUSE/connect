@@ -25,9 +25,6 @@ PercentLiteralDelimiters:
   PreferredDelimiters:
     '%w': '{}'
 
-SpaceBeforeFirstArg:
-  Enabled: false
-
 FileName:
   Exclude:
     - SUSEConnect

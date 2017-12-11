@@ -69,7 +69,7 @@ module SCC
       attr_accessor :logger
     end
 
-    attr_accessor  :status, :projects, :logger, :fail_message
+    attr_accessor :status, :projects, :logger, :fail_message
 
     def initialize(logger: nil)
       self.class.logger = logger
