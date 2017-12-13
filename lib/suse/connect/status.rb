@@ -55,7 +55,7 @@ module SUSE
 
       def system_products
         products = installed_products + activated_products
-        products.map {|product| Product.transform(product) }.uniq
+        products.map { |product| Product.transform(product) }.uniq
       end
 
       private
@@ -69,8 +69,8 @@ module SUSE
             activation_code: build_product_activation_code(extension),
             name: extension.friendly_name,
             free: extension.free,
-            installed: installed_products.any? {|p| p == extension },
-            activated: activated_products.any? {|p| p == extension },
+            installed: installed_products.any? { |p| p == extension },
+            activated: activated_products.any? { |p| p == extension },
             extensions: extract_extensions(extension)
           }
         end if product.extensions
@@ -78,7 +78,7 @@ module SUSE
       end
 
       def grouped_extensions
-        @grouped_extensions ||= available_system_extensions.group_by {|ext| ext[:free] }
+        @grouped_extensions ||= available_system_extensions.group_by { |ext| ext[:free] }
       end
 
       def build_product_activation_code(product)
@@ -117,11 +117,11 @@ module SUSE
       end
 
       def activations_from_server
-        system_activations.map {|s| Remote::Activation.new(s) }
+        system_activations.map { |s| Remote::Activation.new(s) }
       end
 
       def products_from_activations
-        system_activations.map {|p| Remote::Product.new(p['service']['product']) }
+        system_activations.map { |p| Remote::Product.new(p['service']['product']) }
       end
 
       def products_from_zypper
@@ -129,7 +129,7 @@ module SUSE
       end
 
       def product_statuses
-        installed_products.map {|p| Zypper::ProductStatus.new(p, self) }
+        installed_products.map { |p| Zypper::ProductStatus.new(p, self) }
       end
 
       def system_activations

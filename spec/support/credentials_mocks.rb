@@ -6,9 +6,7 @@ def mock_dry_file
     opened_file
   end
 
-  let :params do
-    %w{ Kif Kroker ha }
-  end
+  let(:params) { %w[Kif Kroker ha] }
 
   # TODO: Mock it explicitly by path
   before(:each) do

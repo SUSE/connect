@@ -39,7 +39,7 @@ module SUSE
       end
 
       def select_serializable_attributes
-        to_hash_with_string_keys.select {|key, _| self.class.serializable.include?(key.to_sym) }
+        to_hash_with_string_keys.select { |key, _| self.class.serializable.include?(key.to_sym) }
       end
 
       # allows to merge hash from other source into config to maintain precedence
@@ -60,7 +60,7 @@ module SUSE
       def to_hash_with_string_keys
         # OK, this code maybe look quite magic, but in fact it takes hash from
         # to_h and create new one with keys that is converted with to_s
-        Hash[to_h.map {|k, v| [k.to_s, v] }]
+        Hash[to_h.map { |k, v| [k.to_s, v] }]
       end
 
       def read

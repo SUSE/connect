@@ -24,7 +24,7 @@ describe SUSE::Connect::Cli do
     subject { cli.execute! }
 
     context 'server errors' do
-      let(:opts) { %w{-r 123} }
+      let(:opts) { %w[-r 123] }
 
       it 'should produce log output if ApiError encountered' do
         expect(string_logger).to receive(:fatal).with("Error: Registration server returned 'test' (222)")
@@ -96,7 +96,7 @@ describe SUSE::Connect::Cli do
     end
 
     context 'zypper error' do
-      let(:opts) { %w{-r 456} }
+      let(:opts) { %w[-r 456] }
 
       it 'should produce log output if zypper errors' do
         expect(string_logger).to receive(:fatal).with('Error: zypper returned (666) with \'<stream><error>zypper down</error></stream>\'')
@@ -107,13 +107,13 @@ describe SUSE::Connect::Cli do
 
     context 'parameter dependencies' do
       it 'requires no other parameters on --status' do
-        cli = described_class.new(%w{--status})
+        cli = described_class.new(%w[--status])
         expect_any_instance_of(Status).to receive(:print_product_statuses)
         cli.execute!
       end
 
       it 'does not require --regcode or --url when specifying a product (eg. an extension)' do
-        cli = described_class.new(%w{-p sle-module-web-scripting/12/x86_64})
+        cli = described_class.new(%w[-p sle-module-web-scripting/12/x86_64])
         expect_any_instance_of(Client).to receive(:register!)
         cli.execute!
       end
@@ -128,13 +128,13 @@ describe SUSE::Connect::Cli do
         end
 
         it 'registers the system if --regcode was provided' do
-          cli = described_class.new(%w{-r 456})
+          cli = described_class.new(%w[-r 456])
           expect_any_instance_of(Client).to receive(:register!)
           cli.execute!
         end
 
         it 'registers the system if --url was provided' do
-          cli = described_class.new(%w{--url http://somewhere.com})
+          cli = described_class.new(%w[--url http://somewhere.com])
           expect_any_instance_of(Client).to receive(:register!)
           cli.execute!
         end
@@ -154,21 +154,21 @@ describe SUSE::Connect::Cli do
       end
 
       it '--instance-data requires --url' do
-        cli = described_class.new(%w{--instance-data /tmp/test})
+        cli = described_class.new(%w[--instance-data /tmp/test])
         expect(string_logger).to receive(:error)
           .with('Please use --instance-data only in combination with --url pointing to your SMT server')
         cli.execute!
       end
 
       it '--instance-data is mutually exclusive with --regcode' do
-        cli = described_class.new(%w{-r 123 --instance-data /tmp/test --url test})
+        cli = described_class.new(%w[-r 123 --instance-data /tmp/test --url test])
         expect(string_logger).to receive(:error)
           .with('Please use either --regcode or --instance-data')
         cli.execute!
       end
 
       it '--url implies --write-config' do
-        cli = described_class.new(%w{-r 123 --url http://foo.test.com})
+        cli = described_class.new(%w[-r 123 --url http://foo.test.com])
         expect(cli.config.write_config).to eq true
         allow_any_instance_of(SUSE::Connect::Client).to receive(:register!)
         expect_any_instance_of(SUSE::Connect::Config).to receive(:write!)
@@ -177,7 +177,7 @@ describe SUSE::Connect::Cli do
     end
 
     describe 'de-register command' do
-      let(:opts) { %w{--de-register} }
+      let(:opts) { %w[--de-register] }
 
       it '--de-register calls deregister! method' do
         expect_any_instance_of(Client).to receive(:deregister!)
@@ -194,7 +194,7 @@ describe SUSE::Connect::Cli do
       end
 
       context 'with product specified' do
-        let(:opts) { %w{--de-register -p foo/12/x86_64} }
+        let(:opts) { %w[--de-register -p foo/12/x86_64] }
         before { allow(SUSE::Connect::System).to receive(:credentials?).and_return(true) }
 
         context 'calling for base product' do
@@ -212,7 +212,7 @@ describe SUSE::Connect::Cli do
 
     context 'cleanup command' do
       it '--cleanup calls Systems cleanup! method' do
-        cli = described_class.new(%w{--cleanup})
+        cli = described_class.new(%w[--cleanup])
         expect(System).to receive(:cleanup!)
         cli.execute!
       end
@@ -227,14 +227,14 @@ describe SUSE::Connect::Cli do
 
     context 'status subcommand' do
       it '--status calls json_product_status' do
-        cli = described_class.new(%w{--status})
+        cli = described_class.new(%w[--status])
         expect_any_instance_of(Client).to_not receive(:register!)
         expect_any_instance_of(Status).to receive(:json_product_status)
         cli.execute!
       end
 
       it '--status-text calls text_product_status' do
-        cli = described_class.new(%w{--status-text})
+        cli = described_class.new(%w[--status-text])
         expect_any_instance_of(Client).to_not receive(:register!)
         expect_any_instance_of(Status).to receive(:text_product_status)
         cli.execute!
@@ -244,7 +244,7 @@ describe SUSE::Connect::Cli do
     describe 'list extensions subcommand' do
       context 'on system with registered base product' do
         it '--list-extensions lists all available extensions on the system' do
-          cli = described_class.new(%w{--list-extensions})
+          cli = described_class.new(%w[--list-extensions])
           expect_any_instance_of(Client).not_to receive(:register!)
           expect_any_instance_of(Status).to receive(:print_extensions_list)
           cli.execute!
@@ -254,7 +254,7 @@ describe SUSE::Connect::Cli do
       context 'on system with no registered base product' do
         it '--list-extensions exits with an error explaining that a base product has to be registered first' do
           allow_any_instance_of(Status).to receive(:activated_base_product?).and_return(false)
-          cli = described_class.new(%w{--list-extensions})
+          cli = described_class.new(%w[--list-extensions])
           expect_any_instance_of(Client).not_to receive(:register!)
           expect_any_instance_of(Status).not_to receive(:print_extensions_list)
           expect(string_logger).to receive(:error)
@@ -269,13 +269,13 @@ describe SUSE::Connect::Cli do
       it '--rollback calls SUSE::Connect::Migration.rollback' do
         expect_any_instance_of(Client).not_to receive(:register!)
         expect(SUSE::Connect::Migration).to receive(:rollback)
-        described_class.new(%w{--rollback})
+        described_class.new(%w[--rollback])
       end
     end
 
     describe 'config write' do
       it 'writes config if appropriate cli param been passed' do
-        cli = described_class.new(%w{--write-config --status})
+        cli = described_class.new(%w[--write-config --status])
         expect_any_instance_of(SUSE::Connect::Config).to receive(:write!)
         allow_any_instance_of(Status).to receive(:print_product_statuses)
         cli.execute!
@@ -285,43 +285,43 @@ describe SUSE::Connect::Cli do
 
   describe '?extract_options' do
     it 'sets token options' do
-      argv = %w{-r matoken}
+      argv = %w[-r matoken]
       cli = described_class.new(argv)
       expect(cli.options[:token]).to eq 'matoken'
     end
 
     it 'sets product options' do
-      argv = %w{--product sles/12/i386}
+      argv = %w[--product sles/12/i386]
       cli = described_class.new(argv)
       expect(cli.options[:product]).to eq Remote::Product.new(identifier: 'sles', version: '12', arch: 'i386')
     end
 
     it 'sets token options' do
-      argv = %w{--regcode matoken}
+      argv = %w[--regcode matoken]
       cli = described_class.new(argv)
       expect(cli.options[:token]).to eq 'matoken'
     end
 
     it 'sets email options' do
-      argv = %w{--email me@hotmail.com}
+      argv = %w[--email me@hotmail.com]
       cli = described_class.new(argv)
       expect(cli.options[:email]).to eq 'me@hotmail.com'
     end
 
     it 'sets url options' do
-      argv = %w{--url test}
+      argv = %w[--url test]
       cli = described_class.new(argv)
       expect(cli.options[:url]).to eq 'test'
     end
 
     it 'puts version on version flag' do
-      argv = %w{--version}
+      argv = %w[--version]
       expect_any_instance_of(described_class).to receive(:puts).with(VERSION)
       described_class.new(argv)
     end
 
     it 'outputs help on help flag with no line longer than 80 characters' do
-      argv = %w{--help}
+      argv = %w[--help]
       expect_any_instance_of(described_class).to receive(:puts) do |option_parser|
         expect(option_parser.instance_variable_get(:@opts).to_s.split("\n").map(&:length)).to all be <= 80
       end
@@ -329,31 +329,31 @@ describe SUSE::Connect::Cli do
     end
 
     it 'sets verbose options' do
-      argv = %w{--debug}
+      argv = %w[--debug]
       cli = described_class.new(argv)
       expect(cli.options[:debug]).to be true
     end
 
     it 'sets deregister option' do
-      argv = %w{--de-register}
+      argv = %w[--de-register]
       cli = described_class.new(argv)
       expect(cli.options[:deregister]).to be true
     end
 
     it 'sets root option' do
-      argv = %w{--root /path/to/root}
+      argv = %w[--root /path/to/root]
       described_class.new(argv)
       expect(SUSE::Connect::System.filesystem_root).to eq '/path/to/root'
       SUSE::Connect::System.filesystem_root = nil
     end
 
     it 'requests status sub-command' do
-      argv = %w{--status}
+      argv = %w[--status]
       expect(described_class.new(argv).options[:status]).to be true
     end
 
     it 'sets write_config option' do
-      argv = %w{--write-config}
+      argv = %w[--write-config]
       cli = described_class.new(argv)
       expect(cli.options[:write_config]).to be true
     end
@@ -362,7 +362,7 @@ describe SUSE::Connect::Cli do
   describe 'errors on invalid options format' do
     it 'error on invalid product options format with hint where to find correct product identifiers' do
       expect(string_logger).to receive(:error).with(/Please provide the product identifier in this format.*SUSEConnect --list-extensions/)
-      argv = %w{--product sles}
+      argv = %w[--product sles]
       described_class.new(argv)
     end
   end

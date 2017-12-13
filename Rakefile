@@ -16,7 +16,7 @@ module MonkeypatchRakeLastComment
 end
 Rake::Application.send :include, MonkeypatchRakeLastComment unless Rake::Application.method_defined? :last_comment
 
-task :default => [:spec, :rubocop]
+task default: [:spec, :rubocop]
 
 desc 'Run RSpec'
 RSpec::Core::RakeTask.new(:spec)

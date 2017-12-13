@@ -23,7 +23,7 @@ module SUSE
           status = Status.new(config)
 
           # FIXME: Sort products and ensure the base product is the first one in the list
-          status.installed_products.sort_by {|p| p.isbase ? 0 : 1 }.each do |product|
+          status.installed_products.sort_by { |p| p.isbase ? 0 : 1 }.each do |product|
             service = client.downgrade_product(product)
             # INFO: Remove old and new service because this could be called after filesystem rollback or
             # from inside a failed migration
@@ -59,7 +59,7 @@ module SUSE
         def repositories
           # INFO: use block instead of .map(&:to_openstruct) see https://bugs.ruby-lang.org/issues/9786
           # rubocop:disable SymbolProc
-          SUSE::Connect::Zypper.repositories.map {|r| r.to_openstruct }
+          SUSE::Connect::Zypper.repositories.map { |r| r.to_openstruct }
         end
 
         # Forwards the service which should be added with zypper
@@ -81,7 +81,7 @@ module SUSE
         def find_products(identifier)
           # INFO: use block instead of .map(&:to_openstruct) see https://bugs.ruby-lang.org/issues/9786
           # rubocop:disable SymbolProc
-          SUSE::Connect::Zypper.find_products(identifier).map {|p| p.to_openstruct }
+          SUSE::Connect::Zypper.find_products(identifier).map { |p| p.to_openstruct }
         end
 
         # Installs the product release package

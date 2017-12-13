@@ -43,7 +43,7 @@ class SUSE::Connect::HwInfo::S390 < SUSE::Connect::HwInfo::Base
     private
 
     def output
-      @output ||= Hash[execute('read_values -s', false).split("\n").map {|line| line.split(':') }]
+      @output ||= Hash[execute('read_values -s', false).split("\n").map { |line| line.split(':') }]
     end
   end
 end

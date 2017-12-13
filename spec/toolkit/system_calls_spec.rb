@@ -4,8 +4,8 @@ require 'suse/toolkit/system_calls'
 describe SUSE::Toolkit::SystemCalls do
   subject { Open3 }
   let(:date) { 'Fr 13. Jun 10:50:53 CEST 2014' }
-  let(:success) { double('Process Status', :exitstatus => 0) }
-  let(:failure) { double('Process Status', :exitstatus => 1) }
+  let(:success) { double('Process Status', exitstatus: 0) }
+  let(:failure) { double('Process Status', exitstatus: 1) }
   let(:error_message) { 'Root privileges are required for installing or uninstalling packages' }
   include_context 'shared lets'
 

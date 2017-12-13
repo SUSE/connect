@@ -165,7 +165,7 @@ describe SUSE::Connect::Status do
   describe '#available_system_extensions' do
     it 'returns a list of all available extensions on this system' do
       allow(Zypper).to receive(:installed_products).and_return []
-      allow(Zypper).to receive(:base_product).and_return Zypper::Product.new(:name => 'SLES', :version => '12', :arch => 'x86_64')
+      allow(Zypper).to receive(:base_product).and_return Zypper::Product.new(name: 'SLES', version: '12', arch: 'x86_64')
       allow(client_double).to receive(:show_product).with(Zypper.base_product).and_return(Remote::Product.new(dummy_product_data))
       expect(subject.available_system_extensions).to match_array([
         {
@@ -195,9 +195,9 @@ describe SUSE::Connect::Status do
   end
 
   describe '#system_products' do
-    let(:zypper_product) { Zypper::Product.new(:name => 'SLES', :version => '12', :arch => 'x86_64') }
-    let(:remote_product) { Remote::Product.new(:identifier => 'SLES', :version => '12', :arch => 'x86_64', :release_type => 'HP-CNB') }
-    let(:remote_product_dup) { Remote::Product.new(:identifier => 'SLES', :version => '12', :arch => 'x86_64') }
+    let(:zypper_product) { Zypper::Product.new(name: 'SLES', version: '12', arch: 'x86_64') }
+    let(:remote_product) { Remote::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64', release_type: 'HP-CNB') }
+    let(:remote_product_dup) { Remote::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64') }
 
     it 'returns the installed and activated products from system' do
       expect_any_instance_of(Status).to receive(:installed_products).and_return([zypper_product])

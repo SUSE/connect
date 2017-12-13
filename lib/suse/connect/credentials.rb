@@ -52,7 +52,7 @@ module SUSE
         FileUtils.mkdir_p(dirname) unless File.exist?(dirname)
         log.debug("Writing credentials to #{filename}")
         log.debug("Credentials to write: #{self}")
-        File.write(filename, serialize, :perm => 0600)
+        File.write(filename, serialize, perm: 0600)
       end
 
       # security - override to_s to avoid writing the password to log

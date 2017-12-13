@@ -12,12 +12,12 @@ group :development do
   gem 'redcarpet'
   gem 'ronn'
   gem 'rake'
-  #gem 'gem2rpm', '~> 0.10.1' # TODO: let's link this to the repo that contains the --config fix from the suse package
+  # gem 'gem2rpm', '~> 0.10.1' # TODO: let's link this to the repo that contains the --config fix from the suse package
   gem 'bump'
 end
 
 group :test do
-  gem 'coveralls', :require => false
+  gem 'coveralls', require: false
   gem 'rspec', '~> 3.3.0'
   gem 'rspec-its'
   gem 'webmock', '~> 1.21.0'

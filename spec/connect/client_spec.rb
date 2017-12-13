@@ -300,7 +300,7 @@ describe SUSE::Connect::Client do
 
     it 'writes credentials file' do
       allow(System).to receive_messages(credentials?: false)
-      allow(subject).to receive_messages(announce_system: %w{ lg pw })
+      allow(subject).to receive_messages(announce_system: %w[lg pw])
       expect(Credentials).to receive(:new).with('lg', 'pw', Credentials::GLOBAL_CREDENTIALS_FILE).and_call_original
       subject.register!
     end
@@ -365,17 +365,17 @@ describe SUSE::Connect::Client do
   describe '#system_migrations' do
     let(:stubbed_response) do
       OpenStruct.new(
-        :code => 200,
-        :body => [[{ 'identifier' => 'bravo', 'version' => '12.1' }]],
-        :success => true
+        code: 200,
+        body: [[{ 'identifier' => 'bravo', 'version' => '12.1' }]],
+        success: true
       )
     end
 
     let(:empty_response) do
       OpenStruct.new(
-        :code => 200,
-        :body => [],
-        :success => true
+        code: 200,
+        body: [],
+        success: true
       )
     end
 
@@ -387,7 +387,7 @@ describe SUSE::Connect::Client do
     end
 
     before do
-      allow(subject).to receive_messages(:system_auth => 'Basic: encodedstring')
+      allow(subject).to receive_messages(system_auth: 'Basic: encodedstring')
     end
 
     it 'collects data from the API response' do

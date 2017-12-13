@@ -23,6 +23,6 @@ class SUSE::Toolkit::CurlrcDotfile
 
   def line_with_credentials
     return nil unless exist?
-    @line_with_credentials ||= File.readlines(@file_location).find {|l| l =~ /--proxy-user ".*:.*"/ }
+    @line_with_credentials ||= File.readlines(@file_location).find { |l| l =~ /--proxy-user ".*:.*"/ }
   end
 end

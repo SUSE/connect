@@ -56,7 +56,7 @@ describe SUSE::Connect::YaST do
 
     it 'uses client params' do
       expect_any_instance_of(SUSE::Connect::Config)
-      subject.update_system(:language => 'de')
+      subject.update_system(language: 'de')
     end
   end
 
@@ -97,7 +97,7 @@ describe SUSE::Connect::YaST do
   describe '.upgrade_product' do
     let(:product) { Remote::Product.new(identifier: 'win98') }
     let(:openstruct_product) { product.to_openstruct }
-    let(:client_params) { { :foo => 'oink' } }
+    let(:client_params) { { foo: 'oink' } }
 
     before { allow_any_instance_of(Client).to receive(:upgrade_product) }
 
@@ -271,14 +271,14 @@ describe SUSE::Connect::YaST do
   describe '.system_migrations' do
     let(:products) do
       [
-        Remote::Product.new(:identifier => 'SLES', :version => '12', :arch => 'x86_64', :release_type => 'HP-CNB'),
-        Remote::Product.new(:identifier => 'SUSE-Cloud', :version => '7', :arch => 'x86_64', :release_type => nil)
+        Remote::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64', release_type: 'HP-CNB'),
+        Remote::Product.new(identifier: 'SUSE-Cloud', version: '7', arch: 'x86_64', release_type: nil)
       ]
     end
 
     let(:openstruct_products) { products.map(&:to_openstruct) }
     let(:migrations) { [products] }
-    let(:client_params) { { :foo => 'oink' } }
+    let(:client_params) { { foo: 'oink' } }
 
     it 'calls system_migrations on an instance of Client' do
       expect(Client).to receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
@@ -363,7 +363,7 @@ describe SUSE::Connect::YaST do
 
     it 'assigns new client to status with passed hash' do
       expect(Status).to receive(:new).with(instance_of(SUSE::Connect::Config))
-      subject.status(:foo => :bar)
+      subject.status(foo: :bar)
     end
   end
 

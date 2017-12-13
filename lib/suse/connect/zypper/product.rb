@@ -8,7 +8,7 @@ class SUSE::Connect::Zypper::Product
     @identifier    = product_hash[:name]
     @version       = product_hash[:version]
     @arch          = product_hash[:arch]
-    @isbase        = %w{1 true yes}.include?(product_hash[:isbase])
+    @isbase        = %w[1 true yes].include?(product_hash[:isbase])
     @release_type  = determine_release_type product_hash
     @summary       = product_hash[:summary]
   end
