@@ -29,7 +29,6 @@ describe SUSE::Connect::Config do
       end
 
       it 'initializes SUSE::Connect::Config object with properties from config file' do
-        expect(config.regcode).to eq 'regcode'
         expect(config.url).to eq 'https://scc.suse.com'
         expect(config.language).to eq 'EN'
       end
