@@ -4,9 +4,6 @@
 ## URL of the registration server. (default: https://scc.suse.com)
 # url: https://scc.suse.com
 
-## Registration code to use for the base product on the system
-# regcode:
-
 ## Language code to use for error messages (default: $LANG)
 # language:
 
