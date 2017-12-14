@@ -386,31 +386,27 @@ describe SUSE::Connect::Client do
       ]
     end
 
+    subject { client_instance.system_migrations(products) }
+
     before do
-      allow(subject).to receive_messages(system_auth: 'Basic: encodedstring')
+      allow(client_instance).to receive_messages(system_auth: 'Basic: encodedstring')
     end
 
-    it 'collects data from the API response' do
-      expect(subject.api).to receive(:system_migrations).with('Basic: encodedstring', products).and_return(stubbed_response)
-
-      subject.system_migrations(products)
+    it 'calls the API' do
+      expect(client_instance.api).to receive(:system_migrations).with('Basic: encodedstring', products).and_return(empty_response)
+      subject
     end
 
-    it 'returns a list of upgrade paths (array of Products) returned from the API' do
-      expect(subject.api).to receive(:system_migrations).with('Basic: encodedstring', products).and_return stubbed_response
-      upgrade_paths = subject.system_migrations(products)
+    context 'when upgrades are available' do
+      before { allow(client_instance.api).to receive(:system_migrations).with('Basic: encodedstring', products).and_return(stubbed_response) }
 
-      expect(upgrade_paths).to be_kind_of Array
-      expect(upgrade_paths.first).to be_kind_of Array
-      expect(upgrade_paths.first.first).to be_kind_of Remote::Product
+      it { is_expected.to eq([[ Remote::Product.new(identifier: 'bravo', version: '12.1') ]]) }
     end
 
     context 'when no upgrades are available' do
-      it 'returns an empty array' do
-        expect(subject.api).to receive(:system_migrations).with('Basic: encodedstring', products).and_return empty_response
-        upgrade_paths = subject.system_migrations(products)
-        expect(upgrade_paths).to match_array([])
-      end
+      before { allow(client_instance.api).to receive(:system_migrations).with('Basic: encodedstring', products).and_return empty_response }
+
+      it { is_expected.to eq([]) }
     end
   end
 
