@@ -275,10 +275,13 @@ describe SUSE::Connect::Api do
   end
 
   describe '#system_migrations' do
+    subject { api.new(client).system_migrations('Basic: encodedgibberish', openstruct_products) }
+
+    let(:api) { SUSE::Connect::Api }
+    let(:openstruct_products) { products.map(&:to_openstruct) }
+
     context 'with a non-empty response' do
-      before do
-        stub_system_migrations_call
-      end
+      before { stub_system_migrations_call }
 
       let(:products) do
         [
@@ -287,8 +290,15 @@ describe SUSE::Connect::Api do
         ]
       end
 
-      let(:openstruct_products) { products.map(&:to_openstruct) }
       let(:query) { { installed_products: openstruct_products.map(&:to_params) } }
+
+      its(:code) { is_expected.to eq 200 }
+      its(:body) do
+        is_expected.to match_array([[
+          { 'identifier' => 'SLES', 'version' => '12.1', 'arch' => 'x86_64', 'release_type' => 'HP-CNB' },
+          { 'identifier' => 'SUSE-Cloud', 'version' => '8', 'arch' => 'x86_64', 'release_type' => nil }
+        ]])
+      end
 
       it 'is authenticated via basic auth' do
         payload = [
@@ -300,36 +310,16 @@ describe SUSE::Connect::Api do
           .with(*payload)
           .and_call_original
 
-        subject.new(client).system_migrations('Basic: encodedgibberish', openstruct_products)
-      end
-
-      it 'responds with proper status code' do
-        response = subject.new(client).system_migrations('Basic: encodedgibberish', openstruct_products)
-
-        expect(response.code).to eq 200
-      end
-
-      it 'returns array of arrays of product hashes' do
-        body = subject.new(client).system_migrations('Basic: encodedgibberish', openstruct_products).body
-
-        expect(body.first).to include('identifier' => 'SLES', 'version' => '12.1', 'arch' => 'x86_64', 'release_type' => 'HP-CNB')
-        expect(body.first).to include('identifier' => 'SUSE-Cloud', 'version' => '8', 'arch' => 'x86_64', 'release_type' => nil)
+        subject
       end
     end
 
     context 'with an empty response' do
-      before do
-        stub_empty_system_migrations_call
-      end
+      before { stub_empty_system_migrations_call }
 
-      let(:products) { [Remote::Product.new(identifier: 'SLES', version: 'not-upgradeable', arch: 'x86_64', release_type: nil)] }
-      let(:openstruct_products) { products.map(&:to_openstruct) }
+      let(:products) { [ Remote::Product.new(identifier: 'SLES', version: 'not-upgradeable', arch: 'x86_64', release_type: nil) ] }
 
-      it 'returns an empty array' do
-        body = subject.new(client).system_migrations('Basic: encodedgibberish', openstruct_products).body
-
-        expect(body).to match_array([])
-      end
+      its(:body) { is_expected.to be_empty }
     end
   end
 
