@@ -141,11 +141,15 @@ module SUSE
       #
       # @param [Array <Remote::Product>] the list of currently installed products in the system
       # @param kind [Symbol] :online or :offline. Whether to get online or offline migrations.
+      # @param target_base_product [Remote::Product] (optional) Filter the resulting migration paths for the given base product.
       #
       # @return [Array <Array <Remote::Product>>] the list of possible upgrade paths for the given products,
       #   where an upgrade path is an array of Remote::Product objects.
-      def system_migrations(products, kind:)
-        upgrade_paths = @api.system_migrations(system_auth, products, kind: kind).body
+      def system_migrations(products, target_base_product: nil, kind:)
+        keyword_args = { kind: kind, target_base_product: target_base_product }.reject { |_, v| v.nil? }
+        args = [ system_auth, products, keyword_args ]
+
+        upgrade_paths = @api.system_migrations(*args).body
         upgrade_paths.map do |upgrade_path|
           upgrade_path.map do |product_attributes|
             Remote::Product.new(product_attributes)

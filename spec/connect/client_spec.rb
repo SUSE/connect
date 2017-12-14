@@ -412,6 +412,20 @@ describe SUSE::Connect::Client do
 
           it { is_expected.to eq([]) }
         end
+
+        context 'with specified target_base_product' do
+          subject { client_instance.system_migrations(products, kind: kind, target_base_product: target_base_product) }
+
+          let(:target_base_product) { Remote::Product.new(identifier: 'charlie', version: '15') }
+
+          it 'passes the target_base_product to the API' do
+            expect(client_instance.api).to receive(:system_migrations)
+              .with('Basic: encodedstring', products, kind: kind, target_base_product: target_base_product)
+              .and_return(empty_response)
+
+            subject
+          end
+        end
       end
     end
 
