@@ -274,14 +274,9 @@ describe SUSE::Connect::Api do
     end
   end
 
-  describe '#system_migrations' do
-    subject { api.new(client).system_migrations('Basic: encodedgibberish', openstruct_products) }
-
-    let(:api) { SUSE::Connect::Api }
-    let(:openstruct_products) { products.map(&:to_openstruct) }
-
-    context 'with a non-empty response' do
-      before { stub_system_migrations_call }
+  describe "#system_migrations" do
+    shared_examples 'a query with no specified target base that returns migration paths' do |kind|
+      before { stub_system_migrations_call(kind) }
 
       let(:products) do
         [
@@ -290,7 +285,7 @@ describe SUSE::Connect::Api do
         ]
       end
 
-      let(:query) { { installed_products: openstruct_products.map(&:to_params) } }
+      let(:query) { { installed_products: products.map(&:to_params) } }
 
       its(:code) { is_expected.to eq 200 }
       its(:body) do
@@ -302,7 +297,7 @@ describe SUSE::Connect::Api do
 
       it 'is authenticated via basic auth' do
         payload = [
-          '/connect/systems/products/migrations',
+          "/connect/systems/products/#{(kind == :offline) ? 'offline_' : ''}migrations",
           auth: 'Basic: encodedgibberish',
           params: query
         ]
@@ -314,12 +309,76 @@ describe SUSE::Connect::Api do
       end
     end
 
-    context 'with an empty response' do
-      before { stub_empty_system_migrations_call }
+    shared_examples 'a query with a specific target base that returns migration paths' do |kind|
+      before { stub_system_migrations_call_with_target_product(kind) }
+
+      let(:products) { [ Remote::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64') ] }
+      let(:target_base_product) { Remote::Product.new(identifier: 'SLES', version: '15.0', arch: 'x86_64') }
+
+      let(:query) do
+        {
+          installed_products: products.map(&:to_params),
+          target_base_product: target_base_product.to_params
+        }
+      end
+
+      its(:code) { is_expected.to eq 200 }
+      its(:body) do
+        is_expected.to match_array([[
+          { 'identifier' => 'SLES', 'version' => '15.0', 'arch' => 'x86_64', 'release_type' => nil }
+        ]])
+      end
+
+      it 'is authenticated via basic auth' do
+        payload = [
+          "/connect/systems/products/#{(kind == :offline) ? 'offline_' : ''}migrations",
+          auth: 'Basic: encodedgibberish',
+          params: query
+        ]
+        expect_any_instance_of(Connection).to receive(:post)
+          .with(*payload)
+          .and_call_original
+
+        subject
+      end
+    end
+
+    shared_examples 'a query with no specified target base that returns no migration paths' do |kind|
+      before { stub_empty_system_migrations_call(kind) }
 
       let(:products) { [ Remote::Product.new(identifier: 'SLES', version: 'not-upgradeable', arch: 'x86_64', release_type: nil) ] }
 
       its(:body) { is_expected.to be_empty }
+    end
+
+    let(:api) { SUSE::Connect::Api }
+
+    %i[online offline].each do |kind|
+      context "with kind #{kind}" do
+        subject { api.new(client).system_migrations('Basic: encodedgibberish', products, kind: kind) }
+
+        it_behaves_like 'a query with no specified target base that returns migration paths', kind
+        it_behaves_like 'a query with no specified target base that returns no migration paths', kind
+      end
+
+      context 'with a target base product' do
+        subject { api.new(client).system_migrations('Basic: encodedgibberish', products, kind: kind, target_base_product: target_base_product) }
+
+        it_behaves_like 'a query with a specific target base that returns migration paths', kind
+      end
+    end
+
+    context 'with no specified kind' do
+      subject { api.new(client).system_migrations('Basic: encodedgibberish', products) }
+
+      it_behaves_like 'a query with no specified target base that returns migration paths', :online
+      it_behaves_like 'a query with no specified target base that returns no migration paths', :online
+    end
+
+    context 'with a kind that is not :online nor :offline' do
+      subject { api.new(client).system_migrations('Basic: encodedgibberish', [], kind: :bad) }
+
+      specify { expect { subject }.to raise_error(KeyError) }
     end
   end
 

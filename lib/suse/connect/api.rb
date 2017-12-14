@@ -205,12 +205,21 @@ module SUSE
       # @param auth [String] authorization string which will be injected in 'Authorization' header in request.
       #   In this case we expect Base64 encoded string with login and password
       # @param [Array <Remote::Product>] a list of producs
+      # @param target_base_product [Remote::Product] (optional) a target base
+      #   product to upgrade to. Defaults to nil.
+      # @param kind [Symbol] (optional) :online or :offline. It specifies if the online
+      #   or the offline migrations are desired. Defaults to :online.
       #
       # @return [Array <Array <Hash>>] the list of possible upgrade paths for the given products,
       #   where each product is represented by a hash with identifier, version, arch and release_type
-      def system_migrations(auth, products)
+      def system_migrations(auth, products, kind: :online, target_base_product: nil)
         payload = { installed_products: products.map(&:to_params) }
-        @connection.post('/connect/systems/products/migrations', auth: auth, params: payload)
+        payload[:target_base_product] = target_base_product.to_params if target_base_product
+        endpoints = {
+          online: '/connect/systems/products/migrations',
+          offline: '/connect/systems/products/offline_migrations'
+        }
+        @connection.post(endpoints.fetch(kind), auth: auth, params: payload)
       end
 
       # List available Installer-Updates repositories for the given product
