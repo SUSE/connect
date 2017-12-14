@@ -114,7 +114,8 @@ In the event an authorization failure (or some unrecoverable error in the reques
     - [upgrade product](#upgrade-product)
     - [update system](#update-system)
     - [de-register system](#deregister-system)
-    - [system migration targets](#list-system-migrations)
+    - [system online migrations](#list-system-online-migrations)
+    - [system offline migrations](#list-system-offline-migrations)
     - [system synchronize products](#synchronize-system-products)
     - [services](#system-services)
     - [subscriptions](#system-subscriptions)
@@ -672,7 +673,8 @@ information.
 - [upgrade product](#upgrade-product)
 - [update system](#update-system)
 - [deregister system](#deregister-system)
-- [system migration targets](#list-system-migrations)
+- [system online migrations](#list-system-online-migrations)
+- [system offline migrations](#list-system-offline-migrations)
 - [services](#system-services)
 - [subscriptions](#system-subscriptions)
 - [activations](#system-activations)
@@ -1098,23 +1100,30 @@ Status: 200 OK
 
 ```
 
-##### <a id="sys_prod_migrations">List System Migrations</a>
-Given a list of installed products, return all possible upgrade paths.
+##### List System Online Migrations
+
+Given a list of installed products, return all possible online migration paths.
+An "online" migration is one that can be performed without the media being
+inserted in the target machine. All new software (RPM packages) will be fetched
+by the migration script from the CDN or a repository mirroring tool (SMT or RMT).
+
+A migration path is a list of products.
+A system with a set of installed products could be upgraded in different ways.
+That is to say, some products must be upgraded, others may optionally be upgraded,
+while yet others simply cannot be upgraded.
+This endpoint returns all of the possible compatible combinations.
 
 ```
 POST /connect/systems/products/migrations
 ```
 ###### Parameters
-  - required:
-    - `installed_products` (*Array* of *JSON Objects*):
-      - `friendly_name` ( *String* ): Product friendly name, e.g. `SUSE Linux Enterprise Server 12 SP1 x86_64`.
-      - `identifier` ( *String* ): Product name, e.g. `SLES`.
-      - `version` ( *String* ): Product version e.g. `12`.
-      - `arch` ( *String* ): System architecture, e.g. `x86_64`.
-      - `release_type` ( optional *String* ): Product release type, e.g. `HP-CNB`
-      - `base` ( *Boolean* ): returns true for base products and false for extensions
-      - `product type` ( *String* ): Product type eg "base", "extension", "module"
-      - `free` ( *Boolean* ): returns true for free products, false for ones that require their own subscription
+
+- required:
+  - `installed_products` (*Array* of *JSON Objects*):
+    - `identifier` ( *String* ): Product name, e.g. `SLES`.
+    - `version` ( *String* ): Product version e.g. `12`.
+    - `arch` ( *String* ): System architecture, e.g. `x86_64`.
+    - `release_type` ( optional *String* ): Product release type, e.g. `HP-CNB`
 
 ###### Curl
 ```
@@ -1122,42 +1131,89 @@ curl -X POST -H 'Content-Type:application/json' -u '<username>:<password>' https
 ```
 
 ###### Response
+
 ```
 Status: 200 OK
 ```
+
 ```json
 [
-
-    [
-        {
-            "friendly_name":"SUSE Linux Enterprise Server 12 SP1 x86_64",
-            "shortname": "SLES12-SP1",
-            "identifier": "SLES",
-            "version": "12.1",
-            "arch": "x86_64",
-            "release_type": null,
-            "release_stage": "released", // or "beta"
-            "product_type": "base",
-            "free": "false"
-        },
-        {   
-            "friendly_name":"SUSE Linux Enterprise Software Development Kit 12 x86_64",
-            "shortname": "SLE-SDK12-SP1",
-            "identifier": "SLE-SDK",
-            "version": "12.1",
-            "arch": "x86_64",
-            "release_type": null,
-            "release_stage": "released", // or "beta"
-            "product_type": "extension",
-            "free": "true"             
-        }
-    ]
+  [
+    {
+      "friendly_name":"SUSE Linux Enterprise Server 12 SP1 x86_64",
+      "shortname": "SLES12-SP1",
+      "identifier": "SLES",
+      "version": "12.1",
+      "arch": "x86_64",
+      "release_type": null,
+      "release_stage": "released", // or "beta"
+      "product_type": "base",
+      "free": "false"
+    },
+    {   
+      "friendly_name":"SUSE Linux Enterprise Software Development Kit 12 x86_64",
+      "shortname": "SLE-SDK12-SP1",
+      "identifier": "SLE-SDK",
+      "version": "12.1",
+      "arch": "x86_64",
+      "release_type": null,
+      "release_stage": "released", // or "beta"
+      "product_type": "extension",
+      "free": "true"             
+    }
+  ]
 ]
 ```
 
+**Description:**
+
+- `friendly_name` ( *String* ): Product friendly name, e.g. `SUSE Linux Enterprise Server 12 SP1 x86_64`.
+- `identifier` ( *String* ): Product name, e.g. `SLES`.
+- `version` ( *String* ): Product version e.g. `12`.
+- `arch` ( *String* ): System architecture, e.g. `x86_64`.
+- `release_type` ( optional *String* ): Product release type, e.g. `HP-CNB`
+- `base` ( *Boolean* ): true for base products and false for extensions
+- `product type` ( *String* ): Product type ("base", "extension" or "module")
+- `free` ( *Boolean* ): true for free products, false for ones that require their own subscription
+
+
+##### List System Offline Migrations
+
+Given a list of installed products, return all possible online migration paths.
+An "offline" migration is one that requires the target machine to be booted from
+the media of the desired product (eg. a system that has SLES 12 SP4 installed
+must be booted from the SLES 15 media in order to upgrade it to SLES 15).
+
+```
+POST /connect/systems/products/offline_migrations
+```
+
+###### Parameters
+
+- Required:
+  - `installed_products` (*Array* of *JSON Objects*):
+    - `identifier` ( *String* ): Product name, e.g. `SLES`.
+    - `version` ( *String* ): Product version e.g. `12`.
+    - `arch` ( *String* ): System architecture, e.g. `x86_64`.
+    - `release_type` ( optional *String* ): Product release type, e.g. `HP-CNB`
+- Optional:
+  - `target_base_product` ( *JSON object* )
+    - `identifier` ( *String* ): Product name, e.g. `SLES`.
+    - `version` ( *String* ): Product version e.g. `12`.
+    - `arch` ( *String* ): System architecture, e.g. `x86_64`.
+    - `release_type` ( optional *String* ): Product release type, e.g. `HP-CNB`
+
+###### Response
+
+See the response for the [online migrations endpoint](#list-system-online-migrations).
+The only difference is that if the optional `target_base_product` parameter is supplied,
+the possible migration paths will be filtered to show only those that have
+`target_base_product` as a base.
+
 ##### <a id="system_synchronize_products">Synchronize system products</a>
 Synchronize activated system products to the registration server.
-This will remove obsolete activations on the server after all installed products went through a downgrade().
+This will remove obsolete activations on the server after all installed products
+have gone through a downgrade().
 Returns activated products from the server.
 
 ```
