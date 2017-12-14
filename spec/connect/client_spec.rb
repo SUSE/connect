@@ -386,27 +386,39 @@ describe SUSE::Connect::Client do
       ]
     end
 
-    subject { client_instance.system_migrations(products) }
+    subject { client_instance.system_migrations(products, kind: kind) }
 
     before do
       allow(client_instance).to receive_messages(system_auth: 'Basic: encodedstring')
     end
 
-    it 'calls the API' do
-      expect(client_instance.api).to receive(:system_migrations).with('Basic: encodedstring', products).and_return(empty_response)
-      subject
+    %i[online offline].each do |migration_kind|
+      context "with kind #{migration_kind}" do
+        let(:kind) { migration_kind }
+
+        it 'calls the API' do
+          expect(client_instance.api).to receive(:system_migrations).with('Basic: encodedstring', products, kind: kind).and_return(empty_response)
+          subject
+        end
+
+        context 'when upgrades are available' do
+          before { allow(client_instance.api).to receive(:system_migrations).with('Basic: encodedstring', products, kind: kind).and_return(stubbed_response) }
+
+          it { is_expected.to eq([[ Remote::Product.new(identifier: 'bravo', version: '12.1') ]]) }
+        end
+
+        context 'when no upgrades are available' do
+          before { allow(client_instance.api).to receive(:system_migrations).with('Basic: encodedstring', products, kind: kind).and_return(empty_response) }
+
+          it { is_expected.to eq([]) }
+        end
+      end
     end
 
-    context 'when upgrades are available' do
-      before { allow(client_instance.api).to receive(:system_migrations).with('Basic: encodedstring', products).and_return(stubbed_response) }
+    context 'with no specified kind' do
+      subject { client_instance.system_migrations(products) }
 
-      it { is_expected.to eq([[ Remote::Product.new(identifier: 'bravo', version: '12.1') ]]) }
-    end
-
-    context 'when no upgrades are available' do
-      before { allow(client_instance.api).to receive(:system_migrations).with('Basic: encodedstring', products).and_return empty_response }
-
-      it { is_expected.to eq([]) }
+      specify { expect { subject }.to raise_error(ArgumentError) }
     end
   end
 
