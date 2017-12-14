@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Dec 14 09:01:58 UTC 2017 - tschmidt@suse.com
+
+- Update to version 0.3.4: 
+  - Packaging improvements (bsc#964013)
+
+-------------------------------------------------------------------
 Thu Dec  7 17:30:23 UTC 2017 - tschmidt@suse.com
 
 - Update to version 0.3.3: 

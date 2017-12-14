@@ -16,7 +16,7 @@
 #
 
 Name:           SUSEConnect
-Version:        0.3.3
+Version:        0.3.4
 Release:        0
 %define mod_name suse-connect
 %define mod_full_name %{mod_name}-%{version}
@@ -28,8 +28,12 @@ Requires:       dmidecode
 %endif
 Conflicts:      suseRegister, yast2-registration < 3.1.129.7
 
-# At some point we had a seperate rubygem-suse-connect package, which we need to obsolete
+# In SLE12 GA we had a seperate rubygem-suse-connect package, which we need to obsolete now
+%if (0%{?sle_version} > 0 && 0%{?sle_version} < 150000)
 Obsoletes:      ruby2.1-rubygem-suse-connect < %{version}
+Provides:       ruby2.1-rubygem-suse-connect = %{version}
+%endif
+
 
 %define ruby_version %{rb_default_ruby_suffix}
 # FIXME: For some reason, on SLE15 %{rb_default_ruby_suffix} resolves to ruby2.4 which does not exist there
@@ -43,14 +47,14 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Url:            https://github.com/SUSE/connect
 
 Source:         %{mod_full_name}.gem
-Source1:        %{name}.5.gz
-Source2:        %{name}.8.gz
+Source1:        %{name}.5
+Source2:        %{name}.8
 Source3:        %{name}.example
 
 Summary:        Utility to register a system with the SUSE Customer Center
 License:        LGPL-2.1
 Group:          System/Management
-PreReq:         update-alternatives
+Requires(post): update-alternatives
 
 %description
 This package provides a command line tool and rubygem library for connecting a
@@ -70,8 +74,8 @@ mkdir %{buildroot}%{_sbindir}
 mv %{buildroot}%{_bindir}/%{name}.%{ruby_version} %{buildroot}%{_sbindir}/%{name}
 ln -s %{_sbindir}/%{name} %{buildroot}%{_bindir}/%{name}
 
-install -D -m 644 %_sourcedir/SUSEConnect.5.gz %{buildroot}%_mandir/man5/SUSEConnect.5.gz
-install -D -m 644 %_sourcedir/SUSEConnect.8.gz %{buildroot}%_mandir/man8/SUSEConnect.8.gz
+install -D -m 644 %_sourcedir/SUSEConnect.5 %{buildroot}%_mandir/man5/SUSEConnect.5
+install -D -m 644 %_sourcedir/SUSEConnect.8 %{buildroot}%_mandir/man8/SUSEConnect.8
 install -D -m 644 %_sourcedir/SUSEConnect.example %{buildroot}%_sysconfdir/SUSEConnect.example
 
 touch %{buildroot}%_sysconfdir/SUSEConnect
@@ -95,7 +99,7 @@ fi
 
 # remove stale update-alternatives config left by previous split, versioned packaging of SUSEConnect
 if update-alternatives --config SUSEConnect  &> /dev/null ; then
-  update-alternatives --quiet --remove-all SUSEConnect
+  update-alternatives --force --quiet --remove-all SUSEConnect
   ln -fs ../sbin/%{name} %{_bindir}/%{name}
 fi
 
@@ -107,8 +111,8 @@ fi
 %{gem_base}/cache/%{mod_full_name}.gem
 %{gem_base}/specifications/%{mod_full_name}.gemspec
 
-%doc %{_mandir}/man5/SUSEConnect.5.gz
-%doc %{_mandir}/man8/SUSEConnect.8.gz
+%doc %{_mandir}/man5/SUSEConnect.5.*
+%doc %{_mandir}/man8/SUSEConnect.8.*
 
 %config(noreplace) %ghost %{_sysconfdir}/SUSEConnect
 %config %{_sysconfdir}/SUSEConnect.example

@@ -52,8 +52,8 @@ task :build, [:product] do |t, args|
     sh 'mv .tmp/* .; rm -r .tmp/'
   end
   sh "cp ../#{gemfilename} ."
-  sh 'ronn --roff --manual SUSEConnect --pipe ../SUSEConnect.8.ronn > SUSEConnect.8 && gzip -f SUSEConnect.8'
-  sh 'ronn --roff --manual SUSEConnect --pipe ../SUSEConnect.5.ronn > SUSEConnect.5 && gzip -f SUSEConnect.5'
+  sh 'ronn --roff --manual SUSEConnect --pipe ../SUSEConnect.8.ronn > SUSEConnect.8'
+  sh 'ronn --roff --manual SUSEConnect --pipe ../SUSEConnect.5.ronn > SUSEConnect.5'
   sh "osc build #{args[:product]} x86_64 --no-verify --trust-all-projects"
   Dir.chdir '..'
 end
