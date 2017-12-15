@@ -146,10 +146,9 @@ module SUSE
       # @return [Array <Array <Remote::Product>>] the list of possible upgrade paths for the given products,
       #   where an upgrade path is an array of Remote::Product objects.
       def system_migrations(products, target_base_product: nil, kind:)
-        keyword_args = { kind: kind, target_base_product: target_base_product }.reject { |_, v| v.nil? }
-        args = [ system_auth, products, keyword_args ]
+        args = { kind: kind, target_base_product: target_base_product }.reject { |_, v| v.nil? }
 
-        upgrade_paths = @api.system_migrations(*args).body
+        upgrade_paths = @api.system_migrations(system_auth, products, args).body
         upgrade_paths.map do |upgrade_path|
           upgrade_path.map do |product_attributes|
             Remote::Product.new(product_attributes)
