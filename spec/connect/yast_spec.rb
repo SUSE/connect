@@ -347,7 +347,7 @@ describe SUSE::Connect::YaST do
         allow(Client).to receive(:new).with(anything).and_return(client_double)
 
         expect(client_double).to receive(:system_migrations)
-          .with(installed_products_openstruct, kind: :offline, target_base_product: target_base_product)
+          .with(installed_products_openstruct, kind: :offline, target_base_product: Remote::Product.new(target_base_product.to_h))
           .and_return([])
         subject
       end

@@ -173,6 +173,7 @@ module SUSE
         #   identifier, arch, version, and release_type
         def system_offline_migrations(installed_products, target_base_product = nil, client_params = {})
           config = SUSE::Connect::Config.new.merge!(client_params)
+          target_base_product = Remote::Product.new(target_base_product.to_h) if target_base_product
           args = { target_base_product: target_base_product, kind: :offline }.reject { |_, v| v.nil? }
 
           Client.new(config).system_migrations(installed_products, args).map { |a| a.map(&:to_openstruct) }
