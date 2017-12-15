@@ -142,6 +142,7 @@ module SUSE
       # @param [Array <Remote::Product>] the list of currently installed products in the system
       # @param kind [Symbol] :online or :offline. Whether to get online or offline migrations.
       # @param target_base_product [Remote::Product] (optional) Filter the resulting migration paths for the given base product.
+      #   Only used by the backend when kind is :offline.
       #
       # @return [Array <Array <Remote::Product>>] the list of possible upgrade paths for the given products,
       #   where an upgrade path is an array of Remote::Product objects.

@@ -206,9 +206,9 @@ module SUSE
       #   In this case we expect Base64 encoded string with login and password
       # @param [Array <Remote::Product>] a list of producs
       # @param target_base_product [Remote::Product] (optional) a target base
-      #   product to upgrade to. Defaults to nil.
-      # @param kind [Symbol] (optional) :online or :offline. It specifies if the online
-      #   or the offline migrations are desired. Defaults to :online.
+      #   product to upgrade to. Only used by the backend when kind is :offline. Defaults to nil.
+      # @param kind [Symbol] (optional) :online or :offline. It specifies whether
+      #   the online or the offline migrations are desired. Defaults to :online.
       #
       # @return [Array <Array <Hash>>] the list of possible upgrade paths for the given products,
       #   where each product is represented by a hash with identifier, version, arch and release_type
