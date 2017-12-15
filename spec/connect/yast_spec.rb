@@ -268,6 +268,16 @@ describe SUSE::Connect::YaST do
     end
   end
 
+  shared_examples 'config initializer' do
+    it 'initializes the client with the given client_params' do
+      config = SUSE::Connect::Config.new.merge!(client_params)
+      client_double = instance_double(Client, system_migrations: [])
+
+      expect(Client).to receive(:new).with(config).and_return(client_double)
+      subject
+    end
+  end
+
   describe '.system_migrations' do
     subject { described_class.system_migrations installed_products_openstruct, client_params }
 
@@ -280,13 +290,7 @@ describe SUSE::Connect::YaST do
     let(:installed_products_openstruct) { installed_products.map(&:to_openstruct) }
     let(:client_params) { { foo: 'oink' } }
 
-    it 'initializes the client with the given client_params' do
-      config = SUSE::Connect::Config.new.merge!(client_params)
-      client_double = instance_double(Client, system_migrations: [])
-
-      expect(Client).to receive(:new).with(config).and_return(client_double)
-      subject
-    end
+    include_examples 'config initializer'
 
     it 'calls Client#system_migrations with the products list and kind :online' do
       client_double = instance_double(Client)
@@ -304,7 +308,66 @@ describe SUSE::Connect::YaST do
       allow(client_double).to receive(:system_migrations)
         .and_return([[ Remote::Product.new(product_attributes) ]])
 
-      expect(subject).to match_array([[ OpenStruct.new(product_attributes) ]])
+      expect(subject).to eq([[ OpenStruct.new(product_attributes) ]])
+    end
+  end
+
+  describe '.system_offline_migrations' do
+    shared_examples 'returning migration paths' do
+      it 'returns the result as an array of arrays of OpenStructs' do
+        client_double = instance_double(Client)
+        allow(Client).to receive(:new).with(anything).and_return(client_double)
+
+        product_attributes = { identifier: 'SLES', version: '15', arch: 'x86_64', release_type: 'CD' }
+        allow(client_double).to receive(:system_migrations)
+          .and_return([[ Remote::Product.new(product_attributes) ]])
+
+        expect(subject).to eq([[ OpenStruct.new(product_attributes) ]])
+      end
+    end
+
+    let(:installed_products) do
+      [
+        Remote::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64', release_type: 'HP-CNB'),
+        Remote::Product.new(identifier: 'SUSE-Cloud', version: '7', arch: 'x86_64', release_type: nil)
+      ]
+    end
+    let(:installed_products_openstruct) { installed_products.map(&:to_openstruct) }
+    let(:client_params) { { foo: 'oink' } }
+    let(:target_base_product) { OpenStruct.new(identifier: 'SLES', version: '15', arch: 'x86_64', release_type: 'CD') }
+
+    context 'with a specified target_base_product' do
+      subject { described_class.system_offline_migrations installed_products_openstruct, target_base_product, client_params }
+
+      include_examples 'config initializer'
+      include_examples 'returning migration paths'
+
+      it 'calls Client#system_migrations with the products list, the target product, and kind :offline' do
+        client_double = instance_double(Client)
+        allow(Client).to receive(:new).with(anything).and_return(client_double)
+
+        expect(client_double).to receive(:system_migrations)
+          .with(installed_products_openstruct, kind: :offline, target_base_product: target_base_product)
+          .and_return([])
+        subject
+      end
+    end
+
+    context 'with no specified target_base_product' do
+      subject { described_class.system_offline_migrations installed_products_openstruct, nil, client_params }
+
+      include_examples 'config initializer'
+      include_examples 'returning migration paths'
+
+      it 'calls Client#system_migrations with the products list and kind :offline' do
+        client_double = instance_double(Client)
+        allow(Client).to receive(:new).with(anything).and_return(client_double)
+
+        expect(client_double).to receive(:system_migrations)
+          .with(installed_products_openstruct, kind: :offline)
+          .and_return([])
+        subject
+      end
     end
   end
 
