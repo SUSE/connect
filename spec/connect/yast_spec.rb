@@ -269,50 +269,42 @@ describe SUSE::Connect::YaST do
   end
 
   describe '.system_migrations' do
-    let(:products) do
+    subject { described_class.system_migrations installed_products_openstruct, client_params }
+
+    let(:installed_products) do
       [
         Remote::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64', release_type: 'HP-CNB'),
         Remote::Product.new(identifier: 'SUSE-Cloud', version: '7', arch: 'x86_64', release_type: nil)
       ]
     end
-
-    let(:openstruct_products) { products.map(&:to_openstruct) }
-    let(:migrations) { [products] }
+    let(:installed_products_openstruct) { installed_products.map(&:to_openstruct) }
     let(:client_params) { { foo: 'oink' } }
 
-    it 'calls system_migrations on an instance of Client' do
-      expect(Client).to receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
-      expect_any_instance_of(Client).to receive(:system_migrations).and_return migrations
+    it 'initializes the client with the given client_params' do
+      config = SUSE::Connect::Config.new.merge!(client_params)
+      client_double = instance_double(Client, system_migrations: [])
 
-      subject.system_migrations openstruct_products, client_params
+      expect(Client).to receive(:new).with(config).and_return(client_double)
+      subject
     end
 
-    it 'uses products list as parameter for Client#system_migrations' do
-      expect(Client).to receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
-      expect_any_instance_of(Client).to receive(:system_migrations).with(openstruct_products).and_return migrations
+    it 'calls Client#system_migrations with the products list and kind :online' do
+      client_double = instance_double(Client)
+      allow(Client).to receive(:new).with(anything).and_return(client_double)
 
-      subject.system_migrations openstruct_products, client_params
+      expect(client_double).to receive(:system_migrations).with(installed_products_openstruct, kind: :online).and_return([])
+      subject
     end
 
-    it 'returns the output received from Client' do
-      expected_migration = [[Remote::Product.new(identifier: 'SLES')]]
+    it 'returns the result as an array of arrays of OpenStructs' do
+      client_double = instance_double(Client)
+      allow(Client).to receive(:new).with(anything).and_return(client_double)
 
-      expect(Client).to receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
-      expect_any_instance_of(Client).to receive(:system_migrations).with(openstruct_products).and_return(expected_migration)
+      product_attributes = { identifier: 'SLES', version: '15', arch: 'x86_64', release_type: 'CD' }
+      allow(client_double).to receive(:system_migrations)
+        .and_return([[ Remote::Product.new(product_attributes) ]])
 
-      actual_migration = subject.system_migrations(openstruct_products, client_params)
-
-      expect(actual_migration).to eq(expected_migration)
-    end
-
-    it 'returns an array of arrays with openstruct objects' do
-      expect(Client).to receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
-      expect_any_instance_of(Client).to receive(:system_migrations).with(products).and_return(migrations)
-      migrations = subject.system_migrations products, client_params
-
-      expect(migrations).to be_kind_of Array
-      expect(migrations.first).to be_kind_of Array
-      expect(migrations.first.first).to be_kind_of OpenStruct
+      expect(subject).to match_array([[ OpenStruct.new(product_attributes) ]])
     end
   end
 

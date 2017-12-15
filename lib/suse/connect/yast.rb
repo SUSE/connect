@@ -155,7 +155,7 @@ module SUSE
         #   where an upgrade path is an array of Remote::Product object.
         def system_migrations(products, client_params = {})
           config = SUSE::Connect::Config.new.merge!(client_params)
-          Client.new(config).system_migrations(products).map { |a| a.map(&:to_openstruct) }
+          Client.new(config).system_migrations(products, kind: :online).map { |a| a.map(&:to_openstruct) }
         end
 
         # List available Installer-Updates repositories for the given product
