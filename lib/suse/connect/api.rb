@@ -212,7 +212,7 @@ module SUSE
       #
       # @return [Array <Array <Hash>>] the list of possible upgrade paths for the given products,
       #   where each product is represented by a hash with identifier, version, arch and release_type
-      def system_migrations(auth, products, kind: :online, target_base_product: nil)
+      def system_migrations(auth, products, target_base_product: nil, kind:)
         payload = { installed_products: products.map(&:to_params) }
         payload[:target_base_product] = target_base_product.to_params if target_base_product
         endpoints = {

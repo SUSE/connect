@@ -369,16 +369,15 @@ describe SUSE::Connect::Api do
     end
 
     context 'with no specified kind' do
-      subject { api.new(client).system_migrations('Basic: encodedgibberish', products) }
+      subject { api.new(client).system_migrations('Basic: encodedgibberish', []) }
 
-      it_behaves_like 'a query with no specified target base that returns migration paths', :online
-      it_behaves_like 'a query with no specified target base that returns no migration paths', :online
+      specify { expect { subject }.to raise_error(ArgumentError, 'missing keyword: kind') }
     end
 
     context 'with a kind that is not :online nor :offline' do
       subject { api.new(client).system_migrations('Basic: encodedgibberish', [], kind: :bad) }
 
-      specify { expect { subject }.to raise_error(KeyError) }
+      specify { expect { subject }.to raise_error(KeyError, 'key not found: :bad') }
     end
   end
 
