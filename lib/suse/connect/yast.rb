@@ -143,19 +143,40 @@ module SUSE
           Status.new(config).activated_products.map(&:to_openstruct)
         end
 
-        # Lists all available upgrade paths for a given list of products
+        # Lists all available online migration paths for a given list of products.
         # Accepts an array of products, and returns an array of possible
-        # upgrade paths. An upgrade path is a list of products that may
+        # migration paths. A migration path is a list of products that may
         # be upgraded.
         #
         # @param [Array <OpenStruct>] the list of currently installed {Product}s in the system
         # @param [Hash] client_params parameters to instantiate {Client}
         #
-        # @return [Array <Array <OpenStruct>>] the list of possible upgrade paths for the given {Product}s,
-        #   where an upgrade path is an array of Remote::Product object.
+        # @return [Array <Array <OpenStruct>>] the list of possible migration paths for the given {Product}s,
+        #   where a migration path is an array of OpenStruct objects with the attributes
+        #   identifier, arch, version, and release_type
         def system_migrations(products, client_params = {})
           config = SUSE::Connect::Config.new.merge!(client_params)
-          Client.new(config).system_migrations(products).map { |a| a.map(&:to_openstruct) }
+          Client.new(config).system_migrations(products, kind: :online).map { |a| a.map(&:to_openstruct) }
+        end
+
+        # Lists all available offline migration paths for a given list of products.
+        # Accepts an array of products, and returns an array of possible
+        # migration paths. A migration path is a list of products that may
+        # be upgraded.
+        #
+        # @param installed_products [Array <OpenStruct>] the list of currently installed {Product}s in the system
+        # @param target_base_product [OpenStruct] the {Product} that the system wants to upgrade to
+        # @param client_params [Hash] parameters to instantiate {Client}
+        #
+        # @return [Array <Array <OpenStruct>>] the list of possible migration paths for the given {Product}s,
+        #   where a migration path is an array of OpenStruct objects with the attributes
+        #   identifier, arch, version, and release_type
+        def system_offline_migrations(installed_products, target_base_product = nil, client_params = {})
+          config = SUSE::Connect::Config.new.merge!(client_params)
+          target_base_product = Remote::Product.new(target_base_product.to_h) if target_base_product
+          args = { target_base_product: target_base_product, kind: :offline }.reject { |_, v| v.nil? }
+
+          Client.new(config).system_migrations(installed_products, args).map { |a| a.map(&:to_openstruct) }
         end
 
         # List available Installer-Updates repositories for the given product

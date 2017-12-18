@@ -100,7 +100,7 @@ def stub_systems_activations_call
     .to_return(status: 200, body: response_body, headers: {})
 end
 
-def stub_system_migrations_call
+def stub_system_migrations_call(kind)
   response_body = JSON.parse(File.read('spec/fixtures/migrations_response.json')).to_json
   headers = { 'Accept' => api_header_version, \
               'Authorization' => 'Basic: encodedgibberish' }
@@ -110,19 +110,34 @@ def stub_system_migrations_call
       { identifier: 'SUSE-Cloud', version: '7', arch: 'x86_64', release_type: nil }
     ]
   }
-  stub_request(:post, 'https://example.com/connect/systems/products/migrations')
+  stub_request(:post, "https://example.com/connect/systems/products/#{(kind == :offline) ? 'offline_' : ''}migrations")
     .with(headers: headers, body: request_body.to_json)
     .to_return(status: 200, body: response_body, headers: {})
 end
 
-def stub_empty_system_migrations_call
+def stub_system_migrations_call_with_target_product(kind)
+  response_body = JSON.parse(File.read('spec/fixtures/migrations_sle15_response.json')).to_json
+  headers = { 'Accept' => api_header_version, \
+              'Authorization' => 'Basic: encodedgibberish' }
+  request_body = {
+    installed_products: [
+      { identifier: 'SLES', version: '12', arch: 'x86_64', release_type: nil }
+    ],
+    target_base_product: { identifier: 'SLES', version: '15.0', arch: 'x86_64', release_type: nil }
+  }
+  stub_request(:post, "https://example.com/connect/systems/products/#{(kind == :offline) ? 'offline_' : ''}migrations")
+    .with(headers: headers, body: request_body.to_json)
+    .to_return(status: 200, body: response_body, headers: {})
+end
+
+def stub_empty_system_migrations_call(kind)
   response_body = [].to_json
   headers = { 'Accept' => api_header_version, \
               'Authorization' => 'Basic: encodedgibberish' }
   request_body = {
     installed_products: [{ identifier: 'SLES', version: 'not-upgradeable', arch: 'x86_64', release_type: nil }]
   }
-  stub_request(:post, 'https://example.com/connect/systems/products/migrations')
+  stub_request(:post, "https://example.com/connect/systems/products/#{(kind == :offline) ? 'offline_' : ''}migrations")
     .with(headers: headers, body: request_body.to_json)
     .to_return(status: 200, body: response_body, headers: {})
 end

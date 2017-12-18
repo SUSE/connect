@@ -268,51 +268,106 @@ describe SUSE::Connect::YaST do
     end
   end
 
+  shared_examples 'config initializer' do
+    it 'initializes the client with the given client_params' do
+      config = SUSE::Connect::Config.new.merge!(client_params)
+      client_double = instance_double(Client, system_migrations: [])
+
+      expect(Client).to receive(:new).with(config).and_return(client_double)
+      subject
+    end
+  end
+
   describe '.system_migrations' do
-    let(:products) do
+    subject { described_class.system_migrations installed_products_openstruct, client_params }
+
+    let(:installed_products) do
       [
         Remote::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64', release_type: 'HP-CNB'),
         Remote::Product.new(identifier: 'SUSE-Cloud', version: '7', arch: 'x86_64', release_type: nil)
       ]
     end
-
-    let(:openstruct_products) { products.map(&:to_openstruct) }
-    let(:migrations) { [products] }
+    let(:installed_products_openstruct) { installed_products.map(&:to_openstruct) }
     let(:client_params) { { foo: 'oink' } }
 
-    it 'calls system_migrations on an instance of Client' do
-      expect(Client).to receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
-      expect_any_instance_of(Client).to receive(:system_migrations).and_return migrations
+    include_examples 'config initializer'
 
-      subject.system_migrations openstruct_products, client_params
+    it 'calls Client#system_migrations with the products list and kind :online' do
+      client_double = instance_double(Client)
+      allow(Client).to receive(:new).with(anything).and_return(client_double)
+
+      expect(client_double).to receive(:system_migrations).with(installed_products_openstruct, kind: :online).and_return([])
+      subject
     end
 
-    it 'uses products list as parameter for Client#system_migrations' do
-      expect(Client).to receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
-      expect_any_instance_of(Client).to receive(:system_migrations).with(openstruct_products).and_return migrations
+    it 'returns the result as an array of arrays of OpenStructs' do
+      client_double = instance_double(Client)
+      allow(Client).to receive(:new).with(anything).and_return(client_double)
 
-      subject.system_migrations openstruct_products, client_params
+      product_attributes = { identifier: 'SLES', version: '15', arch: 'x86_64', release_type: 'CD' }
+      allow(client_double).to receive(:system_migrations)
+        .and_return([[ Remote::Product.new(product_attributes) ]])
+
+      expect(subject).to eq([[ OpenStruct.new(product_attributes) ]])
+    end
+  end
+
+  describe '.system_offline_migrations' do
+    shared_examples 'returning migration paths' do
+      it 'returns the result as an array of arrays of OpenStructs' do
+        client_double = instance_double(Client)
+        allow(Client).to receive(:new).with(anything).and_return(client_double)
+
+        product_attributes = { identifier: 'SLES', version: '15', arch: 'x86_64', release_type: 'CD' }
+        allow(client_double).to receive(:system_migrations)
+          .and_return([[ Remote::Product.new(product_attributes) ]])
+
+        expect(subject).to eq([[ OpenStruct.new(product_attributes) ]])
+      end
     end
 
-    it 'returns the output received from Client' do
-      expected_migration = [[Remote::Product.new(identifier: 'SLES')]]
+    let(:installed_products) do
+      [
+        Remote::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64', release_type: 'HP-CNB'),
+        Remote::Product.new(identifier: 'SUSE-Cloud', version: '7', arch: 'x86_64', release_type: nil)
+      ]
+    end
+    let(:installed_products_openstruct) { installed_products.map(&:to_openstruct) }
+    let(:client_params) { { foo: 'oink' } }
+    let(:target_base_product) { OpenStruct.new(identifier: 'SLES', version: '15', arch: 'x86_64', release_type: 'CD') }
 
-      expect(Client).to receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
-      expect_any_instance_of(Client).to receive(:system_migrations).with(openstruct_products).and_return(expected_migration)
+    context 'with a specified target_base_product' do
+      subject { described_class.system_offline_migrations installed_products_openstruct, target_base_product, client_params }
 
-      actual_migration = subject.system_migrations(openstruct_products, client_params)
+      include_examples 'config initializer'
+      include_examples 'returning migration paths'
 
-      expect(actual_migration).to eq(expected_migration)
+      it 'calls Client#system_migrations with the products list, the target product, and kind :offline' do
+        client_double = instance_double(Client)
+        allow(Client).to receive(:new).with(anything).and_return(client_double)
+
+        expect(client_double).to receive(:system_migrations)
+          .with(installed_products_openstruct, kind: :offline, target_base_product: Remote::Product.new(target_base_product.to_h))
+          .and_return([])
+        subject
+      end
     end
 
-    it 'returns an array of arrays with openstruct objects' do
-      expect(Client).to receive(:new).with(instance_of(SUSE::Connect::Config)).and_call_original
-      expect_any_instance_of(Client).to receive(:system_migrations).with(products).and_return(migrations)
-      migrations = subject.system_migrations products, client_params
+    context 'with no specified target_base_product' do
+      subject { described_class.system_offline_migrations installed_products_openstruct, nil, client_params }
 
-      expect(migrations).to be_kind_of Array
-      expect(migrations.first).to be_kind_of Array
-      expect(migrations.first.first).to be_kind_of OpenStruct
+      include_examples 'config initializer'
+      include_examples 'returning migration paths'
+
+      it 'calls Client#system_migrations with the products list and kind :offline' do
+        client_double = instance_double(Client)
+        allow(Client).to receive(:new).with(anything).and_return(client_double)
+
+        expect(client_double).to receive(:system_migrations)
+          .with(installed_products_openstruct, kind: :offline)
+          .and_return([])
+        subject
+      end
     end
   end
 
