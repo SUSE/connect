@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Dec 18 14:56:58 UTC 2017 - hschmidt@suse.com
+
+- Update to 0.3.5
+  - Add YaST.system_offline_migrations 
+
+-------------------------------------------------------------------
 Thu Dec 14 09:01:58 UTC 2017 - tschmidt@suse.com
 
 - Update to version 0.3.4: 
