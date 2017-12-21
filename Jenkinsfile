@@ -8,15 +8,6 @@ node('scc-connect') {
 
   ansiColor('xterm') {
 
-    stage('unit tests')
-    {
-      sh 'rm Gemfile.lock'
-      sh 'bundle install --path ~/.bundle --jobs 4'
-      sh 'bundle clean'
-      sh 'bundle exec rubocop'
-      sh 'bundle exec rspec'
-    }
-
     stage('build docker images') {
       parallel (
         buildga: { sh 'docker build -t connect.ga -f Dockerfile .' },
@@ -24,6 +15,13 @@ node('scc-connect') {
         buildsp2: { sh 'docker build -t connect.sp2 -f Dockerfile.sp2 .' }
         buildsp3: { sh 'docker build -t connect.sp3 -f Dockerfile.sp3 .' }
       )
+    }
+
+    stage('unit tests') {
+      parallel {
+        rubocop: { sh 'docker run --rm -t connect.ga su nobody -c rubocop' }
+        rspec: { sh 'docker run --rm -t connect.ga su nobody -c rspec' }
+      }
     }
 
     // Remove untagged (prior) docker images
