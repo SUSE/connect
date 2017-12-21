@@ -1,6 +1,6 @@
 #!groovy
 
-node('scc-jenkins-node-connect') {
+node('scc-connect') {
 
   stage('checkout') {
      git 'git@github.com:SUSE/connect.git'
@@ -36,7 +36,5 @@ node('scc-jenkins-node-connect') {
         phase3: { sh 'docker run -e "PRODUCT=SLE_12_SP2" -v /space/oscbuild:/oscbuild --privileged --rm -t connect.sp2 ./docker/integration.sh' }
       )
     }
-
   }
-
 }
