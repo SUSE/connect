@@ -6,6 +6,10 @@ node('scc-connect') {
       git 'git@github.com:SUSE/connect.git'
     }
 
+    stage('copy configuration') {
+      sh 'cp /home/jenkins/options-local-connect-prophet.yml prophetp/options-local.yml'
+    }
+
     stage('run prophet') {
       dir('./prophet') {
         sh 'ruby ./prophet.rb'
