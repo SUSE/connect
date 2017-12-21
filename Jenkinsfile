@@ -18,17 +18,16 @@ node('scc-connect') {
     }
 
     stage('unit tests') {
-      parallel {
+      parallel (
         rubocop: { sh 'docker run --rm -t connect.ga su nobody -c rubocop' },
         rspec: { sh 'docker run --rm -t connect.ga su nobody -c rspec' }
-      }
+      )
     }
 
     // Remove untagged (prior) docker images
     // docker rmi $(docker images | grep "^<none>" | awk "{print $3}")
 
-    stage('integration tests')
-    {
+    stage('integration tests') {
       parallel (
         testga: { sh 'docker run -e "PRODUCT=SLE_12" -v /space/oscbuild:/oscbuild --privileged --rm -t connect.ga ./docker/integration.sh' },
         testsp1: { sh 'docker run -e "PRODUCT=SLE_12_SP1" -v /space/oscbuild:/oscbuild --privileged --rm -t connect.sp1 ./docker/integration.sh' },
