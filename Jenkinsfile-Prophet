@@ -7,7 +7,7 @@ node('scc-connect') {
     }
 
     stage('copy configuration') {
-      sh 'cp /home/jenkins/options-local-connect-prophet.yml prophetp/options-local.yml'
+      sh 'cp /home/jenkins/options-local-connect-prophet.yml prophet/options-local.yml'
     }
 
     stage('run prophet') {
