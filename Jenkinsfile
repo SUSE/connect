@@ -3,7 +3,7 @@
 node('scc-connect') {
 
   stage('checkout') {
-     git 'git@github.com:SUSE/connect.git'
+    git 'git@github.com:SUSE/connect.git'
   }
 
   ansiColor('xterm') {
