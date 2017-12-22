@@ -35,5 +35,9 @@ node('scc-connect') {
         testsp3: { sh 'docker run -e "PRODUCT=SLE_12_SP3" -v /space/oscbuild:/oscbuild --privileged --rm -t connect.sp3 ./docker/integration.sh' }
       )
     }
+
+    stage('Clean up docker') {
+      sh 'docker system prune -f'
+    }
   }
 }
