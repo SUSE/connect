@@ -11,16 +11,13 @@ end
 def base_product_version
   # base_product_version will fail if libzypp is locked for testing
   # so use env vars if available
-  case ENV['PRODUCT']
-  when 'SLE_12', 'SLES_12' # for @libzypplocked case
-    '12'
-  when 'SLE_12_SP1'
-    '12.1'
-  when 'SLE_12_SP2'
-    '12.2'
-  else
-    SUSE::Connect::Zypper.base_product.version
-  end
+  {
+    'SLE_12' => '12',
+    'SLES_12' => '12',
+    'SLE_12_SP1' => '12.1',
+    'SLE_12_SP2' => '12.2',
+    'SLE_12_SP3' => '12.3'
+  }.fetch(ENV['PRODUCT']) { SUSE::Connect::Zypper.base_product.version }
 end
 
 # rubocop:disable CyclomaticComplexity
