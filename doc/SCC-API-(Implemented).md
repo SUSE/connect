@@ -1177,6 +1177,9 @@ Status: 200 OK
 - `free` ( *Boolean* ): true for free products, false for ones that require their own subscription
 
 
+##### Errors:
+422: "The requested product '%s' is not activated on this system."
+
 ##### List System Offline Migrations
 
 Given a list of installed products, return all possible online migration paths.
@@ -1196,7 +1199,6 @@ POST /connect/systems/products/offline_migrations
     - `version` ( *String* ): Product version e.g. `12`.
     - `arch` ( *String* ): System architecture, e.g. `x86_64`.
     - `release_type` ( optional *String* ): Product release type, e.g. `HP-CNB`
-- Optional:
   - `target_base_product` ( *JSON object* )
     - `identifier` ( *String* ): Product name, e.g. `SLES`.
     - `version` ( *String* ): Product version e.g. `12`.
@@ -1206,9 +1208,12 @@ POST /connect/systems/products/offline_migrations
 ###### Response
 
 See the response for the [online migrations endpoint](#list-system-online-migrations).
-The only difference is that if the optional `target_base_product` parameter is supplied,
-the possible migration paths will be filtered to show only those that have
-`target_base_product` as a base.
+The only difference is that the `target_base_product` parameter allows the possible migration paths
+to be filtered to show only those that have `target_base_product` as a base.
+
+##### Errors:
+422: "The requested product '%s' is not activated on this system."
+422: "The requested upgrade product '%s' is not an upgrade from the installed product."
 
 ##### <a id="system_synchronize_products">Synchronize system products</a>
 Synchronize activated system products to the registration server.
