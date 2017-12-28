@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Dec 28 13:29:20 UTC 2017 - hschmidt@suse.com
+
+- Update to 0.3.6
+  - Make target_base_product parameter mandatory.
+
+-------------------------------------------------------------------
 Mon Dec 18 14:56:58 UTC 2017 - hschmidt@suse.com
 
 - Update to 0.3.5
