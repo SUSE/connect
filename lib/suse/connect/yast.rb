@@ -171,10 +171,10 @@ module SUSE
         # @return [Array <Array <OpenStruct>>] the list of possible migration paths for the given {Product}s,
         #   where a migration path is an array of OpenStruct objects with the attributes
         #   identifier, arch, version, and release_type
-        def system_offline_migrations(installed_products, target_base_product = nil, client_params = {})
+        def system_offline_migrations(installed_products, target_base_product, client_params = {})
           config = SUSE::Connect::Config.new.merge!(client_params)
-          target_base_product = Remote::Product.new(target_base_product.to_h) if target_base_product
-          args = { target_base_product: target_base_product, kind: :offline }.reject { |_, v| v.nil? }
+          target_base_product = Remote::Product.new(target_base_product.to_h)
+          args = { target_base_product: target_base_product, kind: :offline }
 
           Client.new(config).system_migrations(installed_products, args).map { |a| a.map(&:to_openstruct) }
         end
