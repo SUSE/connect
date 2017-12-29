@@ -185,6 +185,8 @@ Status: 200 OK
     "product_type": "base",
     "recommended": false,
     "predecessor_ids": [769, 690, 824, 814, 1300],
+    "online_predecessor_ids": [769, 690, 824, 814, 1300], // Same as predecessor_ids
+    "offline_predecessor_ids": [809, 659],
     "successor_ids": [1322],
     "shortname": "SLES12",
     "extensions": [
