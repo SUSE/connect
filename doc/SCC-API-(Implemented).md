@@ -1178,7 +1178,13 @@ Status: 200 OK
 
 
 ##### Errors:
-422: "The requested product '%s' is not activated on this system."
+
+- 422: `The requested product '%s' is not activated on this system.`
+- 422: `Required parameters are missing or empty: installed_products`
+- 500: `No base product found` - When the `installed_products` parameter contains no base product.
+- 500: `Multiple base products found: ["SUSE Linux Enterprise Server 12 SP4 x86_64", "SUSE Linux Enterprise Server 12 SP3 x86_64"]` -
+When the `installed_products` parameter contains more than one base product.
+This should not happen, since a system can only have one base product installed.
 
 ##### List System Offline Migrations
 
@@ -1194,26 +1200,27 @@ POST /connect/systems/products/offline_migrations
 ###### Parameters
 
 - Required:
-  - `installed_products` (*Array* of *JSON Objects*):
+  - `installed_products` ( *Array* of *JSON Objects* ):
     - `identifier` ( *String* ): Product name, e.g. `SLES`.
     - `version` ( *String* ): Product version e.g. `12`.
     - `arch` ( *String* ): System architecture, e.g. `x86_64`.
     - `release_type` ( optional *String* ): Product release type, e.g. `HP-CNB`
   - `target_base_product` ( *JSON object* )
     - `identifier` ( *String* ): Product name, e.g. `SLES`.
-    - `version` ( *String* ): Product version e.g. `12`.
+    - `version` ( *String* ): Product version e.g. `15`.
     - `arch` ( *String* ): System architecture, e.g. `x86_64`.
     - `release_type` ( optional *String* ): Product release type, e.g. `HP-CNB`
 
 ###### Response
 
 See the response for the [online migrations endpoint](#list-system-online-migrations).
-The only difference is that the `target_base_product` parameter allows the possible migration paths
-to be filtered to show only those that have `target_base_product` as a base.
+The only difference is that the `target_base_product` parameter filters the migration paths
+to return only those that have `target_base_product` as a base.
 
 ##### Errors:
-422: "The requested product '%s' is not activated on this system."
-422: "The requested upgrade product '%s' is not an upgrade from the installed product."
+
+- 422: `Required parameters are missing or empty: target_base_product`
+- Plus errors from the [online migrations endpoint](#list-system-online-migrations)
 
 ##### <a id="system_synchronize_products">Synchronize system products</a>
 Synchronize activated system products to the registration server.
