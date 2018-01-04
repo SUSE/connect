@@ -1179,9 +1179,18 @@ Status: 200 OK
 - `free` ( *Boolean* ): true for free products, false for ones that require their own subscription
 
 
+##### Errors:
+
+- 422: `The requested product '%s' is not activated on this system.`
+- 422: `Required parameters are missing or empty: installed_products`
+- 500: `No base product found` - When the `installed_products` parameter contains no base product.
+- 500: `Multiple base products found: ["SUSE Linux Enterprise Server 12 SP4 x86_64", "SUSE Linux Enterprise Server 12 SP3 x86_64"]` -
+When the `installed_products` parameter contains more than one base product.
+This should not happen, since a system can only have one base product installed.
+
 ##### List System Offline Migrations
 
-Given a list of installed products, return all possible online migration paths.
+Given a list of installed products, return all possible offline migration paths.
 An "offline" migration is one that requires the target machine to be booted from
 the media of the desired product (eg. a system that has SLES 12 SP4 installed
 must be booted from the SLES 15 media in order to upgrade it to SLES 15).
@@ -1193,24 +1202,27 @@ POST /connect/systems/products/offline_migrations
 ###### Parameters
 
 - Required:
-  - `installed_products` (*Array* of *JSON Objects*):
+  - `installed_products` ( *Array* of *JSON Objects* ):
     - `identifier` ( *String* ): Product name, e.g. `SLES`.
     - `version` ( *String* ): Product version e.g. `12`.
     - `arch` ( *String* ): System architecture, e.g. `x86_64`.
     - `release_type` ( optional *String* ): Product release type, e.g. `HP-CNB`
-- Optional:
   - `target_base_product` ( *JSON object* )
     - `identifier` ( *String* ): Product name, e.g. `SLES`.
-    - `version` ( *String* ): Product version e.g. `12`.
+    - `version` ( *String* ): Product version e.g. `15`.
     - `arch` ( *String* ): System architecture, e.g. `x86_64`.
     - `release_type` ( optional *String* ): Product release type, e.g. `HP-CNB`
 
 ###### Response
 
 See the response for the [online migrations endpoint](#list-system-online-migrations).
-The only difference is that if the optional `target_base_product` parameter is supplied,
-the possible migration paths will be filtered to show only those that have
-`target_base_product` as a base.
+The only difference is that the `target_base_product` parameter filters the migration paths
+to return only those that have `target_base_product` as a base.
+
+##### Errors:
+
+- 422: `Required parameters are missing or empty: target_base_product`
+- Plus errors from the [online migrations endpoint](#list-system-online-migrations)
 
 ##### <a id="system_synchronize_products">Synchronize system products</a>
 Synchronize activated system products to the registration server.
