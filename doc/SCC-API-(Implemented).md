@@ -1115,6 +1115,14 @@ That is to say, some products must be upgraded, others may optionally be upgrade
 while yet others simply cannot be upgraded.
 This endpoint returns all of the possible compatible combinations.
 
+Products in the `installed_products` array that do not exist in SCC (eg.
+3rd-party add-ons) will be filtered out.
+If any product in `installed_products` (after filtering out unknown products)
+is not upgradeable (either no newer version exists, or, in the case of extensions
+or modules, it is not compatible with an upgraded base), the endpoint will return
+an empty array `[]`, since a migration is not possible.
+
+
 ```
 POST /connect/systems/products/migrations
 ```
@@ -1174,6 +1182,7 @@ Status: 200 OK
 - `version` ( *String* ): Product version e.g. `12`.
 - `arch` ( *String* ): System architecture, e.g. `x86_64`.
 - `release_type` ( optional *String* ): Product release type, e.g. `HP-CNB`
+- `release_stage` ( *String* ): One of `released`, `beta` or `alpha`. Note that modules will always show `released`.
 - `base` ( *Boolean* ): true for base products and false for extensions
 - `product type` ( *String* ): Product type ("base", "extension" or "module")
 - `free` ( *Boolean* ): true for free products, false for ones that require their own subscription
@@ -1194,6 +1203,13 @@ Given a list of installed products, return all possible offline migration paths.
 An "offline" migration is one that requires the target machine to be booted from
 the media of the desired product (eg. a system that has SLES 12 SP4 installed
 must be booted from the SLES 15 media in order to upgrade it to SLES 15).
+
+Products in the `installed_products` array that do not exist in SCC (eg.
+3rd-party add-ons) will be filtered out.
+If any product in `installed_products` (after filtering out unknown products)
+is not upgradeable (either no newer version exists, or, in the case of extensions
+or modules, it is not compatible with an upgraded base), the endpoint will return
+an empty array `[]`, since a migration is not possible.
 
 ```
 POST /connect/systems/products/offline_migrations
