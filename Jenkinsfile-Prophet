@@ -1,11 +1,13 @@
 #!groovy
 
-node('scc-jenkins-node-connect') {
-
+node('scc-connect') {
   ansiColor('xterm') {
-
     stage('checkout') {
       git 'git@github.com:SUSE/connect.git'
+    }
+
+    stage('copy configuration') {
+      sh 'cp /home/jenkins/options-local-connect-prophet.yml prophet/options-local.yml'
     }
 
     stage('run prophet') {
@@ -13,8 +15,5 @@ node('scc-jenkins-node-connect') {
         sh 'ruby ./prophet.rb'
       }
     }
-
   }
-
 }
-

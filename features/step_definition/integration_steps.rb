@@ -38,16 +38,13 @@ Then(/^zypper (should|should not) contain a service for (base|sdk|wsm) product$/
 end
 
 Then(/^zypper (should|should not) contain the repositories for (base|sdk|wsm) product$/) do |condition, product|
-  case base_product_version
-  when '12.1'
-    version_string_uscore = '12_SP1'
-    version_string_dash = '12-SP1'
-  when '12.2'
-    version_string_uscore = '12_SP2'
-    version_string_dash = '12-SP2'
-  else
-    version_string_uscore = version_string_dash = '12'
-  end
+  version_string_uscore, version_string_dash = {
+    '12' => [ '12', '12' ],
+    '12.1' => [ '12_SP1', '12-SP1' ],
+    '12.2' => [ '12_SP2', '12-SP2' ],
+    '12.3' => [ '12_SP3', '12-SP3' ]
+  }.fetch(base_product_version)
+
   if product == 'base'
     repositories = [
       "SUSE_Linux_Enterprise_Server_#{version_string_uscore}_x86_64:SLES#{version_string_dash}-Pool",
