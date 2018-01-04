@@ -1188,7 +1188,7 @@ This should not happen, since a system can only have one base product installed.
 
 ##### List System Offline Migrations
 
-Given a list of installed products, return all possible online migration paths.
+Given a list of installed products, return all possible offline migration paths.
 An "offline" migration is one that requires the target machine to be booted from
 the media of the desired product (eg. a system that has SLES 12 SP4 installed
 must be booted from the SLES 15 media in order to upgrade it to SLES 15).
