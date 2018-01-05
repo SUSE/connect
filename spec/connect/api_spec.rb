@@ -10,8 +10,7 @@ describe SUSE::Connect::Api do
            insecure: false,
            verify_callback: nil,
            debug: false,
-           token: 'token-shmocken'
-          )
+           token: 'token-shmocken')
   end
 
   let(:client) { double('client', config: config) }
