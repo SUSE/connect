@@ -190,7 +190,8 @@ describe SUSE::Connect::Status do
             activated: false,
             extensions: []
           }]
-        }])
+        }
+      ])
     end
   end
 

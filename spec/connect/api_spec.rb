@@ -91,8 +91,7 @@ describe SUSE::Connect::Api do
     context :hostname_detected do
       it 'sends a call with hostname' do
         payload = ['/connect/subscriptions/systems', auth: 'token', params: {
-          hostname: 'connect', hwinfo: 'hwinfo', distro_target: 'HHH' }
-                  ]
+          hostname: 'connect', hwinfo: 'hwinfo', distro_target: 'HHH' }]
         expect_any_instance_of(Connection).to receive(:post).with(*payload).and_call_original
         subject.new(client).announce_system('token')
       end
@@ -103,8 +102,7 @@ describe SUSE::Connect::Api do
         allow(Socket).to receive_messages(gethostname: nil)
         allow(Socket).to receive_messages(ip_address_list: [Addrinfo.ip('192.168.42.42')])
         payload = ['/connect/subscriptions/systems', auth: 'token', params: {
-          hostname: '192.168.42.42', hwinfo: 'hwinfo', distro_target: 'HHH' }
-                  ]
+          hostname: '192.168.42.42', hwinfo: 'hwinfo', distro_target: 'HHH' }]
         expect_any_instance_of(Connection).to receive(:post).with(*payload).and_call_original
         subject.new(client).announce_system('token')
       end
