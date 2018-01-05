@@ -6,16 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 4
-# Cop supports --auto-correct.
-# Configuration parameters: AllowForAlignment.
-Layout/SpaceAroundOperators:
-  Exclude:
-    - 'features/step_definition/library_steps.rb'
-    - 'lib/suse/connect/connection.rb'
-    - 'spec/connect/config_spec.rb'
-    - 'spec/connect/connection_spec.rb'
-
 # Offense count: 6
 # Cop supports --auto-correct.
 Layout/SpaceInsidePercentLiteralDelimiters:
