@@ -6,15 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 6
-# Cop supports --auto-correct.
-Layout/SpaceInsidePercentLiteralDelimiters:
-  Exclude:
-    - 'spec/connect/client_spec.rb'
-    - 'spec/connect/zypper/product_spec.rb'
-    - 'spec/support/credentials_mocks.rb'
-    - 'spec/toolkit/curlrc_dotfile_spec.rb'
-
 # Offense count: 1
 Lint/CircularArgumentReference:
   Exclude:
