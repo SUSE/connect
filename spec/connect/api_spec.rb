@@ -456,7 +456,7 @@ describe SUSE::Connect::Api do
   describe '#list_installer_updates' do
     before { stub_list_installer_updates_call }
 
-    let(:product) { Remote::Product.new(identifier: 'SLES', version: '12.2', arch: 'x86_64')  }
+    let(:product) { Remote::Product.new(identifier: 'SLES', version: '12.2', arch: 'x86_64') }
     let(:expected_body) do
       [
         {

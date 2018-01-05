@@ -53,7 +53,7 @@ module SUSE
       private
 
       def json_request(method, path, params = {})
-        request                    = VERB_TO_CLASS[method].new(path)
+        request = VERB_TO_CLASS[method].new(path)
         add_headers(request)
 
         request.body               = params.to_json unless params.empty?

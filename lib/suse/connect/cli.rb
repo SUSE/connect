@@ -4,7 +4,7 @@ require 'suse/connect'
 module SUSE
   module Connect
     # Command line interface for interacting with SUSEConnect
-    class Cli  # rubocop:disable ClassLength
+    class Cli # rubocop:disable ClassLength
       include Logger
 
       attr_reader :config, :options
