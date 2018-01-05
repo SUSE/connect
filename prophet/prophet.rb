@@ -45,7 +45,6 @@ Prophet.setup do |config|
   # NOTE: Either ensure the last call in that block runs your tests
   # or manually set @result to a boolean inside this block.
   config.execution do
-
     executor = SCC::CiExecutor.new(logger: config.logger)
     executor.run!
 
@@ -61,7 +60,6 @@ Prophet.setup do |config|
       throw RuntimeError, config.comment_failure
     end
   end
-
 end
 
 # Finally, run Prophet!

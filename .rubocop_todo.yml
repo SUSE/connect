@@ -6,18 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 6
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-# SupportedStyles: empty_lines, no_empty_lines
-Layout/EmptyLinesAroundBlockBody:
-  Exclude:
-    - 'Rakefile'
-    - 'features/step_definition/integration_steps.rb'
-    - 'prophet/prophet.rb'
-    - 'spec/connect/cli_spec.rb'
-    - 'spec/connect/hwinfo/s390_spec.rb'
-
 # Offense count: 3
 # Cop supports --auto-correct.
 Layout/EmptyLinesAroundExceptionHandlingKeywords:

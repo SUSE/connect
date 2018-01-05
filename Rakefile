@@ -40,7 +40,6 @@ end
 # SLE_12, SLE_12_SP1, and SLE_12_SP2 valid products for testing; use 'osc repos' in package dir to check others.
 desc 'Build locally (prepare for pushing to ibs)'
 task :build, [:product] do |t, args|
-
   gemfilename = "suse-connect-#{SUSE::Connect::VERSION}.gem"
   sh 'rm *.gem' if Dir['*.gem'].any?
   sh 'gem build suse-connect.gemspec'

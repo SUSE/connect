@@ -1,5 +1,4 @@
 Then(/^Set url options$/) do
-
   @url = ENV['URL'] || SUSE::Connect::Config::DEFAULT_URL
 end
 
