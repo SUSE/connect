@@ -18,7 +18,6 @@ module SUSE
         else
           raise
         end
-
       rescue
         raise SUSE::Connect::CannotBuildBasicAuth,
               "\nCannot read username and password from #{SUSE::Connect::Credentials.system_credentials_file}."

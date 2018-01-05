@@ -49,7 +49,6 @@ module SUSE
         end
 
         @config.write! if @config.write_config
-
       rescue Errno::ECONNREFUSED
         log.fatal "Error: Connection refused by server #{@config.url}"
         exit 64
