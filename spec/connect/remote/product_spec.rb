@@ -30,8 +30,7 @@ describe SUSE::Connect::Remote::Product do
               { 'bar' => 'baz', 'extensions' => [] }
             ]
           }
-        ]
-                                   )
+        ])
       expect(subject.extensions.size).to eq 1
       expect(subject.extensions.first.extensions.size).to eq 1
       expect(subject.extensions.first.extensions.first.extensions).to eq []

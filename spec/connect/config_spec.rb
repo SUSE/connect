@@ -121,7 +121,7 @@ describe SUSE::Connect::Config do
       end
 
       it 'only converts serializable attributes to YAML' do
-        config.regcode  = 'CRYTOP'
+        config.regcode = 'CRYTOP'
         expect(config.send(:select_serializable_attributes)).to_not include 'regcode'
       end
     end

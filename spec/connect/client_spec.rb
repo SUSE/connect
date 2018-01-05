@@ -345,7 +345,7 @@ describe SUSE::Connect::Client do
       )
     end
 
-    let(:product) { Remote::Product.new(identifier: 'text_identifier')  }
+    let(:product) { Remote::Product.new(identifier: 'text_identifier') }
 
     before do
       allow(subject).to receive_messages(system_auth: 'Basic: encodedstring')
@@ -610,7 +610,7 @@ describe SUSE::Connect::Client do
       )
     end
 
-    let(:product) { Remote::Product.new(identifier: 'SLES', version: '12.2', arch: 'x86_64')  }
+    let(:product) { Remote::Product.new(identifier: 'SLES', version: '12.2', arch: 'x86_64') }
 
     it 'collects data from api response' do
       expect(subject.api).to receive(:list_installer_updates).with(product).and_return stubbed_response

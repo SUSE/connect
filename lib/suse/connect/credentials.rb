@@ -87,7 +87,7 @@ module SUSE
           raise MalformedSccCredentialsFile, 'Cannot parse credentials file'
         end
 
-        [user,  passwd]
+        [user, passwd]
       end
 
       # serialize the credentials for writing to a file

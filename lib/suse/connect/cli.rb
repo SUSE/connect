@@ -4,7 +4,7 @@ require 'suse/connect'
 module SUSE
   module Connect
     # Command line interface for interacting with SUSEConnect
-    class Cli  # rubocop:disable ClassLength
+    class Cli # rubocop:disable ClassLength
       include Logger
 
       attr_reader :config, :options
@@ -49,7 +49,6 @@ module SUSE
         end
 
         @config.write! if @config.write_config
-
       rescue Errno::ECONNREFUSED
         log.fatal "Error: Connection refused by server #{@config.url}"
         exit 64

@@ -138,7 +138,6 @@ describe SUSE::Connect::Cli do
           expect_any_instance_of(Client).to receive(:register!)
           cli.execute!
         end
-
       end
 
       it 'requires either --regcode or --url (regcode-less SMT registration) but respects config attributes' do
