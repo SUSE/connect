@@ -42,6 +42,12 @@ describe SUSE::Connect::Remote::Product do
     end
   end
 
+  describe '#distro_target' do
+    it 'generate distro target' do
+      expect(subject.distro_target).to eq 'sle-12-x86_64'
+    end
+  end
+
   it_behaves_like 'server driven model'
 
   describe '#==' do
