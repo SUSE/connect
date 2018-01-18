@@ -120,4 +120,4 @@ osc -A https://api.suse.de mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP2:
 
 You can check the status of your requests [here](https://build.opensuse.org/package/requests/systemsmanagement:SCC/SUSEConnect) and [here](https://build.suse.de/package/requests/Devel:SCC:suseconnect/SUSEConnect).
 
-After your requests got accepted, they still have to pass maintenance testing before they get released to customers. You can check their progress at [maintenance.suse.de](https://maintenance.suse.de/search/?q=SUSEConnect). If you still need help, [Leonardo Chiquitto](https://floor.nue.suse.com/users/255) (leonardo in IRC) is a good contact person for maintenance related questions.
+After your requests got accepted, they still have to pass maintenance testing before they get released to customers. You can check their progress at [maintenance.suse.de](https://maintenance.suse.de/search/?q=SUSEConnect). If you still need help, the maintenance team can be reached at [maint-coord@suse.de](maint-coord@suse.de) or #maintenance on irc.suse.de.
