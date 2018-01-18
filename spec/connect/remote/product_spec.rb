@@ -30,8 +30,7 @@ describe SUSE::Connect::Remote::Product do
               { 'bar' => 'baz', 'extensions' => [] }
             ]
           }
-        ]
-                                   )
+        ])
       expect(subject.extensions.size).to eq 1
       expect(subject.extensions.first.extensions.size).to eq 1
       expect(subject.extensions.first.extensions.first.extensions).to eq []
@@ -40,6 +39,12 @@ describe SUSE::Connect::Remote::Product do
     it 'has extensions' do
       expect(subject.extensions.size).to eq 1
       expect(subject.extensions.first.identifier).to eq 'SLEEK-12-EXT'
+    end
+  end
+
+  describe '#distro_target' do
+    it 'generate distro target' do
+      expect(subject.distro_target).to eq 'sle-12-x86_64'
     end
   end
 

@@ -53,7 +53,7 @@ module SUSE
       private
 
       def json_request(method, path, params = {})
-        request                    = VERB_TO_CLASS[method].new(path)
+        request = VERB_TO_CLASS[method].new(path)
         add_headers(request)
 
         request.body               = params.to_json unless params.empty?
@@ -66,7 +66,6 @@ module SUSE
           body: body,
           success: response.is_a?(Net::HTTPSuccess)
         )
-
       rescue Zlib::Error
         raise SUSE::Connect::NetworkError, 'Check your network connection and try again. If it keeps failing, report a bug.'
       end

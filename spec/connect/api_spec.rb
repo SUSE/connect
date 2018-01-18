@@ -10,8 +10,7 @@ describe SUSE::Connect::Api do
            insecure: false,
            verify_callback: nil,
            debug: false,
-           token: 'token-shmocken'
-          )
+           token: 'token-shmocken')
   end
 
   let(:client) { double('client', config: config) }
@@ -91,8 +90,8 @@ describe SUSE::Connect::Api do
     context :hostname_detected do
       it 'sends a call with hostname' do
         payload = ['/connect/subscriptions/systems', auth: 'token', params: {
-          hostname: 'connect', hwinfo: 'hwinfo', distro_target: 'HHH' }
-                  ]
+          hostname: 'connect', hwinfo: 'hwinfo', distro_target: 'HHH'
+        }]
         expect_any_instance_of(Connection).to receive(:post).with(*payload).and_call_original
         subject.new(client).announce_system('token')
       end
@@ -103,8 +102,8 @@ describe SUSE::Connect::Api do
         allow(Socket).to receive_messages(gethostname: nil)
         allow(Socket).to receive_messages(ip_address_list: [Addrinfo.ip('192.168.42.42')])
         payload = ['/connect/subscriptions/systems', auth: 'token', params: {
-          hostname: '192.168.42.42', hwinfo: 'hwinfo', distro_target: 'HHH' }
-                  ]
+          hostname: '192.168.42.42', hwinfo: 'hwinfo', distro_target: 'HHH'
+        }]
         expect_any_instance_of(Connection).to receive(:post).with(*payload).and_call_original
         subject.new(client).announce_system('token')
       end
@@ -456,7 +455,7 @@ describe SUSE::Connect::Api do
   describe '#list_installer_updates' do
     before { stub_list_installer_updates_call }
 
-    let(:product) { Remote::Product.new(identifier: 'SLES', version: '12.2', arch: 'x86_64')  }
+    let(:product) { Remote::Product.new(identifier: 'SLES', version: '12.2', arch: 'x86_64') }
     let(:expected_body) do
       [
         {

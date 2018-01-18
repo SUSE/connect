@@ -70,5 +70,4 @@ describe SUSE::Connect::HwInfo::S390 do
       expect(SUSE::Connect::HwInfo::S390.hypervisor).to be nil
     end
   end
-
 end

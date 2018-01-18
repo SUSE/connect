@@ -23,4 +23,11 @@ class SUSE::Connect::Remote::Product < SUSE::Connect::Remote::ServerDrivenModel
       release_type: release_type
     }
   end
+
+  def distro_target
+    version = self.version.scan(/\d+/)[0]
+    identifier = self.identifier.downcase
+    identifier = 'sle' if (identifier =~ /^sle/)
+    "#{identifier}-#{version}-#{arch}"
+  end
 end
