@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Jan 18 14:54:57 UTC 2018 - fschueller@suse.com
+
+- Update to 0.3.7
+  - virt-create-rootfs connects to SMT server without breaking (bsc#914297)
+
+-------------------------------------------------------------------
 Thu Dec 28 13:29:20 UTC 2017 - hschmidt@suse.com
 
 - Update to 0.3.6
@@ -8,19 +14,19 @@ Thu Dec 28 13:29:20 UTC 2017 - hschmidt@suse.com
 Mon Dec 18 14:56:58 UTC 2017 - hschmidt@suse.com
 
 - Update to 0.3.5
-  - Add YaST.system_offline_migrations 
+  - Add YaST.system_offline_migrations
 
 -------------------------------------------------------------------
 Thu Dec 14 09:01:58 UTC 2017 - tschmidt@suse.com
 
-- Update to version 0.3.4: 
+- Update to version 0.3.4:
   - Packaging improvements (bsc#964013)
 
 -------------------------------------------------------------------
 Thu Dec  7 17:30:23 UTC 2017 - tschmidt@suse.com
 
 - Update to version 0.3.3: 
-  - Fix SLE15 build 
+  - Fix SLE15 build
 
 -------------------------------------------------------------------
 Mon Oct 16 15:23:33 UTC 2017 - ikapelyukhin@suse.com

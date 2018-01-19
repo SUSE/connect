@@ -24,6 +24,8 @@ class SUSE::Connect::Remote::Product < SUSE::Connect::Remote::ServerDrivenModel
     }
   end
 
+  # This method is needed to compute the distro_target when /etc/products.d/baseproduct
+  # does not exist. This happens e.g. when creating a rootfs from scratch.
   def distro_target
     version = self.version.scan(/\d+/)[0]
     identifier = self.identifier.downcase
