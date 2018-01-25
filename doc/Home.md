@@ -1,5 +1,6 @@
-SUSEConnect is the client side commandline tool to register SUSE systems, activate extensions and migrating systems to another release. It is available for SLES12, SLES12SP1, and SLES12SP2.
-The RPM of it is build in the [SUSE Build Service](https://build.suse.de/package/show/Devel:SCC:suseconnect/SUSEConnect). 
+SUSEConnect is the client side commandline tool to register SUSE systems, activate extensions and migrating systems to another release. It is available for SLES starting with SLES12 and also on openSUSE to be able to migrate to SLES.
+
+The RPM of it is build in the [openSUSE Build Service](https://build.opensuse.org/package/show/systemsmanagement:SCC/SUSEConnect). 
 
 Technical information about SUSEConnect:
 
