@@ -107,7 +107,7 @@ osc sr systemsmanagement:SCC SUSEConnect openSUSE:Factory --no-cleanup
 To make the initial submit for a new SLES version:
 
 ```
-osc -A https://api.suse.de sr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP3:GA --no-cleanup
+osc -A https://api.suse.de sr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-15-GA --no-cleanup
 ```
 
 To submit the updated package as a maintenance update to released SLES versions:
@@ -116,6 +116,7 @@ To submit the updated package as a maintenance update to released SLES versions:
 osc -A https://api.suse.de mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12:Update --no-cleanup
 osc -A https://api.suse.de mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP1:Update --no-cleanup
 osc -A https://api.suse.de mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP2:Update --no-cleanup
+osc -A https://api.suse.de mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP3:Update --no-cleanup
 ```
 
 You can check the status of your requests [here](https://build.opensuse.org/package/requests/systemsmanagement:SCC/SUSEConnect) and [here](https://build.suse.de/package/requests/Devel:SCC:suseconnect/SUSEConnect).
