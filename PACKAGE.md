@@ -107,7 +107,7 @@ osc sr systemsmanagement:SCC SUSEConnect openSUSE:Factory --no-cleanup
 To make the initial submit for a new SLES version:
 
 ```
-osc -A https://api.suse.de sr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-15-GA --no-cleanup
+osc -A https://api.suse.de sr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-15:GA --no-cleanup
 ```
 
 To submit the updated package as a maintenance update to released SLES versions:
