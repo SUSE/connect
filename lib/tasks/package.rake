@@ -18,7 +18,7 @@ def build_gem(package_dir)
 
   raise 'Gem build failed.' unless $CHILD_STATUS.exitstatus.zero?
 
-  Dir.chdir "#{package_dir}"
+  Dir.chdir package_dir.to_s
   `rm *.gem` if Dir['*.gem'].any?
   sh "cp ../#{gemfilename} ."
   puts "Gem built and copied to #{package_dir}." if $CHILD_STATUS.exitstatus.zero?
@@ -34,26 +34,24 @@ def checkout_package(obs_project, package_name)
 end
 
 def check_specfile_version(obs_project, package_name, local_spec_file)
-  begin
-    file = Tempfile.new('connect-spec-rake')
-    file.close
-    `osc -A 'https://api.opensuse.org' cat '#{obs_project}' '#{package_name}' '#{package_name}.spec' > #{file.path}`
-    original_version = version_from_spec(file.path)
-    new_version      = version_from_spec(local_spec_file)
+  file = Tempfile.new('connect-spec-rake')
+  file.close
+  `osc -A 'https://api.opensuse.org' cat '#{obs_project}' '#{package_name}' '#{package_name}.spec' > #{file.path}`
+  original_version = version_from_spec(file.path)
+  new_version      = version_from_spec(local_spec_file)
 
-    if new_version == original_version
-      puts "Version in #{package_name}.spec not changed. Changing...\n"
-      change_specfile_version(local_spec_file, original_version)
-    else
-      puts "Version change to #{new_version} in #{package_name}.spec detected."
-    end
-  ensure
-    file.unlink if file
+  if new_version == original_version
+    puts "Version in #{package_name}.spec not changed. Changing...\n"
+    change_specfile_version(local_spec_file, original_version)
+  else
+    puts "Version change to #{new_version} in #{package_name}.spec detected."
   end
+ensure
+  file.unlink if file
 end
 
 def change_specfile_version(specfile, old_version)
-  File.write(specfile,File.open(specfile,&:read).gsub(old_version, SUSE::Connect::VERSION))
+  File.write(specfile, File.open(specfile, &:read).gsub(old_version, SUSE::Connect::VERSION))
 end
 
 def version_from_spec(spec_glob)
