@@ -16,7 +16,7 @@ Lint/IneffectiveAccessModifier:
   Exclude:
     - 'lib/suse/connect/credentials.rb'
 
-Lint/RescueWithoutErrorClass:
+Style/RescueStandardError:
   Exclude:
     - 'lib/suse/connect/hwinfo/arm64.rb'
     - 'lib/suse/connect/hwinfo/x86.rb'
