@@ -34,7 +34,7 @@ def checkout_package(obs_project, package_name)
   end
 end
 
-def check_specfile_version(obs_project, package_name)
+def check_specfile_version(obs_project, package_name, local_spec_file)
   begin
     file = Tempfile.new('connect-spec-rake')
     file.close
@@ -97,7 +97,7 @@ task :prepare do
 
   ###
   puts '== Step 6: check for version bump in specfile'
-  check_specfile_version(obs_project, package_name)
+  check_specfile_version(obs_project, package_name, local_spec_file)
   sleep 1
 
   puts 'Package preparation complete. Run `osc ci` to check in package.'
