@@ -1,34 +1,33 @@
 $LOAD_PATH << 'lib'
 require 'suse/connect'
 require 'tempfile'
+require 'English'
 
 
-def version_from_spec (spec_glob)
+def version_from_spec(spec_glob)
   version = `grep '^Version:' #{spec_glob}`
-  version.sub!(/^Version:\s*/, "")
-  version.sub!(/#.*$/, "")
+  version.sub!(/^Version:\s*/, '')
+  version.sub!(/#.*$/, '')
   version.strip!
   version
 end
 
-package_dir = 'package/'
-package_name = 'SUSEConnect'
-obs_project = 'systemsmanagement:SCC'
-local_spec_file = "#{package_name}.spec"
-
-task default: :prepare
-
 desc 'Prepare package for checking in to IBS'
 task :prepare do
+  package_dir = 'package/'
+  package_name = 'SUSEConnect'
+  obs_project = 'systemsmanagement:SCC'
+  local_spec_file = "#{package_name}.spec"
+
   puts ">> #{package_name} is now at #{SUSE::Connect::VERSION} <<"
 
   ###
   puts '== Step 1: check for uncommitted changes'
   modified = `git ls-files -m --exclude-standard .`
-  if ! modified.empty?
-    raise "Warning: uncommitted changes!\n#{modified}"
+  if !modified.empty?
+    raise "Warning: uncommitted changes!\n\n#{modified}\n"
   else
-    puts 'No uncommitted changes detected.'
+    puts 'No uncommitted changes detected.\n'
   end
   sleep 1
 
@@ -39,11 +38,11 @@ task :prepare do
   `rm *.gem` if Dir['*.gem'].any?
   `gem build suse-connect.gemspec`
 
-  raise 'Gem build failed.' unless $?.exitstatus.zero?
+  raise 'Gem build failed.' unless $CHILD_STATUS.exitstatus.zero?
 
   Dir.chdir "#{package_dir}"
   sh "cp ../#{gemfilename} ."
-  puts "Gem built and copied to #{package_dir}." if $?.exitstatus.zero?
+  puts "Gem built and copied to #{package_dir}." if $CHILD_STATUS.exitstatus.zero?
   sleep 1
 
   ###
@@ -52,7 +51,7 @@ task :prepare do
     sh 'mkdir .tmp; mv * .tmp/'
     sh "osc co #{obs_project} #{package_name} -o ."
     sh 'mv .tmp/* .; rm -r .tmp/'
-    puts 'Checkout successful.' if $?.exitstatus.zero?
+    puts 'Checkout successful.' if $CHILD_STATUS.exitstatus.zero?
     sleep 1
   end
 
