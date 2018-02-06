@@ -2,7 +2,10 @@
 
 ## TL;DR
 
-You can use for example `rake build[SLE_15]` instead of steps 2 to 5.
+Run `rake package:prepare` to fully prepare the package for checkin to IBS. It runs steps 2 to 4, but
+does not build locally. Make sure to run step 1 before.
+
+You can also use `rake build[SLE_15]` instead of steps 2 to 5 to build the package locally.
 After you've build the package locally and are happy with the result - commit the changes to IBS.
 
 ## Step 1. Update gem version

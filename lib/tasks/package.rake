@@ -64,44 +64,46 @@ def version_from_spec(spec_glob)
   version
 end
 
-desc 'Prepare package for checking in to IBS'
-task :prepare do
-  package_dir = 'package/'
-  package_name = 'SUSEConnect'
-  obs_project = 'systemsmanagement:SCC'
-  local_spec_file = "#{package_name}.spec"
+namespace :package do
+  desc 'Prepare package for checking in to IBS'
+  task :prepare do
+    package_dir = 'package/'
+    package_name = 'SUSEConnect'
+    obs_project = 'systemsmanagement:SCC'
+    local_spec_file = "#{package_name}.spec"
 
-  ##
-  puts '== Step 1: check for uncommitted changes'
-  check_git
-  sleep 1
+    ##
+    puts '== Step 1: check for uncommitted changes'
+    check_git
+    sleep 1
 
-  ###
-  puts '== Step 2: Build gem and copy to package'
-  build_gem(package_dir)
-  sleep 1
+    ###
+    puts '== Step 2: Build gem and copy to package'
+    build_gem(package_dir)
+    sleep 1
 
-  ###
-  puts '== Step 3: change to package dir and checkout from IBS =='
-  checkout_package(obs_project, package_name)
-  sleep 1
+    ###
+    puts '== Step 3: change to package dir and checkout from IBS =='
+    checkout_package(obs_project, package_name)
+    sleep 1
 
-  ####
-  puts '== Step 4: Generate man pages'
-  sh 'ronn --roff --manual SUSEConnect --pipe ../SUSEConnect.8.ronn > SUSEConnect.8'
-  sh 'ronn --roff --manual SUSEConnect --pipe ../SUSEConnect.5.ronn > SUSEConnect.5'
-  sleep 1
+    ####
+    puts '== Step 4: Generate man pages'
+    sh 'ronn --roff --manual SUSEConnect --pipe ../SUSEConnect.8.ronn > SUSEConnect.8'
+    sh 'ronn --roff --manual SUSEConnect --pipe ../SUSEConnect.5.ronn > SUSEConnect.5'
+    sleep 1
 
-  ###
-  puts "== Step 5: Log changes to #{package_name}.changes"
-  sh 'osc vc'
-  sleep 1
+    ###
+    puts "== Step 5: Log changes to #{package_name}.changes"
+    sh 'osc vc'
+    sleep 1
 
-  ###
-  puts '== Step 6: check for version bump in specfile'
-  check_specfile_version(obs_project, package_name, local_spec_file)
-  sleep 1
-  `osc ar`
+    ###
+    puts '== Step 6: check for version bump in specfile'
+    check_specfile_version(obs_project, package_name, local_spec_file)
+    sleep 1
+    `osc ar`
 
-  puts 'Package preparation complete. Run `osc status` to check results and `osc ci` to check in package.'
+    puts 'Package preparation complete. Run `osc status` to check results and `osc ci` to check in package.'
+  end
 end
