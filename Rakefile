@@ -3,6 +3,7 @@ require 'suse/connect'
 require 'rspec/core/rake_task'
 require 'date'
 
+Dir.glob('lib/tasks/*.rake') { |f| load f }
 
 # The last_comment method has been silently removed from Rake 11.0.1,
 # then restored with a deprecation warning:
