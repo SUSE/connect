@@ -38,7 +38,7 @@ namespace :package do
 
   desc 'Build gem and copy to package'
   task :build_gem do
-    Dir.chdir "#{root_path}"
+    Dir.chdir root_path.to_s
     gemfilename = "suse-connect-#{SUSE::Connect::VERSION}.gem"
 
     `rm suse-connect-*.gem` if Dir['*.gem'].any?
@@ -52,9 +52,9 @@ namespace :package do
 
   desc 'Generate man pages'
   task :generate_manpages do
-    Dir.chdir "#{root_path}"
-    sh 'ronn --roff --manual SUSEConnect --pipe SUSEConnect.8.ronn > SUSEConnect.8'
-    sh 'ronn --roff --manual SUSEConnect --pipe SUSEConnect.5.ronn > SUSEConnect.5'
+    Dir.chdir root_path.to_s
+    sh 'ronn --roff --manual SUSEConnect --pipe SUSEConnect.8.ronn > package/SUSEConnect.8'
+    sh 'ronn --roff --manual SUSEConnect --pipe SUSEConnect.5.ronn > package/SUSEConnect.5'
   end
 
   desc 'Check for version bump in specfile'
