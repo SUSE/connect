@@ -37,23 +37,3 @@ desc 'Run Rubocop'
 task :rubocop do
   sh 'bundle exec rubocop'
 end
-
-# SLE_12, SLE_12_SP1, and SLE_12_SP2 valid products for testing; use 'osc repos' in package dir to check others.
-desc 'Build locally (prepare for pushing to ibs)'
-task :build, [:product] do |t, args|
-  gemfilename = "suse-connect-#{SUSE::Connect::VERSION}.gem"
-  sh 'rm *.gem' if Dir['*.gem'].any?
-  sh 'gem build suse-connect.gemspec'
-
-  Dir.chdir 'package'
-  unless Dir['.osc'].any?
-    sh 'mkdir .tmp; mv * .tmp/'
-    sh 'osc co systemsmanagement:SCC SUSEConnect -o .'
-    sh 'mv .tmp/* .; rm -r .tmp/'
-  end
-  sh "cp ../#{gemfilename} ."
-  sh 'ronn --roff --manual SUSEConnect --pipe ../SUSEConnect.8.ronn > SUSEConnect.8'
-  sh 'ronn --roff --manual SUSEConnect --pipe ../SUSEConnect.5.ronn > SUSEConnect.5'
-  sh "osc build #{args[:product]} x86_64 --no-verify --trust-all-projects"
-  Dir.chdir '..'
-end
