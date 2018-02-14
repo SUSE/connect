@@ -23,7 +23,7 @@ namespace :package do
     end
   end
 
-  desc 'Checkout from IBS'
+  desc 'Checkout from OBS'
   task :checkout do
     Dir.chdir "#{root_path}/#{package_dir}"
     unless Dir['.osc'].any?
@@ -73,12 +73,12 @@ namespace :package do
     end
   end
 
-  desc 'Prepare package for checking in to IBS'
+  desc 'Prepare package for checking in to OBS'
   task :prepare do
     puts '== Step 1: check for uncommitted changes'
     Rake::Task['package:check_git'].invoke
     ##
-    puts '== Step 2: Checkout from IBS'
+    puts '== Step 2: Checkout from OBS'
     Rake::Task['package:checkout'].invoke
     ##
     puts '== Step 3: Build gem and copy to package'
