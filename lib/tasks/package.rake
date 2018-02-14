@@ -85,7 +85,7 @@ namespace :package do
     Rake::Task['package:build_gem'].invoke
     ##
     puts '== Step 4: Generate man pages'
-    Rake::Task['package:build_gem'].invoke
+    Rake::Task['package:generate_manpages'].invoke
     ##
     puts "== Step 5: Log changes to #{package_name}.changes"
     Dir.chdir "#{root_path}/#{package_dir}"
