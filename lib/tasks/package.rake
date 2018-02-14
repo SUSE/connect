@@ -76,7 +76,7 @@ namespace :package do
   desc 'Prepare package for checking in to IBS'
   task :prepare do
     puts '== Step 1: check for uncommitted changes'
-    # Rake::Task['package:check_git'].invoke
+    Rake::Task['package:check_git'].invoke
     ##
     puts '== Step 2: Checkout from IBS'
     Rake::Task['package:checkout'].invoke
