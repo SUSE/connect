@@ -42,8 +42,7 @@ def check_specfile_version(obs_project, package_name, local_spec_file)
   new_version      = version_from_spec(local_spec_file)
 
   if new_version == original_version
-    puts "Version in #{package_name}.spec not changed. Changing...\n"
-    change_specfile_version(local_spec_file, original_version)
+    puts "Version in #{package_name}.spec not changed. Please change to the latest version before committing.\n"
   else
     puts "Version change to #{new_version} in #{package_name}.spec detected."
   end
@@ -51,16 +50,9 @@ ensure
   file.unlink if file
 end
 
-def change_specfile_version(specfile, old_version)
-  File.write(specfile, File.open(specfile, &:read).gsub(old_version, SUSE::Connect::VERSION))
-end
-
 def version_from_spec(spec_glob)
   version = `grep '^Version:' #{spec_glob}`
-  version.sub!(/^Version:\s*/, '')
-  version.sub!(/#.*$/, '')
-  version.strip!
-  version
+  version[/(\d\.\d\.\d)/, 0]
 end
 
 namespace :package do
@@ -79,30 +71,24 @@ namespace :package do
     ###
     puts '== Step 2: change to package dir and checkout from IBS'
     checkout_package(obs_project, package_name, package_dir)
-    sleep 1
 
     ###
     puts '== Step 3: Build gem and copy to package'
     build_gem(package_dir)
-    sleep 1
 
     ####
     puts '== Step 4: Generate man pages'
     sh 'ronn --roff --manual SUSEConnect --pipe SUSEConnect.8.ronn > SUSEConnect.8'
     sh 'ronn --roff --manual SUSEConnect --pipe SUSEConnect.5.ronn > SUSEConnect.5'
-    sleep 1
 
     ###
     puts "== Step 5: Log changes to #{package_name}.changes"
     Dir.chdir package_dir
     sh 'osc vc'
-    sleep 1
 
     ###
     puts '== Step 6: check for version bump in specfile'
     check_specfile_version(obs_project, package_name, local_spec_file)
-    sleep 1
-    `osc ar`
 
     puts 'Package preparation complete. Run `osc status` to check results and `osc ci` to check in package.'
   end
