@@ -6,8 +6,8 @@ def version_from_spec(spec_glob)
   version[/(\d\.\d\.\d)/, 0]
 end
 
-def upstream_file (name, file_type, obs_project, package_name)
-  file = Tempfile.new("#{name}")
+def upstream_file(name, file_type, obs_project, package_name)
+  file = Tempfile.new(name.to_s)
   file.close
   `osc -A 'https://api.opensuse.org' cat '#{obs_project}' '#{package_name}' '#{package_name}#{file_type}' > #{file.path}`
   file
