@@ -6,6 +6,13 @@ def version_from_spec(spec_glob)
   version[/(\d\.\d\.\d)/, 0]
 end
 
+def upstream_file (name, file_type, obs_project, package_name)
+  file = Tempfile.new("#{name}")
+  file.close
+  `osc -A 'https://api.opensuse.org' cat '#{obs_project}' '#{package_name}' '#{package_name}#{file_type}' > #{file.path}`
+  file
+end
+
 namespace :package do
   package_dir = 'package/'
   package_name = 'SUSEConnect'
@@ -29,7 +36,6 @@ namespace :package do
     unless Dir['.osc'].any?
       sh 'mkdir .tmp; mv * .tmp/'
       sh "osc co #{obs_project} #{package_name} -o ."
-      sh 'mv .tmp/* .; rm -r .tmp/'
       puts 'Checkout successful.' if $CHILD_STATUS.exitstatus.zero?
     end
     `rm *suse-connect-*.gem` if Dir['*.gem'].any?
@@ -57,12 +63,25 @@ namespace :package do
     sh 'ronn --roff --manual SUSEConnect --pipe SUSEConnect.5.ronn > package/SUSEConnect.5'
   end
 
+  desc 'Check for changelog update'
+  task :changelog do
+    Dir.chdir "#{root_path}/#{package_dir}"
+    file = upstream_file('connect-changes-rake', '.changes', obs_project, package_name)
+    if FileUtils.compare_file("#{package_name}.changes", file.path)
+      raise 'Upstream changelog identical. Please run `osc vc` to log new changes.'
+    elsif !IO.read("#{package_name}.changes").include? "Update to #{SUSE::Connect::VERSION}"
+      raise 'Please run `osc vc` to add changelog about version bump.'
+    else
+      modified = `osc status | grep -Po 'M\s+SUSEConnect\.changes'`
+      puts 'Changelog updated.' if modified
+    end
+    Dir.chdir '..'
+  end
+
   desc 'Check for version bump in specfile'
   task :check_specfile_version do
     Dir.chdir "#{root_path}/#{package_dir}"
-    file = Tempfile.new('connect-spec-rake')
-    file.close
-    `osc -A 'https://api.opensuse.org' cat '#{obs_project}' '#{package_name}' '#{package_name}.spec' > #{file.path}`
+    file = upstream_file('connect-spec-rake', '.spec', obs_project, package_name)
     original_version = version_from_spec(file.path)
     new_version      = version_from_spec(local_spec_file)
 
@@ -87,10 +106,8 @@ namespace :package do
     puts '== Step 4: Generate man pages'
     Rake::Task['package:generate_manpages'].invoke
     ##
-    puts "== Step 5: Log changes to #{package_name}.changes"
-    Dir.chdir "#{root_path}/#{package_dir}"
-    sh 'osc vc'
-    Dir.chdir '..'
+    puts "== Step 5: Check changelog update in #{package_name}.changes"
+    Rake::Task['package:changelog'].invoke
     ##
     puts '== Step 6: check for version bump in specfile'
     Rake::Task['package:check_specfile_version'].invoke
