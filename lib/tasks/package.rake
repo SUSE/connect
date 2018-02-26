@@ -22,11 +22,11 @@ namespace :package do
 
   desc 'Check local checkout for uncommitted changes'
   task :check_git do
-    modified = `git ls-files -m --exclude-standard .`
+    modified = `git ls-files -m -o --exclude-standard .`
     if modified.empty?
       puts 'No uncommitted changes detected.'
     else
-      raise "Warning: uncommitted changes!\n\n#{modified}\n"
+      raise "Warning: uncommitted or untracked changes!\n\n#{modified}\n"
     end
   end
 
