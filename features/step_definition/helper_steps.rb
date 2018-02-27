@@ -16,7 +16,8 @@ def base_product_version
     'SLES_12' => '12',
     'SLE_12_SP1' => '12.1',
     'SLE_12_SP2' => '12.2',
-    'SLE_12_SP3' => '12.3'
+    'SLE_12_SP3' => '12.3',
+    'SLE_15' => '15'
   }.fetch(ENV['PRODUCT']) { SUSE::Connect::Zypper.base_product.version }
 end
 
@@ -41,7 +42,7 @@ def regcode_for_test(regcode_kind)
                   'notyetactivated_code'
                 end
 
-  regcode_key.prepend('beta_') if base_product_version == '12.2'
+  regcode_key.prepend('beta_') if base_product_version == '15'
 
   test_regcodes[regcode_key] || "regcode file does not contain '#{regcode_key}'!!"
 end

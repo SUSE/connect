@@ -41,15 +41,19 @@ Then(/^zypper (should|should not) contain the repositories for (base|sdk|wsm) pr
     '12' => [ '12', '12' ],
     '12.1' => [ '12_SP1', '12-SP1' ],
     '12.2' => [ '12_SP2', '12-SP2' ],
-    '12.3' => [ '12_SP3', '12-SP3' ]
+    '12.3' => [ '12_SP3', '12-SP3' ],
+    '15' => [ '15', '15' ],
   }.fetch(base_product_version)
 
+
   if product == 'base'
+    prepend_string = base_product_version =~ /15/ ? 'SLE-Product-' : '' # Repos have been renamed in SLES 15
     repositories = [
-      "SUSE_Linux_Enterprise_Server_#{version_string_uscore}_x86_64:SLES#{version_string_dash}-Pool",
-      "SUSE_Linux_Enterprise_Server_#{version_string_uscore}_x86_64:SLES#{version_string_dash}-Updates",
-      "SUSE_Linux_Enterprise_Server_#{version_string_uscore}_x86_64:SLES#{version_string_dash}-Debuginfo-Updates"
+      "SUSE_Linux_Enterprise_Server_#{version_string_uscore}_x86_64:#{prepend_string}SLES#{version_string_dash}-Pool",
+      "SUSE_Linux_Enterprise_Server_#{version_string_uscore}_x86_64:#{prepend_string}SLES#{version_string_dash}-Updates",
+      "SUSE_Linux_Enterprise_Server_#{version_string_uscore}_x86_64:#{prepend_string}SLES#{version_string_dash}-Debuginfo-Updates"
     ]
+    repositories.pop if base_product_version =~ /15/ # SLES 15 does not get the Debuginfo-Updates repo
   elsif product == 'sdk'
     repositories = [
       "SUSE_Linux_Enterprise_Software_Development_Kit_#{version_string_uscore}_x86_64:SLE-SDK#{version_string_dash}-Pool",

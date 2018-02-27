@@ -10,29 +10,28 @@ node('scc-connect') {
 
     stage('build docker images') {
       parallel (
-        buildga: { sh 'docker build -t connect.ga -f Dockerfile .' },
-        buildsp1: { sh 'docker build -t connect.sp1 -f Dockerfile.sp1 .' },
-        buildsp2: { sh 'docker build -t connect.sp2 -f Dockerfile.sp2 .' },
-        buildsp3: { sh 'docker build -t connect.sp3 -f Dockerfile.sp3 .' }
+        build12sp0: { sh 'docker build -t connect.12sp0 -f Dockerfile.12sp0 .' },
+        build12sp1: { sh 'docker build -t connect.12sp1 -f Dockerfile.12sp1 .' },
+        build12sp2: { sh 'docker build -t connect.12sp2 -f Dockerfile.12sp2 .' },
+        build12sp3: { sh 'docker build -t connect.12sp3 -f Dockerfile.12sp3 .' }
+        build15sp0: { sh 'docker build -t connect.15sp0 -f Dockerfile.15sp0 .' }
       )
     }
 
     stage('unit tests') {
       parallel (
-        rubocop: { sh 'docker run --rm -t connect.ga su nobody -c rubocop' },
-        rspec: { sh 'docker run --rm -t connect.ga su nobody -c rspec' }
+        rubocop: { sh 'docker run --rm -t connect.12sp0 rubocop' },
+        rspec: { sh 'docker run --rm -t connect.12sp0 rspec' }
       )
     }
 
-    // Remove untagged (prior) docker images
-    // docker rmi $(docker images | grep "^<none>" | awk "{print $3}")
-
     stage('integration tests') {
       parallel (
-        testga: { sh 'docker run -e "PRODUCT=SLE_12" -v /space/oscbuild:/oscbuild --privileged --rm -t connect.ga ./docker/integration.sh' },
-        testsp1: { sh 'docker run -e "PRODUCT=SLE_12_SP1" -v /space/oscbuild:/oscbuild --privileged --rm -t connect.sp1 ./docker/integration.sh' },
-        testsp2: { sh 'docker run -e "PRODUCT=SLE_12_SP2" -v /space/oscbuild:/oscbuild --privileged --rm -t connect.sp2 ./docker/integration.sh' },
-        testsp3: { sh 'docker run -e "PRODUCT=SLE_12_SP3" -v /space/oscbuild:/oscbuild --privileged --rm -t connect.sp3 ./docker/integration.sh' }
+        test12sp0: { sh 'docker run -e "PRODUCT=SLE_12" -u root -v /space/oscbuild:/oscbuild --privileged --rm -t connect.12sp0 ./docker/integration.sh' },
+        test12sp1: { sh 'docker run -e "PRODUCT=SLE_12_SP1" -u root -v /space/oscbuild:/oscbuild --privileged --rm -t connect.12sp1 ./docker/integration.sh' },
+        test12sp2: { sh 'docker run -e "PRODUCT=SLE_12_SP2" -u root -v /space/oscbuild:/oscbuild --privileged --rm -t connect.12sp2 ./docker/integration.sh' },
+        test12sp3: { sh 'docker run -e "PRODUCT=SLE_12_SP3" -u root -v /space/oscbuild:/oscbuild --privileged --rm -t connect.12sp3 ./docker/integration.sh' }
+        test15sp0: { sh 'docker run -e "PRODUCT=SLE_15" -u root -v /space/oscbuild:/oscbuild --privileged --rm -t connect.15sp0 ./docker/integration.sh' }
       )
     }
 
