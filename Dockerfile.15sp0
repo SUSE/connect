@@ -27,4 +27,3 @@ RUN bundle config jobs $(nproc) && \
     bundle install
 ADD . /tmp/connect
 RUN chown -R scc /tmp/connect
-USER scc

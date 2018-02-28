@@ -27,11 +27,11 @@ node('scc-connect') {
 
     stage('integration tests') {
       parallel (
-        test12sp0: { sh 'docker run -e "PRODUCT=SLE_12" -u root -v /space/oscbuild:/oscbuild --privileged --rm -t connect.12sp0 ./docker/integration.sh' },
-        test12sp1: { sh 'docker run -e "PRODUCT=SLE_12_SP1" -u root -v /space/oscbuild:/oscbuild --privileged --rm -t connect.12sp1 ./docker/integration.sh' },
-        test12sp2: { sh 'docker run -e "PRODUCT=SLE_12_SP2" -u root -v /space/oscbuild:/oscbuild --privileged --rm -t connect.12sp2 ./docker/integration.sh' },
-        test12sp3: { sh 'docker run -e "PRODUCT=SLE_12_SP3" -u root -v /space/oscbuild:/oscbuild --privileged --rm -t connect.12sp3 ./docker/integration.sh' }
         test15sp0: { sh 'docker run -e "PRODUCT=SLE_15" -u root -v /space/oscbuild:/oscbuild --privileged --rm -t connect.15sp0 ./docker/integration.sh' }
+        test12sp0: { sh 'docker run -e "PRODUCT=SLE_12" -v /space/oscbuild:/oscbuild --privileged --rm -t connect.12sp0 ./docker/integration.sh' },
+        test12sp1: { sh 'docker run -e "PRODUCT=SLE_12_SP1" -v /space/oscbuild:/oscbuild --privileged --rm -t connect.12sp1 ./docker/integration.sh' },
+        test12sp2: { sh 'docker run -e "PRODUCT=SLE_12_SP2" -v /space/oscbuild:/oscbuild --privileged --rm -t connect.12sp2 ./docker/integration.sh' },
+        test12sp3: { sh 'docker run -e "PRODUCT=SLE_12_SP3" -v /space/oscbuild:/oscbuild --privileged --rm -t connect.12sp3 ./docker/integration.sh' }
       )
     }
 
