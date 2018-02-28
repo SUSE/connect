@@ -21,7 +21,8 @@ node('scc-connect') {
     stage('unit tests') {
       parallel (
         rubocop: { sh 'docker run --rm -t connect.12sp0 rubocop' },
-        rspec: { sh 'docker run --rm -t connect.12sp0 rspec' }
+        rspec_ruby21: { sh 'docker run --rm -t connect.12sp0 rspec' }
+        rspec_ruby25: { sh 'docker run --rm -t connect.15sp0 rspec' }
       )
     }
 
