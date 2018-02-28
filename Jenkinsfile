@@ -13,7 +13,7 @@ node('scc-connect') {
         build12sp0: { sh 'docker build -t connect.12sp0 -f Dockerfile.12sp0 .' },
         build12sp1: { sh 'docker build -t connect.12sp1 -f Dockerfile.12sp1 .' },
         build12sp2: { sh 'docker build -t connect.12sp2 -f Dockerfile.12sp2 .' },
-        build12sp3: { sh 'docker build -t connect.12sp3 -f Dockerfile.12sp3 .' }
+        build12sp3: { sh 'docker build -t connect.12sp3 -f Dockerfile.12sp3 .' },
         build15sp0: { sh 'docker build -t connect.15sp0 -f Dockerfile.15sp0 .' }
       )
     }
@@ -21,7 +21,7 @@ node('scc-connect') {
     stage('unit tests') {
       parallel (
         rubocop: { sh 'docker run --rm -t connect.12sp0 rubocop' },
-        rspec_ruby21: { sh 'docker run --rm -t connect.12sp0 rspec' }
+        rspec_ruby21: { sh 'docker run --rm -t connect.12sp0 rspec' },
         rspec_ruby25: { sh 'docker run --rm -t connect.15sp0 rspec' }
       )
     }
