@@ -217,10 +217,20 @@ describe SUSE::Connect::Cli do
       end
     end
 
-    context 'namespace option' do |_variables|
-      it '--namespace requires namespace' do
+    context '--namespace option' do
+      it 'requires a namespace' do
         expect(string_logger).to receive(:error).with('Please provide a namespace')
         expect { described_class.new('--namespace') }.to exit_with_code(1)
+      end
+
+      it 'sets the given namespace in the config' do
+        cli = described_class.new(%w[--namespace mynamespace])
+        expect(cli.config[:namespace]).to eq 'mynamespace'
+      end
+
+      it 'automatically writes the config' do
+        cli = described_class.new(%w[--namespace mynamespace])
+        expect(cli.options[:write_config]).to be true
       end
     end
 
