@@ -17,19 +17,26 @@ describe SUSE::Connect::Connection do
       expect(secure_connection.http.address).to eq 'example.com'
     end
 
-    context :proxy_detected do
+    context 'when using a proxy' do
       before do
-        allow_any_instance_of(Net::HTTP).to receive(:proxy?).and_return(true)
+        allow(ENV).to receive(:[]).with('http_proxy').and_return('http://myproxy')
+        allow(ENV).to receive(:[]).with('no_proxy').and_return(nil)
+        allow(ENV).to receive(:[]).with('NO_PROXY').and_return(nil)
+        allow(ENV).to receive(:[]).with('HOME').and_call_original
         allow_any_instance_of(SUSE::Toolkit::CurlrcDotfile).to receive(:username).and_return('robot')
         allow_any_instance_of(SUSE::Toolkit::CurlrcDotfile).to receive(:password).and_return('gobot')
       end
 
-      it 'sets proxy_user to curlrc extracted username' do
+      it 'uses the proxy user configured in the .curlrc file' do
         expect(subject.new('https://example.com').http.proxy_user).to eq 'robot'
       end
 
-      it 'sets proxy_pass to curlrc extracted password' do
+      it 'uses the proxy password configured in the .curlrc file' do
         expect(subject.new('https://example.com').http.proxy_pass).to eq 'gobot'
+      end
+
+      it 'uses the proxy URL configured in the http_proxy environment variable' do
+        expect(subject.new('https://example.com').http.proxy_address).to eq 'myproxy'
       end
     end
 
