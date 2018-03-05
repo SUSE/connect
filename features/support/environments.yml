@@ -1,0 +1,17 @@
+---
+SLE_15:
+  activatable_module:
+    identifier: sle-module-basesystem/15/x86_64
+  paid_extension:
+    identifier: sle-live-patching/15/x86_64
+
+SLE_12_SP3:
+  activatable_module:
+    identifier: sle-module-web-scripting/12/x86_64
+  paid_extension:
+    identifier: sle-live-patching/12.3/x86_64
+  free_extension:
+    identifier: sle-sdk/12.3/x86_64
+    credentials_file: /etc/zypp/credentials.d/SUSE_Linux_Enterprise_Software_Development_Kit_12_SP3_x86_64
+
+SLE_12_SP1:
