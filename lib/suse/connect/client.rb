@@ -28,35 +28,39 @@ module SUSE
         product = @config.product || Zypper.base_product
 
         register_product(product, install_release_package: @config.product ? true : false)
-        product_hash = show_product(product)
 
-        product_hash.recommended_extensions.each do |ext|
-          register_recommended!(ext)
+        # Only install recommended packages for base products
+        if product.isbase
+          product_hash = show_product(product)
+          product_hash.recommended_extensions.each do |ext|
+            register_product(ext)
+            register_recommended!(ext)
+          end
         end
 
-        print_title "=> Activation successful!"
+        print_title '=> Activation successful!'
       end
 
       # Activate, add service and install release package for all recommended
       # extension available
       def register_recommended!(extension)
-        register_product(extension)
-
         extension.recommended_extensions.each do |ext|
+          register_product(ext)
           register_recommended!(ext)
         end
       end
 
       # Activate the product, add the service and install the relase package
-      def register_product(product, install_release_package=true)
-        print_title "Activating #{product.identifier} #{product.version}"
+      def register_product(product, install_release_package = true)
+        print_title "Activating #{product.identifier} #{product.version}", "\e[34m"
         service = activate_product(product, @config.email)
 
-        print_action "Adding zypper service"
+        print_action 'Adding zypper service'
         System.add_service(service)
 
         if install_release_package
-          print_action "Installing release package"
+          print_action 'Installing release package'
+          Zypper.refresh_services
           Zypper.install_release_package(product.identifier)
         end
       end
@@ -225,12 +229,12 @@ module SUSE
         end
       end
 
-      def print_title(title)
-        log.info "\e[32m\e[1m#{title}\e[0m"
+      def print_title(title, color = "\e[32m")
+        log.info "#{color}\e[1m#{title}\e[0m"
       end
 
-      def print_action(action)
-        log.info "  \e[32m::\e[0m #{action}..."
+      def print_action(action, color = "\e[32m")
+        log.info "  #{color}::\e[0m #{action}..."
       end
 
       def print_success_message(product, action: 'Registered')
