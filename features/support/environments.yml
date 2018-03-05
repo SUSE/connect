@@ -1,7 +1,22 @@
 ---
 SLE_15:
+  base_product:
+    repositories:
+    - SUSE_Linux_Enterprise_Server_15_x86_64:SLE-Product-SLES15-Pool
+    - SUSE_Linux_Enterprise_Server_15_x86_64:SLE-Product-SLES15-Updates
   paid_extension:
     identifier: sle-live-patching/15/x86_64
+  free_extension:
+    identifier: sle-module-basesystem/15/x86_64
+    credentials_file: /etc/zypp/credentials.d/Basesystem_Module_15_x86_64
+    service: Basesystem_Module_15_x86_64
+    release_packages: sle-module-basesystem-release
+    repositories:
+    - Basesystem_Module_15_x86_64:SLE-Module-Basesystem15-Debuginfo-Pool
+    - Basesystem_Module_15_x86_64:SLE-Module-Basesystem15-Debuginfo-Updates
+    - Basesystem_Module_15_x86_64:SLE-Module-Basesystem15-Pool
+    - Basesystem_Module_15_x86_64:SLE-Module-Basesystem15-Source-Pool
+    - Basesystem_Module_15_x86_64:SLE-Module-Basesystem15-Updates
 
 SLE_12_SP3:
   base_product:

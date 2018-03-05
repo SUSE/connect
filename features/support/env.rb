@@ -18,3 +18,11 @@ end
 After('@libzypplocked') do
   `rm /var/run/zypp.pid`
 end
+
+Before('@skip-sles-15') do
+  skip_this_scenario if base_product_version =~ /15/
+end
+
+Before('@skip-sles-12') do
+  skip_this_scenario if base_product_version =~ /12/
+end
