@@ -32,8 +32,7 @@ node('scc-connect') {
         test12sp1: { sh 'docker run -v /space/oscbuild:/oscbuild --privileged --rm -t connect.12sp1 ./docker/integration.sh' },
         test12sp2: { sh 'docker run -v /space/oscbuild:/oscbuild --privileged --rm -t connect.12sp2 ./docker/integration.sh' },
         test12sp3: { sh 'docker run -v /space/oscbuild:/oscbuild --privileged --rm -t connect.12sp3 ./docker/integration.sh' }
-        // TODO: Connect and integration tests need to be adapted to SLES 15.
-        // test15sp0: { sh 'docker run -v /space/oscbuild:/oscbuild --privileged --rm -t connect.15sp0 ./docker/integration.sh' }
+        test15sp0: { sh 'docker run -v /space/oscbuild:/oscbuild --privileged --rm -t connect.15sp0 ./docker/integration.sh' }
       )
     }
 
