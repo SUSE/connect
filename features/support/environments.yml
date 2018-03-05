@@ -1,17 +1,21 @@
 ---
 SLE_15:
-  activatable_module:
-    identifier: sle-module-basesystem/15/x86_64
   paid_extension:
     identifier: sle-live-patching/15/x86_64
 
 SLE_12_SP3:
-  activatable_module:
-    identifier: sle-module-web-scripting/12/x86_64
+  base_product:
+    repositories:
+    - SUSE_Linux_Enterprise_Server_12_SP3_x86_64:SLES12-SP3-Pool
+    - SUSE_Linux_Enterprise_Server_12_SP3_x86_64:SLES12-SP3-Updates
+    - SUSE_Linux_Enterprise_Server_12_SP3_x86_64:SLES12-SP3-Debuginfo-Updates
   paid_extension:
     identifier: sle-live-patching/12.3/x86_64
   free_extension:
     identifier: sle-sdk/12.3/x86_64
     credentials_file: /etc/zypp/credentials.d/SUSE_Linux_Enterprise_Software_Development_Kit_12_SP3_x86_64
-
-SLE_12_SP1:
+    service: SUSE_Linux_Enterprise_Software_Development_Kit_12_SP3_x86_64
+    release_packages: sle-sdk-release sle-sdk-release-POOL
+    repositories:
+    - SUSE_Linux_Enterprise_Software_Development_Kit_12_SP3_x86_64:SLE-SDK12-SP3-Pool
+    - SUSE_Linux_Enterprise_Software_Development_Kit_12_SP3_x86_64:SLE-SDK12-SP3-Updates

@@ -19,10 +19,10 @@ Then(/^I call SUSEConnect with '(.*)' arguments$/) do |args|
   step "I run `#{connect}`"
 end
 
-Then(/^zypper (should|should not) contain a service for (base|sdk) product$/) do |condition, product|
+Then(/^zypper (should|should not) contain a service for (base product|the extension)$/) do |condition, product|
   service = {
-    'base' => service_name,
-    'sdk' => 'SUSE_Linux_Enterprise_Software_Development_Kit_12_x86_64'
+    'base product' => service_name,
+    'the extension' => OPTIONS['free_extension']['service']
   }.fetch(product)
 
   step 'I run `zypper ls`'
@@ -31,25 +31,12 @@ Then(/^zypper (should|should not) contain a service for (base|sdk) product$/) do
   step 'the exit status should be 0'
 end
 
-Then(/^zypper (should|should not) contain the repositories for (base|sdk) product$/) do |condition, product|
-  version_dot = base_product_version
-  version_uscore = version_to_sp_notation(version_dot, '_')
-  version_dash = version_to_sp_notation(version_dot, '-')
-
-  if product == 'base'
-    prepend_string = (version_dot =~ /15/) ? 'SLE-Product-' : '' # Repos have been renamed in SLES 15
-    repositories = [
-      "SUSE_Linux_Enterprise_Server_#{version_uscore}_x86_64:#{prepend_string}SLES#{version_dash}-Pool",
-      "SUSE_Linux_Enterprise_Server_#{version_uscore}_x86_64:#{prepend_string}SLES#{version_dash}-Updates",
-      "SUSE_Linux_Enterprise_Server_#{version_uscore}_x86_64:#{prepend_string}SLES#{version_dash}-Debuginfo-Updates"
-    ]
-    repositories.pop if version_dot =~ /15/ # SLES 15 does not get the Debuginfo-Updates repo
-  elsif product == 'sdk'
-    repositories = [
-      "SUSE_Linux_Enterprise_Software_Development_Kit_#{version_uscore}_x86_64:SLE-SDK#{version_dash}-Pool",
-      "SUSE_Linux_Enterprise_Software_Development_Kit_#{version_uscore}_x86_64:SLE-SDK#{version_dash}-Updates"
-    ]
-  end
+Then(/^zypper (should|should not) contain the repositories for (base product|the extension)$/) do |condition, product|
+  repositories = if product == 'base product'
+                   OPTIONS['base_product']['repositories']
+                 elsif product == 'the extension'
+                   OPTIONS['free_extension']['repositories']
+                 end
 
   step 'I run `zypper lr`'
 
@@ -57,6 +44,12 @@ Then(/^zypper (should|should not) contain the repositories for (base|sdk) produc
     puts "zypper lr output #{condition} contain \"#{repo}\""
     step "the output #{condition} contain \"#{repo}\""
   end
+end
+
+Then(/I remove the extension's release packages/) do
+  release_packages = OPTIONS['free_extension']['release_packages']
+  run("zypper --non-interactive rm #{release_packages}")
+  expect(last_command_started).to be_successfully_executed
 end
 
 Then(/zypp credentials for (base|sdk|wsm) (should|should not) exist$/) do |product, condition|

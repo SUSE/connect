@@ -12,6 +12,7 @@ AllCops:
     - kitchen/tmp/**/*
     - vendor/**
     - package/**
+    - features/support/absolute_paths.rb
 
 Rails:
   Enabled: false
