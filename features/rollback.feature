@@ -4,11 +4,10 @@ Feature: Rollback registration state to system products
   Scenario: Register base system
     Given I have a system with activated base product
 
-  # SLES 15 has no migration targets yet
-  @skip-sles-15
+
   Scenario: Migration targets
     When Prepare SUSEConnect client with a valid regcode
-    Then I should receive the next Service Pack as a migration target
+    Then I should receive the next Service Packs as online migration targets
 
 
   Scenario: Rollback can be called on activated system without an issue
