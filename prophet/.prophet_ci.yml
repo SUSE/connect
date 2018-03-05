@@ -2,6 +2,12 @@ projects:
 
   connect:
     docker-build-image-sle12sp0: cd ..; docker build -t connect.12sp0 -f Dockerfile.12sp0 .
+    docker-build-image-sle12sp1: cd ..; docker build -t connect.12sp1 -f Dockerfile.12sp1 .
+    docker-build-image-sle12sp2: cd ..; docker build -t connect.12sp2 -f Dockerfile.12sp2 .
+    docker-build-image-sle12sp3: cd ..; docker build -t connect.12sp3 -f Dockerfile.12sp3 .
     docker-build-image-sle15sp0: cd ..; docker build -t connect.15sp0 -f Dockerfile.15sp0 .
     docker-run-tests-sle12sp0: cd ..; docker run --privileged --rm -t connect.12sp0 ./docker/prophet_tests.sh
+    docker-run-tests-sle12sp1: cd ..; docker run --privileged --rm -t connect.12sp1 ./docker/prophet_tests.sh
+    docker-run-tests-sle12sp2: cd ..; docker run --privileged --rm -t connect.12sp2 ./docker/prophet_tests.sh
+    docker-run-tests-sle12sp3: cd ..; docker run --privileged --rm -t connect.12sp3 ./docker/prophet_tests.sh
     docker-run-tests-sle15sp0: cd ..; docker run --privileged --rm -t connect.15sp0 ./docker/prophet_tests.sh
