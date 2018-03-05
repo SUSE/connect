@@ -2,10 +2,11 @@ When(/^there's a file "(.+)" with a line "(.+)"$/) do |filename, line|
   File.open(filename, 'w') { |f| f.puts(line) }
 end
 
-When(/^I should receive '(.*)' as a migration target$/) do |target_name|
+When(/^I should receive the next Service Pack as a migration target$/) do
+  next_version = OPTIONS['next_version']
   products = SUSE::Connect::Status.new(@client.config).system_products.map(&:to_openstruct)
   migration_targets = @client.system_migrations(products, kind: :online).flatten.uniq.map(&:shortname)
-  expect(migration_targets).to include(target_name)
+  expect(migration_targets).to include(next_version)
 end
 
 When(/^I call the migration rollback method$/) do

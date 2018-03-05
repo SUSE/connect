@@ -1,5 +1,6 @@
 ---
 SLE_15:
+  next_version: SLES15-SP1 # SLES15 migration feature disabled until release of 15SP1
   base_product:
     repositories:
     - SUSE_Linux_Enterprise_Server_15_x86_64:SLE-Product-SLES15-Pool
@@ -19,6 +20,7 @@ SLE_15:
     - Basesystem_Module_15_x86_64:SLE-Module-Basesystem15-Updates
 
 SLE_12_SP3:
+  next_version: SLES12-SP4
   base_product:
     repositories:
     - SUSE_Linux_Enterprise_Server_12_SP3_x86_64:SLES12-SP3-Pool
