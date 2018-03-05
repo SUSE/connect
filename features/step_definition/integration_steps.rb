@@ -52,7 +52,7 @@ Then(/I remove the extension's release packages/) do
   expect(last_command_started).to be_successfully_executed
 end
 
-Then(/zypp credentials for (base|sdk|wsm) (should|should not) exist$/) do |product, condition|
+Then(/zypp credentials for base (should|should not) exist$/) do |condition|
   credentials_path = '/etc/zypp/credentials.d/'
   step "a file named \"#{credentials_path}#{service_name}\" #{condition} exist"
 end
