@@ -9,16 +9,24 @@ def service_name
 end
 
 def base_product_version
-  # base_product_version will fail if libzypp is locked for testing
-  # so use env vars if available
-  {
-    'SLE_12' => '12',
-    'SLES_12' => '12',
-    'SLE_12_SP1' => '12.1',
-    'SLE_12_SP2' => '12.2',
-    'SLE_12_SP3' => '12.3',
-    'SLE_15' => '15'
-  }.fetch(ENV['PRODUCT']) { SUSE::Connect::Zypper.base_product.version }
+  sp = ENV.fetch('PRODUCT').split('_', 2).last
+  version_to_dot_notation(sp)
+end
+
+# ('12') => '12'
+# ('12.0', '_') => '12_SP0'
+# ('12.1', '_') => '12_SP1'
+# ('12.1', '-') => '12-SP1'
+def version_to_sp_notation(dot_notation, separator)
+  dot_notation.split('.').join("#{separator}SP")
+end
+
+# ('12') => '12'
+# ('12_SP0') => '12.0'
+# ('12_SP1') => '12.1'
+# ('12-SP1') => '12.1'
+def version_to_dot_notation(sp_notation)
+  sp_notation.gsub(/_SP|-SP/, '.')
 end
 
 # rubocop:disable CyclomaticComplexity
