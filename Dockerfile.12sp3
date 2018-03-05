@@ -11,7 +11,8 @@ RUN zypper --non-interactive ar http://download.suse.de/ibs/SUSE/Products/SLE-SE
     zypper --non-interactive --gpg-auto-import-keys ref &&\
     zypper --non-interactive up zypper &&\
     zypper --non-interactive install git-core ruby-devel make gcc gcc-c++ build wget dmidecode \
-      vim osc ruby2.1-rubygem-gem2rpm hwinfo libx86emu1 zypper-migration-plugin sudo
+      vim osc ruby2.1-rubygem-gem2rpm hwinfo libx86emu1 zypper-migration-plugin sudo && \
+    zypper --non-interactive rr SLE-12-SP3-standard SLE-12-SP3-updates sle12sp3sdk sle12sp3sdk-updates
 
 RUN wget http://username:password@gaffer.suse.de:9999/files/.regcode -O ~/.regcode
 RUN wget http://username:password@gaffer.suse.de:9999/files/.oscrc -O ~/.oscrc
