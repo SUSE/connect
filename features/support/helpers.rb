@@ -3,7 +3,7 @@ def service_name
   if product.identifier == 'openSUSE'
     "#{product.identifier}_#{product.version}_#{product.arch}"
   else
-    identifier = product.instance_variable_get(:@summary).gsub(' ', '_')
+    identifier = product.instance_variable_get(:@summary).tr(' ', '_')
     "#{identifier}_#{product.arch}"
   end
 end
@@ -29,7 +29,6 @@ def version_to_dot_notation(sp_notation)
   sp_notation.gsub(/_SP|-SP/, '.')
 end
 
-# rubocop:disable CyclomaticComplexity
 # This is ugly logic, but it is this way for compatibility with the existing code
 # If the TODOs are resolved, it can become simpler.
 def regcode_for_test(regcode_kind)
@@ -54,4 +53,3 @@ def regcode_for_test(regcode_kind)
 
   test_regcodes[regcode_key] || "regcode file does not contain '#{regcode_key}'!!"
 end
-# rubocop:enable CyclomaticComplexity
