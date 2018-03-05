@@ -19,16 +19,11 @@ Then(/^I call SUSEConnect with '(.*)' arguments$/) do |args|
   step "I run `#{connect}`"
 end
 
-Then(/^zypper (should|should not) contain a service for (base|sdk|wsm) product$/) do |condition, product|
-  if product == 'base'
-    service = service_name
-  elsif product == 'sdk'
-    # TODO: unused
-    service = 'SUSE_Linux_Enterprise_Software_Development_Kit_12_x86_64'
-  else
-    # TODO: unused
-    service = 'Web_and_Scripting_Module_12_x86_64'
-  end
+Then(/^zypper (should|should not) contain a service for (base|sdk) product$/) do |condition, product|
+  service = {
+    'base' => service_name,
+    'sdk' => 'SUSE_Linux_Enterprise_Software_Development_Kit_12_x86_64'
+  }.fetch(product)
 
   step 'I run `zypper ls`'
   puts "zypper ls output #{condition} contain \"#{service}\""
@@ -36,32 +31,23 @@ Then(/^zypper (should|should not) contain a service for (base|sdk|wsm) product$/
   step 'the exit status should be 0'
 end
 
-Then(/^zypper (should|should not) contain the repositories for (base|sdk|wsm) product$/) do |condition, product|
-  version_string_uscore, version_string_dash = {
-    '12' => [ '12', '12' ],
-    '12.1' => [ '12_SP1', '12-SP1' ],
-    '12.2' => [ '12_SP2', '12-SP2' ],
-    '12.3' => [ '12_SP3', '12-SP3' ],
-    '15' => [ '15', '15' ]
-  }.fetch(base_product_version)
-
+Then(/^zypper (should|should not) contain the repositories for (base|sdk) product$/) do |condition, product|
+  version_dot = base_product_version
+  version_uscore = version_to_sp_notation(version_dot, '_')
+  version_dash = version_to_sp_notation(version_dot, '-')
 
   if product == 'base'
-    prepend_string = (base_product_version =~ /15/) ? 'SLE-Product-' : '' # Repos have been renamed in SLES 15
+    prepend_string = (version_dot =~ /15/) ? 'SLE-Product-' : '' # Repos have been renamed in SLES 15
     repositories = [
-      "SUSE_Linux_Enterprise_Server_#{version_string_uscore}_x86_64:#{prepend_string}SLES#{version_string_dash}-Pool",
-      "SUSE_Linux_Enterprise_Server_#{version_string_uscore}_x86_64:#{prepend_string}SLES#{version_string_dash}-Updates",
-      "SUSE_Linux_Enterprise_Server_#{version_string_uscore}_x86_64:#{prepend_string}SLES#{version_string_dash}-Debuginfo-Updates"
+      "SUSE_Linux_Enterprise_Server_#{version_uscore}_x86_64:#{prepend_string}SLES#{version_dash}-Pool",
+      "SUSE_Linux_Enterprise_Server_#{version_uscore}_x86_64:#{prepend_string}SLES#{version_dash}-Updates",
+      "SUSE_Linux_Enterprise_Server_#{version_uscore}_x86_64:#{prepend_string}SLES#{version_dash}-Debuginfo-Updates"
     ]
-    repositories.pop if base_product_version =~ /15/ # SLES 15 does not get the Debuginfo-Updates repo
+    repositories.pop if version_dot =~ /15/ # SLES 15 does not get the Debuginfo-Updates repo
   elsif product == 'sdk'
     repositories = [
-      "SUSE_Linux_Enterprise_Software_Development_Kit_#{version_string_uscore}_x86_64:SLE-SDK#{version_string_dash}-Pool",
-      "SUSE_Linux_Enterprise_Software_Development_Kit_#{version_string_uscore}_x86_64:SLE-SDK#{version_string_dash}-Updates"
-    ]
-  else
-    repositories = [
-      "Web_and_Scripting_Module_#{version_string_uscore}_x86_64:SLE-Module-Web-Scripting#{version_string_dash}-Pool"
+      "SUSE_Linux_Enterprise_Software_Development_Kit_#{version_uscore}_x86_64:SLE-SDK#{version_dash}-Pool",
+      "SUSE_Linux_Enterprise_Software_Development_Kit_#{version_uscore}_x86_64:SLE-SDK#{version_dash}-Updates"
     ]
   end
 
@@ -78,7 +64,7 @@ Then(/zypp credentials for (base|sdk|wsm) (should|should not) exist$/) do |produ
   step "a file named \"#{credentials_path}#{service_name}\" #{condition} exist"
 end
 
-Then(/zypp credentials for (base|sdk|wsm) (should|should not) contain "(.*)"$/) do |product, condition, content|
+Then(/zypp credentials for base (should|should not) contain "(.*)"$/) do |condition, content|
   credentials_path = '/etc/zypp/credentials.d/'
   step "the file \"#{credentials_path}#{service_name}\" #{condition} contain \"#{content}\""
 end
