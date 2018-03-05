@@ -24,7 +24,7 @@ Feature: Test extension/module activation
     Then the exit status should be 0
     And the output should contain "Containers Module"
 
-  # Skip in SLES15 for now, since there's no paid extansions that can be activated
+  # Skip in SLES15 for now, since there's no paid extensions that can be activated
   # directly on the root product. Once SUSEConnect automatically activates recommended
   # modules, then we can enable this test with a proper extension.
   @skip-sles-15
