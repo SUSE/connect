@@ -23,6 +23,6 @@ group :test do
   gem 'rspec-its'
   gem 'webmock', '~> 1.21.0'
   gem 'http', '~> 2.2.2'
-  gem 'aruba', '~> 0.14.1'
+  gem 'aruba', '~> 0.14.3'
   gem 'cucumber', '3.0.1' # Last cucumber version to support Ruby 2.1
 end
