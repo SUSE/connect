@@ -1,5 +1,6 @@
 ---
 SLE_15:
+  beta: true
   online_migration_targets: []
   base_product:
     repositories:
@@ -20,6 +21,7 @@ SLE_15:
     - Basesystem_Module_15_x86_64:SLE-Module-Basesystem15-Updates
 
 SLE_12_SP3:
+  beta: false
   online_migration_targets:
   - SLES12-SP4
   next_version: SLES12-SP4
@@ -40,6 +42,7 @@ SLE_12_SP3:
     - SUSE_Linux_Enterprise_Software_Development_Kit_12_SP3_x86_64:SLE-SDK12-SP3-Updates
 
 SLE_12_SP2:
+  beta: false
   online_migration_targets:
   - SLES12-SP3
   - SLES12-SP4
@@ -60,6 +63,7 @@ SLE_12_SP2:
     - SUSE_Linux_Enterprise_Software_Development_Kit_12_SP2_x86_64:SLE-SDK12-SP2-Updates
 
 SLE_12_SP1:
+  beta: false
   online_migration_targets:
   - SLES12-SP2
   - SLES12-SP3
@@ -81,6 +85,7 @@ SLE_12_SP1:
     - SUSE_Linux_Enterprise_Software_Development_Kit_12_SP1_x86_64:SLE-SDK12-SP1-Updates
 
 SLE_12:
+  beta: false
   online_migration_targets:
   - SLES12-SP1
   - SLES12-SP2

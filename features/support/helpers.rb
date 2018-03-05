@@ -49,7 +49,7 @@ def regcode_for_test(regcode_kind)
                   'notyetactivated_code'
                 end
 
-  regcode_key.prepend('beta_') if base_product_version == '15'
+  regcode_key.prepend('beta_') if OPTIONS['beta']
 
   test_regcodes[regcode_key] || "regcode file does not contain '#{regcode_key}'!!"
 end
