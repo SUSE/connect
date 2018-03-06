@@ -1,26 +1,34 @@
 def service_name
   product = SUSE::Connect::Zypper.base_product
   if product.identifier == 'openSUSE'
-    @service_name ||= "#{product.identifier}_#{product.version}_#{product.arch}"
+    "#{product.identifier}_#{product.version}_#{product.arch}"
   else
-    identifier = product.instance_variable_get(:@summary).gsub(' ', '_')
-    @service_name ||= "#{identifier}_#{product.arch}"
+    identifier = product.instance_variable_get(:@summary).tr(' ', '_')
+    "#{identifier}_#{product.arch}"
   end
 end
 
 def base_product_version
-  # base_product_version will fail if libzypp is locked for testing
-  # so use env vars if available
-  {
-    'SLE_12' => '12',
-    'SLES_12' => '12',
-    'SLE_12_SP1' => '12.1',
-    'SLE_12_SP2' => '12.2',
-    'SLE_12_SP3' => '12.3'
-  }.fetch(ENV['PRODUCT']) { SUSE::Connect::Zypper.base_product.version }
+  sp = ENV.fetch('PRODUCT').split('_', 2).last
+  version_to_dot_notation(sp)
 end
 
-# rubocop:disable CyclomaticComplexity
+# ('12') => '12'
+# ('12.0', '_') => '12_SP0'
+# ('12.1', '_') => '12_SP1'
+# ('12.1', '-') => '12-SP1'
+def version_to_sp_notation(dot_notation, separator)
+  dot_notation.split('.').join("#{separator}SP")
+end
+
+# ('12') => '12'
+# ('12_SP0') => '12.0'
+# ('12_SP1') => '12.1'
+# ('12-SP1') => '12.1'
+def version_to_dot_notation(sp_notation)
+  sp_notation.gsub(/_SP|-SP/, '.')
+end
+
 # This is ugly logic, but it is this way for compatibility with the existing code
 # If the TODOs are resolved, it can become simpler.
 def regcode_for_test(regcode_kind)
@@ -41,8 +49,7 @@ def regcode_for_test(regcode_kind)
                   'notyetactivated_code'
                 end
 
-  regcode_key.prepend('beta_') if base_product_version == '12.2'
+  regcode_key.prepend('beta_') if OPTIONS['beta']
 
   test_regcodes[regcode_key] || "regcode file does not contain '#{regcode_key}'!!"
 end
-# rubocop:enable CyclomaticComplexity

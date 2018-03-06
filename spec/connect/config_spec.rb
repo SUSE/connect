@@ -84,7 +84,7 @@ describe SUSE::Connect::Config do
       end
     end
 
-    context '#merge!' do
+    describe '#merge!' do
       it 'updates config attributes from overrides hash' do
         expect(config.url).to eq 'https://scc.suse.com'
         expect(config.insecure).to eq false
@@ -108,14 +108,14 @@ describe SUSE::Connect::Config do
       end
     end
 
-    context '#write' do
+    describe '#write' do
       it 'writes configuration settings to YAML file' do
         expect(File).to receive(:write).with(config_file, config.to_yaml).and_return(0)
         config.write!
       end
     end
 
-    context '#to_yaml' do
+    describe '#to_yaml' do
       it 'converts object attributes to yaml' do
         expect(YAML.load(config.to_yaml)).to_not be_empty
       end

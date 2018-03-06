@@ -4,19 +4,25 @@ require 'suse/connect'
 require 'aruba/cucumber'
 require 'cucumber/rspec/doubles'
 
+OPTIONS = YAML.load_file(File.join(__dir__, 'environments.yml')).fetch(ENV.fetch('PRODUCT'))
+
 Before('@slow_process') do
-  @aruba_io_wait_seconds = 90
-  @aruba_timeout_seconds = 90
+  aruba.config.io_wait_timeout = 90
+  aruba.config.exit_timeout = 90
 end
 
 Before('@libzypplocked') do
-  # this should put the pid of the cucumber process into the lockfile
-  @old_product_env_var_contents = ENV['PRODUCT']
-  ENV['PRODUCT'] = SUSE::Connect::Zypper.base_product.identifier + '_' + SUSE::Connect::Zypper.base_product.version
   `echo $PPID > /var/run/zypp.pid`
 end
 
 After('@libzypplocked') do
   `rm /var/run/zypp.pid`
-  ENV['PRODUCT'] = @old_product_env_var_contents
+end
+
+Before('@skip-sles-15') do
+  skip_this_scenario if base_product_version =~ /15/
+end
+
+Before('@skip-sles-12') do
+  skip_this_scenario if base_product_version =~ /12/
 end

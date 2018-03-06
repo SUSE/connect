@@ -19,16 +19,11 @@ Then(/^I call SUSEConnect with '(.*)' arguments$/) do |args|
   step "I run `#{connect}`"
 end
 
-Then(/^zypper (should|should not) contain a service for (base|sdk|wsm) product$/) do |condition, product|
-  if product == 'base'
-    service = service_name
-  elsif product == 'sdk'
-    # TODO: unused
-    service = 'SUSE_Linux_Enterprise_Software_Development_Kit_12_x86_64'
-  else
-    # TODO: unused
-    service = 'Web_and_Scripting_Module_12_x86_64'
-  end
+Then(/^zypper (should|should not) contain a service for (base product|the extension)$/) do |condition, product|
+  service = {
+    'base product' => service_name,
+    'the extension' => OPTIONS['free_extension']['service']
+  }.fetch(product)
 
   step 'I run `zypper ls`'
   puts "zypper ls output #{condition} contain \"#{service}\""
@@ -36,30 +31,12 @@ Then(/^zypper (should|should not) contain a service for (base|sdk|wsm) product$/
   step 'the exit status should be 0'
 end
 
-Then(/^zypper (should|should not) contain the repositories for (base|sdk|wsm) product$/) do |condition, product|
-  version_string_uscore, version_string_dash = {
-    '12' => [ '12', '12' ],
-    '12.1' => [ '12_SP1', '12-SP1' ],
-    '12.2' => [ '12_SP2', '12-SP2' ],
-    '12.3' => [ '12_SP3', '12-SP3' ]
-  }.fetch(base_product_version)
-
-  if product == 'base'
-    repositories = [
-      "SUSE_Linux_Enterprise_Server_#{version_string_uscore}_x86_64:SLES#{version_string_dash}-Pool",
-      "SUSE_Linux_Enterprise_Server_#{version_string_uscore}_x86_64:SLES#{version_string_dash}-Updates",
-      "SUSE_Linux_Enterprise_Server_#{version_string_uscore}_x86_64:SLES#{version_string_dash}-Debuginfo-Updates"
-    ]
-  elsif product == 'sdk'
-    repositories = [
-      "SUSE_Linux_Enterprise_Software_Development_Kit_#{version_string_uscore}_x86_64:SLE-SDK#{version_string_dash}-Pool",
-      "SUSE_Linux_Enterprise_Software_Development_Kit_#{version_string_uscore}_x86_64:SLE-SDK#{version_string_dash}-Updates"
-    ]
-  else
-    repositories = [
-      "Web_and_Scripting_Module_#{version_string_uscore}_x86_64:SLE-Module-Web-Scripting#{version_string_dash}-Pool"
-    ]
-  end
+Then(/^zypper (should|should not) contain the repositories for (base product|the extension)$/) do |condition, product|
+  repositories = if product == 'base product'
+                   OPTIONS['base_product']['repositories']
+                 elsif product == 'the extension'
+                   OPTIONS['free_extension']['repositories']
+                 end
 
   step 'I run `zypper lr`'
 
@@ -69,12 +46,18 @@ Then(/^zypper (should|should not) contain the repositories for (base|sdk|wsm) pr
   end
 end
 
-Then(/zypp credentials for (base|sdk|wsm) (should|should not) exist$/) do |product, condition|
+Then(/I remove the extension's release packages/) do
+  release_packages = OPTIONS['free_extension']['release_packages']
+  run("zypper --non-interactive rm #{release_packages}")
+  expect(last_command_started).to be_successfully_executed
+end
+
+Then(/zypp credentials for base (should|should not) exist$/) do |condition|
   credentials_path = '/etc/zypp/credentials.d/'
   step "a file named \"#{credentials_path}#{service_name}\" #{condition} exist"
 end
 
-Then(/zypp credentials for (base|sdk|wsm) (should|should not) contain "(.*)"$/) do |product, condition, content|
+Then(/zypp credentials for base (should|should not) contain "(.*)"$/) do |condition, content|
   credentials_path = '/etc/zypp/credentials.d/'
   step "the file \"#{credentials_path}#{service_name}\" #{condition} contain \"#{content}\""
 end

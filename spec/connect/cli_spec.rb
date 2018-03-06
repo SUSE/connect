@@ -10,7 +10,6 @@ describe SUSE::Connect::Cli do
 
   before do
     allow(Zypper).to receive_messages(base_product: {})
-    allow_any_instance_of(described_class).to receive(:exit)
     allow_any_instance_of(described_class).to receive_messages(puts: true)
     SUSE::Connect::GlobalLogger.instance.log = string_logger
     allow_any_instance_of(Status).to receive(:activated_base_product?).and_return(true)
@@ -31,7 +30,7 @@ describe SUSE::Connect::Cli do
         response = Net::HTTPResponse.new('1.1', 222, 'Test')
         expect(response).to receive(:body).and_return('localized_error' => 'test')
         allow_any_instance_of(Client).to receive(:register!).and_raise ApiError.new(response)
-        cli.execute!
+        expect { cli.execute! }.to exit_with_code(67)
       end
 
       context 'system has proper credentials file' do
@@ -40,7 +39,7 @@ describe SUSE::Connect::Cli do
           allow(System).to receive(:credentials?).and_return true
           expect_any_instance_of(Client).to receive(:register!).and_raise ApiError.new(response)
           expect(string_logger).to receive(:fatal).with(match(/Error: Invalid system credentials/))
-          cli.execute!
+          expect { cli.execute! }.to exit_with_code(67)
         end
       end
 
@@ -53,7 +52,7 @@ describe SUSE::Connect::Cli do
 
           error_message = "Error: Registration server returned 'Invalid registration code' (401)"
           expect(string_logger).to receive(:fatal).with(error_message)
-          cli.execute!
+          expect { cli.execute! }.to exit_with_code(67)
         end
       end
 
@@ -63,35 +62,35 @@ describe SUSE::Connect::Cli do
           allow_any_instance_of(SUSE::Connect::Config).to receive(:url_default?).and_return(false)
           expect_any_instance_of(Api).to receive(:up_to_date?).and_return(false)
 
-          ERROR_MESSAGE = "Your Registration Proxy server doesn't support this function. Please update it and try again."
-          expect(string_logger).to receive(:fatal).with(ERROR_MESSAGE)
+          error = "Your Registration Proxy server doesn't support this function. Please update it and try again."
+          expect(string_logger).to receive(:fatal).with(error)
 
-          cli.execute!
+          expect { cli.execute! }.to exit_with_code(66)
         end
       end
 
       it 'should produce log output if connection refused' do
         expect(string_logger).to receive(:fatal).with('Error: Connection refused by server https://scc.suse.com')
         allow_any_instance_of(Client).to receive(:register!).and_raise Errno::ECONNREFUSED
-        cli.execute!
+        expect { cli.execute! }.to exit_with_code(64)
       end
 
       it 'should produce log output if json parse error encountered' do
         expect(string_logger).to receive(:fatal).with('Error: Cannot parse response from server')
         allow_any_instance_of(Client).to receive(:register!).and_raise JSON::ParserError
-        cli.execute!
+        expect { cli.execute! }.to exit_with_code(66)
       end
 
       it 'should produce log output if EACCES encountered' do
         expect(string_logger).to receive(:fatal).with('Error: Access error - Permission denied')
         allow_any_instance_of(Client).to receive(:register!).and_raise Errno::EACCES
-        cli.execute!
+        expect { cli.execute! }.to exit_with_code(65)
       end
 
       it 'should produce log output if FileError encountered' do
         expect(string_logger).to receive(:fatal).with('FileError: \'test\'')
         allow_any_instance_of(Client).to receive(:register!).and_raise(FileError, 'test')
-        cli.execute!
+        expect { cli.execute! }.to exit_with_code(68)
       end
     end
 
@@ -101,7 +100,7 @@ describe SUSE::Connect::Cli do
       it 'should produce log output if zypper errors' do
         expect(string_logger).to receive(:fatal).with('Error: zypper returned (666) with \'<stream><error>zypper down</error></stream>\'')
         allow_any_instance_of(Client).to receive(:register!).and_raise ZypperError.new(666, '<stream><error>zypper down</error></stream>')
-        cli.execute!
+        expect { cli.execute! }.to raise_error(SystemExit)
       end
     end
 
@@ -124,7 +123,7 @@ describe SUSE::Connect::Cli do
           expect_any_instance_of(Client).not_to receive(:register!)
           expect(string_logger).to receive(:error)
             .with('Please register your system using the --regcode parameter, or provide the --url parameter to register against SMT.')
-          cli.execute!
+          expect { cli.execute! }.to raise_error(SystemExit)
         end
 
         it 'registers the system if --regcode was provided' do
@@ -136,6 +135,7 @@ describe SUSE::Connect::Cli do
         it 'registers the system if --url was provided' do
           cli = described_class.new(%w[--url http://somewhere.com])
           expect_any_instance_of(Client).to receive(:register!)
+          expect_any_instance_of(SUSE::Connect::Config).to receive(:write!)
           cli.execute!
         end
       end
@@ -156,14 +156,14 @@ describe SUSE::Connect::Cli do
         cli = described_class.new(%w[--instance-data /tmp/test])
         expect(string_logger).to receive(:error)
           .with('Please use --instance-data only in combination with --url pointing to your SMT server')
-        cli.execute!
+        expect { cli.execute! }.to raise_error(SystemExit)
       end
 
       it '--instance-data is mutually exclusive with --regcode' do
         cli = described_class.new(%w[-r 123 --instance-data /tmp/test --url test])
         expect(string_logger).to receive(:error)
           .with('Please use either --regcode or --instance-data')
-        cli.execute!
+        expect { cli.execute! }.to raise_error(SystemExit)
       end
 
       it '--url implies --write-config' do
@@ -188,7 +188,7 @@ describe SUSE::Connect::Cli do
 
         it 'dies with error' do
           expect(string_logger).to receive(:fatal).with(/Deregistration failed. Check if the system has been registered/)
-          subject
+          expect { subject }.to exit_with_code(69)
         end
       end
 
@@ -203,7 +203,7 @@ describe SUSE::Connect::Cli do
 
           it 'dies with error' do
             expect(string_logger).to receive(:fatal).with(/Can not deregister base product/)
-            subject
+            expect { subject }.to exit_with_code(70)
           end
         end
       end
@@ -217,10 +217,20 @@ describe SUSE::Connect::Cli do
       end
     end
 
-    context 'namespace option' do |_variables|
-      it '--namespace requires namespace' do
+    context '--namespace option' do
+      it 'requires a namespace' do
         expect(string_logger).to receive(:error).with('Please provide a namespace')
-        described_class.new('--namespace')
+        expect { described_class.new('--namespace') }.to exit_with_code(1)
+      end
+
+      it 'sets the given namespace in the config' do
+        cli = described_class.new(%w[--namespace mynamespace])
+        expect(cli.config[:namespace]).to eq 'mynamespace'
+      end
+
+      it 'automatically writes the config' do
+        cli = described_class.new(%w[--namespace mynamespace])
+        expect(cli.options[:write_config]).to be true
       end
     end
 
@@ -268,7 +278,7 @@ describe SUSE::Connect::Cli do
       it '--rollback calls SUSE::Connect::Migration.rollback' do
         expect_any_instance_of(Client).not_to receive(:register!)
         expect(SUSE::Connect::Migration).to receive(:rollback)
-        described_class.new(%w[--rollback])
+        expect { described_class.new(%w[--rollback]) }.to exit_with_code(0)
       end
     end
 
@@ -316,7 +326,7 @@ describe SUSE::Connect::Cli do
     it 'puts version on version flag' do
       argv = %w[--version]
       expect_any_instance_of(described_class).to receive(:puts).with(VERSION)
-      described_class.new(argv)
+      expect { described_class.new(argv) }.to exit_with_code(0)
     end
 
     it 'outputs help on help flag with no line longer than 80 characters' do
@@ -324,7 +334,7 @@ describe SUSE::Connect::Cli do
       expect_any_instance_of(described_class).to receive(:puts) do |option_parser|
         expect(option_parser.instance_variable_get(:@opts).to_s.split("\n").map(&:length)).to all be <= 80
       end
-      described_class.new(argv)
+      expect { described_class.new(argv) }.to exit_with_code(0)
     end
 
     it 'sets verbose options' do
@@ -362,7 +372,7 @@ describe SUSE::Connect::Cli do
     it 'error on invalid product options format with hint where to find correct product identifiers' do
       expect(string_logger).to receive(:error).with(/Please provide the product identifier in this format.*SUSEConnect --list-extensions/)
       argv = %w[--product sles]
-      described_class.new(argv)
+      expect { described_class.new(argv) }.to exit_with_code(1)
     end
   end
 

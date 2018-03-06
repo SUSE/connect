@@ -204,7 +204,7 @@ module SUSE
 
         @opts.on('--version', 'Print program version.') do
           puts VERSION
-          exit
+          exit 0
         end
 
         @opts.on('--debug', 'Provide debug output.') do |opt|
@@ -214,7 +214,7 @@ module SUSE
 
         @opts.on_tail('-h', '--help', 'Show this message.') do
           puts @opts
-          exit
+          exit 0
         end
 
         @opts.set_summary_width(24)

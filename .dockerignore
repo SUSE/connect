@@ -1,3 +1,6 @@
-coverage/
+coverage
 .git
-.yardoc/
+.yardoc
+tmp
+*.gem
+.tags*

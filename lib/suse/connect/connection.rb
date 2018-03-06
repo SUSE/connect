@@ -22,8 +22,11 @@ module SUSE
         uri              = URI.parse(endpoint)
         http             = Net::HTTP.new(uri.host, uri.port)
         if http.proxy?
-          http.proxy_user = SUSE::Toolkit::CurlrcDotfile.new.username
-          http.proxy_pass = SUSE::Toolkit::CurlrcDotfile.new.password
+          proxy_address = http.proxy_uri.hostname
+          proxy_port = http.proxy_uri.port
+          proxy_user = SUSE::Toolkit::CurlrcDotfile.new.username
+          proxy_pass = SUSE::Toolkit::CurlrcDotfile.new.password
+          http = Net::HTTP.new(uri.host, uri.port, proxy_address, proxy_port, proxy_user, proxy_pass)
         end
         http.use_ssl     = uri.is_a? URI::HTTPS
         http.verify_mode = insecure ? OpenSSL::SSL::VERIFY_NONE : OpenSSL::SSL::VERIFY_PEER
