@@ -96,4 +96,15 @@ describe SUSE::Connect::Remote::Product do
       expect(subject).to respond_to(:to_openstruct)
     end
   end
+
+  describe '#recommended_extensions' do
+    let(:product_tree) { JSON.parse(File.read('spec/fixtures/product_tree.json')) }
+    let(:product) { described_class.new(product_tree) }
+
+    let(:submodule) { product.extensions[1] }
+
+    it 'returns only the recommended extensions' do
+      expect(product.recommended_extensions).to contain_exactly(submodule)
+    end
+  end
 end
