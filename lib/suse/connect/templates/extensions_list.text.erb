@@ -1,7 +1,7 @@
 \e[1mAVAILABLE EXTENSIONS AND MODULES\e[0m
 
 <% any_installed = installed_products.select {|x| !x.isbase }.any? -%>
-<%  available_system_extensions.each do |extension| -%>
+<%  available_system_extensions.sort_by { |ext| ext[:name] }.each do |extension| -%>
 <%=   render 'extension.text', { extension: extension, any_installed: any_installed, level: 1 } -%>
 <% end -%>
 \e[1mMORE INFORMATION\e[0m

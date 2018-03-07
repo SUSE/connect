@@ -1,4 +1,4 @@
 <%= render 'extension_item.text', { extension: extension, any_installed: any_installed, level: level} %>
-<% extension.fetch(:extensions, []).each do |sub_extension| -%>
+<% extension.fetch(:extensions, []).sort_by { |ext| ext[:name] }.each do |sub_extension| -%>
 <%=    render 'extension.text', { extension: sub_extension, any_installed: any_installed, level: level + 1} -%>
 <% end -%>
