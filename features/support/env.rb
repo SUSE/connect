@@ -5,7 +5,7 @@ require 'aruba/cucumber'
 require 'cucumber/rspec/doubles'
 
 Aruba.configure do |config|
-  config.activate_announcer_on_command_failure = [:stderr, :stdout, :command]
+  config.activate_announcer_on_command_failure = %i[stderr stdout command]
   config.startup_wait_time = 5
 end
 
