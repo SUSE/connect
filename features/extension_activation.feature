@@ -9,8 +9,9 @@ Feature: Test extension/module activation
   # once it does.
   @skip-sles-15
   Scenario: Lists all possible extensions
-    When I successfully run `SUSEConnect --list-extensions`
-    Then the output should contain "Containers Module"
+    When I run `SUSEConnect --list-extensions`
+    Then the exit status should be 0
+    And the output should contain "Containers Module"
     And the output should contain "Web and Scripting"
     And the output should contain "Legacy Module"
     And the output should contain "Public Cloud Module"
@@ -19,7 +20,7 @@ Feature: Test extension/module activation
 
   @skip-sles-12
   Scenario: Lists all possible extensions
-    When I successfully run `SUSEConnect --list-extensions`
+    When I run `SUSEConnect --list-extensions`
     Then the exit status should be 0
     And the output should contain "Containers Module"
 
