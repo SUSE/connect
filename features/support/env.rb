@@ -14,6 +14,7 @@ OPTIONS = YAML.load_file(File.join(__dir__, 'environments.yml')).fetch(ENV.fetch
 Before('@slow_process') do
   aruba.config.io_wait_timeout = 90
   aruba.config.exit_timeout = 90
+  aruba.config.startup_wait_time = 90
 end
 
 Before('@libzypplocked') do
