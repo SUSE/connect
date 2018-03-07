@@ -4,6 +4,11 @@ require 'suse/connect'
 require 'aruba/cucumber'
 require 'cucumber/rspec/doubles'
 
+Aruba.configure do |config|
+  config.activate_announcer_on_command_failure = [:stderr, :stdout, :command]
+  config.startup_wait_time = 1
+end
+
 OPTIONS = YAML.load_file(File.join(__dir__, 'environments.yml')).fetch(ENV.fetch('PRODUCT'))
 
 Before('@slow_process') do
