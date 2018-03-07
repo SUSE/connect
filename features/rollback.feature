@@ -23,6 +23,7 @@ Feature: Rollback registration state to system products
     And zypper should contain the repositories for base product
 
 
+  @slow_startup
   Scenario: Rollback can be called from console with the same outcome as called from library
     When I successfully run `SUSEConnect --rollback`
 
@@ -33,6 +34,8 @@ Feature: Rollback registration state to system products
     And zypp credentials for base should exist
     And zypp credentials for base should contain "SCC_"
 
+
+  Scenario: Rollback has the intended side effects
     And zypper should contain a service for base product
     And zypper should contain the repositories for base product
 
