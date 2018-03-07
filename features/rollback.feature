@@ -24,10 +24,9 @@ Feature: Rollback registration state to system products
 
 
   Scenario: Rollback can be called from console with the same outcome as called from library
-    When I run `SUSEConnect --rollback`
+    When I successfully run `SUSEConnect --rollback`
 
-    Then the exit status should be 0
-    And the output should contain "> Beginning registration rollback. This can take some time..."
+    Then the output should contain "> Beginning registration rollback. This can take some time..."
     And a file named "/etc/zypp/credentials.d/SCCcredentials" should exist
     And the file "/etc/zypp/credentials.d/SCCcredentials" should contain "SCC_"
 
