@@ -6,7 +6,7 @@ require 'cucumber/rspec/doubles'
 
 Aruba.configure do |config|
   config.activate_announcer_on_command_failure = [:stderr, :stdout, :command]
-  config.startup_wait_time = 1
+  config.startup_wait_time = 5
 end
 
 OPTIONS = YAML.load_file(File.join(__dir__, 'environments.yml')).fetch(ENV.fetch('PRODUCT'))
