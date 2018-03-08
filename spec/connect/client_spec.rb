@@ -300,7 +300,7 @@ describe SUSE::Connect::Client do
 
     it 'should call register_product for the base product' do
       expect(subject).to receive(:announce_system)
-      expect(subject).to receive(:register_product).with(product, install_release_package: false)
+      expect(subject).to receive(:register_product).with(product, false)
       subject.register!
     end
 

@@ -27,7 +27,7 @@ module SUSE
         announce_or_update
         product = @config.product || Zypper.base_product
 
-        register_product(product, install_release_package: @config.product ? true : false)
+        register_product(product, @config.product ? true : false)
 
         # Only install recommended packages for base products
         if product.isbase
