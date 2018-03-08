@@ -12,7 +12,7 @@ SLE_15:
     identifier: sle-module-basesystem/15/x86_64
     credentials_file: /etc/zypp/credentials.d/Basesystem_Module_15_x86_64
     service: Basesystem_Module_15_x86_64
-    release_packages: sle-module-basesystem-release
+    release_package: sle-module-basesystem-release
     repositories:
     - Basesystem_Module_15_x86_64:SLE-Module-Basesystem15-Debuginfo-Pool
     - Basesystem_Module_15_x86_64:SLE-Module-Basesystem15-Debuginfo-Updates
@@ -36,7 +36,7 @@ SLE_12_SP3:
     identifier: sle-sdk/12.3/x86_64
     credentials_file: /etc/zypp/credentials.d/SUSE_Linux_Enterprise_Software_Development_Kit_12_SP3_x86_64
     service: SUSE_Linux_Enterprise_Software_Development_Kit_12_SP3_x86_64
-    release_packages: sle-sdk-release sle-sdk-release-POOL
+    release_package: sle-sdk-release
     repositories:
     - SUSE_Linux_Enterprise_Software_Development_Kit_12_SP3_x86_64:SLE-SDK12-SP3-Pool
     - SUSE_Linux_Enterprise_Software_Development_Kit_12_SP3_x86_64:SLE-SDK12-SP3-Updates
@@ -57,7 +57,7 @@ SLE_12_SP2:
     identifier: sle-sdk/12.2/x86_64
     credentials_file: /etc/zypp/credentials.d/SUSE_Linux_Enterprise_Software_Development_Kit_12_SP2_x86_64
     service: SUSE_Linux_Enterprise_Software_Development_Kit_12_SP2_x86_64
-    release_packages: sle-sdk-release sle-sdk-release-POOL
+    release_package: sle-sdk-release
     repositories:
     - SUSE_Linux_Enterprise_Software_Development_Kit_12_SP2_x86_64:SLE-SDK12-SP2-Pool
     - SUSE_Linux_Enterprise_Software_Development_Kit_12_SP2_x86_64:SLE-SDK12-SP2-Updates
@@ -79,7 +79,7 @@ SLE_12_SP1:
     identifier: sle-sdk/12.1/x86_64
     credentials_file: /etc/zypp/credentials.d/SUSE_Linux_Enterprise_Software_Development_Kit_12_SP1_x86_64
     service: SUSE_Linux_Enterprise_Software_Development_Kit_12_SP1_x86_64
-    release_packages: sle-sdk-release sle-sdk-release-POOL
+    release_package: sle-sdk-release
     repositories:
     - SUSE_Linux_Enterprise_Software_Development_Kit_12_SP1_x86_64:SLE-SDK12-SP1-Pool
     - SUSE_Linux_Enterprise_Software_Development_Kit_12_SP1_x86_64:SLE-SDK12-SP1-Updates
@@ -102,7 +102,7 @@ SLE_12:
     identifier: sle-sdk/12/x86_64
     credentials_file: /etc/zypp/credentials.d/SUSE_Linux_Enterprise_Software_Development_Kit_12_x86_64
     service: SUSE_Linux_Enterprise_Software_Development_Kit_12_x86_64
-    release_packages: sle-sdk-release sle-sdk-release-POOL
+    release_package: sle-sdk-release
     repositories:
     - SUSE_Linux_Enterprise_Software_Development_Kit_12_x86_64:SLE-SDK12-Pool
     - SUSE_Linux_Enterprise_Software_Development_Kit_12_x86_64:SLE-SDK12-Updates

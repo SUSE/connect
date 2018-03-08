@@ -31,5 +31,9 @@ Feature: Test extension/module activation
     And zypper should contain the repositories for the extension
 
   Scenario: Remove all registration leftovers
-    Then I deregister the system
-    And I remove the extension's release packages
+    When System has free extension
+    And I run `SUSEConnect -d`
+    Then the exit status should be 0
+    And the output should contain "To server: https://scc.suse.com"
+    And the output should contain "Successfully deregistered system."
+    And It deregisters free extension

@@ -37,12 +37,11 @@ module SUSE
       def deregister!
         raise SystemNotRegisteredError unless registered?
         if @config.product
-          raise BaseProductDeactivationError if @config.product == Zypper.base_product
-          service = deactivate_product @config.product
-          remove_or_refresh_service(service)
-          Zypper.remove_release_package @config.product.identifier
-          print_success_message @config.product, action: 'Deregistered'
+          deregister_product(@config.product)
         else
+          Zypper.installed_products.each do |product|
+            deregister_product(product) unless product == Zypper.base_product
+          end
           @api.deregister(system_auth)
           System.cleanup!
           log.info 'Successfully deregistered system.'
@@ -167,6 +166,14 @@ module SUSE
       end
 
       private
+
+      def deregister_product(product)
+        raise BaseProductDeactivationError if product == Zypper.base_product
+        service = deactivate_product product
+        remove_or_refresh_service(service)
+        Zypper.remove_release_package product.identifier
+        print_success_message product, action: 'Deregistered'
+      end
 
       # Announces the system to the server, receiving and storing its credentials.
       # When already announced, sends the current hardware details to the server
