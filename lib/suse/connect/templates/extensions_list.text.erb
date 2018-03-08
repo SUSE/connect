@@ -1,19 +1,9 @@
 \e[1mAVAILABLE EXTENSIONS AND MODULES\e[0m
 
-<%
-any_installed = installed_products.select {|x| !x.isbase }.any?
-{ true => 'FREE EXTENSIONS', false => 'PAID EXTENSIONS' }.each do |type_key, title|
-  if grouped_extensions[type_key] %>
-\e[1m<%= title %>\e[0m
-
-<%  grouped_extensions[type_key].each do |extension| -%>
-  <%= render 'extension_item.text', locals: { extension: extension, any_installed: any_installed } %>
-<%    extension[:extensions].each do |extension| -%>
-    <%= render 'extension_item.text', locals: { extension: extension, nested: true, any_installed: any_installed } %>
-<%    end
-    end
-  end
-end %>
+<% any_installed = installed_products.select {|x| !x.isbase }.any? -%>
+<%  available_system_extensions.sort_by { |ext| ext[:name] }.each do |extension| -%>
+<%=   render 'extension.text', { extension: extension, any_installed: any_installed, level: 1 } -%>
+<% end -%>
 \e[1mMORE INFORMATION\e[0m
 
 You can find more information about available modules here:

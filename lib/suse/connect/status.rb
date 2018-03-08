@@ -77,10 +77,6 @@ module SUSE
         extensions
       end
 
-      def grouped_extensions
-        @grouped_extensions ||= available_system_extensions.group_by { |ext| ext[:free] }
-      end
-
       def build_product_activation_code(product)
         "#{product.identifier}/#{product.version}/#{product.arch}"
       end

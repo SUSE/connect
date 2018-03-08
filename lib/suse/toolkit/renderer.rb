@@ -7,10 +7,20 @@ module SUSE
         super
       end
 
-      def render(filename, locals: binding)
-        bind = locals.is_a?(Binding) ? locals : OpenStruct.new(locals).instance_eval { binding }
-        @templates[filename] ||= ERB.new File.read(File.expand_path("../../connect/templates/#{filename}.erb", __FILE__)), 0, '-<>'
+      def render(filename, locals = {})
+        bind = binding
+        path = "../../connect/templates/#{filename}.erb"
+
+        locals.each_pair do |key, value|
+          bind.local_variable_set(key, value)
+        end
+
+        @templates[filename] ||= ERB.new File.read(File.expand_path(path, __FILE__)), 0, '-<>'
         @templates[filename].result(bind).gsub('\e', "\e")
+      end
+
+      def indent(level)
+        ' ' * (level * 4)
       end
     end
   end

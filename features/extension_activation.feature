@@ -4,10 +4,6 @@ Feature: Test extension/module activation
   Scenario: Register base system
     Given I have a system with activated base product
 
-  # At the time of writing, --list-extensions on SLES15 does not return
-  # a full list of extensions. Re-enable this test and remove the next one
-  # once it does.
-  @skip-sles-15
   Scenario: Lists all possible extensions
     When I run `SUSEConnect --list-extensions`
     Then the exit status should be 0
@@ -17,12 +13,6 @@ Feature: Test extension/module activation
     And the output should contain "Public Cloud Module"
     And the output should contain "SUSE Linux Enterprise High Availability Extension"
     And the output should contain "https://www.suse.com/products/server/features/modules.html"
-
-  @skip-sles-12
-  Scenario: Lists all possible extensions
-    When I run `SUSEConnect --list-extensions`
-    Then the exit status should be 0
-    And the output should contain "Containers Module"
 
   # Skip in SLES15 for now, since there's no paid extensions that can be activated
   # directly on the root product. Once SUSEConnect automatically activates recommended
