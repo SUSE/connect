@@ -20,7 +20,6 @@ Then(/^I call SUSEConnect with '(.*)' arguments$/) do |args|
 end
 
 Then(/^zypper (should|should not) contain a service for (base product|the extension|(.+))$/) do |condition, name|
-
   case name
   when 'base product'
     service = service_name
