@@ -32,4 +32,9 @@ class SUSE::Connect::Remote::Product < SUSE::Connect::Remote::ServerDrivenModel
     identifier = 'sle' if (identifier =~ /^sle/)
     "#{identifier}-#{version}-#{arch}"
   end
+
+  # Get all recommended extensions for this product
+  def recommended_extensions
+    extensions.select(&:recommended)
+  end
 end

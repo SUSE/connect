@@ -19,11 +19,15 @@ Then(/^I call SUSEConnect with '(.*)' arguments$/) do |args|
   step "I run `#{connect}`"
 end
 
-Then(/^zypper (should|should not) contain a service for (base product|the extension)$/) do |condition, product|
-  service = {
-    'base product' => service_name,
-    'the extension' => OPTIONS['free_extension']['service']
-  }.fetch(product)
+Then(/^zypper (should|should not) contain a service for (base product|the extension|(.+))$/) do |condition, name|
+  case name
+  when 'base product'
+    service = service_name
+  when 'the extension'
+    service = OPTIONS['free_extension']['service']
+  else
+    service = name
+  end
 
   step 'I run `zypper ls`'
   puts "zypper ls output #{condition} contain \"#{service}\""

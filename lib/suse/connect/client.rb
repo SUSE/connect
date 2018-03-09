@@ -1,6 +1,7 @@
 require 'net/http'
 require 'suse/toolkit/utilities'
 
+
 module SUSE
   module Connect
     # Client to interact with API
@@ -25,10 +26,43 @@ module SUSE
       def register!
         announce_or_update
         product = @config.product || Zypper.base_product
+
+        register_product(product, @config.product ? true : false)
+
+        # Only install recommended packages for base products
+        if product.isbase
+          product_hash = show_product(product)
+          product_hash.recommended_extensions.each do |ext|
+            register_product(ext)
+            register_recommended!(ext)
+          end
+        end
+
+        print_title '=> Activation successful!'
+      end
+
+      # Activate, add service and install release package for all recommended
+      # extension available
+      def register_recommended!(extension)
+        extension.recommended_extensions.each do |ext|
+          register_product(ext)
+          register_recommended!(ext)
+        end
+      end
+
+      # Activate the product, add the service and install the relase package
+      def register_product(product, install_release_package = true)
+        print_title "Activating #{product.identifier} #{product.version}", "\e[34m"
         service = activate_product(product, @config.email)
+
+        print_action 'Adding zypper service'
         System.add_service(service)
-        Zypper.install_release_package(product.identifier) if @config.product
-        print_success_message product
+
+        if install_release_package
+          print_action 'Installing release package'
+          Zypper.refresh_services
+          Zypper.install_release_package(product.identifier)
+        end
       end
 
       # Deregisters a whole system or a single product
@@ -200,6 +234,14 @@ module SUSE
         else
           System.remove_service service
         end
+      end
+
+      def print_title(title, color = "\e[32m")
+        log.info "#{color}\e[1m#{title}\e[0m"
+      end
+
+      def print_action(action, color = "\e[32m")
+        log.info "  #{color}::\e[0m #{action}..."
       end
 
       def print_success_message(product, action: 'Registered')
