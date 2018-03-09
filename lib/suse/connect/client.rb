@@ -39,7 +39,7 @@ module SUSE
         if @config.product
           deregister_product(@config.product)
         else
-          Zypper.installed_products.each do |product|
+          Zypper.installed_products.reverse.each do |product|
             deregister_product(product) unless product == Zypper.base_product
           end
           @api.deregister(system_auth)
