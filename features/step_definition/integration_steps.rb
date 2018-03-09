@@ -62,14 +62,14 @@ Then(/^I remove local credentials$/) do
 end
 
 When(/^System has free extension$/) do
-  step "I run `zypper se -x #{OPTIONS['free_extension']['release_package']}`"
+  step "I run `zypper se -i --match-exact #{OPTIONS['free_extension']['release_package']}`"
   step 'the exit status should be 0'
 end
 
 Then(/^It deregisters free extension$/) do
   identifier = OPTIONS['free_extension']['identifier'].split('/').first
   step "the output should contain \"#{identifier}\""
-  step "I run `zypper se -x #{OPTIONS['free_extension']['release_package']}`"
+  step "I run `zypper se -i --match-exact #{OPTIONS['free_extension']['release_package']}`"
   step 'the exit status should be 104'
 end
 
