@@ -46,12 +46,6 @@ Then(/^zypper (should|should not) contain the repositories for (base product|the
   end
 end
 
-Then(/I remove the extension's release packages/) do
-  release_packages = OPTIONS['free_extension']['release_packages']
-  run("zypper --non-interactive rm #{release_packages}")
-  expect(last_command_started).to be_successfully_executed
-end
-
 Then(/zypp credentials for base (should|should not) exist$/) do |condition|
   credentials_path = '/etc/zypp/credentials.d/'
   step "a file named \"#{credentials_path}#{service_name}\" #{condition} exist"
@@ -65,6 +59,18 @@ end
 Then(/^I remove local credentials$/) do
   step 'Prepare SUSEConnect client with a valid regcode'
   @client.instance_eval { SUSE::Connect::System.remove_credentials }
+end
+
+When(/^System has free extension$/) do
+  step "I run `zypper se -x #{OPTIONS['free_extension']['release_package']}`"
+  step 'the exit status should be 0'
+end
+
+Then(/^It deregisters free extension$/) do
+  identifier = OPTIONS['free_extension']['identifier'].split('/').first
+  step "the output should contain \"#{identifier}\""
+  step "I run `zypper se -x #{OPTIONS['free_extension']['release_package']}`"
+  step 'the exit status should be 104'
 end
 
 Then(/^System cleanup$/) do

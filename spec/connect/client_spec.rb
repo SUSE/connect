@@ -438,6 +438,8 @@ describe SUSE::Connect::Client do
 
   describe '#deregister!' do
     let(:stubbed_response) { OpenStruct.new(code: 204, body: nil, success: true) }
+    let(:product_list) { [product] }
+
     subject { client_instance.deregister! }
 
     before { SUSE::Connect::GlobalLogger.instance.log = string_logger }
@@ -449,6 +451,8 @@ describe SUSE::Connect::Client do
         allow(client_instance).to receive(:registered?).and_return true
         allow(client_instance.api).to receive(:deregister).with('Basic: encodedstring').and_return stubbed_response
         allow(System).to receive(:cleanup!).and_return(true)
+        allow(Zypper).to receive(:base_product).and_return(product)
+        allow(Zypper).to receive(:installed_products).and_return(product_list)
       end
 
       it 'calls underlying api and removes credentials file' do
@@ -465,6 +469,37 @@ describe SUSE::Connect::Client do
         before { allow(System).to receive(:cleanup!).and_return(true) }
 
         it 'prints confirmation message' do
+          expect(string_logger).to receive(:info).with('Successfully deregistered system.')
+          subject
+        end
+      end
+
+      context 'without specified product' do
+        let(:extension) { SUSE::Connect::Remote::Product.new identifier: 'SLES HA', version: '12', arch: 'x86_64' }
+        let(:product_service) { SUSE::Connect::Remote::Service.new({ 'name' => 'dummy', 'product' => {} }) }
+        let(:product_list) { [product, extension] }
+
+        before do
+          stub_request(:delete, 'https://scc.suse.com/connect/systems/products').to_return(body: '{"product":{}}')
+          allow(System).to receive(:cleanup!).and_return(true)
+          allow(System).to receive :remove_service
+          allow(Zypper).to receive :remove_release_package
+        end
+
+        it 'removes SCC service and release package for extension' do
+          expect(client_instance).not_to receive(:deactivate_product).with(product)
+          expect(client_instance).to receive(:deactivate_product).with(extension) do
+            product_service
+          end
+          expect(System).to receive(:remove_service).with(product_service)
+          expect(Zypper).to receive(:remove_release_package).with(extension.identifier)
+          expect(Zypper).not_to receive(:remove_release_package).with(product.identifier)
+          subject
+        end
+
+        it 'prints confirmation message' do
+          expect(string_logger).to receive(:info).with('Deregistered SLES HA 12 x86_64')
+          expect(string_logger).to receive(:info).with('To server: https://scc.suse.com')
           expect(string_logger).to receive(:info).with('Successfully deregistered system.')
           subject
         end
