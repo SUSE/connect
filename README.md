@@ -30,38 +30,44 @@ rake spec     # Run RSpec
 
 For SLES12SP0
 
-* `docker build -t connect .`
+* `docker build -t connect.12sp0 -f Dockerfile.12sp0 .`
 
 For SLES12SP1
 
-* `docker build -t connect.sp1 -f Dockerfile.sp1 .`
+* `docker build -t connect.12sp1 -f Dockerfile.12sp1 .`
 
 For SLES12SP2
 
-* `docker build -t connect.sp2 -f Dockerfile.sp2 .`
+* `docker build -t connect.12sp2 -f Dockerfile.12sp2 .`
 
 For SLES12SP3
 
-* `docker build -t connect.sp3 -f Dockerfile.sp3 .`
+* `docker build -t connect.12sp3 -f Dockerfile.12sp3 .`
+
+For SLES15SP0
+
+* `docker build -t connect.15sp0 -f Dockerfile.15sp0 .`
 
 ## Run commands
 
+Note: Substitute `connect.12sp0` with the respective image you've built above.
+
 Open a console
 
-* `docker run --privileged --rm -ti connect /bin/bash`
+* `docker run --privileged --rm -ti connect.12sp0 /bin/bash`
 
 Run RSpec
 
-* `docker run --privileged --rm -t connect su nobody -c rspec`
+* `docker run --privileged --rm -t connect.12sp0 su nobody -c rspec`
 
 Run Cucumber
 
-* `docker run --privileged --rm -t connect cucumber`
+* `docker run --privileged --rm -t connect.12sp0 cucumber`
 
 Run Rubocop
 
-* `docker run --privileged --rm -t connect su nobody -c rubocop`
+* `docker run --privileged --rm -t connect.12sp0 su nobody -c rubocop`
 
 Or run whole set of tests together
 
-* `docker run --privileged --rm -t connect sh docker/runall.sh`
+* `docker run --privileged --rm -t connect.12sp0 sh docker/runall.sh`
