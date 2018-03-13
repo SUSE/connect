@@ -48,6 +48,27 @@ module SUSE
         end
       end
 
+      # Walk trough the given product tree and fetch all nodes which where
+      # accessed and a condition is matched
+      #
+      # @param tree Remote::Product
+      # @param condition a ruby block which takes a extension as parameter
+      #                  and evaluates a boolean condition
+      #
+      # @returns an array of all matched/accessed nodes
+      def walk_product_tree(tree, &condition)
+        result = []
+
+        tree.extensions.each do |extension|
+          next unless yield(extension)
+
+          # Add all accessed nodes to the result
+          result.push(extension)
+          result += walk_product_tree(extension, &condition)
+        end
+        result
+      end
+
       # Announce system via SCC/Registration Proxy
       #
       # @returns: [Array] login, password tuple. Those credentials are given by SCC/Registration Proxy

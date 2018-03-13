@@ -5,7 +5,16 @@ describe SUSE::Connect::Client do
   let(:default_logger) { SUSE::Connect::GlobalLogger.instance.log }
   let(:string_logger) { ::Logger.new(StringIO.new) }
   let(:client_instance) { described_class.new config }
-  let(:product) { SUSE::Connect::Remote::Product.new identifier: 'SLES', version: '12', arch: 'x86_64' }
+
+  let(:product_tree) { JSON.parse(File.read('spec/fixtures/product_tree.json')) }
+  let(:product) { Remote::Product.new(product_tree) }
+
+  let(:extension) { product.extensions[1] }
+  let(:subextension) { extension.extensions[1] }
+
+  let(:recommended3) { product.extensions[2] }
+  let(:extension3) { product.extensions[3] }
+  let(:extension5) { extension3.extensions[1] }
 
   subject { client_instance }
 
@@ -545,6 +554,35 @@ describe SUSE::Connect::Client do
       before { allow(::SUSE::Connect::System).to receive(:credentials).and_return(nil) }
 
       it { expect { subject }.to raise_error(::SUSE::Connect::SystemNotRegisteredError) }
+    end
+  end
+
+  describe '#walk_product_tree' do
+    let(:specific_product) { 'Some extension 5' }
+
+    let(:installed) do
+      [
+        extension3[:identifier],
+        product[:identifier],
+        subextension[:identifier],
+        extension[:identifier],
+        extension5[:identifier]
+      ]
+    end
+
+    it 'returns all branches for a certain condition' do
+      result = subject.walk_product_tree(product) { |e| e[:recommended] == true }
+      expect(result).to eq [ extension, subextension, recommended3 ]
+    end
+
+    it 'returns all nodes in correct branch order' do
+      result = subject.walk_product_tree(product) { |e| installed.include? e[:identifier] }
+      expect(result).to eq [ extension, subextension, extension3, extension5 ]
+    end
+
+    it 'returns an empty list if nothing was matched' do
+      result = subject.walk_product_tree(product) { |e| e[:indentifier] == 'not_existing' }
+      expect(result).to be_empty
     end
   end
 
