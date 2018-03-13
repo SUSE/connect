@@ -1,4 +1,13 @@
 -------------------------------------------------------------------
+Thu Mar 13 12:54:57 UTC 2018 - fschnizlein@suse.com
+
+- Update to 0.3.8
+  - Fix list-extensions to show the full SLE 15 tree (bsc#1064264)
+  - Enable automatic activation of recommended extensions/modules
+  - Automatically deregister all installed extensions/modules when
+    deregistering a system
+
+-------------------------------------------------------------------
 Thu Jan 18 14:54:57 UTC 2018 - fschueller@suse.com
 
 - Update to 0.3.7
