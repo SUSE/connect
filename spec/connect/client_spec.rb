@@ -279,17 +279,22 @@ describe SUSE::Connect::Client do
 
   describe '#register!' do
     before do
-      allow(Zypper).to receive(:base_product).and_return Zypper::Product.new(name: 'SLE_BASE')
-      allow(System).to receive(:add_service).and_return true
+      allow(Zypper).to receive(:base_product).and_return product
       allow(Zypper).to receive(:write_base_credentials)
+
       allow_any_instance_of(Credentials).to receive(:write)
-      allow(subject).to receive(:activate_product)
-      allow(subject).to receive(:update_system)
-      allow(Zypper).to receive(:install_release_package)
+      allow(System).to receive_messages(credentials?: false)
+
+      allow(subject).to receive(:show_product).and_return product
+      allow(subject).to receive(:register_product).and_return true
+      SUSE::Connect::GlobalLogger.instance.log = string_logger
+    end
+
+    after do
+      SUSE::Connect::GlobalLogger.instance.log = default_logger
     end
 
     it 'should call announce if system not registered' do
-      allow(System).to receive_messages(credentials?: false)
       expect(subject).to receive(:announce_system)
       subject.register!
     end
@@ -301,9 +306,17 @@ describe SUSE::Connect::Client do
       subject.register!
     end
 
-    it 'should call activate_product on api' do
-      allow(System).to receive_messages(credentials?: true)
-      expect(subject).to receive(:activate_product)
+    it 'should call register_product for the base product' do
+      expect(subject).to receive(:announce_system)
+      expect(subject).to receive(:register_product).with(product, false)
+      subject.register!
+    end
+
+    it 'should call register_product for all recommended extensions' do
+      expect(subject).to receive(:announce_system)
+      [extension, subextension, recommended3].each do |ext|
+        expect(subject).to receive(:register_product).with(ext)
+      end
       subject.register!
     end
 
@@ -314,34 +327,57 @@ describe SUSE::Connect::Client do
       subject.register!
     end
 
-    it 'adds service after product activation' do
-      allow(System).to receive_messages(credentials?: true)
-      expect(System).to receive(:add_service)
+    it 'prints message on successful activation' do
+      expect(subject).to receive(:announce_system)
+      expect(subject).to receive(:register_product).exactly(4).times
+      expect(string_logger).to receive(:info).with('Successfully registered system.')
       subject.register!
     end
+  end
 
-    it 'installs release package on product activation' do
-      subject.config.product = Remote::Product.new(identifier: 'SLES')
-      allow(System).to receive(:credentials?).and_return true
-      expect(Zypper).to receive(:install_release_package).with(subject.config.product.identifier)
-      subject.register!
-    end
+  describe '#register_product' do
+    let(:service_stub) { 'service_stub' }
+    let(:fake_email) { 'email@email.org.what.ever' }
 
-    it 'prints message on successful register' do
-      product = Zypper::Product.new(name: 'SLES', version: 12, arch: 's390')
-      merged_config = config.merge!(url: 'http://dummy:42', email: 'asd@asd.de', product: product, filesystem_root: '/test', language: 'EN')
-      client = Client.new(merged_config)
-      allow(client).to receive(:announce_or_update)
-      allow(client).to receive(:activate_product)
-      allow(Zypper).to receive_messages(base_product: product)
+    before do
+      config.email = fake_email
       SUSE::Connect::GlobalLogger.instance.log = string_logger
+    end
 
-      expect(string_logger).to receive(:info).with('Registered SLES 12 s390')
-      expect(string_logger).to receive(:info).with('To server: http://dummy:42')
-      expect(string_logger).to receive(:info).with('Using E-Mail: asd@asd.de')
-      expect(string_logger).to receive(:info).with('Rooted at: /test')
-      client.register!
+    after do
       SUSE::Connect::GlobalLogger.instance.log = default_logger
+    end
+
+    it 'should activate the product, add service file and install release package' do
+      expect(subject).to receive(:activate_product).with(product, fake_email).and_return service_stub
+      expect(System).to receive(:add_service).with(service_stub)
+
+      expect(Zypper).to receive(:refresh_services)
+      expect(Zypper).to receive(:install_release_package).with(product.identifier)
+
+      subject.register_product(product)
+    end
+
+    it 'should not install the release package if install_release_package is false' do
+      expect(subject).to receive(:activate_product).with(product, fake_email).and_return service_stub
+      expect(System).to receive(:add_service).with(service_stub)
+
+      expect(Zypper).not_to receive(:refresh_services)
+      expect(Zypper).not_to receive(:install_release_package)
+
+      subject.register_product(product, false)
+    end
+
+    it 'informs the user about progress' do
+      allow(subject).to receive(:activate_product)
+      allow(System).to receive(:add_service)
+      allow(Zypper).to receive(:refresh_services)
+      allow(Zypper).to receive(:install_release_package)
+
+      expect(string_logger).to receive(:info).with('Registered SLES 15 x86_64')
+      expect(string_logger).to receive(:info).with('To server: https://scc.suse.com')
+      expect(string_logger).to receive(:info).with('Using E-Mail: email@email.org.what.ever')
+      subject.register_product(product)
     end
   end
 

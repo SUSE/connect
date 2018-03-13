@@ -1,9 +1,33 @@
 @slow_process
 Feature: Test product activation
 
+  @skip-sles-15
   Scenario: System registration
     Given I have a system with activated base product
 
+    Then the output should contain "Registered SLES 12"
+    And the output should contain "To server: https://scc.suse.com"
+    And the output should contain "Successfully registered system."
+
+
+  @skip-sles-12
+  Scenario: System registration
+    Given I have a system with activated base product
+
+    Then the output should contain "Registered SLES 15"
+    And the output should contain "To server: https://scc.suse.com"
+
+    And the output should contain "Registered sle-module-basesystem 15"
+    And the output should contain "To server: https://scc.suse.com"
+    And zypper should contain a service for sle-module-basesystem
+
+    And the output should contain "Registered sle-module-server-applications 15"
+    And the output should contain "To server: https://scc.suse.com"
+    And zypper should contain a service for sle-module-server-applications
+
+    And the output should contain "Successfully registered system."
+
+  Scenario: Files are created as required
     Then a file named "/etc/zypp/credentials.d/SCCcredentials" should exist
     And the file "/etc/zypp/credentials.d/SCCcredentials" should contain "SCC_"
 
