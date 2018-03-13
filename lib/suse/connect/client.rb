@@ -62,8 +62,12 @@ module SUSE
         if @config.product
           deregister_product(@config.product)
         else
-          Zypper.installed_products.reverse.each do |product|
-            deregister_product(product) unless product == Zypper.base_product
+          tree = show_product(Zypper.base_product)
+          installed = Zypper.installed_products.map(&:identifier)
+          dependencies = walk_product_tree(tree) { |e| installed.include? e[:identifier] }
+
+          dependencies.reverse.each do |product|
+            deregister_product(product)
           end
           @api.deregister(system_auth)
           System.cleanup!
