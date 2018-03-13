@@ -6,27 +6,27 @@
   "isbase": true,
   "extensions": [
     {
-      "identifier": "Some extension 1",
+      "identifier": "1-Extension",
       "version": 98,
       "recommended": false,
       "arch": "x86_64",
       "extensions": []
     },
     {
-      "identifier": "Recommended extension 1",
+      "identifier": "2-Recommended",
       "version": 15,
       "recommended": true,
       "arch": "x86_64",
       "extensions": [
           {
-            "identifier": "Some extension 2",
+            "identifier": "2-1-Extension",
             "version": 83,
             "arch": "x86_64",
             "recommended": false,
             "extensions": []
           },
           {
-            "identifier": "Recommended extension 2",
+            "identifier": "2-2-Recommended",
             "version": 83,
             "arch": "x86_64",
             "recommended": true,
@@ -35,27 +35,27 @@
         ]
     },
     {
-      "identifier": "Recommended extension 3",
+      "identifier": "3-Recommended",
       "version": 1,
       "recommended": true,
       "arch": "x86_64",
       "extensions": []
     },
     {
-      "identifier": "Some extension 3",
+      "identifier": "4-Extension",
       "version": 1337,
       "recommended": false,
       "arch": "x86_64",
       "extensions": [
           {
-            "identifier": "Some extension 4",
+            "identifier": "4-1-Extension",
             "version": 83,
             "arch": "x86_64",
             "recommended": false,
             "extensions": []
           },
           {
-            "identifier": "Some extension 5",
+            "identifier": "4-2-Extension",
             "version": 83,
             "arch": "x86_64",
             "recommended": false,

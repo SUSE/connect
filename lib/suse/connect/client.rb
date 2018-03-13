@@ -31,7 +31,7 @@ module SUSE
         # Only register recommended packages for base products
         if product.isbase
           tree = show_product(product)
-          recommended = walk_product_tree(tree) { |e| e[:recommended] == true }
+          recommended = flatten_tree(tree).select { |e| e[:recommended] == true }
 
           recommended.each do |extension|
             register_product(extension)
@@ -64,7 +64,7 @@ module SUSE
         else
           tree = show_product(Zypper.base_product)
           installed = Zypper.installed_products.map(&:identifier)
-          dependencies = walk_product_tree(tree) { |e| installed.include? e[:identifier] }
+          dependencies = flatten_tree(tree).select { |e| installed.include? e[:identifier] }
 
           dependencies.reverse.each do |product|
             deregister_product(product)
@@ -75,23 +75,16 @@ module SUSE
         end
       end
 
-      # Walk trough the given product tree and fetch all nodes which where
-      # accessed and a condition is matched
+      # Flatten a product tree into an array
       #
       # @param tree Remote::Product
-      # @param condition a ruby block which takes a extension as parameter
-      #                  and evaluates a boolean condition
       #
-      # @returns an array of all matched/accessed nodes
-      def walk_product_tree(tree, &condition)
+      # @returns an array of the flattend tree
+      def flatten_tree(tree)
         result = []
-
         tree.extensions.each do |extension|
-          next unless yield(extension)
-
-          # Add all accessed nodes to the result
           result.push(extension)
-          result += walk_product_tree(extension, &condition)
+          result += flatten_tree(extension)
         end
         result
       end

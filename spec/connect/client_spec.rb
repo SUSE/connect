@@ -9,12 +9,12 @@ describe SUSE::Connect::Client do
   let(:product_tree) { JSON.parse(File.read('spec/fixtures/product_tree.json')) }
   let(:product) { Remote::Product.new(product_tree) }
 
-  let(:extension) { product.extensions[1] }
-  let(:subextension) { extension.extensions[1] }
+  let(:recommended_2) { product.extensions[1] }
+  let(:recommended_2_2) { recommended_2.extensions[1] }
+  let(:recommended_3) { product.extensions[2] }
 
-  let(:recommended3) { product.extensions[2] }
-  let(:extension3) { product.extensions[3] }
-  let(:extension5) { extension3.extensions[1] }
+  let(:extension_4) { product.extensions[3] }
+  let(:extension_4_2) { extension_4.extensions[1] }
 
   subject { client_instance }
 
@@ -314,7 +314,7 @@ describe SUSE::Connect::Client do
 
     it 'should call register_product for all recommended extensions' do
       expect(subject).to receive(:announce_system)
-      [extension, subextension, recommended3].each do |ext|
+      [recommended_2, recommended_2_2, recommended_3].each do |ext|
         expect(subject).to receive(:register_product).with(ext)
       end
       subject.register!
@@ -523,10 +523,10 @@ describe SUSE::Connect::Client do
       context 'without specified product' do
         let(:installed_products) do
           [
-            subextension,
-            extension,
-            extension5,
-            extension3,
+            recommended_2_2,
+            extension_4,
+            recommended_2,
+            extension_4_2,
             product
           ]
         end
@@ -543,7 +543,7 @@ describe SUSE::Connect::Client do
         end
 
         it 'removes all extensions if no product was specified' do
-          [extension5, extension3, subextension, extension].each do |ext|
+          [extension_4_2, extension_4, recommended_2_2, recommended_2].each do |ext|
             expect(client_instance).to receive(:deregister_product).with(ext).ordered
           end
           subject
@@ -551,19 +551,19 @@ describe SUSE::Connect::Client do
 
         it 'removes SCC service and release package for extension' do
           expect(client_instance).not_to receive(:deactivate_product).with(product)
-          [extension5, extension3, subextension, extension].each do |ext|
+          [extension_4_2, extension_4, recommended_2_2, recommended_2].each do |ext|
             expect(client_instance).to receive(:deactivate_product).with(ext).and_return product_service
             expect(System).to receive(:remove_service).with(product_service)
-            expect(Zypper).to receive(:remove_release_package).with(ext.identifier)
+            expect(Zypper).to receive(:remove_release_package).with(ext[:identifier])
           end
           subject
         end
 
         it 'prints confirmation message' do
-          expect(string_logger).to receive(:info).with('Deregistered Recommended extension 1 15 x86_64')
-          expect(string_logger).to receive(:info).with('Deregistered Recommended extension 2 83 x86_64')
-          expect(string_logger).to receive(:info).with('Deregistered Some extension 3 1337 x86_64')
-          expect(string_logger).to receive(:info).with('Deregistered Some extension 5 83 x86_64')
+          expect(string_logger).to receive(:info).with('Deregistered 4-2-Extension 83 x86_64')
+          expect(string_logger).to receive(:info).with('Deregistered 4-Extension 1337 x86_64')
+          expect(string_logger).to receive(:info).with('Deregistered 2-2-Recommended 83 x86_64')
+          expect(string_logger).to receive(:info).with('Deregistered 2-Recommended 15 x86_64')
           expect(string_logger).to receive(:info).with('To server: https://scc.suse.com').exactly(4).times
           expect(string_logger).to receive(:info).with('Successfully deregistered system.')
           subject
@@ -613,31 +613,14 @@ describe SUSE::Connect::Client do
     end
   end
 
-  describe '#walk_product_tree' do
-    let(:specific_product) { 'Some extension 5' }
-
-    let(:installed) do
-      [
-        extension3[:identifier],
-        product[:identifier],
-        subextension[:identifier],
-        extension[:identifier],
-        extension5[:identifier]
-      ]
+  describe '#flatten_tree' do
+    it 'returns all products in a tree' do
+      result = subject.flatten_tree(product).uniq
+      expect(result.size).to eq 8
     end
 
-    it 'returns all branches for a certain condition' do
-      result = subject.walk_product_tree(product) { |e| e[:recommended] == true }
-      expect(result).to eq [ extension, subextension, recommended3 ]
-    end
-
-    it 'returns all nodes in correct branch order' do
-      result = subject.walk_product_tree(product) { |e| installed.include? e[:identifier] }
-      expect(result).to eq [ extension, subextension, extension3, extension5 ]
-    end
-
-    it 'returns an empty list if nothing was matched' do
-      result = subject.walk_product_tree(product) { |e| e[:indentifier] == 'not_existing' }
+    it 'returns an empty array when there are no extensions' do
+      result = subject.flatten_tree(recommended_3)
       expect(result).to be_empty
     end
   end
