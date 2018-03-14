@@ -614,9 +614,22 @@ describe SUSE::Connect::Client do
   end
 
   describe '#flatten_tree' do
+    let(:identifiers) do
+      [
+        '1-Extension',
+        '2-Recommended',
+        '2-1-Extension',
+        '2-2-Recommended',
+        '3-Recommended',
+        '4-Extension',
+        '4-1-Extension',
+        '4-2-Extension'
+      ]
+    end
+
     it 'returns all products in a tree' do
-      result = subject.flatten_tree(product).uniq
-      expect(result.size).to eq 8
+      result = subject.flatten_tree(product).map(&:identifier)
+      expect(result).to eq identifiers
     end
 
     it 'returns an empty array when there are no extensions' do
