@@ -25,10 +25,33 @@ module SUSE
       def register!
         announce_or_update
         product = @config.product || Zypper.base_product
+
+        register_product(product, @config.product ? true : false)
+
+        # Only register recommended packages for base products
+        if product.isbase
+          tree = show_product(product)
+          recommended = flatten_tree(tree).select { |e| e[:recommended] == true }
+
+          recommended.each do |extension|
+            register_product(extension)
+          end
+        end
+
+        log.info 'Successfully registered system.'
+      end
+
+      # Activate the product, add the service and install the relase package
+      def register_product(product, install_release_package = true)
         service = activate_product(product, @config.email)
+
         System.add_service(service)
-        Zypper.install_release_package(product.identifier) if @config.product
-        print_success_message product
+
+        if install_release_package
+          Zypper.refresh_services
+          Zypper.install_release_package(product.identifier)
+        end
+        print_success_message(product)
       end
 
       # Deregisters a whole system or a single product
@@ -39,13 +62,31 @@ module SUSE
         if @config.product
           deregister_product(@config.product)
         else
-          Zypper.installed_products.reverse.each do |product|
-            deregister_product(product) unless product == Zypper.base_product
+          tree = show_product(Zypper.base_product)
+          installed = Zypper.installed_products.map(&:identifier)
+          dependencies = flatten_tree(tree).select { |e| installed.include? e[:identifier] }
+
+          dependencies.reverse.each do |product|
+            deregister_product(product)
           end
           @api.deregister(system_auth)
           System.cleanup!
           log.info 'Successfully deregistered system.'
         end
+      end
+
+      # Flatten a product tree into an array
+      #
+      # @param tree Remote::Product
+      #
+      # @returns an array of the flattend tree
+      def flatten_tree(tree)
+        result = []
+        tree.extensions.each do |extension|
+          result.push(extension)
+          result += flatten_tree(extension)
+        end
+        result
       end
 
       # Announce system via SCC/Registration Proxy

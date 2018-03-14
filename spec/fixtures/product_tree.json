@@ -1,0 +1,68 @@
+{
+  "identifier": "SLES",
+  "version": 15,
+  "recommended": false,
+  "arch": "x86_64",
+  "isbase": true,
+  "extensions": [
+    {
+      "identifier": "1-Extension",
+      "version": 98,
+      "recommended": false,
+      "arch": "x86_64",
+      "extensions": []
+    },
+    {
+      "identifier": "2-Recommended",
+      "version": 15,
+      "recommended": true,
+      "arch": "x86_64",
+      "extensions": [
+          {
+            "identifier": "2-1-Extension",
+            "version": 83,
+            "arch": "x86_64",
+            "recommended": false,
+            "extensions": []
+          },
+          {
+            "identifier": "2-2-Recommended",
+            "version": 83,
+            "arch": "x86_64",
+            "recommended": true,
+            "extensions": []
+          }
+        ]
+    },
+    {
+      "identifier": "3-Recommended",
+      "version": 1,
+      "recommended": true,
+      "arch": "x86_64",
+      "extensions": []
+    },
+    {
+      "identifier": "4-Extension",
+      "version": 1337,
+      "recommended": false,
+      "arch": "x86_64",
+      "extensions": [
+          {
+            "identifier": "4-1-Extension",
+            "version": 83,
+            "arch": "x86_64",
+            "recommended": false,
+            "extensions": []
+          },
+          {
+            "identifier": "4-2-Extension",
+            "version": 83,
+            "arch": "x86_64",
+            "recommended": false,
+            "extensions": []
+          }
+        ]
+    }
+  ]
+}
+

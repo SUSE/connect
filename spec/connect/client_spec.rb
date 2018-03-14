@@ -5,7 +5,16 @@ describe SUSE::Connect::Client do
   let(:default_logger) { SUSE::Connect::GlobalLogger.instance.log }
   let(:string_logger) { ::Logger.new(StringIO.new) }
   let(:client_instance) { described_class.new config }
-  let(:product) { SUSE::Connect::Remote::Product.new identifier: 'SLES', version: '12', arch: 'x86_64' }
+
+  let(:product_tree) { JSON.parse(File.read('spec/fixtures/product_tree.json')) }
+  let(:product) { Remote::Product.new(product_tree) }
+
+  let(:recommended_2) { product.extensions[1] }
+  let(:recommended_2_2) { recommended_2.extensions[1] }
+  let(:recommended_3) { product.extensions[2] }
+
+  let(:extension_4) { product.extensions[3] }
+  let(:extension_4_2) { extension_4.extensions[1] }
 
   subject { client_instance }
 
@@ -270,17 +279,22 @@ describe SUSE::Connect::Client do
 
   describe '#register!' do
     before do
-      allow(Zypper).to receive(:base_product).and_return Zypper::Product.new(name: 'SLE_BASE')
-      allow(System).to receive(:add_service).and_return true
+      allow(Zypper).to receive(:base_product).and_return product
       allow(Zypper).to receive(:write_base_credentials)
+
       allow_any_instance_of(Credentials).to receive(:write)
-      allow(subject).to receive(:activate_product)
-      allow(subject).to receive(:update_system)
-      allow(Zypper).to receive(:install_release_package)
+      allow(System).to receive_messages(credentials?: false)
+
+      allow(subject).to receive(:show_product).and_return product
+      allow(subject).to receive(:register_product).and_return true
+      SUSE::Connect::GlobalLogger.instance.log = string_logger
+    end
+
+    after do
+      SUSE::Connect::GlobalLogger.instance.log = default_logger
     end
 
     it 'should call announce if system not registered' do
-      allow(System).to receive_messages(credentials?: false)
       expect(subject).to receive(:announce_system)
       subject.register!
     end
@@ -292,9 +306,17 @@ describe SUSE::Connect::Client do
       subject.register!
     end
 
-    it 'should call activate_product on api' do
-      allow(System).to receive_messages(credentials?: true)
-      expect(subject).to receive(:activate_product)
+    it 'should call register_product for the base product' do
+      expect(subject).to receive(:announce_system)
+      expect(subject).to receive(:register_product).with(product, false)
+      subject.register!
+    end
+
+    it 'should call register_product for all recommended extensions' do
+      expect(subject).to receive(:announce_system)
+      [recommended_2, recommended_2_2, recommended_3].each do |ext|
+        expect(subject).to receive(:register_product).with(ext)
+      end
       subject.register!
     end
 
@@ -305,34 +327,57 @@ describe SUSE::Connect::Client do
       subject.register!
     end
 
-    it 'adds service after product activation' do
-      allow(System).to receive_messages(credentials?: true)
-      expect(System).to receive(:add_service)
+    it 'prints message on successful activation' do
+      expect(subject).to receive(:announce_system)
+      expect(subject).to receive(:register_product).exactly(4).times
+      expect(string_logger).to receive(:info).with('Successfully registered system.')
       subject.register!
     end
+  end
 
-    it 'installs release package on product activation' do
-      subject.config.product = Remote::Product.new(identifier: 'SLES')
-      allow(System).to receive(:credentials?).and_return true
-      expect(Zypper).to receive(:install_release_package).with(subject.config.product.identifier)
-      subject.register!
-    end
+  describe '#register_product' do
+    let(:service_stub) { 'service_stub' }
+    let(:fake_email) { 'email@email.org.what.ever' }
 
-    it 'prints message on successful register' do
-      product = Zypper::Product.new(name: 'SLES', version: 12, arch: 's390')
-      merged_config = config.merge!(url: 'http://dummy:42', email: 'asd@asd.de', product: product, filesystem_root: '/test', language: 'EN')
-      client = Client.new(merged_config)
-      allow(client).to receive(:announce_or_update)
-      allow(client).to receive(:activate_product)
-      allow(Zypper).to receive_messages(base_product: product)
+    before do
+      config.email = fake_email
       SUSE::Connect::GlobalLogger.instance.log = string_logger
+    end
 
-      expect(string_logger).to receive(:info).with('Registered SLES 12 s390')
-      expect(string_logger).to receive(:info).with('To server: http://dummy:42')
-      expect(string_logger).to receive(:info).with('Using E-Mail: asd@asd.de')
-      expect(string_logger).to receive(:info).with('Rooted at: /test')
-      client.register!
+    after do
       SUSE::Connect::GlobalLogger.instance.log = default_logger
+    end
+
+    it 'should activate the product, add service file and install release package' do
+      expect(subject).to receive(:activate_product).with(product, fake_email).and_return service_stub
+      expect(System).to receive(:add_service).with(service_stub)
+
+      expect(Zypper).to receive(:refresh_services)
+      expect(Zypper).to receive(:install_release_package).with(product.identifier)
+
+      subject.register_product(product)
+    end
+
+    it 'should not install the release package if install_release_package is false' do
+      expect(subject).to receive(:activate_product).with(product, fake_email).and_return service_stub
+      expect(System).to receive(:add_service).with(service_stub)
+
+      expect(Zypper).not_to receive(:refresh_services)
+      expect(Zypper).not_to receive(:install_release_package)
+
+      subject.register_product(product, false)
+    end
+
+    it 'informs the user about progress' do
+      allow(subject).to receive(:activate_product)
+      allow(System).to receive(:add_service)
+      allow(Zypper).to receive(:refresh_services)
+      allow(Zypper).to receive(:install_release_package)
+
+      expect(string_logger).to receive(:info).with('Registered SLES 15 x86_64')
+      expect(string_logger).to receive(:info).with('To server: https://scc.suse.com')
+      expect(string_logger).to receive(:info).with('Using E-Mail: email@email.org.what.ever')
+      subject.register_product(product)
     end
   end
 
@@ -453,6 +498,7 @@ describe SUSE::Connect::Client do
         allow(System).to receive(:cleanup!).and_return(true)
         allow(Zypper).to receive(:base_product).and_return(product)
         allow(Zypper).to receive(:installed_products).and_return(product_list)
+        allow(client_instance).to receive(:show_product).and_return(product)
       end
 
       it 'calls underlying api and removes credentials file' do
@@ -475,31 +521,50 @@ describe SUSE::Connect::Client do
       end
 
       context 'without specified product' do
-        let(:extension) { SUSE::Connect::Remote::Product.new identifier: 'SLES HA', version: '12', arch: 'x86_64' }
+        let(:installed_products) do
+          [
+            recommended_2_2,
+            extension_4,
+            recommended_2,
+            extension_4_2,
+            product
+          ]
+        end
+
         let(:product_service) { SUSE::Connect::Remote::Service.new({ 'name' => 'dummy', 'product' => {} }) }
-        let(:product_list) { [product, extension] }
 
         before do
           stub_request(:delete, 'https://scc.suse.com/connect/systems/products').to_return(body: '{"product":{}}')
           allow(System).to receive(:cleanup!).and_return(true)
           allow(System).to receive :remove_service
           allow(Zypper).to receive :remove_release_package
+          allow(Zypper).to receive(:installed_products).and_return installed_products
+          allow(client_instance).to receive(:show_product).and_return product
+        end
+
+        it 'removes all extensions if no product was specified' do
+          [extension_4_2, extension_4, recommended_2_2, recommended_2].each do |ext|
+            expect(client_instance).to receive(:deregister_product).with(ext).ordered
+          end
+          subject
         end
 
         it 'removes SCC service and release package for extension' do
           expect(client_instance).not_to receive(:deactivate_product).with(product)
-          expect(client_instance).to receive(:deactivate_product).with(extension) do
-            product_service
+          [extension_4_2, extension_4, recommended_2_2, recommended_2].each do |ext|
+            expect(client_instance).to receive(:deactivate_product).with(ext).and_return product_service
+            expect(System).to receive(:remove_service).with(product_service)
+            expect(Zypper).to receive(:remove_release_package).with(ext[:identifier])
           end
-          expect(System).to receive(:remove_service).with(product_service)
-          expect(Zypper).to receive(:remove_release_package).with(extension.identifier)
-          expect(Zypper).not_to receive(:remove_release_package).with(product.identifier)
           subject
         end
 
         it 'prints confirmation message' do
-          expect(string_logger).to receive(:info).with('Deregistered SLES HA 12 x86_64')
-          expect(string_logger).to receive(:info).with('To server: https://scc.suse.com')
+          expect(string_logger).to receive(:info).with('Deregistered 4-2-Extension 83 x86_64')
+          expect(string_logger).to receive(:info).with('Deregistered 4-Extension 1337 x86_64')
+          expect(string_logger).to receive(:info).with('Deregistered 2-2-Recommended 83 x86_64')
+          expect(string_logger).to receive(:info).with('Deregistered 2-Recommended 15 x86_64')
+          expect(string_logger).to receive(:info).with('To server: https://scc.suse.com').exactly(4).times
           expect(string_logger).to receive(:info).with('Successfully deregistered system.')
           subject
         end
@@ -545,6 +610,31 @@ describe SUSE::Connect::Client do
       before { allow(::SUSE::Connect::System).to receive(:credentials).and_return(nil) }
 
       it { expect { subject }.to raise_error(::SUSE::Connect::SystemNotRegisteredError) }
+    end
+  end
+
+  describe '#flatten_tree' do
+    let(:identifiers) do
+      [
+        '1-Extension',
+        '2-Recommended',
+        '2-1-Extension',
+        '2-2-Recommended',
+        '3-Recommended',
+        '4-Extension',
+        '4-1-Extension',
+        '4-2-Extension'
+      ]
+    end
+
+    it 'returns all products in a tree' do
+      result = subject.flatten_tree(product).map(&:identifier)
+      expect(result).to eq identifiers
+    end
+
+    it 'returns an empty array when there are no extensions' do
+      result = subject.flatten_tree(recommended_3)
+      expect(result).to be_empty
     end
   end
 
