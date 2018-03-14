@@ -8,6 +8,16 @@ Thu Mar 13 12:54:57 UTC 2018 - fschnizlein@suse.com
     deregistering a system
 
 -------------------------------------------------------------------
+Tue Jan 30 14:27:51 UTC 2018 - fschueller@suse.com
+
+- Repackage gem
+
+-------------------------------------------------------------------
+Tue Jan 23 13:27:08 UTC 2018 - fschueller@suse.com
+
+- Remove unnecessary .gz files
+
+-------------------------------------------------------------------
 Thu Jan 18 14:54:57 UTC 2018 - fschueller@suse.com
 
 - Update to 0.3.7
@@ -34,7 +44,7 @@ Thu Dec 14 09:01:58 UTC 2017 - tschmidt@suse.com
 -------------------------------------------------------------------
 Thu Dec  7 17:30:23 UTC 2017 - tschmidt@suse.com
 
-- Update to version 0.3.3: 
+- Update to version 0.3.3:
   - Fix SLE15 build
 
 -------------------------------------------------------------------
