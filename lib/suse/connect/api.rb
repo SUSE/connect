@@ -1,4 +1,5 @@
 require 'optparse'
+require 'cgi'
 
 module SUSE
   module Connect
@@ -229,6 +230,20 @@ module SUSE
       # @return [Array <Hash>] list of Installer-Updates repositories
       def list_installer_updates(product)
         @connection.get('/connect/repositories/installer', params: product.to_params)
+      end
+
+      # Search packages which are available in the product of the base product
+      #
+      # @param product [SUSE::Connect::Zypper::Product] the product for in which product tree should be searched
+      # @param query [String] The package query to search
+      #
+      # @return [Array< <Hash>>] of all matched packages available
+      def package_search(product, query)
+        api = '/api/package_search/packages'
+        triplet = CGI.escape(product.to_triplet)
+        query = CGI.escape(query)
+
+        @connection.get(api + "?product_id=#{triplet}&query=#{query}")
       end
     end
   end

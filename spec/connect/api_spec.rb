@@ -519,4 +519,24 @@ describe SUSE::Connect::Api do
       expect(stubbed_request).to have_been_made
     end
   end
+
+  describe '#package_search' do
+    let(:product) { SUSE::Connect::Zypper::Product.new name: 'SLES', version: '15', arch: 'x86_64' }
+    let(:query) { 'https://example.com/api/package_search/packages?product_id=SLES/15/x86_64&query=vim' }
+
+    let!(:stubbed_request) do
+      stub_request(:get, query).with(headers: {
+        'Accept' => 'application/json,application/vnd.scc.suse.com.v4+json',
+        'Content-Type' => 'application/json'
+      }).to_return(status: 200, body: "[{}]", headers: {})
+    end
+
+    it 'performs the request and set the query params correctly' do
+      expect(CGI).to receive(:escape).twice.and_call_original
+      expect(product).to receive(:to_triplet).and_call_original
+
+      subject.new(config).package_search(product, "vim")
+      expect(stubbed_request).to have_been_made
+    end
+  end
 end
