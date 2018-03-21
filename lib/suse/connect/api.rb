@@ -14,16 +14,16 @@ module SUSE
 
       # Returns a new instance of SUSE::Connect::Api
       #
-      # @param client [SUSE::Connect::Client] client instance
+      # @param config [SUSE::Connect::Config] config instance
       # @return [SUSE::Connect::Api] api object to call SCC API
-      def initialize(client)
-        @client     = client
+      def initialize(config)
+        @config     = config
         @connection = Connection.new(
-          client.config.url,
-          language:        client.config.language,
-          insecure:        client.config.insecure,
-          verify_callback: client.config.verify_callback,
-          debug:           client.config.debug
+          config.url,
+          language:        config.language,
+          insecure:        config.insecure,
+          verify_callback: config.verify_callback,
+          debug:           config.debug
         )
       end
 
@@ -98,7 +98,7 @@ module SUSE
           version:      product.version,
           arch:         product.arch,
           release_type: product.release_type,
-          token:        @client.config.token,
+          token:        @config.token,
           email:        email
         }
         @connection.post('/connect/systems/products', auth: auth, params: payload)

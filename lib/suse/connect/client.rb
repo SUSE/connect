@@ -17,7 +17,7 @@ module SUSE
       # @return [Client]
       def initialize(config)
         @config = config
-        @api    = Api.new(self)
+        @api    = Api.new(@config)
         log.debug "Merged options: #{@config}"
       end
 
