@@ -24,6 +24,10 @@ class SUSE::Connect::Remote::Product < SUSE::Connect::Remote::ServerDrivenModel
     }
   end
 
+  def to_triplet
+    "#{identifier}/#{version}/#{arch}"
+  end
+
   # This method is needed to compute the distro_target when /etc/products.d/baseproduct
   # does not exist. This happens e.g. when creating a rootfs from scratch.
   def distro_target
