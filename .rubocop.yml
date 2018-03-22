@@ -20,3 +20,4 @@ FileName:
   Exclude:
     - SUSEConnect
     - suse-connect.gemspec
+    - Guardfile
