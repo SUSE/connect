@@ -10,7 +10,7 @@ RUN zypper ar http://download.suse.de/ibs/SUSE:/SLE-15:/GA/standard/ sles-pool &
     zypper --non-interactive --gpg-auto-import-keys ref &&\
     zypper --non-interactive up zypper &&\
     zypper --non-interactive install git-core ruby-devel make gcc gcc-c++ build wget dmidecode \
-      vim osc hwinfo libx86emu1 zypper-migration-plugin sudo &&\
+      vim osc hwinfo libx86emu1 zypper-migration-plugin sudo awk &&\
     zypper --non-interactive rr sles-pool sles-updates
 
 RUN wget http://username:password@gaffer.suse.de:9999/files/.regcode -O ~/.regcode
