@@ -25,7 +25,8 @@ Feature: Test extension/module activation
 
   Scenario: Free extension activation does not require regcode and activates the extension
     When I activate a free extension
-    Then the exit status should be 0
+    Then the output should contain "Successfully registered"
+    And the exit status should be 0
     And a credentials file is created for the extension
     And zypper should contain a service for the extension
     And zypper should contain the repositories for the extension
