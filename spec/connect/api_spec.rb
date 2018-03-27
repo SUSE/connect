@@ -14,11 +14,11 @@ describe SUSE::Connect::Api do
   end
 
   describe '.new' do
-    it 'require config object' do
+    it 'requires a config object and raises if nothing was supplied' do
       expect { subject.new }.to raise_error ArgumentError
     end
 
-    it 'require config object' do
+    it 'requires a config object to initialize the class instance' do
       expect { subject.new(config) }.not_to raise_error
     end
   end

@@ -31,7 +31,7 @@ describe SUSE::Connect::PackageSearch do
       subject.search('vim', product: product)
     end
 
-    it 'overwrites configuration settings supllied as argument' do
+    it 'overwrites configuration settings supplied as argument' do
       overwrites = { language: 'Bonk', debug: true }
 
       expect(config).to receive(:merge!).with(overwrites).and_call_original
