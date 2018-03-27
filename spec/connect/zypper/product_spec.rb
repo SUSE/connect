@@ -73,8 +73,16 @@ describe SUSE::Connect::Zypper::Product do
 
   describe '#to_params' do
     it "returns a hash with the product's identifier, version, arch and release_type" do
-      product = subject.new(identifier: 'SLES', version: '12', arch: 'x86_64', release_type: 'OEM')
+      product = subject.new(name: 'SLES', version: '12', arch: 'x86_64', release_type: 'OEM')
       expect(product.to_params).to eq(identifier: product.identifier, version: product.version, arch: product.arch, release_type: product.release_type)
+    end
+  end
+
+  describe '#to_triplet' do
+    it 'returns the identifier triplet for a product' do
+      product = subject.new({ name: 'SLES', version: '12', arch: 'x86_64', release_type: 'OEM' })
+      triplet = 'SLES/12/x86_64'
+      expect(product.to_triplet).to eq triplet
     end
   end
 end

@@ -96,4 +96,11 @@ describe SUSE::Connect::Remote::Product do
       expect(subject).to respond_to(:to_openstruct)
     end
   end
+
+  describe '#to_triplet' do
+    it 'returns the identifier triplet for a product' do
+      triplet = "#{subject.identifier}/#{subject.version}/#{subject.arch}"
+      expect(subject.to_triplet).to eq triplet
+    end
+  end
 end

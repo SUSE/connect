@@ -22,6 +22,10 @@ class SUSE::Connect::Zypper::Product
     }
   end
 
+  def to_triplet
+    "#{identifier}/#{version}/#{arch}"
+  end
+
   private
 
   def determine_release_type(product_hash)
