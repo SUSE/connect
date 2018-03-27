@@ -48,7 +48,7 @@ module SUSE
         System.add_service(service)
 
         if install_release_package
-          Zypper.refresh_services
+          # Zypper.refresh_services
           Zypper.install_release_package(product.identifier)
         end
         print_success_message(product)
