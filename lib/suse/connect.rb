@@ -17,6 +17,7 @@ module SUSE
     require 'suse/connect/hwinfo/base'
     require 'suse/connect/product'
     require 'suse/connect/migration'
+    require 'suse/connect/package_search'
     require 'suse/connect/yast'
 
     # Holding all the object classes received from registration server

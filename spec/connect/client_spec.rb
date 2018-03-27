@@ -352,7 +352,6 @@ describe SUSE::Connect::Client do
       expect(subject).to receive(:activate_product).with(product, fake_email).and_return service_stub
       expect(System).to receive(:add_service).with(service_stub)
 
-      expect(Zypper).to receive(:refresh_services)
       expect(Zypper).to receive(:install_release_package).with(product.identifier)
 
       subject.register_product(product)
@@ -362,7 +361,6 @@ describe SUSE::Connect::Client do
       expect(subject).to receive(:activate_product).with(product, fake_email).and_return service_stub
       expect(System).to receive(:add_service).with(service_stub)
 
-      expect(Zypper).not_to receive(:refresh_services)
       expect(Zypper).not_to receive(:install_release_package)
 
       subject.register_product(product, false)
@@ -371,7 +369,6 @@ describe SUSE::Connect::Client do
     it 'informs the user about progress' do
       allow(subject).to receive(:activate_product)
       allow(System).to receive(:add_service)
-      allow(Zypper).to receive(:refresh_services)
       allow(Zypper).to receive(:install_release_package)
 
       expect(string_logger).to receive(:info).with('Registered SLES 15 x86_64')
