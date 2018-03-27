@@ -46,11 +46,8 @@ module SUSE
         service = activate_product(product, @config.email)
 
         System.add_service(service)
+        Zypper.install_release_package(product.identifier) if install_release_package
 
-        if install_release_package
-          Zypper.refresh_services
-          Zypper.install_release_package(product.identifier)
-        end
         print_success_message(product)
       end
 
