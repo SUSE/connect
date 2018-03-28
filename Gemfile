@@ -7,6 +7,8 @@ group :test, :development do
   gem 'pry'
   gem 'scc-codestyle', '0.1.4'
   gem 'ffi', '1.9.18'
+  gem 'guard'
+  gem 'guard-rspec', require: false
 end
 
 group :development do
