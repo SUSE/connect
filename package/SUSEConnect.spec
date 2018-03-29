@@ -21,6 +21,9 @@ Release:        0
 %define mod_name suse-connect
 %define mod_full_name %{mod_name}-%{version}
 
+# Does not build for i586 and s390 and is not supported on those architectures
+ExcludeArch:    %ix86 s390
+
 Requires:       coreutils, util-linux, net-tools, hwinfo, zypper, ca-certificates-mozilla
 Requires:       zypper(auto-agree-with-product-licenses)
 %ifarch x86_64 aarch64
