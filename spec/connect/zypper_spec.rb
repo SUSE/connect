@@ -280,16 +280,29 @@ describe SUSE::Connect::Zypper do
   end
 
   describe '.remove_service_credentials' do
-    let(:service_name) { 'SLES_12_Service' }
     let(:service_credentials_dir) { SUSE::Connect::Credentials::DEFAULT_CREDENTIALS_DIR }
     let(:service_credentials_file) { File.join(service_credentials_dir, service_name) }
 
-    it 'removes zypper service credentials' do
-      expect(File).to receive(:join).with(service_credentials_dir, service_name).and_return(service_credentials_file)
-      expect(File).to receive(:exist?).with(service_credentials_file).and_return(true)
-      expect(File).to receive(:delete).with(service_credentials_file).and_return(true)
+    context 'with service_name' do
+      let(:service_name) { 'SLES_12_Service' }
+      it 'removes zypper service credentials' do
+        expect(File).to receive(:join).with(service_credentials_dir, service_name).and_return(service_credentials_file)
+        expect(File).to receive(:file?).with(service_credentials_file).and_return(true)
+        expect(File).to receive(:exist?).with(service_credentials_file).and_return(true)
+        expect(File).to receive(:delete).with(service_credentials_file).and_return(true)
 
-      subject.remove_service_credentials(service_name)
+        subject.remove_service_credentials(service_name)
+      end
+    end
+
+    context 'with empty service_name' do
+      let(:service_name) { '' }
+      it 'does not try to remove service credentials' do
+        expect(File).to receive(:file?).with(service_credentials_file).and_return(false)
+        expect(File).not_to receive(:delete)
+
+        subject.remove_service_credentials(service_name)
+      end
     end
   end
 
