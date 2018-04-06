@@ -86,17 +86,16 @@ It should typically be enough to run `osc ar` to add new and delete removed file
 osc commit
 ```
 
-## Step 7. Submit Requests to OpenSUSE Factory and IBS
+## Step 7. Submit Requests to OpenSUSE Factory and SLES
 
 To get a maintenance request accepted, each changelog entry needs to reference a bug or feature
-request with `bnc#123` or `fate#123`.
+request with `bsc#123` or `fate#123`.
 
 ### Factory First
 
 To submit a request to openSUSE Factory, issue this commands in the console:
 
 ```bash
-cd package
 osc sr systemsmanagement:SCC SUSEConnect openSUSE:Factory --no-cleanup
 ```
 
@@ -105,7 +104,7 @@ osc sr systemsmanagement:SCC SUSEConnect openSUSE:Factory --no-cleanup
 
 To make the initial submit for a new SLES version:
 
-```
+```bash
 osc -A https://api.suse.de sr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-15:GA --no-cleanup
 ```
 
