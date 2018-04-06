@@ -176,7 +176,7 @@ module SUSE
         def remove_service_credentials(service_name)
           service_credentials_file = File.join(SUSE::Connect::Credentials::DEFAULT_CREDENTIALS_DIR, service_name)
 
-          if File.exist?(service_credentials_file)
+          if File.file?(service_credentials_file)
             File.delete service_credentials_file
           end
         end
