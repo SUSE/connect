@@ -189,7 +189,6 @@ module SUSE
 
         @opts.on('--rollback', 'Revert the registration state in case of a failed',
                  'migration.') do |_opt|
-          log.info('Starting to sync local activations to the server. This can take some time...')
           @options[:rollback] = true
         end
 

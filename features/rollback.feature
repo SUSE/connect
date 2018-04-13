@@ -27,7 +27,7 @@ Feature: Rollback registration state to system products
     When I run `SUSEConnect --rollback`
     Then the exit status should be 0
 
-    And the output should contain "> Beginning registration rollback. This can take some time..."
+    And the output should contain "Starting to sync system product activations to the server."
     And a file named "/etc/zypp/credentials.d/SCCcredentials" should exist
     And the file "/etc/zypp/credentials.d/SCCcredentials" should contain "SCC_"
 
