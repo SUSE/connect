@@ -16,7 +16,7 @@ module SUSE
         @config = Config.new.merge!(@options)
       end
 
-      def execute! # rubocop:disable MethodLength, CyclomaticComplexity
+      def execute! # rubocop:disable MethodLength, CyclomaticComplexity, PerceivedComplexity, AbcSize
         # check for parameter dependencies
         if @config.status
           status.print_product_statuses(:json)
@@ -26,6 +26,8 @@ module SUSE
           Client.new(@config).deregister!
         elsif @config.cleanup
           System.cleanup!
+        elsif @config.rollback
+          Migration.rollback
         elsif @config.list_extensions
           if status.activated_base_product?
             status.print_extensions_list
@@ -187,9 +189,8 @@ module SUSE
 
         @opts.on('--rollback', 'Revert the registration state in case of a failed',
                  'migration.') do |_opt|
-          log.info('> Beginning registration rollback. This can take some time...')
-          SUSE::Connect::Migration.rollback
-          exit 0
+          log.info('Starting to sync local activations to the server. This can take some time...')
+          @options[:rollback] = true
         end
 
         @opts.separator ''
