@@ -276,9 +276,10 @@ describe SUSE::Connect::Cli do
 
     context 'rollback subcommand' do
       it '--rollback calls SUSE::Connect::Migration.rollback' do
+        cli = described_class.new(%w[--rollback])
         expect_any_instance_of(Client).not_to receive(:register!)
-        expect(SUSE::Connect::Migration).to receive(:rollback)
-        expect { described_class.new(%w[--rollback]) }.to exit_with_code(0)
+        expect(Migration).to receive(:rollback)
+        expect { cli.execute! }.not_to exit_with_code(1)
       end
     end
 

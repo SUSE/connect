@@ -18,6 +18,7 @@ module SUSE
 
         # Restores a state of the system before migration
         def rollback(client_params = {})
+          log.info('Starting to sync system product activations to the server. This can take some time...')
           config = SUSE::Connect::Config.new.merge!(client_params)
           client = Client.new(config)
           status = Status.new(config)
