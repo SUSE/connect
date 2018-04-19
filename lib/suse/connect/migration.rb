@@ -23,9 +23,14 @@ module SUSE
           client = Client.new(config)
           status = Status.new(config)
 
-          # FIXME: Sort products and ensure the base product is the first one in the list
-          status.installed_products.sort_by { |p| p.isbase ? 0 : 1 }.each do |product|
-            service = client.downgrade_product(product)
+          tree = client.show_product(Zypper.base_product)
+          installed = Hash[status.installed_products.collect { |p| [p.identifier, p] }]
+
+          extensions = client.flatten_tree(tree).select { |e| installed.include? e.identifier }.map(&:identifier)
+          base_product = [Zypper.base_product.identifier]
+
+          (base_product + extensions).each do |product|
+            service = client.downgrade_product(installed[product])
             # INFO: Remove old and new service because this could be called after filesystem rollback or
             # from inside a failed migration
             remove_service service.name
