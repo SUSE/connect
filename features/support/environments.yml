@@ -44,6 +44,7 @@ SLE_12_SP3:
 SLE_12_SP2:
   beta: false
   online_migration_targets:
+  - SLE-HPC-12-SP3
   - SLES12-SP3
   - SLES12-SP4
   base_product:
@@ -65,6 +66,8 @@ SLE_12_SP2:
 SLE_12_SP1:
   beta: false
   online_migration_targets:
+  - SLE-HPC-12-SP2
+  - SLE-HPC-12-SP3
   - SLES12-SP2
   - SLES12-SP3
   - SLES12-SP4
@@ -87,6 +90,8 @@ SLE_12_SP1:
 SLE_12:
   beta: false
   online_migration_targets:
+  - SLE-HPC-12-SP2
+  - SLE-HPC-12-SP3
   - SLES12-SP1
   - SLES12-SP2
   - SLES12-SP3
