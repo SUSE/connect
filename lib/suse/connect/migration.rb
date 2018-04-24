@@ -98,7 +98,7 @@ module SUSE
           SUSE::Connect::Zypper.install_release_package(identifier)
         end
 
-        # Removes service an readds service with current url and name
+        # Removes service and readds service with current url and name
         # @param Service service which should be refreshed
         def refresh_service(service)
           # INFO: Remove old and new service because this could be called after filesystem rollback or

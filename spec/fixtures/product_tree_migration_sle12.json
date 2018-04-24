@@ -8,7 +8,7 @@
     {
       "identifier": "sle-module-legacy",
       "version": 12,
-      "recommended": true,
+      "recommended": false,
       "arch": "x86_64",
       "extensions": []
     }
