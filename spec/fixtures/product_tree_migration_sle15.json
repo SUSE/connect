@@ -1,0 +1,38 @@
+{
+  "identifier": "SLES",
+  "version": 15,
+  "recommended": false,
+  "arch": "x86_64",
+  "isbase": true,
+  "extensions": [
+    {
+      "identifier": "sle-module-basesystem",
+      "version": 15,
+      "recommended": true,
+      "arch": "x86_64",
+      "extensions": [
+        {
+          "identifier": "sle-module-server-applications",
+          "version": 15,
+          "recommended": true,
+          "arch": "x86_64",
+          "extensions": []
+        },
+        {
+          "identifier": "sle-module-desktop-applications",
+          "version": 15,
+          "recommended": false,
+          "arch": "x86_64",
+          "extensions": []
+        }
+      ]
+    },
+    {
+      "identifier": "sle-module-live-patching",
+      "version": 15,
+      "recommended": false,
+      "arch": "x86_64",
+      "extensions": []
+    }
+  ]
+}
