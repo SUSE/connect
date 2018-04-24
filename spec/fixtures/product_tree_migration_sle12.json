@@ -1,0 +1,16 @@
+{
+  "identifier": "SLES",
+  "version": 12,
+  "recommended": false,
+  "arch": "x86_64",
+  "isbase": true,
+  "extensions": [
+    {
+      "identifier": "sle-module-legacy",
+      "version": 12,
+      "recommended": true,
+      "arch": "x86_64",
+      "extensions": []
+    }
+  ]
+}

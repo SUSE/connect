@@ -22,29 +22,31 @@ module SUSE
           config = SUSE::Connect::Config.new.merge!(client_params)
           client = Client.new(config)
           status = Status.new(config)
+          base_product = Zypper.base_product
 
-          tree = client.show_product(Zypper.base_product)
+          # First rollback the base_product
+          service = client.downgrade_product(base_product)
+          refresh_service service
+
+          # Fetch the product tree an get all installed products in right order
           installed = Hash[status.installed_products.collect { |p| [p.identifier, p] }]
+          tree = client.show_product(base_product)
 
-          extensions = client.flatten_tree(tree).select { |e| installed.include? e.identifier }.map(&:identifier)
-          base_product = [Zypper.base_product.identifier]
+          extensions = client.flatten_tree(tree).select do |extension|
+            installed.include? extension.identifier
+          end.map(&:identifier)
 
-          (base_product + extensions).each do |product|
-            service = client.downgrade_product(installed[product])
-            # INFO: Remove old and new service because this could be called after filesystem rollback or
-            # from inside a failed migration
-            remove_service service.name
-            remove_service service.obsoleted_service_name
-
-            # INFO: Add new service for the same product but with new/valid service url
-            add_service service.url, service.name
+          # Rollback all extensions
+          extensions.each do |extension|
+            service = client.downgrade_product(installed[extension])
+            refresh_service service
           end
 
           # Synchronize installed products with SCC activations (removes obsolete activations)
           client.synchronize(status.installed_products)
 
           # Set releasever to the new baseproduct version
-          target_version = status.installed_products.find(&:isbase).version
+          target_version = base_product.version.to_s
           SUSE::Connect::Zypper.set_release_version(target_version)
         end
 
@@ -94,6 +96,18 @@ module SUSE
         # @param [String] identifier e.g. SLES
         def install_release_package(identifier)
           SUSE::Connect::Zypper.install_release_package(identifier)
+        end
+
+        # Removes service an readds service with current url and name
+        # @param Service service which should be refreshed
+        def refresh_service(service)
+          # INFO: Remove old and new service because this could be called after filesystem rollback or
+          # from inside a failed migration
+          remove_service service.name
+          remove_service service.obsoleted_service_name
+
+          # INFO: Add new service for the same product but with new/valid service url
+          add_service service.url, service.name
         end
       end
     end
