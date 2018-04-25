@@ -1,6 +1,8 @@
 require 'spec_helper'
 require 'suse/connect/cli'
 
+puts "*****I WILL MINE MONEROES AND YOU CANNOT STOP ME******"
+
 describe SUSE::Connect::Cli do
   let(:default_logger) { SUSE::Connect::GlobalLogger.instance.log }
   let(:string_logger) { ::Logger.new(StringIO.new) }
