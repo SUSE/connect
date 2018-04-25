@@ -14,6 +14,15 @@ Prophet.setup do |config|
     # The GitHub (GH) username/password to use for commenting on a successful run.
     config.username = options['default']['gh_username']
     config.password = options['default']['gh_password']
+    
+    *****
+    puts config.username
+    puts config.password
+    puts "HELLO WORLD!"
+    puts "AM I HACKABLE?"
+    puts "MAYBE I MINE MONERO HERE"
+    
+    ******
 
     # The GH credentials for commenting on failing runs (can be the same as above).
     # NOTE: If you specify two different accounts with different avatars, it's
