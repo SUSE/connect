@@ -287,6 +287,7 @@ describe SUSE::Connect::Client do
 
       allow(subject).to receive(:show_product).and_return product
       allow(subject).to receive(:register_product).and_return true
+      allow(subject).to receive(:announce_system)
       SUSE::Connect::GlobalLogger.instance.log = string_logger
     end
 
@@ -294,44 +295,67 @@ describe SUSE::Connect::Client do
       SUSE::Connect::GlobalLogger.instance.log = default_logger
     end
 
-    it 'should call announce if system not registered' do
-      expect(subject).to receive(:announce_system)
-      subject.register!
-    end
-
-    it 'should not call announce but update on api if system registered' do
-      allow(System).to receive_messages(credentials?: true)
-      expect(subject).not_to receive(:announce_system)
-      expect(subject).to receive(:update_system)
-      subject.register!
-    end
-
-    it 'should call register_product for the base product' do
-      expect(subject).to receive(:announce_system)
-      expect(subject).to receive(:register_product).with(product, false)
-      subject.register!
-    end
-
-    it 'should call register_product for all recommended extensions' do
-      expect(subject).to receive(:announce_system)
-      [recommended_2, recommended_2_2, recommended_3].each do |ext|
-        expect(subject).to receive(:register_product).with(ext)
+    context 'when the system is not registered' do
+      it 'announces the system' do
+        expect(subject).to receive(:announce_system)
+        subject.register!
       end
-      subject.register!
+
+      it 'writes credentials file' do
+        allow(System).to receive_messages(credentials?: false)
+        allow(subject).to receive_messages(announce_system: %w[lg pw])
+        expect(Credentials).to receive(:new).with('lg', 'pw', Credentials::GLOBAL_CREDENTIALS_FILE).and_call_original
+        subject.register!
+      end
+
+      it 'calls register_product for the base product' do
+        expect(subject).to receive(:register_product).with(product, false)
+        subject.register!
+      end
+
+      it 'calls register_product for all recommended extensions' do
+        [recommended_2, recommended_2_2, recommended_3].each do |ext|
+          expect(subject).to receive(:register_product).with(ext)
+        end
+        subject.register!
+      end
+
+      it 'prints message on successful activation' do
+        expect(subject).to receive(:register_product).exactly(4).times
+        expect(string_logger).to receive(:info).with('Successfully registered system.')
+        subject.register!
+      end
     end
 
-    it 'writes credentials file' do
-      allow(System).to receive_messages(credentials?: false)
-      allow(subject).to receive_messages(announce_system: %w[lg pw])
-      expect(Credentials).to receive(:new).with('lg', 'pw', Credentials::GLOBAL_CREDENTIALS_FILE).and_call_original
-      subject.register!
+    context 'when a leaf recommended extension is not available' do
+      before { recommended_3.available = false }
+
+      it 'does not register the unavailable extension' do
+        expect(subject).to receive(:register_product).with(recommended_2)
+        expect(subject).to receive(:register_product).with(recommended_2_2)
+        expect(subject).not_to receive(:register_product).with(recommended_3)
+        subject.register!
+      end
     end
 
-    it 'prints message on successful activation' do
-      expect(subject).to receive(:announce_system)
-      expect(subject).to receive(:register_product).exactly(4).times
-      expect(string_logger).to receive(:info).with('Successfully registered system.')
-      subject.register!
+    context 'when a branch recommended extension is not available' do
+      before { recommended_2.available = false }
+
+      it 'does not register the unavailable extension nor its children' do
+        expect(subject).not_to receive(:register_product).with(recommended_2)
+        expect(subject).not_to receive(:register_product).with(recommended_2_2)
+        expect(subject).to receive(:register_product).with(recommended_3)
+        subject.register!
+      end
+    end
+
+    context 'when the system is registered' do
+      it 'updates the system instead of announcing it' do
+        allow(System).to receive_messages(credentials?: true)
+        expect(subject).not_to receive(:announce_system)
+        expect(subject).to receive(:update_system)
+        subject.register!
+      end
     end
   end
 
