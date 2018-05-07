@@ -14,7 +14,7 @@ the [openSUSE build service](https://build.opensuse.org/package/show/systemsmana
 Please visit https://scc.suse.com to see and manage your subscriptions.
 
 SUSEConnect communicates with SCC over this [REST API](https://github.com/SUSE/connect/blob/master/doc/SCC-API-%28Implemented%29.md).
-
+ 
 # Rake tasks
 
 ```
