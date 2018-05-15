@@ -28,12 +28,12 @@ module SUSE
           service = client.downgrade_product(base_product)
           refresh_service service
 
-          # Fetch the product tree an get all installed products in right order
+          # Fetch the product tree and get all installed products in right order
           installed = Hash[status.installed_products.collect { |p| [p.identifier, p] }]
           tree = client.show_product(base_product)
 
           extensions = client.flatten_tree(tree).select do |extension|
-            installed.include? extension.identifier
+            installed.key? extension.identifier
           end.map(&:identifier)
 
           # Rollback all extensions
