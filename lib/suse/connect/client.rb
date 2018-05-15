@@ -29,14 +29,7 @@ module SUSE
         register_product(product, @config.product ? true : false)
 
         # Only register recommended packages for base products
-        if product.isbase
-          tree = show_product(product)
-          recommended = flatten_tree(tree).select { |e| e[:recommended] == true }
-
-          recommended.each do |extension|
-            register_product(extension)
-          end
-        end
+        register_product_tree(show_product(product)) if product.isbase
 
         log.info 'Successfully registered system.'
       end
@@ -204,6 +197,19 @@ module SUSE
       end
 
       private
+
+      # Traverses (depth-first search) the product tree
+      # and registers the recommended and available products.
+      def register_product_tree(product)
+        product.extensions.each do |extension|
+          # We need to explicitly check whether `.available` is `false`,
+          # because SCC does not return this attribute, only SMT & RMT do.
+          if extension.recommended && extension.available != false
+            register_product(extension)
+            register_product_tree(extension)
+          end
+        end
+      end
 
       def deregister_product(product)
         raise BaseProductDeactivationError if product == Zypper.base_product

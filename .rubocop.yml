@@ -21,3 +21,6 @@ FileName:
     - SUSEConnect
     - suse-connect.gemspec
     - Guardfile
+
+RSpec/NestedGroups:
+  MaxNesting: 4
