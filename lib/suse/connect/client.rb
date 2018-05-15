@@ -203,7 +203,7 @@ module SUSE
       def register_product_tree(product)
         product.extensions.each do |extension|
           # We need to explicitly check whether `.available` is `false`,
-          #  because SCC does not return this attribute, only SMT & RMT do.
+          # because SCC does not return this attribute, only SMT & RMT do.
           if extension.recommended && extension.available != false
             register_product(extension)
             register_product_tree(extension)

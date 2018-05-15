@@ -304,7 +304,8 @@ describe SUSE::Connect::Client do
       it 'writes credentials file' do
         allow(System).to receive_messages(credentials?: false)
         allow(subject).to receive_messages(announce_system: %w[lg pw])
-        expect(Credentials).to receive(:new).with('lg', 'pw', Credentials::GLOBAL_CREDENTIALS_FILE).and_call_original
+        expect(Credentials).to receive(:new).with('lg', 'pw', Credentials::GLOBAL_CREDENTIALS_FILE)
+          .and_return(double(write: true))
         subject.register!
       end
 
