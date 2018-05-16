@@ -1,7 +1,7 @@
 #
 # spec file for package SUSEConnect
 #
-# Copyright (c) 2015 SUSE LINUX Products GmbH, Nuernberg, Germany.
+# Copyright (c) 2018 SUSE LINUX GmbH, Nuernberg, Germany.
 #
 # All modifications and additions to the file contributed by third parties
 # remain the property of their copyright owners, unless otherwise agreed
@@ -12,8 +12,9 @@
 # license that conforms to the Open Source Definition (Version 1.9)
 # published by the Open Source Initiative.
 
-# Please submit bugfixes or comments via https://bugzilla.suse.com/
+# Please submit bugfixes or comments via http://bugs.opensuse.org/
 #
+
 
 Name:           SUSEConnect
 Version:        0.3.11
@@ -24,9 +25,19 @@ Release:        0
 # Does not build for i586 and s390 and is not supported on those architectures
 ExcludeArch:    %ix86 s390
 
-Requires:       coreutils, util-linux, net-tools, hwinfo, zypper, ca-certificates-mozilla
+Requires:       ca-certificates-mozilla
+Requires:       coreutils
+Requires:       hwinfo
+Requires:       net-tools
+Requires:       util-linux
+Requires:       zypper
 # Required by the rmt-client-setup script:
-Requires:       wget, gawk, openssl, grep, gpg2, sed
+Requires:       gawk
+Requires:       gpg2
+Requires:       grep
+Requires:       openssl
+Requires:       sed
+Requires:       wget
 Requires:       zypper(auto-agree-with-product-licenses)
 %ifarch x86_64 aarch64
 Requires:       dmidecode
@@ -38,7 +49,6 @@ Conflicts:      suseRegister, yast2-registration < 3.1.129.7
 Obsoletes:      ruby2.1-rubygem-suse-connect < %{version}
 Provides:       ruby2.1-rubygem-suse-connect = %{version}
 %endif
-
 
 %define ruby_version %{rb_default_ruby_suffix}
 # FIXME: For some reason, on SLE15 %{rb_default_ruby_suffix} resolves to ruby2.4 which does not exist there
@@ -57,7 +67,7 @@ Source2:        %{name}.8
 Source3:        %{name}.example
 
 Summary:        Utility to register a system with the SUSE Customer Center
-License:        LGPL-2.1
+License:        LGPL-2.1-only
 Group:          System/Management
 Requires(post): update-alternatives
 
