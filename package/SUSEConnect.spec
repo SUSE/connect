@@ -16,7 +16,7 @@
 #
 
 Name:           SUSEConnect
-Version:        0.3.10
+Version:        0.3.11
 Release:        0
 %define mod_name suse-connect
 %define mod_full_name %{mod_name}-%{version}
@@ -25,6 +25,8 @@ Release:        0
 ExcludeArch:    %ix86 s390
 
 Requires:       coreutils, util-linux, net-tools, hwinfo, zypper, ca-certificates-mozilla
+# Required by the rmt-client-setup script:
+Requires:       wget, gawk, openssl, grep, gpg2, sed
 Requires:       zypper(auto-agree-with-product-licenses)
 %ifarch x86_64 aarch64
 Requires:       dmidecode
