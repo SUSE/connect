@@ -5,7 +5,7 @@ group :test, :development do
   gem 'yard'
   gem 'awesome_print'
   gem 'pry'
-  gem 'scc-codestyle', '0.1.4'
+  gem 'scc-codestyle', '~> 0.2.0'
   gem 'ffi', '1.9.18'
 end
 
