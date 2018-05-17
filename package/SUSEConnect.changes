@@ -2,7 +2,7 @@
 Wed May 16 10:14:57 UTC 2018 - hschmidt@suse.com
 
 - Update to 0.3.11
-- Add dependencies needed by the rmt-client-setup script.
+- Add dependencies needed by the rmt-client-setup script. bsc#1093658
 
 -------------------------------------------------------------------
 Mon May  7 15:47:50 UTC 2018 - hschmidt@suse.com
