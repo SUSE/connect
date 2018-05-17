@@ -6,6 +6,10 @@ inherit_gem:
 
 inherit_from: .rubocop_todo.yml
 
+inherit_mode:
+  merge:
+    - Exclude
+
 AllCops:
   Exclude:
     - kitchen/cookbooks/**/*
@@ -23,4 +27,4 @@ FileName:
     - Guardfile
 
 RSpec/NestedGroups:
-  MaxNesting: 4
+  Max: 4
