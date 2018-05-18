@@ -86,12 +86,12 @@ It should typically be enough to run `osc ar` to add new and delete removed file
 osc commit
 ```
 
-## Step 7. Submit Requests to OpenSUSE Factory and SLES
+## Step 7. Submit Requests to OpenSUSE and SLES
 
 To get a maintenance request accepted, each changelog entry needs to reference a bug or feature
 request with `bsc#123` or `fate#123`.
 
-### Factory First
+### OpenSUSE Factory
 
 To submit a request to openSUSE Factory, issue this commands in the console:
 
@@ -99,8 +99,16 @@ To submit a request to openSUSE Factory, issue this commands in the console:
 osc sr systemsmanagement:SCC SUSEConnect openSUSE:Factory --no-cleanup
 ```
 
+### OpenSUSE Leap
 
-### Internal Build Service
+To submit the updated package as a maintenance update to released openSUSE Leap versions:
+
+```bash
+osc sr systemsmanagement:SCC SUSEConnect openSUSE:Leap:15.0:Update --no-cleanup
+```
+
+
+### SLES (Internal Build Service)
 
 To make the initial submit for a new SLES version:
 
