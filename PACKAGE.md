@@ -40,6 +40,8 @@ Please also update `package/SUSEConnect.changes` file with a list of new feature
 osc vc
 ```
 
+**Note:** The changelog entry **requires** a reference to a Bugzilla bug (in the form of `bsc#1234`), otherwise maintenance requests will be declined. Even if no bug exists for the particular code change, you need to create one and then reference it here. This is the only way that the patches can appear in the patch finder.
+
 After you've commited your sources, make sure that a new git tag (looking like `v0.3.88`) has been also created and pushed. It is highly advised to use [signed tags](https://git-scm.com/book/en/v2/Git-Tools-Signing-Your-Work); use `git tag -s v0.3.88 -m "Version 0.3.88"` to create those.
 
 ## Step 4. Prepare the files for building the package
