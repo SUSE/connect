@@ -101,15 +101,6 @@ To submit a request to openSUSE Factory, issue this commands in the console:
 osc sr systemsmanagement:SCC SUSEConnect openSUSE:Factory --no-cleanup
 ```
 
-### OpenSUSE Leap
-
-To submit the updated package as a maintenance update to released openSUSE Leap versions:
-
-```bash
-osc sr systemsmanagement:SCC SUSEConnect openSUSE:Leap:15.0:Update --no-cleanup
-```
-
-
 ### SLES (Internal Build Service)
 
 To make the initial submit for a new SLES version:
@@ -118,7 +109,7 @@ To make the initial submit for a new SLES version:
 osc -A https://api.suse.de sr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-15:GA --no-cleanup
 ```
 
-To submit the updated package as a maintenance update to maintained SLES versions:
+To submit the updated package as a maintenance update to maintained SLES versions (it will automatically also go to the matching Leap version):
 
 ```bash
 osc -A https://api.suse.de sr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP2:Update --no-cleanup
