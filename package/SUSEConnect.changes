@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Jun  1 11:45:40 UTC 2018 - wstephenson@suse.com
+
+- Relax package dependencies for rmt-client-setup
+- Use curl instead of wget (bsc#1094348)
+
+-------------------------------------------------------------------
 Wed May 16 10:14:57 UTC 2018 - hschmidt@suse.com
 
 - Update to 0.3.11
