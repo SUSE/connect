@@ -32,12 +32,12 @@ Requires:       net-tools
 Requires:       util-linux
 Requires:       zypper
 # Required by the rmt-client-setup script:
-Requires:       gawk
-Requires:       gpg2
-Requires:       grep
-Requires:       openssl
-Requires:       sed
-Requires:       wget
+Recommends:     gawk
+Recommends:     gpg2
+Recommends:     grep
+Recommends:     openssl
+Recommends:     sed
+Recommends:     curl
 Requires:       zypper(auto-agree-with-product-licenses)
 %ifarch x86_64 aarch64
 Requires:       dmidecode
