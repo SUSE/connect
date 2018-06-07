@@ -244,6 +244,11 @@ module SUSE
         query = CGI.escape(query)
 
         @connection.get(api + "?product_id=#{triplet}&query=#{query}")
+      rescue ApiError => e
+        raise e if e.code != 404
+        raise UnsupportedOperation, 'Package search is not supported by the '\
+                                    'registration proxy: Alternatively checkout'\
+                                    'the web version at https://scc.suse.com/packages/'
       end
     end
   end
