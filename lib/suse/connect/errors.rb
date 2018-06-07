@@ -32,6 +32,9 @@ module SUSE
       end
 
       def message
+        return @response.http_message unless @response.body
+        return @response.body['error'] unless @response.body.key? 'localized_error'
+
         @response.body['localized_error']
       end
     end

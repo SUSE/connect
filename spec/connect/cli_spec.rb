@@ -28,7 +28,7 @@ describe SUSE::Connect::Cli do
       it 'should produce log output if ApiError encountered' do
         expect(string_logger).to receive(:fatal).with("Error: Registration server returned 'test' (222)")
         response = Net::HTTPResponse.new('1.1', 222, 'Test')
-        expect(response).to receive(:body).and_return('localized_error' => 'test')
+        allow(response).to receive(:body).and_return('localized_error' => 'test')
         allow_any_instance_of(Client).to receive(:register!).and_raise ApiError.new(response)
         expect { cli.execute! }.to exit_with_code(67)
       end
