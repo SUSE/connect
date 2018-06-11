@@ -19,23 +19,23 @@ describe SUSE::Connect::ApiError do
     )
   end
 
-  describe '.code' do
+  describe '#code' do
     it 'returns the http status code' do
       expect(described_class.new(with_http_message).code).to eq(1337)
     end
   end
 
-  describe '.message' do
+  describe '#message' do
     it 'returns the http message' do
-      expect(described_class.new(with_http_message).message).to eq 'foo'
+      expect(described_class.new(with_http_message).message).to eq('foo')
     end
 
     it 'returns the not localized error' do
-      expect(described_class.new(with_error).message).to eq 'bar'
+      expect(described_class.new(with_error).message).to eq('bar')
     end
 
     it 'returns the localized error' do
-      expect(described_class.new(with_localized_error).message).to eq 'baz'
+      expect(described_class.new(with_localized_error).message).to eq('baz')
     end
   end
 end
