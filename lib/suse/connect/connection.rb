@@ -67,6 +67,7 @@ module SUSE
           code: response.code.to_i,
           headers: response.to_hash,
           body: body,
+          http_message: response.message,
           success: response.is_a?(Net::HTTPSuccess)
         )
       rescue Zlib::Error
