@@ -12,6 +12,7 @@ module SUSE
     class NetworkError < StandardError; end
     class SystemNotRegisteredError < StandardError; end
     class BaseProductDeactivationError < StandardError; end
+    class UnsupportedOperation < StandardError; end
 
     # Basic error for API interactions. Collects HTTP response (which includes
     # status code and response body) for future showing to user via {Cli}
