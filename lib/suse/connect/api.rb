@@ -247,7 +247,7 @@ module SUSE
       rescue ApiError => e
         raise e if e.code != 404
         raise UnsupportedOperation, 'Package search is not supported by the '\
-                                    'registration proxy: Alternatively, use'\
+                                    'registration proxy: Alternatively, use '\
                                     'the web version at https://scc.suse.com/packages/'
       end
     end
