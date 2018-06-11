@@ -51,10 +51,6 @@ Provides:       ruby2.1-rubygem-suse-connect = %{version}
 %endif
 
 %define ruby_version %{rb_default_ruby_suffix}
-# FIXME: For some reason, on SLE15 %{rb_default_ruby_suffix} resolves to ruby2.4 which does not exist there
-%if (0%{?sle_version} > 0 && 0%{?sle_version} >= 150000)
-%define ruby_version ruby2.5
-%endif
 
 BuildRequires:  %{ruby_version}
 
