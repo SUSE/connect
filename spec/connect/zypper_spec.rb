@@ -84,7 +84,7 @@ describe SUSE::Connect::Zypper do
   describe '.disable_repository' do
     let(:repository) { 'repository' }
 
-    it 'enables zypper repository' do
+    it 'disables zypper repository' do
       expect(Open3).to receive(:capture3).with(shared_env_hash, "zypper --non-interactive modifyrepo -d #{repository}").and_return(['', '', status])
       subject.disable_repository(repository)
     end
