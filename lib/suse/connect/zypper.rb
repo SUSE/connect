@@ -88,6 +88,7 @@ module SUSE
         # @param service_name [String] Alias-mnemonic with which zypper should add this service
         # @return [TrueClass]
         #
+        # @see https://doc.opensuse.org/projects/libzypp/HEAD/zypp-services.html#services-remote ZYpp Services Documentation
         # @todo TODO: introduce Product class
         def add_service(service_url, service_name)
           # INFO: Remove old service which could be modified by a customer
