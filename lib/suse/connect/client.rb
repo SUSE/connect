@@ -149,19 +149,19 @@ module SUSE
         Remote::Product.new(result)
       end
 
-      # @returns: body described in https://github.com/SUSE/connect/wiki/SCC-API-(Implemented)#response-12 and
+      # @returns: body described in https://github.com/SUSE/connect/blob/master/doc/SCC-API-(Implemented).md#response-15 and
       # 200 status code
       def system_services
         @api.system_services(system_auth)
       end
 
-      # @returns: body described in https://github.com/SUSE/connect/wiki/SCC-API-(Implemented)#response-13 and
+      # @returns: body described in https://github.com/SUSE/connect/blob/master/doc/SCC-API-(Implemented).md#response-19 and
       # 200 status code
       def system_subscriptions
         @api.system_subscriptions(system_auth)
       end
 
-      # @returns: body described in https://github.com/SUSE/connect/wiki/SCC-API-(Implemented)#response-14 and
+      # @returns: body described in https://github.com/SUSE/connect/blob/master/doc/SCC-API-(Implemented).md#response-20 and
       # 200 status code
       def system_activations
         @api.system_activations(system_auth)
