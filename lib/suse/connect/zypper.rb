@@ -84,7 +84,7 @@ module SUSE
           xml_doc.elements.to_a('stream/repo-list/repo').map { |r| r.to_hash.merge!(url: r.elements['url'].text) }
         end
 
-        # @param service_url [String] url to appropriate repomd.xml to be fed to zypper
+        # @param service_url [String] url to appropriate repoindex.xml to be fed to zypper
         # @param service_name [String] Alias-mnemonic with which zypper should add this service
         # @return [TrueClass]
         #
