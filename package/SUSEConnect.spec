@@ -50,9 +50,17 @@ Obsoletes:      ruby2.1-rubygem-suse-connect < %{version}
 Provides:       ruby2.1-rubygem-suse-connect = %{version}
 %endif
 
+# cross-distribution howto: https://en.opensuse.org/openSUSE:Build_Service_cross_distribution_howto
+%if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version}
+%define ruby_version ruby2.5
+%global gem_base /usr/share/gems
+%global debug_package %{nil}
+BuildRequires:  ruby
+BuildRequires:  rubygems
+%else
 %define ruby_version %{rb_default_ruby_suffix}
-
 BuildRequires:  %{ruby_version}
+%endif
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Url:            https://github.com/SUSE/connect
@@ -65,7 +73,8 @@ Source3:        %{name}.example
 Summary:        Utility to register a system with the SUSE Customer Center
 License:        LGPL-2.1-only
 Group:          System/Management
-Requires(post): update-alternatives
+Requires(post): /usr/sbin/update-alternatives
+
 
 %description
 This package provides a command line tool and rubygem library for connecting a
@@ -80,9 +89,10 @@ done
 %build
 
 %install
-gem install --verbose --local --build-root=%{buildroot} -f --no-ri --no-rdoc ./%{mod_full_name}.gem
-mkdir %{buildroot}%{_sbindir}
-mv %{buildroot}%{_bindir}/%{name}.%{ruby_version} %{buildroot}%{_sbindir}/%{name}
+mkdir -p %{buildroot}%{_sbindir}
+mkdir -p %{buildroot}%{_bindir}
+gem install --verbose --local --build-root=%{buildroot} --no-user-install --bindir %{_bindir} -f --no-ri --no-rdoc ./%{mod_full_name}.gem
+mv %{buildroot}%{_bindir}/%{name}* %{buildroot}%{_sbindir}/%{name}
 ln -s %{_sbindir}/%{name} %{buildroot}%{_bindir}/%{name}
 
 install -D -m 644 %_sourcedir/SUSEConnect.5 %{buildroot}%_mandir/man5/SUSEConnect.5
