@@ -111,3 +111,22 @@ SLE_12:
     repositories:
     - SUSE_Linux_Enterprise_Software_Development_Kit_12_x86_64:SLE-SDK12-Pool
     - SUSE_Linux_Enterprise_Software_Development_Kit_12_x86_64:SLE-SDK12-Updates
+
+FEDORA_24:
+  beta: false
+  online_migration_targets: []
+  base_product:
+    repositories:
+    - SUSE_Linux_Enterprise_Server_12_x86_64:SLES12-Pool
+    - SUSE_Linux_Enterprise_Server_12_x86_64:SLES12-Updates
+    - SUSE_Linux_Enterprise_Server_12_x86_64:SLES12-Debuginfo-Updates
+  paid_extension:
+    identifier: sle-ha/12/x86_64
+  free_extension:
+    identifier: sle-sdk/12/x86_64
+    credentials_file: /etc/zypp/credentials.d/SUSE_Linux_Enterprise_Software_Development_Kit_12_x86_64
+    service: SUSE_Linux_Enterprise_Software_Development_Kit_12_x86_64
+    release_package: sle-sdk-release
+    repositories:
+    - SUSE_Linux_Enterprise_Software_Development_Kit_12_x86_64:SLE-SDK12-Pool
+    - SUSE_Linux_Enterprise_Software_Development_Kit_12_x86_64:SLE-SDK12-Updates
