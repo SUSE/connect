@@ -1,8 +1,10 @@
 -------------------------------------------------------------------
-Fri Jun  1 11:45:40 UTC 2018 - wstephenson@suse.com
+Tue Jun  5 11:39:05 UTC 2018 - wstephenson@suse.com
 
-- Relax package dependencies for rmt-client-setup
-- Use curl instead of wget (bsc#1094348)
+- Weaken dependencies of rmt-client-setup script to Recommends:
+  (bsc#1094348)
+- Enhance error message generation
+- Add not supported operation exception to PackageSearch API
 
 -------------------------------------------------------------------
 Wed May 16 10:14:57 UTC 2018 - hschmidt@suse.com
