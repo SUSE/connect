@@ -116,7 +116,7 @@ module SUSE
             '<internal name>/<version>/<architecture>. You can find these values by calling: ' \
             '\'SUSEConnect --list-extensions\'. ')
           identifier, version, arch = opt.split('/')
-          @options[:product] = Remote::Product.new(identifier: identifier, version: version, arch: arch)
+          @options[:product] = Zypper::Product.new(name: identifier, version: version, arch: arch)
         end
 
         @opts.on('-r', '--regcode [REGCODE]',
