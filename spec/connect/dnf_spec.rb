@@ -6,7 +6,7 @@ describe SUSE::Connect::Dnf do
     allow(Object).to receive(:system).and_return true
   end
 
-  subject { described_class }
+  subject { SUSE::Connect::Dnf }
 
   let(:os_release_file) { SUSE::Connect::Dnf::OS_RELEASE_FILE }
   let(:status) { object_double('Process Status', exitstatus: 0) }
