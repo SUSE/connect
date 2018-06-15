@@ -173,10 +173,11 @@ module SUSE
         #   identifier, arch, version, and release_type
         def system_offline_migrations(installed_products, target_base_product, client_params = {})
           config = SUSE::Connect::Config.new.merge!(client_params)
-          target_base_product = Remote::Product.new(target_base_product.to_h)
+          client = Client.new(config)
+          target_base_product = Remote::Product.new(client, target_base_product.to_h)
           args = { target_base_product: target_base_product, kind: :offline }
 
-          Client.new(config).system_migrations(installed_products, args).map { |a| a.map(&:to_openstruct) }
+          client.system_migrations(installed_products, args).map { |a| a.map(&:to_openstruct) }
         end
 
         # List available Installer-Updates repositories for the given product

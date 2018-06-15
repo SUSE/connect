@@ -4,7 +4,9 @@ describe SUSE::Connect::Remote::Service do
   subject { described_class }
 
   describe '.new' do
-    let(:service) { subject.new(JSON.parse(File.read('spec/fixtures/activate_response.json'))) }
+    let(:config) { SUSE::Connect::Config.new }
+    let(:client) { SUSE::Connect::Client.new(config) }
+    let(:service) { subject.new(client, JSON.parse(File.read('spec/fixtures/activate_response.json'))) }
 
     it 'contains name' do
       expect(service.name).to_not be_empty

@@ -47,6 +47,9 @@ describe SUSE::Connect::Zypper::ProductStatus do
   end
 
   describe '#related_activation' do
+    let(:config) { SUSE::Connect::Config.new }
+    let(:client) { SUSE::Connect::Client.new(config) }
+
     it 'returns nil if there is no remote_product found' do
       allow(subject).to receive(:remote_product).and_return nil
       expect(subject.related_activation).to be nil
@@ -54,7 +57,7 @@ describe SUSE::Connect::Zypper::ProductStatus do
 
     it 'finds related activation by comparing installing and remote product' do
       activation = double('activation')
-      remote_product = Remote::Product.new(identifier: :foo, version: 42, arch: :wax)
+      remote_product = Remote::Product.new(client, identifier: :foo, version: 42, arch: :wax)
       expect(activation).to receive_message_chain(:service, :product).and_return remote_product
       allow(status).to receive(:activations).and_return [activation]
       allow(subject).to receive(:remote_product).and_return remote_product
@@ -63,8 +66,11 @@ describe SUSE::Connect::Zypper::ProductStatus do
   end
 
   describe '#remote_product' do
+    let(:config) { SUSE::Connect::Config.new }
+    let(:client) { SUSE::Connect::Client.new(config) }
+
     it 'search if there is a product in activations which is equal to one installed' do
-      remote_product = Remote::Product.new(identifier: :foo, version: 42, arch: :wax)
+      remote_product = Remote::Product.new(client, identifier: :foo, version: 42, arch: :wax)
       allow(subject).to receive(:installed_product).and_return(Zypper::Product.new(name: :foo, version: 42, arch: :wax))
       allow(status).to receive(:activated_products).and_return([remote_product])
       expect(subject.remote_product).to eq remote_product

@@ -294,6 +294,8 @@ describe SUSE::Connect::Cli do
   end
 
   describe '?extract_options' do
+    let(:client_double) { double('client') }
+
     it 'sets token options' do
       argv = %w[-r matoken]
       cli = described_class.new(argv)
@@ -303,7 +305,7 @@ describe SUSE::Connect::Cli do
     it 'sets product options' do
       argv = %w[--product sles/12/i386]
       cli = described_class.new(argv)
-      expect(cli.options[:product]).to eq Remote::Product.new(identifier: 'sles', version: '12', arch: 'i386')
+      expect(cli.options[:product]).to eq Remote::Product.new(client_double, identifier: 'sles', version: '12', arch: 'i386')
     end
 
     it 'sets token options' do

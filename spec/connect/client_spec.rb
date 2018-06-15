@@ -7,7 +7,7 @@ describe SUSE::Connect::Client do
   let(:client_instance) { described_class.new config }
 
   let(:product_tree) { JSON.parse(File.read('spec/fixtures/product_tree.json')) }
-  let(:product) { Remote::Product.new(product_tree) }
+  let(:product) { Remote::Product.new(client_instance, product_tree) }
 
   let(:recommended_2) { product.extensions[1] }
   let(:recommended_2_2) { recommended_2.extensions[1] }
@@ -412,7 +412,7 @@ describe SUSE::Connect::Client do
       )
     end
 
-    let(:product) { Remote::Product.new(identifier: 'text_identifier') }
+    let(:product) { Remote::Product.new(client_instance, identifier: 'text_identifier') }
 
     before do
       allow(subject).to receive_messages(system_auth: 'Basic: encodedstring')
@@ -448,8 +448,8 @@ describe SUSE::Connect::Client do
 
     let(:products) do
       [
-        Remote::Product.new(identifier: 'tango', version: '12'),
-        Remote::Product.new(identifier: 'bravo', version: '7')
+        Remote::Product.new(client_instance, identifier: 'tango', version: '12'),
+        Remote::Product.new(client_instance, identifier: 'bravo', version: '7')
       ]
     end
 
@@ -471,7 +471,7 @@ describe SUSE::Connect::Client do
         context 'when upgrades are available' do
           before { allow(client_instance.api).to receive(:system_migrations).with('Basic: encodedstring', products, kind: kind).and_return(stubbed_response) }
 
-          it { is_expected.to eq([[ Remote::Product.new(identifier: 'bravo', version: '12.1') ]]) }
+          it { is_expected.to eq([[ Remote::Product.new(client_instance, identifier: 'bravo', version: '12.1') ]]) }
         end
 
         context 'when no upgrades are available' do
@@ -483,7 +483,7 @@ describe SUSE::Connect::Client do
         context 'with specified target_base_product' do
           subject { client_instance.system_migrations(products, kind: kind, target_base_product: target_base_product) }
 
-          let(:target_base_product) { Remote::Product.new(identifier: 'charlie', version: '15') }
+          let(:target_base_product) { Remote::Product.new(client_instance, identifier: 'charlie', version: '15') }
 
           it 'passes the target_base_product to the API' do
             expect(client_instance.api).to receive(:system_migrations)
@@ -553,7 +553,7 @@ describe SUSE::Connect::Client do
           ]
         end
 
-        let(:product_service) { SUSE::Connect::Remote::Service.new({ 'name' => 'dummy', 'product' => {} }) }
+        let(:product_service) { SUSE::Connect::Remote::Service.new(client_instance, { 'name' => 'dummy', 'product' => {} }) }
 
         before do
           stub_request(:delete, 'https://scc.suse.com/connect/systems/products').to_return(body: '{"product":{}}')
@@ -593,7 +593,7 @@ describe SUSE::Connect::Client do
       end
 
       context 'for single product' do
-        let(:extension) { SUSE::Connect::Remote::Product.new identifier: 'SLES HA', version: '12', arch: 'x86_64' }
+        let(:extension) { SUSE::Connect::Remote::Product.new(client_instance, identifier: 'SLES HA', version: '12', arch: 'x86_64') }
         before do
           config.product = extension
           allow(Zypper).to receive(:base_product).and_return(product)
@@ -602,7 +602,7 @@ describe SUSE::Connect::Client do
 
         it 'removes SCC service and release package' do
           expect(client_instance).to receive(:deactivate_product) do
-            SUSE::Connect::Remote::Service.new({ 'name' => 'dummy', 'product' => {} })
+            SUSE::Connect::Remote::Service.new(client_instance, { 'name' => 'dummy', 'product' => {} })
           end
           expect(System).to receive :remove_service
           expect(Zypper).to receive :remove_release_package
@@ -611,7 +611,7 @@ describe SUSE::Connect::Client do
 
         it 'refreshes SMT service and removes release package' do
           expect(client_instance).to receive(:deactivate_product) do
-            SUSE::Connect::Remote::Service.new({ 'name' => 'SMT_DUMMY_NOREMOVE_SERVICE', 'product' => {} })
+            SUSE::Connect::Remote::Service.new(client_instance, { 'name' => 'SMT_DUMMY_NOREMOVE_SERVICE', 'product' => {} })
           end
           expect(Zypper).to receive :refresh_all_services
           expect(Zypper).to receive :remove_release_package
@@ -757,7 +757,7 @@ describe SUSE::Connect::Client do
       )
     end
 
-    let(:product) { Remote::Product.new(identifier: 'SLES', version: '12.2', arch: 'x86_64') }
+    let(:product) { Remote::Product.new(client_instance, identifier: 'SLES', version: '12.2', arch: 'x86_64') }
 
     it 'collects data from api response' do
       expect(subject.api).to receive(:list_installer_updates).with(product).and_return stubbed_response

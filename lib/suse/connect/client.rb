@@ -107,7 +107,7 @@ module SUSE
       # @returns: Service for this product
       def activate_product(product, email = nil)
         result = @api.activate_product(system_auth, product, email).body
-        Remote::Service.new(result)
+        Remote::Service.new(self, result)
       end
 
       # Deactivate a product
@@ -116,7 +116,7 @@ module SUSE
       # @returns: Service for this product
       def deactivate_product(product)
         result = @api.deactivate_product(system_auth, product).body
-        Remote::Service.new(result)
+        Remote::Service.new(self, result)
       end
 
       # Upgrade a product
@@ -126,7 +126,7 @@ module SUSE
       # @returns: Service for this product
       def upgrade_product(product)
         result = @api.upgrade_product(system_auth, product).body
-        Remote::Service.new(result)
+        Remote::Service.new(self, result)
       end
 
       # Downgrade a product
@@ -146,7 +146,7 @@ module SUSE
       # @param product [Remote::Product] product to query extensions for
       def show_product(product)
         result = @api.show_product(system_auth, product).body
-        Remote::Product.new(result)
+        Remote::Product.new(self, result)
       end
 
       # @returns: body described in https://github.com/SUSE/connect/wiki/SCC-API-(Implemented)#response-12 and
@@ -182,7 +182,7 @@ module SUSE
         upgrade_paths = @api.system_migrations(system_auth, products, args).body
         upgrade_paths.map do |upgrade_path|
           upgrade_path.map do |product_attributes|
-            Remote::Product.new(product_attributes)
+            Remote::Product.new(self, product_attributes)
           end
         end
       end

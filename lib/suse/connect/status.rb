@@ -117,7 +117,7 @@ module SUSE
       end
 
       def products_from_activations
-        system_activations.map { |p| Remote::Product.new(p['service']['product']) }
+        system_activations.map { |p| Remote::Product.new(client, p['service']['product']) }
       end
 
       def products_from_zypper

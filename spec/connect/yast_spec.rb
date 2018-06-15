@@ -61,8 +61,9 @@ describe SUSE::Connect::YaST do
   end
 
   describe '.activate_product' do
+    let(:client_double) { double('client') }
     let(:client_params) { { token: 'regcode' } }
-    let(:product) { Remote::Product.new(identifier: 'win95') }
+    let(:product) { Remote::Product.new(client_double, identifier: 'win95') }
     let(:openstruct_product) { product.to_openstruct }
     let(:email) { 'foo@bar.zer' }
 
@@ -95,7 +96,8 @@ describe SUSE::Connect::YaST do
   end
 
   describe '.upgrade_product' do
-    let(:product) { Remote::Product.new(identifier: 'win98') }
+    let(:client_double) { double('client') }
+    let(:product) { Remote::Product.new(client_double, identifier: 'win98') }
     let(:openstruct_product) { product.to_openstruct }
     let(:client_params) { { foo: 'oink' } }
 
@@ -192,7 +194,8 @@ describe SUSE::Connect::YaST do
   end
 
   describe '.show_product' do
-    let(:product) { Remote::Product.new(identifier: 'tango') }
+    let(:client_double) { double('client') }
+    let(:product) { Remote::Product.new(client_double, identifier: 'tango') }
     let(:openstruct_product) { product.to_openstruct }
     let(:client_params) { { foo: 'oink' } }
 
@@ -235,7 +238,8 @@ describe SUSE::Connect::YaST do
   end
 
   describe '.product_activated?' do
-    let(:product) { Remote::Product.new(identifier: 'tango') }
+    let(:client_double) { double('client') }
+    let(:product) { Remote::Product.new(client_double, identifier: 'tango') }
     let(:openstruct_product) { product.to_openstruct }
 
     it 'returns false if no credentials' do
@@ -260,7 +264,8 @@ describe SUSE::Connect::YaST do
   end
 
   describe '.activated_products' do
-    let(:remote_product) { Remote::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64', release_type: 'HP-CNB') }
+    let(:client_double) { double('client') }
+    let(:remote_product) { Remote::Product.new(client_double, identifier: 'SLES', version: '12', arch: 'x86_64', release_type: 'HP-CNB') }
 
     it 'returns an array of activated system products' do
       expect_any_instance_of(SUSE::Connect::Status).to receive(:activated_products).and_return([remote_product])
@@ -281,10 +286,11 @@ describe SUSE::Connect::YaST do
   describe '.system_migrations' do
     subject { described_class.system_migrations installed_products_openstruct, client_params }
 
+    let(:client_double) { double('client') }
     let(:installed_products) do
       [
-        Remote::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64', release_type: 'HP-CNB'),
-        Remote::Product.new(identifier: 'SUSE-Cloud', version: '7', arch: 'x86_64', release_type: nil)
+        Remote::Product.new(client_double, identifier: 'SLES', version: '12', arch: 'x86_64', release_type: 'HP-CNB'),
+        Remote::Product.new(client_double, identifier: 'SUSE-Cloud', version: '7', arch: 'x86_64', release_type: nil)
       ]
     end
     let(:installed_products_openstruct) { installed_products.map(&:to_openstruct) }
@@ -306,7 +312,7 @@ describe SUSE::Connect::YaST do
 
       product_attributes = { identifier: 'SLES', version: '15', arch: 'x86_64', release_type: 'CD' }
       allow(client_double).to receive(:system_migrations)
-        .and_return([[ Remote::Product.new(product_attributes) ]])
+        .and_return([[ Remote::Product.new(client_double, product_attributes) ]])
 
       expect(subject).to eq([[ OpenStruct.new(product_attributes) ]])
     end
@@ -315,10 +321,11 @@ describe SUSE::Connect::YaST do
   describe '.system_offline_migrations' do
     subject { described_class.system_offline_migrations(installed_products_openstruct, target_base_product, client_params) }
 
+    let(:client_double) { double('client') }
     let(:installed_products) do
       [
-        Remote::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64', release_type: 'HP-CNB'),
-        Remote::Product.new(identifier: 'SUSE-Cloud', version: '7', arch: 'x86_64', release_type: nil)
+        Remote::Product.new(client_double, identifier: 'SLES', version: '12', arch: 'x86_64', release_type: 'HP-CNB'),
+        Remote::Product.new(client_double, identifier: 'SUSE-Cloud', version: '7', arch: 'x86_64', release_type: nil)
       ]
     end
     let(:installed_products_openstruct) { installed_products.map(&:to_openstruct) }
@@ -333,7 +340,7 @@ describe SUSE::Connect::YaST do
 
       product_attributes = { identifier: 'SLES', version: '15', arch: 'x86_64', release_type: 'CD' }
       allow(client_double).to receive(:system_migrations)
-        .and_return([[ Remote::Product.new(product_attributes) ]])
+        .and_return([[ Remote::Product.new(client_double, product_attributes) ]])
 
       expect(subject).to eq([[ OpenStruct.new(product_attributes) ]])
     end
@@ -343,7 +350,7 @@ describe SUSE::Connect::YaST do
       allow(Client).to receive(:new).with(anything).and_return(client_double)
 
       expect(client_double).to receive(:system_migrations)
-        .with(installed_products_openstruct, kind: :offline, target_base_product: Remote::Product.new(target_base_product.to_h))
+        .with(installed_products_openstruct, kind: :offline, target_base_product: Remote::Product.new(client_double, target_base_product.to_h))
         .and_return([])
       subject
     end
@@ -401,7 +408,8 @@ describe SUSE::Connect::YaST do
   end
 
   describe '.list_installer_updates' do
-    let(:product) { Remote::Product.new(identifier: 'win95') }
+    let(:client_double) { double('client') }
+    let(:product) { Remote::Product.new(client_double, identifier: 'win95') }
     let(:client_params) { {} }
 
     it 'calls #list_installer_updates on an instance of Client' do

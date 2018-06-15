@@ -12,6 +12,7 @@ describe SUSE::Connect::Api do
            debug: false,
            token: 'token-shmocken')
   end
+  let(:client) { Client.new(config) }
 
   describe '.new' do
     it 'requires a config object and raises if nothing was supplied' do
@@ -173,7 +174,7 @@ describe SUSE::Connect::Api do
     let(:api_endpoint) { '/connect/systems/products' }
     let(:system_auth) { 'basic_auth_mock' }
 
-    let(:product) { Remote::Product.new(identifier: 'SLES', version: '11-SP2', arch: 'x86_64', token: 'token-shmocken') }
+    let(:product) { Remote::Product.new(client, identifier: 'SLES', version: '11-SP2', arch: 'x86_64', token: 'token-shmocken') }
 
     let(:payload) do
       {
@@ -207,7 +208,7 @@ describe SUSE::Connect::Api do
   describe '#upgrade_product' do
     let(:api_endpoint) { '/connect/systems/products' }
     let(:system_auth) { 'basic_auth_mock' }
-    let(:product) { Remote::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64', release_type: 'aaaa') }
+    let(:product) { Remote::Product.new(client, identifier: 'SLES', version: '12', arch: 'x86_64', release_type: 'aaaa') }
     let(:openstruct_product) { product.to_openstruct }
 
     it 'calls ConnectAPI with basic auth and params and receives a JSON in return' do
@@ -218,7 +219,7 @@ describe SUSE::Connect::Api do
 
   describe '#downgrade_product' do
     let(:system_auth) { 'basic_auth_mock' }
-    let(:product) { Remote::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64', release_type: 'aaaa') }
+    let(:product) { Remote::Product.new(client, identifier: 'SLES', version: '12', arch: 'x86_64', release_type: 'aaaa') }
 
     it 'is an alias method for upgrade_product' do
       expect(subject.new(config)).to respond_to(:downgrade_product)
@@ -246,7 +247,7 @@ describe SUSE::Connect::Api do
       stub_show_product_call
     end
 
-    let(:product) { Remote::Product.new(identifier: 'rodent', version: 'good', arch: 'z42', release_type: 'foo') }
+    let(:product) { Remote::Product.new(client, identifier: 'rodent', version: 'good', arch: 'z42', release_type: 'foo') }
 
     it 'is authenticated via basic auth' do
       payload = [
@@ -277,8 +278,8 @@ describe SUSE::Connect::Api do
 
       let(:products) do
         [
-          Remote::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64', release_type: 'HP-CNB'),
-          Remote::Product.new(identifier: 'SUSE-Cloud', version: '7', arch: 'x86_64', release_type: nil)
+          Remote::Product.new(client, identifier: 'SLES', version: '12', arch: 'x86_64', release_type: 'HP-CNB'),
+          Remote::Product.new(client, identifier: 'SUSE-Cloud', version: '7', arch: 'x86_64', release_type: nil)
         ]
       end
 
@@ -309,8 +310,8 @@ describe SUSE::Connect::Api do
     shared_examples 'a query with a specific target base that returns migration paths' do |kind|
       before { stub_system_migrations_call_with_target_product(kind) }
 
-      let(:products) { [ Remote::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64') ] }
-      let(:target_base_product) { Remote::Product.new(identifier: 'SLES', version: '15.0', arch: 'x86_64') }
+      let(:products) { [ Remote::Product.new(client, identifier: 'SLES', version: '12', arch: 'x86_64') ] }
+      let(:target_base_product) { Remote::Product.new(client, identifier: 'SLES', version: '15.0', arch: 'x86_64') }
 
       let(:query) do
         {
@@ -343,7 +344,7 @@ describe SUSE::Connect::Api do
     shared_examples 'a query with no specified target base that returns no migration paths' do |kind|
       before { stub_empty_system_migrations_call(kind) }
 
-      let(:products) { [ Remote::Product.new(identifier: 'SLES', version: 'not-upgradeable', arch: 'x86_64', release_type: nil) ] }
+      let(:products) { [ Remote::Product.new(client, identifier: 'SLES', version: 'not-upgradeable', arch: 'x86_64', release_type: nil) ] }
 
       its(:body) { is_expected.to be_empty }
     end
@@ -453,7 +454,7 @@ describe SUSE::Connect::Api do
   describe '#list_installer_updates' do
     before { stub_list_installer_updates_call }
 
-    let(:product) { Remote::Product.new(identifier: 'SLES', version: '12.2', arch: 'x86_64') }
+    let(:product) { Remote::Product.new(client, identifier: 'SLES', version: '12.2', arch: 'x86_64') }
     let(:expected_body) do
       [
         {
@@ -506,7 +507,7 @@ describe SUSE::Connect::Api do
   end
 
   describe '#deactivate_product' do
-    let(:product) { SUSE::Connect::Remote::Product.new identifier: 'sles', version: '12', arch: 'x86_64' }
+    let(:product) { SUSE::Connect::Remote::Product.new(client, identifier: 'sles', version: '12', arch: 'x86_64') }
     let!(:stubbed_request) do
       stub_request(:delete, 'https://example.com/connect/systems/products')
         .with(headers: { 'Authorization' => 'foo_token' }, body: "{\"identifier\":\"sles\",\"version\":\"12\",\"arch\":\"x86_64\",\"release_type\":null}")

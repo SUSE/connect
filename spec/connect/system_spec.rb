@@ -2,7 +2,8 @@ require 'spec_helper'
 
 describe SUSE::Connect::System do
   let(:credentials_file) { Credentials::GLOBAL_CREDENTIALS_FILE }
-  let(:service) { Remote::Service.new name: 'JiYoKo', url: 'furl', 'product' => {} }
+  let(:client_double) { double('client') }
+  let(:service) { Remote::Service.new(client_double, name: 'JiYoKo', url: 'furl', 'product' => {}) }
 
   before(:each) do
     allow_any_instance_of(Object).to receive(:system).and_return true

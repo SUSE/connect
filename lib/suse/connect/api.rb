@@ -223,6 +223,17 @@ module SUSE
         @connection.post(endpoints.fetch(kind), auth: auth, params: payload)
       end
 
+      # Returns the RIS index for a given service
+      #
+      # The index contains a list of repository with the authorization tokens
+      #
+      # @param auth [String] authorization string which will be injected in 'Authorization' header in request.
+      #   In this case we expect Base64 encoded string with login and password
+      # @param service [Service] the service we are retrieving the index for
+      def service_index(auth, service)
+        @connection.get("/access/services/#{service.id}", auth: auth)
+      end
+
       # List available Installer-Updates repositories for the given product
       #
       # @param product [Remote::Product] list repositories for this product

@@ -109,7 +109,7 @@ describe SUSE::Connect::Status do
         allow(status).to receive(:registration_status).and_return('test')
         allow(status).to receive(:remote_product).and_return(true)
         expect(status).to receive_message_chain(:remote_product, :free).and_return(false)
-        activation = SUSE::Connect::Remote::Activation.new('service' => { 'product' => {} })
+        activation = SUSE::Connect::Remote::Activation.new(client_double, 'service' => { 'product' => {} })
         allow(status).to receive(:related_activation).and_return(activation)
 
         expect(subject).to receive(:product_statuses).and_return [status]
@@ -132,7 +132,7 @@ describe SUSE::Connect::Status do
       allow(File).to receive(:exist?).with(Credentials.system_credentials_file).and_return false
       allow(Zypper).to receive(:installed_products).and_return []
       allow(Zypper).to receive(:base_product).and_return Zypper::Product.new(name: 'SLES', version: '12', arch: 'x86_64')
-      allow(client_double).to receive(:show_product).with(Zypper.base_product).and_return(Remote::Product.new(dummy_product_data))
+      allow(client_double).to receive(:show_product).with(Zypper.base_product).and_return(Remote::Product.new(client_double, dummy_product_data))
     end
 
     it 'outputs the list of extensions available on the system' do
@@ -166,7 +166,7 @@ describe SUSE::Connect::Status do
     it 'returns a list of all available extensions on this system' do
       allow(Zypper).to receive(:installed_products).and_return []
       allow(Zypper).to receive(:base_product).and_return Zypper::Product.new(name: 'SLES', version: '12', arch: 'x86_64')
-      allow(client_double).to receive(:show_product).with(Zypper.base_product).and_return(Remote::Product.new(dummy_product_data))
+      allow(client_double).to receive(:show_product).with(Zypper.base_product).and_return(Remote::Product.new(client_double, dummy_product_data))
       expect(subject.available_system_extensions).to match_array([
         {
           activation_code: 'sle-sdk/12/ppc64le',
@@ -197,8 +197,8 @@ describe SUSE::Connect::Status do
 
   describe '#system_products' do
     let(:zypper_product) { Zypper::Product.new(name: 'SLES', version: '12', arch: 'x86_64') }
-    let(:remote_product) { Remote::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64', release_type: 'HP-CNB') }
-    let(:remote_product_dup) { Remote::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64') }
+    let(:remote_product) { Remote::Product.new(client_double, identifier: 'SLES', version: '12', arch: 'x86_64', release_type: 'HP-CNB') }
+    let(:remote_product_dup) { Remote::Product.new(client_double, identifier: 'SLES', version: '12', arch: 'x86_64') }
 
     it 'returns the installed and activated products from system' do
       expect_any_instance_of(Status).to receive(:installed_products).and_return([zypper_product])

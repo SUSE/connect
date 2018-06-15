@@ -3,8 +3,11 @@ require 'spec_helper'
 describe SUSE::Connect::Remote::Activation do
   subject { described_class }
 
+  let(:config) { SUSE::Connect::Config.new }
+  let(:client) { SUSE::Connect::Client.new(config) }
+
   describe '.new' do
-    let(:activation) { described_class.new(JSON.parse(File.read('spec/fixtures/activations_response.json')).last) }
+    let(:activation) { described_class.new(client, JSON.parse(File.read('spec/fixtures/activations_response.json')).last) }
 
     it 'contains id' do
       expect(activation.id).to eq 124_232

@@ -2,8 +2,10 @@ require 'spec_helper'
 
 describe SUSE::Connect::Migration do
   describe '.system_products' do
+    let(:config) { SUSE::Connect::Config.new }
+    let(:client) { SUSE::Connect::Client.new(config) }
     let(:zypper_product) { Zypper::Product.new(name: 'SLES', version: '12', arch: 'x86_64') }
-    let(:remote_product) { Remote::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64', release_type: 'HP-CNB') }
+    let(:remote_product) { Remote::Product.new(client, identifier: 'SLES', version: '12', arch: 'x86_64', release_type: 'HP-CNB') }
 
     it 'returns installed products and status activated products' do
       expect_any_instance_of(SUSE::Connect::Status).to receive(:system_products).and_return([Product.transform(zypper_product),
@@ -19,7 +21,7 @@ describe SUSE::Connect::Migration do
     let(:status) { SUSE::Connect::Status.new(config) }
 
     let(:product_tree) { JSON.parse(File.read('spec/fixtures/product_tree_migration_sle15.json')) }
-    let(:product) { Remote::Product.new(product_tree) }
+    let(:product) { Remote::Product.new(client, product_tree) }
 
     before do
       allow(SUSE::Connect::Config).to receive(:new).and_return config
@@ -30,7 +32,7 @@ describe SUSE::Connect::Migration do
 
     context 'SLE15' do
       let(:service) do
-        SUSE::Connect::Remote::Service.new(name: 'SLES15', obsoleted_service_name: 'SLES12',
+        SUSE::Connect::Remote::Service.new(client, name: 'SLES15', obsoleted_service_name: 'SLES12',
                                           url: 'https://scc.suse.com', 'product' => { identifier: 'SLES' })
       end
 
@@ -62,7 +64,7 @@ describe SUSE::Connect::Migration do
     context 'SLE12' do
       let(:product_tree) { JSON.parse(File.read('spec/fixtures/product_tree_migration_sle12.json')) }
       let(:service) do
-        SUSE::Connect::Remote::Service.new(name: 'SLES12', obsoleted_service_name: 'SLES11',
+        SUSE::Connect::Remote::Service.new(client, name: 'SLES12', obsoleted_service_name: 'SLES11',
                                           url: 'https://scc.suse.com', 'product' => { identifier: 'SLES' })
       end
 
@@ -158,8 +160,10 @@ describe SUSE::Connect::Migration do
   end
 
   describe '.refresh_service' do
+    let(:config) { SUSE::Connect::Config.new }
+    let(:client) { SUSE::Connect::Client.new(config) }
     let(:service) do
-      SUSE::Connect::Remote::Service.new(name: 'SLES15', obsoleted_service_name: 'SLES12',
+      SUSE::Connect::Remote::Service.new(client, name: 'SLES15', obsoleted_service_name: 'SLES12',
                                         url: 'https://scc.suse.com', 'product' => { identifier: 'SLES' })
     end
 

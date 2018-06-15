@@ -9,10 +9,10 @@ class SUSE::Connect::Remote::Product < SUSE::Connect::Remote::ServerDrivenModel
   include SUSE::Toolkit::ProductEquality
   include SUSE::Toolkit::Cast
 
-  def initialize(product_hash)
-    super
+  def initialize(client, product_hash)
+    super(client, product_hash)
     # TODO: ensure we have array here
-    self.extensions = extensions.map { |ext| self.class.new(ext) } if extensions
+    self.extensions = extensions.map { |ext| self.class.new(client, ext) } if extensions
   end
 
   def to_params

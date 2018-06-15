@@ -2,6 +2,9 @@ require 'spec_helper'
 
 describe SUSE::Connect::Remote::Product do
   subject do
+    config = SUSE::Connect::Config.new
+    client = SUSE::Connect::Client.new(config)
+
     product = {
       'id' => 700,
       'name' => 'SLEEK',
@@ -17,12 +20,15 @@ describe SUSE::Connect::Remote::Product do
       'product_type' => 'extension',
       'release_type' => 'HP-CNB'
     }
-    described_class.new(product)
+    described_class.new(client, product)
   end
 
   describe '#extensions' do
+    let(:config) { SUSE::Connect::Config.new }
+    let(:client) { SUSE::Connect::Client.new(config) }
+
     it 'build as much nested extensions as returned by server' do
-      subject = described_class.new('extensions' =>
+      subject = described_class.new(client, 'extensions' =>
         [
           {
             'foo' => 'bar',
