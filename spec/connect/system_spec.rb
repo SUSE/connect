@@ -17,6 +17,53 @@ describe SUSE::Connect::System do
     end
   end
 
+  describe '.package_manager' do
+    context :green do
+      before do
+        System.instance_variable_set(:@package_manager, nil)
+        allow(File).to receive(:exist?).with(SUSE::Connect::System.prefix_path('/etc/redhat-release')).and_return(false)
+      end
+
+      it 'should return the right package manager implementation' do
+        expect(subject.package_manager).to eq SUSE::Connect::Zypper
+      end
+
+      after do
+        System.instance_variable_set(:@package_manager, nil)
+      end
+    end
+
+    context :red do
+      before do
+        System.instance_variable_set(:@package_manager, nil)
+        allow(File).to receive(:exist?).with(SUSE::Connect::System.prefix_path('/etc/redhat-release')).and_return(true)
+      end
+
+      it 'should return the right package manager implementation' do
+        expect(subject.package_manager).to eq SUSE::Connect::Dnf
+      end
+
+      after do
+        System.instance_variable_set(:@package_manager, nil)
+      end
+    end
+
+    context :credentials_not_exist do
+      it 'should produce log message' do
+        expect(File).to receive(:exist?).with(credentials_file).and_return(false)
+        expect(subject.credentials).to be_nil
+      end
+    end
+
+    context :remove_credentials do
+      it 'should remove credentials file' do
+        expect(subject).to receive(:credentials?).and_return(true)
+        expect(File).to receive(:delete).with(credentials_file).and_return(true)
+        expect(subject.remove_credentials).to be true
+      end
+    end
+  end
+
   describe '.credentials' do
     context :credentials_exist do
       let :stub_ncc_cred_file do

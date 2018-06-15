@@ -24,7 +24,7 @@ module SUSE
       # Announces the system, activates the product on SCC and adds the service to the system
       def register!
         announce_or_update
-        product = @config.product || Zypper.base_product
+        product = @config.product || System.package_manager.base_product
 
         register_product(product, @config.product ? true : false)
 
@@ -39,7 +39,7 @@ module SUSE
         service = activate_product(product, @config.email)
 
         System.add_service(service)
-        Zypper.install_release_package(product.identifier) if install_release_package
+        System.package_manager.install_release_package(product.identifier) if install_release_package
 
         print_success_message(product)
       end
@@ -52,8 +52,8 @@ module SUSE
         if @config.product
           deregister_product(@config.product)
         else
-          tree = show_product(Zypper.base_product)
-          installed = Zypper.installed_products.map(&:identifier)
+          tree = show_product(System.package_manager.base_product)
+          installed = System.package_manager.installed_products.map(&:identifier)
           dependencies = flatten_tree(tree).select { |e| installed.include? e[:identifier] }
 
           dependencies.reverse.each do |product|
@@ -212,10 +212,10 @@ module SUSE
       end
 
       def deregister_product(product)
-        raise BaseProductDeactivationError if product == Zypper.base_product
+        raise BaseProductDeactivationError if product == System.package_manager.base_product
         service = deactivate_product product
         remove_or_refresh_service(service)
-        Zypper.remove_release_package product.identifier
+        System.package_manager.remove_release_package product.identifier
         print_success_message product, action: 'Deregistered'
       end
 
@@ -240,7 +240,7 @@ module SUSE
       # Refreshing the service instead to remove the repos of deregistered product.
       def remove_or_refresh_service(service)
         if service.name == 'SMT_DUMMY_NOREMOVE_SERVICE'
-          Zypper.refresh_all_services
+          System.package_manager.refresh_all_services
         else
           System.remove_service service
         end

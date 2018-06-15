@@ -9,6 +9,17 @@ module SUSE
           filesystem_root ? File.join(filesystem_root, path) : path
         end
 
+        # Returns an implementation of the package manager
+        def package_manager
+          @package_manager ||= if File.exist?(SUSE::Connect::System.prefix_path('/etc/redhat-release'))
+                                 log.debug 'Detected Red Hat/CentOS/Fedora distribution'
+                                 Dnf
+                               else
+                                 log.debug 'Detected SUSE/openSUSE distribution'
+                                 Zypper
+                               end
+        end
+
         def hwinfo
           SUSE::Connect::HwInfo::Base.info
         end
@@ -34,18 +45,18 @@ module SUSE
 
         def cleanup!
           System.remove_credentials
-          Zypper.remove_all_suse_services
+          System.package_manager.remove_all_suse_services
         end
 
         def add_service(service)
           raise ArgumentError, 'only Remote::Service accepted' unless service.is_a? Remote::Service
-          Zypper.add_service(service.url, service.name)
+          System.package_manager.add_service(service.url, service.name)
           service
         end
 
         def remove_service(service)
           raise ArgumentError, 'only Remote::Service accepted' unless service.is_a? Remote::Service
-          Zypper.remove_service service.name
+          System.package_manager.remove_service service.name
           service
         end
 
