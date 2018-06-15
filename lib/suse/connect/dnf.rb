@@ -6,6 +6,9 @@ require 'suse/connect/rexml_refinement'
 require 'suse/toolkit/system_calls'
 module SUSE
   module Connect
+    # Dnf needs to make API calls back to SCC to handle the services itself,
+    # therefore we need to inject the config
+    attr_accessor :config
 
     # Implements dnf interaction
     module Dnf
