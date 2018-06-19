@@ -1,0 +1,7 @@
+<repoindex ttl="86400">
+  <repo url="https://updates.suse.com/repo/$RCE/RES7/src?token"
+alias="RES7" name="RES7" autorefresh="true" enabled="true"/>
+  <repo
+url="https://updates.suse.com/repo/$RCE/RES7/x86_64?token"
+alias="RES7" name="RES7" autorefresh="true" enabled="true"/>
+</repoindex>

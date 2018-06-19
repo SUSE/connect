@@ -105,4 +105,33 @@ describe SUSE::Connect::Dnf do
       expect(subject.repositories.size).to eq 0
     end
   end
+
+  describe '.read_service' do
+    let(:service_name) { 'valid_service' }
+    let(:service_url)  { 'http://example.com/access/service/666' }
+    let(:login) { 'login' }
+    let(:password) { 'password' }
+    let(:system_credentials) { Credentials.new(login, password, Credentials::GLOBAL_CREDENTIALS_FILE) }
+    let(:repo) do
+      { alias: 'RES7',
+        autorefresh: 'true',
+        enabled: 'true',
+        name: 'RES7',
+        url: 'https://updates.suse.com/repo/$RCE/RES7/src?token' }
+    end
+
+    before do
+      allow(Dnf).to receive(:config).at_least(1).and_return(Config.new)
+      allow(Credentials).to receive(:read).with(Credentials::GLOBAL_CREDENTIALS_FILE).and_return(system_credentials)
+      stub_request(:get, "http://#{login}:#{password}@example.com/access/service/666")
+        .to_return(status: 200, body: File.read('spec/fixtures/service_response.xml'))
+    end
+
+    it 'returns a list of repositories' do
+      service = subject.read_service(service_url)
+      expect(service.size).to eq 2
+      expect(service.first).to eq repo
+    end
+  end
+
 end

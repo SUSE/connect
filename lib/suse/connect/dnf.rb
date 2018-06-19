@@ -51,6 +51,25 @@ module SUSE
           JSON.parse(helper_out, symbolize_names: true)
         end
 
+        # Internal method that implements service refresh logic missing in dnf
+        def read_service(service_url)
+          connection = Connection.new(
+            service_url,
+            language:        Dnf.config.language,
+            insecure:        Dnf.config.insecure,
+            verify_callback: Dnf.config.verify_callback,
+            debug:           Dnf.config.debug
+          )
+          auth = Class.new.extend(SUSE::Toolkit::Utilities).system_auth
+
+          uri = URI.parse(service_url)
+          request = Net::HTTP::Get.new(uri.path)
+          request['Authorization'] = auth
+          service_index = connection.http.request(request)
+          xml_doc = REXML::Document.new(service_index.body, compress_whitespace: [])
+          xml_doc.root.elements.map(&:to_hash)
+        end
+
         def root_arg
           "--installroot '#{SUSE::Connect::System.filesystem_root}' " if SUSE::Connect::System.filesystem_root
         end

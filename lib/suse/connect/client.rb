@@ -19,6 +19,8 @@ module SUSE
         @config = config
         @api    = Api.new(@config)
         log.debug "Merged options: #{@config}"
+
+        Dnf.config = config
       end
 
       # Announces the system, activates the product on SCC and adds the service to the system
