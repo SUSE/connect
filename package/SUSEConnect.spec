@@ -25,7 +25,11 @@ Release:        0
 # Does not build for i586 and s390 and is not supported on those architectures
 ExcludeArch:    %ix86 s390
 
+%if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version}
+Requires:       ca-certificates
+%else
 Requires:       ca-certificates-mozilla
+%endif
 Requires:       coreutils
 Requires:       hwinfo
 Requires:       net-tools
