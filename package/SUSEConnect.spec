@@ -75,7 +75,7 @@ Source2:        %{name}.8
 Source3:        %{name}.example
 
 Summary:        Utility to register a system with the SUSE Customer Center
-License:        LGPL-2.1-only
+License:        LGPL-2.1
 Group:          System/Management
 Requires(post): /usr/sbin/update-alternatives
 
