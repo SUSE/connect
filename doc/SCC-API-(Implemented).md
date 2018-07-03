@@ -222,7 +222,7 @@ Status: 200 OK
         ]
       }
     ],
-    "repositories": [     
+    "repositories": [
       {
         "id": 1632,
         "name": "SLES12-Updates",
@@ -316,7 +316,7 @@ Status: 200 OK
       "expired": false,
       "sku": "6A2BC"
     } ]
-  }  
+  }
 ]
 ```
 
@@ -347,8 +347,9 @@ Status: 200 OK
   {
     "id": 14,
     "login": "SCC_28445cf5f3a84bfdaa44d4a5e499b4fd",
-    "password": "secret"
-  }  
+    "password": "secret",
+    "last_seen_at": "2010-03-14T13:10:21.164Z"
+  }
 ]
 ```
 
@@ -381,8 +382,9 @@ Status: 200 OK
 {
   "id": 14,
   "login": "SCC_28445cf5f3a84bfdaa44d4a5e499b4fd",
-  "password": "secret"
-}  
+  "password": "secret",
+  "last_seen_at": "2010-03-14T13:10:21.164Z"
+}
 ```
 
 ***
@@ -458,7 +460,7 @@ Status: 200 OK
     "product_classes": ["SLES"],
     "families": ["sles", "sled"],
     "skus": ["sku1", "sku2"],
-    "systems": [{ "id": 1, "login": "login1" }]
+    "systems": [{ "id": 1, "login": "login1", "last_seen_at": "2010-03-14T13:10:21.164Z" }]
   }
 ]
 ```
@@ -753,7 +755,7 @@ curl https://scc.suse.com/connect/systems/products -u<username>:<password> -d id
       ]
     }
   ],
-  "repositories": [     
+  "repositories": [
     {
       "id": 1357,
       "name": "SLE10-SDK-SP4-Online",
@@ -805,7 +807,7 @@ Status: 200 OK
 ```
 
 ```json
-{  
+{
   "id": 42,
   "name": "SUSE_Linux_Enterprise_Server_12_x86_64",
   "url": "https://scc.suse.com/access/services/1106?credentials=SUSE_Linux_Enterprise_Server_12_x86_64",
@@ -830,7 +832,7 @@ Status: 200 OK
     "extensions": [ ],
     "product_type": "base",
     "recommended": false
-  }  
+  }
 }
 ```
 
@@ -867,7 +869,7 @@ Status: 200 OK
 ```
 
 ```json
-{  
+{
   "id": 42,
   "name": "SUSE_Linux_Enterprise_Server_High_Availability_12_x86_64",
   "url": "https://scc.suse.com/access/services/1106?credentials=SUSE_Linux_Enterprise_Server_12_x86_64",
@@ -892,7 +894,7 @@ Status: 200 OK
     "extensions": [ ],
     "product_type": "base",
     "recommended": false
-  }  
+  }
 }
 ```
 
@@ -924,7 +926,7 @@ curl https://scc.suse.com/connect/systems/products -X 'PUT' -u<username>:<passwo
 
 ###### Response
 ```json
-{  
+{
   "id": 42,
   "name": "SUSE_Linux_Enterprise_Server_12_SP1_x86_64",
   "obsoleted_service_name": "SUSE_Linux_Enterprise_Server_12_x86_64",
@@ -950,7 +952,7 @@ curl https://scc.suse.com/connect/systems/products -X 'PUT' -u<username>:<passwo
     "extensions": [ ],
     "product_type": "base",
     "recommended": false
-  }  
+  }
 }
 ```
 ##### Errors:
@@ -1160,7 +1162,7 @@ Status: 200 OK
       "product_type": "base",
       "free": "false"
     },
-    {   
+    {
       "friendly_name":"SUSE Linux Enterprise Software Development Kit 12 x86_64",
       "shortname": "SLE-SDK12-SP1",
       "identifier": "SLE-SDK",
@@ -1169,7 +1171,7 @@ Status: 200 OK
       "release_type": null,
       "release_stage": "released", // or "beta"
       "product_type": "extension",
-      "free": "true"             
+      "free": "true"
     }
   ]
 ]
@@ -1290,7 +1292,7 @@ Status: 200 OK
       ]
     }
   ],
-  "repositories": [     
+  "repositories": [
     {
       "id": 1357,
       "name": "SLE10-SDK-SP4-Online",
@@ -1339,7 +1341,7 @@ Status: 200 OK
     "virtual_count": null,
     "product_classes": ["7260"],
     "families": ["sles", "sled"],
-    "systems": [{ "id": 117, "login": "login2", "password": "password2" }],
+    "systems": [{ "id": 117, "login": "login2", "password": "password2", "last_seen_at": "2010-05-14T09:13:26.589Z" }],
     "product_ids": [239, 238, 240]
   }
 ]
