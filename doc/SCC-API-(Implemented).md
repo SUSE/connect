@@ -12,6 +12,78 @@ These several levels of authentication also act as scopes on the queried
 resources. Naturally, resource listings on one level will resemble subsets of
 the same listings on a higher level.
 
+## Differences in RMT, SMT and SCC API
+
+- The `available` attribute is only present in SMT/RMT and indicates if a certain
+  repository is mirrored or not.
+  *Affected endpoints*:
+    * `/connect/*/products`
+    * `/connect/systems/services`
+    * `/connect/systems/products/synchronize`
+    * `/connect/systems/activations`
+
+- The product `free` attribute is always true in RMT and SMT.
+  *Affected endpoints*:
+    * `/connect/*/products`
+    * `/connect/systems/services`
+    * `/connect/systems/products/migrations`
+    * `/connect/systems/products/synchronize`
+    * `/connect/systems/activations`
+
+- No `registration code` is required by RMT.
+  *Affected endpoints*:
+    * `/connect/subscriptions/products`
+
+- A `registration code` is not required by SMT. (If it's supplied it will show up
+  in SCC if system information forwarding is enabled in SMT)
+  *Affected endpoints*:
+    * `/connect/subscriptions/products`
+
+- The `distro_target` attribute is only consumed by SMT to create old correct
+  service definitions with different distribution targets.
+  *Affected endpoints*:
+    * `/connect/*/products`
+    * `/connect/systems/products/synchronize`
+    * `/connect/systems/activations`
+
+- The `zypper service` API endpoint in SMT11/SMT12 has one service for all
+  products instead of a service for each product.
+  *Affected endpoints*:
+    * `/connect/systems/activations`
+
+- Only SCC implements the package search functionality
+  *Affected endpoints:*
+    * `/api/products/search_packages`
+
+- RMT does not implement all API endpoints of the SCC API.
+  *Endpoints not available in RMT:*
+    * `/api/products/search_packages`
+    * `/connect/systems/services`
+    * `/connect/systems/subscriptions`
+    * `/connect/origanizations/*`
+    * `/connect/subscriptions/*`
+
+- SMT12 does not implement all API endpoints of the SCC API.
+  *Endpoints not available in SMT:*
+    * `/api/products/search_packages`
+    * `/connect/systems/services`
+    * `/connect/systems/subscriptions`
+    * `/connect/subscriptions/*`
+    * `/connect/organizations/*`
+
+- SMT11 does not implement all API endpoints of the SCC API.
+  *Endpoints not available in SMT11:*
+    * `/api/products/search_packages`
+    * `/connect/systems/services`
+    * `/connect/systems/subscriptions`
+    * `/connect/systems/offline_migrations`
+    * `/connect/subscriptions/*`
+    * `/connect/organizations/*`
+
+- SMT does not implement the `last_seen_at` attribute.
+  *Affected endpoints:*
+    * `/connect/subscriptions/systems`
+
 ## API versioning:
 By default, the latest available api version is used. Clients are recommended to
 hardcode a fixed version in order not to break when the SCC api changes in an incompatible way.
@@ -482,12 +554,12 @@ scope of the specified subscription.
 Announce a system to SCC. This is the typical first
 contact of any system with SCC, which triggers a couple of processes:
   - Register the system with SCC, thereby creating and returning the system's
-  credentials (`identifier` and `secret`) for further access to this API and
-  update repositories.
+    credentials (`identifier` and `secret`) for further access to this API and
+    update repositories.
   - Store the system's information from the payload in SCC to be able to provide
-  proper counting and additional functionality through SCC's web page.
+    proper counting and additional functionality through SCC's web page.
   - Validate subscription specified by the `regcode`. E.g. check for expiry date,
-  system limit, hardware requirements, etc. Note that this does not consume a `regcode` from that subscription, but only uses the `regcode` to authenticate the caller of this method
+    system limit, hardware requirements, etc. Note that this does not consume a `regcode` from that subscription, but only uses the `regcode` to authenticate the caller of this method
   - Associate the system inside SCC with the subscription.
 
 ```
@@ -1169,7 +1241,7 @@ Status: 200 OK
       "release_type": null,
       "release_stage": "released", // or "beta"
       "product_type": "extension",
-      "free": "true"             
+      "free": "true"
     }
   ]
 ]
