@@ -30,7 +30,7 @@ end
 @entities = []
 
 links = { next: URL }
-while links[:next] do
+while links[:next]
   resp = get(links[:next])
   @entities += JSON.parse(resp)
   links = process_rels(resp)

@@ -43,7 +43,7 @@ def process_data(data)
 end
 
 links = { next: API_BASE_URL + 'organizations/systems' }
-while links[:next] do
+while links[:next]
   resp = get(links[:next])
   process_data(resp)
   links = process_rels(resp)
