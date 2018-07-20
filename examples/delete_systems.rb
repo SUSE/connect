@@ -42,13 +42,9 @@ def process_data(data)
   end
 end
 
-resp = get(API_BASE_URL + 'organizations/systems')
-
-@page = 1
-loop do
-  links = process_rels(resp)
-  process_data(resp)
-  break unless links[:next]
-  @page += 1
+links = { next: API_BASE_URL + 'organizations/systems' }
+while links[:next] do
   resp = get(links[:next])
+  process_data(resp)
+  links = process_rels(resp)
 end
