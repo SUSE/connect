@@ -6,8 +6,6 @@ require 'pp'
 require 'json'
 require 'base64'
 
-require 'byebug'
-
 USERNAME = ARGV[0]
 PASSWORD = ARGV[1]
 
