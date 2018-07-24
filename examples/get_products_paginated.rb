@@ -27,16 +27,13 @@ def get(url)
   res
 end
 
-resp = get(URL)
 @entities = []
 
-@page = 1
-loop do
-  links = process_rels(resp)
-  @entities += JSON.parse(resp)
-  break unless links[:next]
-  @page += 1
+links = { next: URL }
+while links[:next]
   resp = get(links[:next])
+  @entities += JSON.parse(resp)
+  links = process_rels(resp)
 end
 
 @entities.each do |entity|
