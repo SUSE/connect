@@ -1,0 +1,18 @@
+# dmidecode 3.1
+Getting SMBIOS data from sysfs.
+SMBIOS 2.7 present.
+
+Handle 0x0100, DMI type 1, 27 bytes
+System Information
+	Manufacturer: Xen
+	Product Name: HVM domU
+	Version: 4.2.amazon
+	Serial Number: ec266d00-0a79-7089-68d5-82cc396381c1
+	UUID: EC266D00-0A79-7089-68D5-82CC396381C1
+	Wake-up Type: Power Switch
+	SKU Number: Not Specified
+	Family: Not Specified
+
+Handle 0x2000, DMI type 32, 11 bytes
+System Boot Information
+	Status: No errors detected

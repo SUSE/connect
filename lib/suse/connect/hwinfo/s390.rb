@@ -8,7 +8,8 @@ class SUSE::Connect::HwInfo::S390 < SUSE::Connect::HwInfo::Base
         sockets: sockets,
         hypervisor: hypervisor,
         arch: arch,
-        uuid: uuid
+        uuid: uuid,
+        cloud_provider: cloud_provider
       }
     end
 
