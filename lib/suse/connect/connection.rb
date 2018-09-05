@@ -59,14 +59,14 @@ module SUSE
         request = VERB_TO_CLASS[method].new(path)
         add_headers(request)
 
-        request.body               = params.to_json unless params.empty?
-        response                   = @http.request(request)
-        body                       = JSON.parse(response.body) if response.body
+        request.body  = params.to_json unless params.empty?
+        response      = @http.request(request)
+        response_body = JSON.parse(response.body) unless response.body.to_s.empty?
 
         OpenStruct.new(
           code: response.code.to_i,
           headers: response.to_hash,
-          body: body,
+          body: response_body,
           http_message: response.message,
           success: response.is_a?(Net::HTTPSuccess)
         )
