@@ -23,6 +23,7 @@ describe SUSE::Toolkit::SystemCalls do
 
     it 'produces debug log output' do
       expect(SUSE::Connect::GlobalLogger.instance.log).to receive(:debug).with(/Executing:/)
+      expect(SUSE::Connect::GlobalLogger.instance.log).to receive(:debug).with(/Executing raw:/)
       expect(SUSE::Connect::GlobalLogger.instance.log).to receive(:debug).with(/Output:/)
       expect(subject).to receive(:capture3).with(shared_env_hash, 'date').and_return([date, '', success])
       expect(execute('date', false)).to eql date

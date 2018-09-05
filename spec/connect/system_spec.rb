@@ -73,7 +73,7 @@ describe SUSE::Connect::System do
 
   describe '.add_service' do
     it 'adds zypper service to the system' do
-      expect(Zypper).to receive(:add_service).with('furl', 'JiYoKo')
+      expect(Zypper).to receive(:add_service).with('furl', 'JiYoKo', true)
       subject.add_service service
     end
 

@@ -391,7 +391,11 @@ describe SUSE::Connect::Zypper do
   end
 
   describe '.install_release_package' do
+    # FIXME: context when release package is installed
     it 'calls the command' do
+      expect(Open3).to receive(:capture3).with(shared_env_hash, 'rpm -q opensuse-release')
+                         .and_return(['', '', 1])
+
       expect(Open3).to receive(:capture3).with(shared_env_hash, 'zypper --no-refresh --non-interactive install --no-recommends --auto-agree-with-product-licenses -t product opensuse') # rubocop:disable LineLength
                                          .and_return(['', '', status])
       subject.install_release_package('opensuse')

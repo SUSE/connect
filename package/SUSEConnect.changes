@@ -4,7 +4,8 @@ Wed Sep  5 12:21:39 UTC 2018 - tmuntaner@suse.com
 - Update to 0.3.12
   - Detect if system is in cloud provider (AWS/Google/Azure)
     (fate#320935)
-- Don't fail when trying to parse an empty body. Fixes bsc#1098220
+  - Don't fail when trying to parse an empty body. Fixes bsc#1098220
+  - Don't install release packages if they are already present
 
 -------------------------------------------------------------------
 Tue Jun 19 15:58:46 UTC 2018 - tschmidt@suse.com

@@ -310,13 +310,13 @@ describe SUSE::Connect::Client do
       end
 
       it 'calls register_product for the base product' do
-        expect(subject).to receive(:register_product).with(product, false)
+        expect(subject).to receive(:register_product).with(product, false, true)
         subject.register!
       end
 
       it 'calls register_product for all recommended extensions' do
         [recommended_2, recommended_2_2, recommended_3].each do |ext|
-          expect(subject).to receive(:register_product).with(ext)
+          expect(subject).to receive(:register_product).with(ext, true, true)
         end
         subject.register!
       end
@@ -332,9 +332,9 @@ describe SUSE::Connect::Client do
       before { recommended_3.available = false }
 
       it 'does not register the unavailable extension' do
-        expect(subject).to receive(:register_product).with(recommended_2)
-        expect(subject).to receive(:register_product).with(recommended_2_2)
-        expect(subject).not_to receive(:register_product).with(recommended_3)
+        expect(subject).to receive(:register_product).with(recommended_2, true, true)
+        expect(subject).to receive(:register_product).with(recommended_2_2, true, true)
+        expect(subject).not_to receive(:register_product).with(recommended_3, any_args)
         subject.register!
       end
     end
@@ -343,9 +343,9 @@ describe SUSE::Connect::Client do
       before { recommended_2.available = false }
 
       it 'does not register the unavailable extension nor its children' do
-        expect(subject).not_to receive(:register_product).with(recommended_2)
-        expect(subject).not_to receive(:register_product).with(recommended_2_2)
-        expect(subject).to receive(:register_product).with(recommended_3)
+        expect(subject).not_to receive(:register_product).with(recommended_2, any_args)
+        expect(subject).not_to receive(:register_product).with(recommended_2_2, any_args)
+        expect(subject).to receive(:register_product).with(recommended_3, true, true)
         subject.register!
       end
     end
@@ -375,7 +375,7 @@ describe SUSE::Connect::Client do
 
     it 'should activate the product, add service file and install release package' do
       expect(subject).to receive(:activate_product).with(product, fake_email).and_return service_stub
-      expect(System).to receive(:add_service).with(service_stub)
+      expect(System).to receive(:add_service).with(service_stub, true)
 
       expect(Zypper).to receive(:install_release_package).with(product.identifier)
 
@@ -384,7 +384,7 @@ describe SUSE::Connect::Client do
 
     it 'should not install the release package if install_release_package is false' do
       expect(subject).to receive(:activate_product).with(product, fake_email).and_return service_stub
-      expect(System).to receive(:add_service).with(service_stub)
+      expect(System).to receive(:add_service).with(service_stub, true)
 
       expect(Zypper).not_to receive(:install_release_package)
 

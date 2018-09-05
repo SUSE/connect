@@ -37,9 +37,9 @@ module SUSE
           Zypper.remove_all_suse_services
         end
 
-        def add_service(service)
+        def add_service(service, refresh_zypper_service = true)
           raise ArgumentError, 'only Remote::Service accepted' unless service.is_a? Remote::Service
-          Zypper.add_service(service.url, service.name)
+          Zypper.add_service(service.url, service.name, refresh_zypper_service)
           service
         end
 
