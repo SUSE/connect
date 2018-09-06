@@ -99,35 +99,45 @@ describe SUSE::Connect::Connection do
     end
 
     before do
-      allow(connection.http).to receive(:request).and_return(OpenStruct.new(body: 'bodyofostruct'))
-      allow(JSON).to receive_messages(parse: { '1' => '2' })
+      allow(connection.http).to receive(:request).and_return(OpenStruct.new(body: '{ "test": "body" }'))
     end
 
-    context :get_request do
+    context 'with a get request' do
       it 'takes Net::HTTP::Get class to build request' do
         expect(Net::HTTP::Get).to receive(:new).and_call_original
         connection.send(:json_request, :get, '/api/v1/megusta')
       end
     end
 
-    context :post_request do
+    context 'with a post request' do
       it 'takes Net::HTTP::Post class to build request' do
         expect(Net::HTTP::Post).to receive(:new).and_call_original
         connection.send(:json_request, :post, '/api/v1/megusta')
       end
     end
 
-    context :put_request do
+    context 'with a put request' do
       it 'takes Net::HTTP::Put class to build request' do
         expect(Net::HTTP::Put).to receive(:new).and_call_original
         connection.send(:json_request, :put, '/api/v1/megusta')
       end
     end
 
-    context :delete_request do
+    context 'with a delete request' do
       it 'takes Net::HTTP::Delete class to build request' do
         expect(Net::HTTP::Delete).to receive(:new).and_call_original
         connection.send(:json_request, :delete, '/api/v1/megusta')
+      end
+    end
+
+    context 'with an empty body response' do
+      before do
+        allow(connection.http).to receive(:request).and_return(OpenStruct.new(body: ''))
+      end
+
+      it 'does not fail to parse the body' do
+        expect(Net::HTTP::Get).to receive(:new).and_call_original
+        connection.send(:json_request, :get, '/api/v1/megusta')
       end
     end
   end
