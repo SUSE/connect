@@ -1,0 +1,18 @@
+# dmidecode 3.0
+Scanning /dev/mem for entry point.
+SMBIOS 2.4 present.
+
+Handle 0x0100, DMI type 1, 27 bytes
+System Information
+	Manufacturer: Google
+	Product Name: Google Compute Engine
+	Version: Not Specified
+	Serial Number: GoogleCloud-28570BE051B627017F196DB87226F476
+	UUID: 28570BE0-51B6-2701-7F19-6DB87226F476
+	Wake-up Type: Power Switch
+	SKU Number: Not Specified
+	Family: Not Specified
+
+Handle 0x2000, DMI type 32, 11 bytes
+System Boot Information
+	Status: No errors detected

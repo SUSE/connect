@@ -3,7 +3,7 @@ require 'English'
 
 def version_from_spec(spec_glob)
   version = `grep '^Version:' #{spec_glob}`
-  version[/(\d\.\d\.\d)/, 0]
+  version[/(\d+\.\d+\.\d+)/, 0]
 end
 
 def upstream_file(name, file_type, obs_project, package_name)
