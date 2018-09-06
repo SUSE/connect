@@ -5,12 +5,14 @@ describe SUSE::Connect::HwInfo::S390 do
   subject { SUSE::Connect::HwInfo::S390 }
   let(:read_values) { File.read(File.join(fixtures_dir, 'read_values_s.txt')) }
   let(:success) { double('Process Status', exitstatus: 0) }
+  let(:dmidecode) { File.read(File.join(fixtures_dir, 'dmidecode_aws.txt')) }
   include_context 'shared lets'
 
   before :each do
     allow(Open3).to receive(:capture3).with(shared_env_hash, 'uname -i').and_return(['s390x', '', success])
     allow(SUSE::Connect::System).to receive(:hostname).and_return('test')
     allow(Open3).to receive(:capture3).with(shared_env_hash, 'read_values -s').and_return([read_values, '', success])
+    allow(Open3).to receive(:capture3).with(shared_env_hash, 'dmidecode -t system').and_return([dmidecode, '', success])
   end
 
   after(:each) do
@@ -41,6 +43,7 @@ describe SUSE::Connect::HwInfo::S390 do
       expect(hwinfo[:hypervisor]).to eq 'z/VM 6.1.0'
       expect(hwinfo[:arch]).to eq 's390x'
       expect(hwinfo[:uuid]).to eq nil
+      expect(hwinfo[:cloud_provider]).to eq 'Amazon'
     end
 
     it 'returns system hypervisor' do
@@ -64,6 +67,7 @@ describe SUSE::Connect::HwInfo::S390 do
       expect(hwinfo[:hypervisor]).to eq nil
       expect(hwinfo[:arch]).to eq 's390x'
       expect(hwinfo[:uuid]).to eq nil
+      expect(hwinfo[:cloud_provider]).to eq 'Amazon'
     end
 
     it 'returns no hypervisor when running on an LPAR' do

@@ -5,11 +5,13 @@ describe SUSE::Connect::HwInfo::X86 do
   subject { SUSE::Connect::HwInfo::X86 }
   let(:success) { double('Process Status', exitstatus: 0) }
   let(:lscpu) { File.read(File.join(fixtures_dir, 'lscpu_phys.txt')) }
+  let(:dmidecode) { File.read(File.join(fixtures_dir, 'dmidecode_aws.txt')) }
   include_context 'shared lets'
 
   before :each do
     allow(SUSE::Connect::System).to receive(:hostname).and_return('test')
     allow(Open3).to receive(:capture3).with(shared_env_hash, 'lscpu').and_return([lscpu, '', success])
+    allow(Open3).to receive(:capture3).with(shared_env_hash, 'dmidecode -t system').and_return([dmidecode, '', success])
   end
 
   after(:each) do
@@ -27,6 +29,7 @@ describe SUSE::Connect::HwInfo::X86 do
     expect(hwinfo[:hypervisor]).to eq nil
     expect(hwinfo[:arch]).to eq 'x86_64'
     expect(hwinfo[:uuid]).to eq 'uuid'
+    expect(hwinfo[:cloud_provider]).to eq 'Amazon'
   end
 
   it 'parses output of lscpu and returns hash' do

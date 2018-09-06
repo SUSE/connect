@@ -1,0 +1,27 @@
+# dmidecode 3.0
+Getting SMBIOS data from sysfs.
+SMBIOS 2.3 present.
+
+Handle 0x0001, DMI type 1, 25 bytes
+System Information
+	Manufacturer: Microsoft Corporation
+	Product Name: Virtual Machine
+	Version: 7.0
+	Serial Number: 0000-0005-0960-9066-4444-7097-88
+	UUID: 75F3B846-6985-9C4B-835F-12D4A8C73BA7
+	Wake-up Type: Power Switch
+
+Handle 0x004E, DMI type 12, 5 bytes
+System Configuration Options
+	Option 1: To Be Filled By O.E.M.
+	Option 2: To Be Filled By O.E.M.
+	Option 3: To Be Filled By O.E.M.
+
+Handle 0x014F, DMI type 23, 13 bytes
+System Reset
+	Status: Disabled
+	Watchdog Timer: Not Present
+
+Handle 0x0150, DMI type 32, 20 bytes
+System Boot Information
+	Status: No errors detected
