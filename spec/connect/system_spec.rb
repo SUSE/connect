@@ -72,9 +72,18 @@ describe SUSE::Connect::System do
   end
 
   describe '.add_service' do
-    it 'adds zypper service to the system' do
-      expect(Zypper).to receive(:add_service).with('furl', 'JiYoKo', true)
-      subject.add_service service
+    context 'when refresh_zypper_service is true' do
+      it 'adds zypper service to the system and refreshes it' do
+        expect(Zypper).to receive(:add_service).with('furl', 'JiYoKo', true)
+        subject.add_service service
+      end
+    end
+
+    context 'when refresh_zypper_service is false' do
+      it "adds zypper service to the system and doesn't refresh it" do
+        expect(Zypper).to receive(:add_service).with('furl', 'JiYoKo', false)
+        subject.add_service(service, false)
+      end
     end
 
     context 'with wrong argument' do

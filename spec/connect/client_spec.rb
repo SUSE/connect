@@ -309,16 +309,40 @@ describe SUSE::Connect::Client do
         subject.register!
       end
 
-      it 'calls register_product for the base product' do
-        expect(subject).to receive(:register_product).with(product, false, true)
-        subject.register!
+      context 'when no_zypper_refs is false' do
+        it 'calls register_product for the base product' do
+          expect(subject).to receive(:register_product).with(product, false, true)
+          subject.register!
+        end
+
+        it 'calls register_product for all recommended extensions' do
+          [recommended_2, recommended_2_2, recommended_3].each do |ext|
+            expect(subject).to receive(:register_product).with(ext, true, true)
+          end
+          subject.register!
+        end
       end
 
-      it 'calls register_product for all recommended extensions' do
-        [recommended_2, recommended_2_2, recommended_3].each do |ext|
-          expect(subject).to receive(:register_product).with(ext, true, true)
+      context 'when no_zypper_refs is true' do
+        let(:config) do
+          SUSE::Connect::Config.new.merge!({ 'no_zypper_refs' => true })
         end
-        subject.register!
+
+        before do
+          allow(SUSE::Connect::Config).to receive(:new).and_return(config)
+        end
+
+        it 'calls register_product for the base product' do
+          expect(subject).to receive(:register_product).with(product, false, false)
+          subject.register!
+        end
+
+        it 'calls register_product for all recommended extensions' do
+          [recommended_2, recommended_2_2, recommended_3].each do |ext|
+            expect(subject).to receive(:register_product).with(ext, true, false)
+          end
+          subject.register!
+        end
       end
 
       it 'prints message on successful activation' do
