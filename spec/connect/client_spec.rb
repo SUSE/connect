@@ -309,40 +309,16 @@ describe SUSE::Connect::Client do
         subject.register!
       end
 
-      context 'when no_zypper_refs is false' do
-        it 'calls register_product for the base product' do
-          expect(subject).to receive(:register_product).with(product, false, true)
-          subject.register!
-        end
-
-        it 'calls register_product for all recommended extensions' do
-          [recommended_2, recommended_2_2, recommended_3].each do |ext|
-            expect(subject).to receive(:register_product).with(ext, true, true)
-          end
-          subject.register!
-        end
+      it 'calls register_product for the base product' do
+        expect(subject).to receive(:register_product).with(product, false)
+        subject.register!
       end
 
-      context 'when no_zypper_refs is true' do
-        let(:config) do
-          SUSE::Connect::Config.new.merge!({ 'no_zypper_refs' => true })
+      it 'calls register_product for all recommended extensions' do
+        [recommended_2, recommended_2_2, recommended_3].each do |ext|
+          expect(subject).to receive(:register_product).with(ext)
         end
-
-        before do
-          allow(SUSE::Connect::Config).to receive(:new).and_return(config)
-        end
-
-        it 'calls register_product for the base product' do
-          expect(subject).to receive(:register_product).with(product, false, false)
-          subject.register!
-        end
-
-        it 'calls register_product for all recommended extensions' do
-          [recommended_2, recommended_2_2, recommended_3].each do |ext|
-            expect(subject).to receive(:register_product).with(ext, true, false)
-          end
-          subject.register!
-        end
+        subject.register!
       end
 
       it 'prints message on successful activation' do
@@ -356,9 +332,9 @@ describe SUSE::Connect::Client do
       before { recommended_3.available = false }
 
       it 'does not register the unavailable extension' do
-        expect(subject).to receive(:register_product).with(recommended_2, true, true)
-        expect(subject).to receive(:register_product).with(recommended_2_2, true, true)
-        expect(subject).not_to receive(:register_product).with(recommended_3, any_args)
+        expect(subject).to receive(:register_product).with(recommended_2)
+        expect(subject).to receive(:register_product).with(recommended_2_2)
+        expect(subject).not_to receive(:register_product).with(recommended_3)
         subject.register!
       end
     end
@@ -367,9 +343,9 @@ describe SUSE::Connect::Client do
       before { recommended_2.available = false }
 
       it 'does not register the unavailable extension nor its children' do
-        expect(subject).not_to receive(:register_product).with(recommended_2, any_args)
-        expect(subject).not_to receive(:register_product).with(recommended_2_2, any_args)
-        expect(subject).to receive(:register_product).with(recommended_3, true, true)
+        expect(subject).not_to receive(:register_product).with(recommended_2)
+        expect(subject).not_to receive(:register_product).with(recommended_2_2)
+        expect(subject).to receive(:register_product).with(recommended_3)
         subject.register!
       end
     end
@@ -397,22 +373,60 @@ describe SUSE::Connect::Client do
       SUSE::Connect::GlobalLogger.instance.log = default_logger
     end
 
-    it 'should activate the product, add service file and install release package' do
-      expect(subject).to receive(:activate_product).with(product, fake_email).and_return service_stub
-      expect(System).to receive(:add_service).with(service_stub, true)
+    context 'when no_zypper_refs is false' do
+      context 'when install_release_package is true' do
+        it 'activates the product, add the service, refreshes the service and installs release package' do
+          expect(subject).to receive(:activate_product).with(product, fake_email).and_return service_stub
+          expect(System).to receive(:add_service).with(service_stub, true)
 
-      expect(Zypper).to receive(:install_release_package).with(product.identifier)
+          expect(Zypper).to receive(:install_release_package).with(product.identifier)
 
-      subject.register_product(product)
+          subject.register_product(product)
+        end
+      end
+
+      context 'when install_release_package is false' do
+        it "refreshes the service, doesn't install the release package" do
+          expect(subject).to receive(:activate_product).with(product, fake_email).and_return service_stub
+          expect(System).to receive(:add_service).with(service_stub, true)
+
+          expect(Zypper).not_to receive(:install_release_package)
+
+          subject.register_product(product, false)
+        end
+      end
     end
 
-    it 'should not install the release package if install_release_package is false' do
-      expect(subject).to receive(:activate_product).with(product, fake_email).and_return service_stub
-      expect(System).to receive(:add_service).with(service_stub, true)
+    context 'when no_zypper_refs is true' do
+      let(:config) do
+        SUSE::Connect::Config.new.merge!({ 'no_zypper_refs' => true })
+      end
 
-      expect(Zypper).not_to receive(:install_release_package)
+      before do
+        allow(SUSE::Connect::Config).to receive(:new).and_return(config)
+      end
 
-      subject.register_product(product, false)
+      context 'when install_release_package is true' do
+        it "activates the product, adds service file, doesn't refresh the service and installs release package" do
+          expect(subject).to receive(:activate_product).with(product, fake_email).and_return service_stub
+          expect(System).to receive(:add_service).with(service_stub, false)
+
+          expect(Zypper).to receive(:install_release_package).with(product.identifier)
+
+          subject.register_product(product)
+        end
+      end
+
+      context 'when install_release_package is false' do
+        it "doesn't refresh the service, doesn't not install the release package" do
+          expect(subject).to receive(:activate_product).with(product, fake_email).and_return service_stub
+          expect(System).to receive(:add_service).with(service_stub, false)
+
+          expect(Zypper).not_to receive(:install_release_package)
+
+          subject.register_product(product, false)
+        end
+      end
     end
 
     it 'informs the user about progress' do

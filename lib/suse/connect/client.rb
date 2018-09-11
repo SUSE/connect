@@ -26,19 +26,19 @@ module SUSE
         announce_or_update
         product = @config.product || Zypper.base_product
 
-        register_product(product, @config.product ? true : false, !@config.no_zypper_refs)
+        register_product(product, @config.product ? true : false)
 
         # Only register recommended packages for base products
-        register_product_tree(show_product(product), !@config.no_zypper_refs) if product.isbase
+        register_product_tree(show_product(product)) if product.isbase
 
         log.info 'Successfully registered system.'
       end
 
       # Activate the product, add the service and install the release package
-      def register_product(product, install_release_package = true, refresh_zypper_service = true)
+      def register_product(product, install_release_package = true)
         service = activate_product(product, @config.email)
 
-        System.add_service(service, refresh_zypper_service)
+        System.add_service(service, !@config.no_zypper_refs)
         Zypper.install_release_package(product.identifier) if install_release_package
 
         print_success_message(product)
@@ -200,13 +200,13 @@ module SUSE
 
       # Traverses (depth-first search) the product tree
       # and registers the recommended and available products.
-      def register_product_tree(product, refresh_zypper_service = true)
+      def register_product_tree(product)
         product.extensions.each do |extension|
           # We need to explicitly check whether `.available` is `false`,
           # because SCC does not return this attribute, only SMT & RMT do.
           if extension.recommended && extension.available != false
-            register_product(extension, true, refresh_zypper_service)
-            register_product_tree(extension, refresh_zypper_service)
+            register_product(extension)
+            register_product_tree(extension)
           end
         end
       end
