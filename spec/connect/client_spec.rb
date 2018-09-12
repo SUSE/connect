@@ -373,22 +373,60 @@ describe SUSE::Connect::Client do
       SUSE::Connect::GlobalLogger.instance.log = default_logger
     end
 
-    it 'should activate the product, add service file and install release package' do
-      expect(subject).to receive(:activate_product).with(product, fake_email).and_return service_stub
-      expect(System).to receive(:add_service).with(service_stub)
+    context 'when no_zypper_refs is false' do
+      context 'when install_release_package is true' do
+        it 'activates the product, add the service, refreshes the service and installs release package' do
+          expect(subject).to receive(:activate_product).with(product, fake_email).and_return service_stub
+          expect(System).to receive(:add_service).with(service_stub, true)
 
-      expect(Zypper).to receive(:install_release_package).with(product.identifier)
+          expect(Zypper).to receive(:install_release_package).with(product.identifier)
 
-      subject.register_product(product)
+          subject.register_product(product)
+        end
+      end
+
+      context 'when install_release_package is false' do
+        it "refreshes the service, doesn't install the release package" do
+          expect(subject).to receive(:activate_product).with(product, fake_email).and_return service_stub
+          expect(System).to receive(:add_service).with(service_stub, true)
+
+          expect(Zypper).not_to receive(:install_release_package)
+
+          subject.register_product(product, false)
+        end
+      end
     end
 
-    it 'should not install the release package if install_release_package is false' do
-      expect(subject).to receive(:activate_product).with(product, fake_email).and_return service_stub
-      expect(System).to receive(:add_service).with(service_stub)
+    context 'when no_zypper_refs is true' do
+      let(:config) do
+        SUSE::Connect::Config.new.merge!({ 'no_zypper_refs' => true })
+      end
 
-      expect(Zypper).not_to receive(:install_release_package)
+      before do
+        allow(SUSE::Connect::Config).to receive(:new).and_return(config)
+      end
 
-      subject.register_product(product, false)
+      context 'when install_release_package is true' do
+        it "activates the product, adds service file, doesn't refresh the service and installs release package" do
+          expect(subject).to receive(:activate_product).with(product, fake_email).and_return service_stub
+          expect(System).to receive(:add_service).with(service_stub, false)
+
+          expect(Zypper).to receive(:install_release_package).with(product.identifier)
+
+          subject.register_product(product)
+        end
+      end
+
+      context 'when install_release_package is false' do
+        it "doesn't refresh the service, doesn't not install the release package" do
+          expect(subject).to receive(:activate_product).with(product, fake_email).and_return service_stub
+          expect(System).to receive(:add_service).with(service_stub, false)
+
+          expect(Zypper).not_to receive(:install_release_package)
+
+          subject.register_product(product, false)
+        end
+      end
     end
 
     it 'informs the user about progress' do

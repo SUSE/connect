@@ -34,11 +34,11 @@ module SUSE
         log.info 'Successfully registered system.'
       end
 
-      # Activate the product, add the service and install the relase package
+      # Activate the product, add the service and install the release package
       def register_product(product, install_release_package = true)
         service = activate_product(product, @config.email)
 
-        System.add_service(service)
+        System.add_service(service, !@config.no_zypper_refs)
         Zypper.install_release_package(product.identifier) if install_release_package
 
         print_success_message(product)

@@ -90,14 +90,14 @@ module SUSE
         #
         # @see https://doc.opensuse.org/projects/libzypp/HEAD/zypp-services.html#services-remote ZYpp Services Documentation
         # @todo TODO: introduce Product class
-        def add_service(service_url, service_name)
+        def add_service(service_url, service_name, refresh_zypper_service = true)
           # INFO: Remove old service which could be modified by a customer
           remove_service(service_name)
           call("--non-interactive addservice -t ris #{Shellwords.escape(service_url)} '#{Shellwords.escape(service_name)}'")
           enable_service_autorefresh(service_name)
           write_service_credentials(service_name)
 
-          refresh_service(service_name)
+          refresh_service(service_name) if refresh_zypper_service
         end
 
         # @param service_name [String] Alias-mnemonic with which zypper should remove this service
@@ -154,7 +154,9 @@ module SUSE
         end
 
         def install_release_package(identifier)
-          call("--no-refresh --non-interactive install --no-recommends --auto-agree-with-product-licenses -t product #{identifier}") if identifier
+          return unless identifier
+          _, _, status = execute_raw("rpm -q #{identifier}-release")
+          call("--no-refresh --non-interactive install --no-recommends --auto-agree-with-product-licenses -t product #{identifier}") unless (status == 0)
         end
 
         def remove_release_package(identifier)

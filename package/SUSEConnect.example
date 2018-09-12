@@ -9,3 +9,6 @@
 
 ## Do not verify SSL certificates when using https (default: false)
 # insecure: false
+
+## Do not refresh zypper service when registering (default: false)
+# no_zypper_refs: false

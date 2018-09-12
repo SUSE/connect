@@ -121,21 +121,35 @@ describe SUSE::Connect::Zypper do
     let(:service_url)  { 'http://example.com' }
     let(:args) { "zypper --non-interactive addservice -t ris #{service_url} '#{service_name}'" }
 
-    before :each do
+    before do
       allow(Zypper).to receive(:remove_service).with(service_name)
       allow(Zypper).to receive(:enable_service_autorefresh).with(service_name)
       allow(Zypper).to receive(:write_service_credentials).with(service_name)
       allow(Zypper).to receive(:refresh_service)
     end
 
-    it 'adds service' do
-      expect(Zypper).to receive(:remove_service).with(service_name)
-      expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
-      expect(Zypper).to receive(:enable_service_autorefresh).with(service_name)
-      expect(Zypper).to receive(:write_service_credentials).with(service_name)
-      expect(Zypper).to receive(:refresh_service).with(service_name)
+    context 'when refresh_zypper_service is false' do
+      it "adds a service, but doesn't refresh it" do
+        expect(Zypper).to receive(:remove_service).with(service_name)
+        expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
+        expect(Zypper).to receive(:enable_service_autorefresh).with(service_name)
+        expect(Zypper).to receive(:write_service_credentials).with(service_name)
+        expect(Zypper).not_to receive(:refresh_service)
 
-      subject.add_service(service_url, service_name)
+        subject.add_service(service_url, service_name, false)
+      end
+    end
+
+    context 'when refresh_zypper_service is true' do
+      it 'adds service and refreshes it' do
+        expect(Zypper).to receive(:remove_service).with(service_name)
+        expect(Open3).to receive(:capture3).with(shared_env_hash, args).and_return(['', '', status])
+        expect(Zypper).to receive(:enable_service_autorefresh).with(service_name)
+        expect(Zypper).to receive(:write_service_credentials).with(service_name)
+        expect(Zypper).to receive(:refresh_service).with(service_name)
+
+        subject.add_service(service_url, service_name)
+      end
     end
 
     it 'sets autorefresh flag' do
@@ -391,10 +405,25 @@ describe SUSE::Connect::Zypper do
   end
 
   describe '.install_release_package' do
-    it 'calls the command' do
-      expect(Open3).to receive(:capture3).with(shared_env_hash, 'zypper --no-refresh --non-interactive install --no-recommends --auto-agree-with-product-licenses -t product opensuse') # rubocop:disable LineLength
-                                         .and_return(['', '', status])
-      subject.install_release_package('opensuse')
+    context 'when the release package is not yet installed' do
+      it 'calls zypper install' do
+        expect(Open3).to receive(:capture3).with(shared_env_hash, 'rpm -q opensuse-release')
+                           .and_return(['', '', 1])
+
+        expect(Open3).to receive(:capture3).with(shared_env_hash, 'zypper --no-refresh --non-interactive install --no-recommends --auto-agree-with-product-licenses -t product opensuse') # rubocop:disable LineLength
+                                           .and_return(['', '', status])
+        subject.install_release_package('opensuse')
+      end
+    end
+
+    context 'when the release package is already installed' do
+      it "doesn't call zypper install" do
+        expect(Open3).to receive(:capture3).with(shared_env_hash, 'rpm -q opensuse-release')
+                           .and_return(['', '', 0])
+
+        expect(Open3).not_to receive(:capture3)
+        subject.install_release_package('opensuse')
+      end
     end
   end
 
