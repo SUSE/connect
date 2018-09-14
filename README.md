@@ -58,7 +58,7 @@ Open a console
 
 Run RSpec
 
-* `docker run --privileged --rm -t connect.12sp0 su nobody -c rspec`
+* `docker run --privileged --rm -t connect.12sp0 rspec`
 
 Run Cucumber
 
@@ -66,8 +66,8 @@ Run Cucumber
 
 Run Rubocop
 
-* `docker run --privileged --rm -t connect.12sp0 su nobody -c rubocop`
+* `docker run --privileged --rm -t connect.12sp0 rubocop`
 
-Or run whole set of tests together
+Run integration tests & cucumber
 
-* `docker run --privileged --rm -t connect.12sp0 sh docker/runall.sh`
+* `docker run --privileged --rm -t connect.12sp0 sh docker/integration.sh`
