@@ -12,6 +12,7 @@ module SUSE
     class Api
       # Set desired API version and forward it in accept headers (see connection.rb#json_request)
       VERSION = 'v4'
+      PRODUCT_NOT_INSTALLED_INDEX = 9000
 
       # Returns a new instance of SUSE::Connect::Api
       #
@@ -220,7 +221,18 @@ module SUSE
           online: '/connect/systems/products/migrations',
           offline: '/connect/systems/products/offline_migrations'
         }
-        @connection.post(endpoints.fetch(kind), auth: auth, params: payload)
+        result = @connection.post(endpoints.fetch(kind), auth: auth, params: payload)
+        # sort migration targets by product and version
+        if result.body.is_a?(Array)
+          products_list = products.sort_by! { |product| product.isbase ? 0 : 1 }.map(&:identifier).uniq
+          result.body.sort_by! do |suggested_products|
+            [
+              products_list.index(suggested_products[0]['identifier']) || PRODUCT_NOT_INSTALLED_INDEX,
+              -suggested_products[0]['version'].to_f
+            ]
+          end
+        end
+        result
       end
 
       # List available Installer-Updates repositories for the given product
