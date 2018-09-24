@@ -87,33 +87,69 @@ It should typically be enough to run `osc ar` to add new and delete removed file
 ```bash
 osc commit
 ```
+## Step 7. Submit Requests to openSUSE Factory and SLES
 
-## Step 7. Submit Requests to OpenSUSE and SLES
+To get a maintenance request accepted, each changelog entry needs to have at
+least one reference to a bug or feature request like `bsc#123` or `fate#123`.
 
-To get a maintenance request accepted, each changelog entry needs to reference a bug or feature
-request with `bsc#123` or `fate#123`.
+Note: If you want to disable automatic changes made by osc (e.g. License string)
+      use the `--no-cleanup` switch. Can be used for commands like `osc mr`, `osc sr`
+      and `osc ci`.
 
-### OpenSUSE Factory
+### Factory First
 
 To submit a request to openSUSE Factory, issue this commands in the console:
 
 ```bash
-osc sr systemsmanagement:SCC SUSEConnect openSUSE:Factory --no-cleanup
+osc sr systemsmanagement:SCC SUSEConnect openSUSE:Factory
 ```
 
-### SLES (Internal Build Service)
+### Submit maintenance updates for SLES to the Internal Build Service
 
-To make the initial submit for a new SLES version:
+#### Get target codesteams where to submit
+
+To checkout in which codestreams the package is currently maintaned, run:
 
 ```bash
-osc -A https://api.suse.de sr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-15:GA --no-cleanup
+osc -A https://api.suse.de maintained SUSEConnect
 ```
 
-To submit the updated package as a maintenance update to maintained SLES versions (it will automatically also go to the matching Leap version):
+For a more detailed view which target codestreams are in which state checkout: [Codestream overview](https://maintenance.suse.de/maintained/?package=SUSEConnect)
+
+#### Submit updates
+
+For each maintained codestream you need to create a new maintenance request:
 
 ```bash
-osc -A https://api.suse.de sr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP2:Update --no-cleanup
-osc -A https://api.suse.de sr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP3:Update --no-cleanup
+osc -A https://api.suse.de mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-15:Update
+```
+
+Note: In case the `mr` (maintenance request) command is not working properly,
+      try `sr` (submit request) command.
+
+
+Example:
+
+```bash
+$ osc -A https://api.suse.de maintained SUSEConnect
+SUSE:SLE-12-SP1:Update/SUSEConnect
+SUSE:SLE-12-SP2:Update/SUSEConnect
+SUSE:SLE-12-SP3:Update/SUSEConnect
+SUSE:SLE-12:Update/SUSEConnect
+SUSE:SLE-15:Update/SUSEConnect
+
+$ osc -A https://api.suse.de mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-15:Update
+Using target project 'SUSE:Maintenance'
+1736456
+
+$ osc -A https://api.suse.de mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP2:Update
+Using target project 'SUSE:Maintenance'
+164309
+
+$ osc -A https://api.suse.de mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP3:Update
+Using target project 'SUSE:Maintenance'
+347506
+
 ```
 
 You can check the status of your requests [here](https://build.opensuse.org/package/requests/systemsmanagement:SCC/SUSEConnect) and [here](https://build.suse.de/package/requests/Devel:SCC:suseconnect/SUSEConnect).
