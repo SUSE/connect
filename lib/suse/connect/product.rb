@@ -12,6 +12,7 @@ module SUSE
         product.version = old_product.version
         product.arch = old_product.arch
         product.release_type = old_product.release_type
+        product.isbase = !!product.isbase
         product
       end
     end

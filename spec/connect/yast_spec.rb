@@ -304,7 +304,7 @@ describe SUSE::Connect::YaST do
       client_double = instance_double(Client)
       allow(Client).to receive(:new).with(anything).and_return(client_double)
 
-      product_attributes = { identifier: 'SLES', version: '15', arch: 'x86_64', release_type: 'CD' }
+      product_attributes = { identifier: 'SLES', version: '15', arch: 'x86_64', release_type: 'CD', isbase: true }
       allow(client_double).to receive(:system_migrations)
         .and_return([[ Remote::Product.new(product_attributes) ]])
 
@@ -331,7 +331,7 @@ describe SUSE::Connect::YaST do
       client_double = instance_double(Client)
       allow(Client).to receive(:new).with(anything).and_return(client_double)
 
-      product_attributes = { identifier: 'SLES', version: '15', arch: 'x86_64', release_type: 'CD' }
+      product_attributes = { identifier: 'SLES', version: '15', arch: 'x86_64', release_type: 'CD', isbase: true }
       allow(client_double).to receive(:system_migrations)
         .and_return([[ Remote::Product.new(product_attributes) ]])
 

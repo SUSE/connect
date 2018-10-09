@@ -272,25 +272,50 @@ describe SUSE::Connect::Api do
   end
 
   describe "#system_migrations" do
-    shared_examples 'a query with no specified target base that returns migration paths' do |kind|
-      before { stub_system_migrations_call(kind) }
+    shared_examples 'a query with no specified target base that returns migration paths in the correct order' do |kind|
+      before { stub_system_migrations_call(kind, products) }
 
+      let(:query) { { installed_products: products.map(&:to_params) } }
       let(:products) do
         [
-          Remote::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64', release_type: 'HP-CNB'),
-          Remote::Product.new(identifier: 'SUSE-Cloud', version: '7', arch: 'x86_64', release_type: nil)
+          Remote::Product.new(identifier: 'SLES', version: '12', arch: 'x86_64', release_type: 'HP-CNB', isbase: true)
         ]
       end
 
-      let(:query) { { installed_products: products.map(&:to_params) } }
-
-      its(:code) { is_expected.to eq 200 }
-      its(:body) do
-        is_expected.to match_array([[
-          { 'identifier' => 'SLES', 'version' => '12.1', 'arch' => 'x86_64', 'release_type' => 'HP-CNB' },
-          { 'identifier' => 'SUSE-Cloud', 'version' => '8', 'arch' => 'x86_64', 'release_type' => nil }
-        ]])
+      context 'with SLES as base product' do
+        its(:code) { is_expected.to eq 200 }
+        its(:body) do
+          is_expected.to match_array(
+            [
+              [{ 'identifier' => 'SLES', 'version' => '12.2', 'arch' => 'x86_64', 'release_type' => 'HP-CNB' }],
+              [{ 'identifier' => 'SLES', 'version' => '12.1', 'arch' => 'x86_64', 'release_type' => 'HP-CNB' }],
+              [{ 'identifier' => 'SLE-HPC', 'version' => '12.2', 'arch' => 'x86_64', 'release_type' => nil }],
+              [{ 'identifier' => 'SLE-HPC', 'version' => '12.1', 'arch' => 'x86_64', 'release_type' => nil }]
+            ]
+          )
+        end
       end
+
+      context 'with SLE-HPC as base product' do
+        let(:products) do
+          [
+            Remote::Product.new(identifier: 'SLE-HPC', version: '12', arch: 'x86_64', release_type: 'test', isbase: true)
+          ]
+        end
+
+        its(:code) { is_expected.to eq 200 }
+        its(:body) do
+          is_expected.to match_array(
+            [
+              [{ 'identifier' => 'SLE-HPC', 'version' => '12.2', 'arch' => 'x86_64', 'release_type' => nil }],
+              [{ 'identifier' => 'SLE-HPC', 'version' => '12.1', 'arch' => 'x86_64', 'release_type' => nil }],
+              [{ 'identifier' => 'SLES', 'version' => '12.2', 'arch' => 'x86_64', 'release_type' => 'HP-CNB' }],
+              [{ 'identifier' => 'SLES', 'version' => '12.1', 'arch' => 'x86_64', 'release_type' => 'HP-CNB' }]
+            ]
+          )
+        end
+      end
+
 
       it 'is authenticated via basic auth' do
         payload = [
@@ -354,7 +379,7 @@ describe SUSE::Connect::Api do
       context "with kind #{kind}" do
         subject { api.new(config).system_migrations('Basic: encodedgibberish', products, kind: kind) }
 
-        it_behaves_like 'a query with no specified target base that returns migration paths', kind
+        it_behaves_like 'a query with no specified target base that returns migration paths in the correct order', kind
         it_behaves_like 'a query with no specified target base that returns no migration paths', kind
       end
 

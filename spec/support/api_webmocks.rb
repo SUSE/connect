@@ -100,15 +100,14 @@ def stub_systems_activations_call
     .to_return(status: 200, body: response_body, headers: {})
 end
 
-def stub_system_migrations_call(kind)
+def stub_system_migrations_call(kind, products)
   response_body = JSON.parse(File.read('spec/fixtures/migrations_response.json')).to_json
   headers = { 'Accept' => api_header_version, \
               'Authorization' => 'Basic: encodedgibberish' }
+  products_data = products.map(&:to_h)
+  products_data.each { |product| product.delete(:isbase) } # we do not send it to the server
   request_body = {
-    installed_products: [
-      { identifier: 'SLES', version: '12', arch: 'x86_64', release_type: 'HP-CNB' },
-      { identifier: 'SUSE-Cloud', version: '7', arch: 'x86_64', release_type: nil }
-    ]
+    installed_products: products_data
   }
   stub_request(:post, "https://example.com/connect/systems/products/#{(kind == :offline) ? 'offline_' : ''}migrations")
     .with(headers: headers, body: request_body.to_json)
