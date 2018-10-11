@@ -13,6 +13,7 @@ class SUSE::Connect::Remote::Product < SUSE::Connect::Remote::ServerDrivenModel
     super
     # TODO: ensure we have array here
     self.extensions = extensions.map { |ext| self.class.new(ext) } if extensions
+    self.isbase ||= (product_hash['product_type'] == 'base')
   end
 
   def to_params
