@@ -73,7 +73,7 @@ osc build SLE_15 x86_64 --no-verify
 
 Please consult the corresponding [IBS page](https://build.opensuse.org/package/show/systemsmanagement:SCC/SUSEConnect) for the full list of available targets.
 
-## Step 6. Commiting the package
+## Step 6. Committing the package
 
 To submit the package:
 ```bash
@@ -106,7 +106,7 @@ osc sr systemsmanagement:SCC SUSEConnect openSUSE:Factory
 
 ### Submit maintenance updates for SLES to the Internal Build Service
 
-#### Get target codesteams where to submit
+#### Get target codestreams where to submit
 
 To checkout in which codestreams the package is currently maintaned, run:
 
@@ -114,7 +114,7 @@ To checkout in which codestreams the package is currently maintaned, run:
 osc -A https://api.suse.de maintained SUSEConnect
 ```
 
-For a more detailed view which target codestreams are in which state checkout: [Codestream overview](https://maintenance.suse.de/maintained/?package=SUSEConnect)
+For a more detailed view which target codestreams are in which state, check out: [Codestream overview](https://maintenance.suse.de/maintained/?package=SUSEConnect)
 
 #### Submit updates
 
