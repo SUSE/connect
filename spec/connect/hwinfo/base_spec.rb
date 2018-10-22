@@ -28,6 +28,16 @@ describe SUSE::Connect::HwInfo::Base do
       end
     end
 
+    context 'the dmidecode command is not installed' do
+      before do
+        allow(Open3).to receive(:capture3).with(shared_env_hash, 'dmidecode -t system').and_raise(Errno::ENOENT)
+      end
+
+      it 'returns nil' do
+        expect(subject.cloud_provider).to be_nil
+      end
+    end
+
     context 'on AWS hypervisors' do
       let(:dmidecode_output) { File.read(File.join(fixtures_dir, 'dmidecode_aws.txt')) }
 

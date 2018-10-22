@@ -48,7 +48,7 @@ module SUSE::Connect::HwInfo
         matches = execute('dmidecode -t system', false).match(regex).to_a[2..4].to_a.compact
         return nil unless matches.length == 1
         matches[0].capitalize
-      rescue SUSE::Connect::SystemCallError
+      rescue SUSE::Connect::SystemCallError, Errno::ENOENT
         nil
       end
     end
