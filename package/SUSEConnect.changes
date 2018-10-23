@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Oct 23 15:52:51 UTC 2018 - hschmidt@suse.com
+
+- Changed "openssl" recommendation to "openssl(cli)"
+  on SLE 12 SP3+ and SLE 15+ (bsc#1101470).
+
+-------------------------------------------------------------------
 Mon Oct 22 15:59:04 UTC 2018 - hschmidt@suse.com
 
 - Update to 0.3.14
