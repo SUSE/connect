@@ -3,50 +3,61 @@ require 'spec_helper'
 describe SUSE::Connect::HwInfo::Base do
   subject { SUSE::Connect::HwInfo::Base }
   let(:exit_status) { double('Process Status', exitstatus: 0) }
-  let(:dmidecode) { '' }
   include_context 'shared lets'
 
-  after(:each) do
+  after do
     SUSE::Connect::HwInfo::Base.instance_variable_set('@arch', nil)
   end
 
   describe '#cloud_provider' do
-    before(:each) do
-      allow(Open3).to receive(:capture3).with(shared_env_hash, 'dmidecode -t system').and_return([dmidecode, '', exit_status])
+    let(:dmidecode_output) { '' }
+
+    before do
+      allow(Open3).to receive(:capture3).with(shared_env_hash, 'dmidecode -t system').and_return([dmidecode_output, '', exit_status])
     end
 
     it 'handles non-cloud providers' do
       expect(subject.cloud_provider).to be_nil
     end
 
-    context 'run with error' do
+    context 'the dmidecode command fails' do
       let(:exit_status) { double('Process Status', exitstatus: 1) }
 
-      it 'defaults to nil with error' do
+      it 'returns nil' do
         expect(subject.cloud_provider).to be_nil
       end
     end
 
-    context 'AWS hypervisors' do
-      let(:dmidecode) { File.read(File.join(fixtures_dir, 'dmidecode_aws.txt')) }
+    context 'the dmidecode command is not installed' do
+      before do
+        allow(Open3).to receive(:capture3).with(shared_env_hash, 'dmidecode -t system').and_raise(Errno::ENOENT)
+      end
 
-      it 'can detect an amazon hypervisor' do
+      it 'returns nil' do
+        expect(subject.cloud_provider).to be_nil
+      end
+    end
+
+    context 'on AWS hypervisors' do
+      let(:dmidecode_output) { File.read(File.join(fixtures_dir, 'dmidecode_aws.txt')) }
+
+      it 'detects it' do
         expect(subject.cloud_provider).to eq('Amazon')
       end
     end
 
-    context 'Google hypervisors' do
-      let(:dmidecode) { File.read(File.join(fixtures_dir, 'dmidecode_google.txt')) }
+    context 'on Google hypervisors' do
+      let(:dmidecode_output) { File.read(File.join(fixtures_dir, 'dmidecode_google.txt')) }
 
-      it 'can detect an google hypervisor' do
+      it 'detects it' do
         expect(subject.cloud_provider).to eq('Google')
       end
     end
 
-    context 'Azure hypervisors' do
-      let(:dmidecode) { File.read(File.join(fixtures_dir, 'dmidecode_azure.txt')) }
+    context 'on Azure hypervisors' do
+      let(:dmidecode_output) { File.read(File.join(fixtures_dir, 'dmidecode_azure.txt')) }
 
-      it 'can detect an microsoft hypervisor' do
+      it 'detects it' do
         expect(subject.cloud_provider).to eq('Microsoft')
       end
     end
