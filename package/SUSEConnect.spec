@@ -39,7 +39,12 @@ Requires:       zypper
 Recommends:     gawk
 Recommends:     gpg2
 Recommends:     grep
+# Allows for installing openssl 1.0 without needing to remove SUSEConnect. See bsc#1101470.
+%if 0%{?sle_version} < 120200
 Recommends:     openssl
+%else
+Recommends:     openssl(cli)
+%endif
 Recommends:     sed
 Recommends:     curl
 Requires:       zypper(auto-agree-with-product-licenses)
