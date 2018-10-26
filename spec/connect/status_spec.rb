@@ -160,6 +160,16 @@ describe SUSE::Connect::Status do
 
       it { expect(&subject).to output(/^    \e\[1mSUSE Linux Enterprise Software Development Kit 12 ppc64le\e\[0m \e\[33m\(Activated\)\e\[0m$/).to_stdout }
     end
+
+    context 'on readable root filesystem' do
+      before { allow(status_instance).to receive(:root_fs_writable?).and_return true }
+      it { expect(&subject).to output(/^    Activate with: SUSEConnect/).to_stdout }
+    end
+
+    context 'on read-only root filesystem' do
+      before { allow(status_instance).to receive(:root_fs_writable?).and_return false }
+      it { expect(&subject).to output(/^    Activate with: transactional-update register/).to_stdout }
+    end
   end
 
   describe '#available_system_extensions' do
@@ -243,6 +253,21 @@ describe SUSE::Connect::Status do
         expect(Remote::Activation).to receive(:new).with(2)
         expect(Remote::Activation).to receive(:new).with(3)
         subject.send(:activations_from_server)
+      end
+    end
+
+    describe '?root_fs_writable?' do
+      context 'when root filesystem is readable' do
+        it 'returns true' do
+          allow(subject).to receive(:system).and_return true
+          expect(subject.send(:root_fs_writable?)).to be_truthy
+        end
+      end
+      context 'when root filesystem is readonly' do
+        it 'returns false' do
+          allow(subject).to receive(:system).and_return false
+          expect(subject.send(:root_fs_writable?)).to be_falsey
+        end
       end
     end
   end
