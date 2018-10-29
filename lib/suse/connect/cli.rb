@@ -1,11 +1,13 @@
 require 'optparse'
 require 'suse/connect'
+require 'suse/toolkit/renderer'
 
 module SUSE
   module Connect
     # Command line interface for interacting with SUSEConnect
     class Cli # rubocop:disable ClassLength
       include Logger
+      prepend SUSE::Toolkit::Renderer
 
       attr_reader :config, :options
 
@@ -43,7 +45,7 @@ module SUSE
             log.error 'Please use either --regcode or --instance-data'
             exit(1)
           elsif @config.url_default? && !@config.token && !status.activated_base_product?
-            log.error 'Please register your system using the --regcode parameter, or provide the --url parameter to register against SMT.'
+            puts render('default.text', version: SUSE::Connect::VERSION)
             exit(1)
           else
             Client.new(@config).register!

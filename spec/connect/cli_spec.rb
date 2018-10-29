@@ -121,8 +121,7 @@ describe SUSE::Connect::Cli do
         it 'requires --regcode or --url' do
           expect_any_instance_of(Status).to receive(:activated_base_product?).and_return(false)
           expect_any_instance_of(Client).not_to receive(:register!)
-          expect(string_logger).to receive(:error)
-            .with('Please register your system using the --regcode parameter, or provide the --url parameter to register against SMT.')
+          expect_any_instance_of(SUSE::Toolkit::Renderer).to receive(:render).with('default.text', { version: SUSE::Connect::VERSION })
           expect { cli.execute! }.to raise_error(SystemExit)
         end
 
