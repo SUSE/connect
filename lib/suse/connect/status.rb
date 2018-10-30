@@ -36,6 +36,7 @@ module SUSE
       end
 
       def print_extensions_list
+        @binary = root_fs_writable? ? 'SUSEConnect' : 'transactional-update register'
         puts render('extensions_list.text')
       end
 
@@ -79,6 +80,10 @@ module SUSE
 
       def build_product_activation_code(product)
         "#{product.identifier}/#{product.version}/#{product.arch}"
+      end
+
+      def root_fs_writable?
+        system('test -w /')
       end
 
       def text_product_status
