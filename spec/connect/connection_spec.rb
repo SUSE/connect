@@ -93,6 +93,35 @@ describe SUSE::Connect::Connection do
     end
   end
 
+  describe '?prefix_protocol' do
+    let(:http_endpoint) { 'http://example.com' }
+    let(:https_endpoint) { 'https://example.com' }
+    let(:connection_http) { subject.new(http_endpoint) }
+    let(:connection_https) { subject.new(https_endpoint) }
+    let(:connection_no_protocol) { subject.new('example.com') }
+
+    context 'with http prefixed' do
+      before { allow(connection_http).to receive(:prefix_protocol).with(http_endpoint).and_return(http_endpoint) }
+      it 'returns unchanged string' do
+        expect(connection_http.send(:prefix_protocol, http_endpoint)).to eq http_endpoint
+      end
+    end
+
+    context 'with https prefixed' do
+      before { allow(connection_https).to receive(:prefix_protocol).with(https_endpoint).and_return(https_endpoint) }
+      it 'returns unchanged string' do
+        expect(connection_https.send(:prefix_protocol, https_endpoint)).to eq https_endpoint
+      end
+    end
+
+    context 'without prefixed protocol' do
+      before { allow(connection_no_protocol).to receive(:prefix_protocol).with('example.com').and_return(https_endpoint) }
+      it 'returns unchanged string' do
+        expect(connection_no_protocol.send(:prefix_protocol, 'example.com')).to eq https_endpoint
+      end
+    end
+  end
+
   describe '?json_request' do
     let :connection do
       subject.new('https://leg')
