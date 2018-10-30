@@ -154,7 +154,7 @@ describe SUSE::Connect::Cli do
       it '--instance-data requires --url' do
         cli = described_class.new(%w[--instance-data /tmp/test])
         expect(string_logger).to receive(:error)
-          .with('Please use --instance-data only in combination with --url pointing to your SMT server')
+          .with('Please use --instance-data only in combination with --url pointing to your RMT or SMT server')
         expect { cli.execute! }.to raise_error(SystemExit)
       end
 
