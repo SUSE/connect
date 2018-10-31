@@ -118,10 +118,12 @@ describe SUSE::Connect::Cli do
       end
 
       context 'when the system has no activated base product' do
-        it 'requires --regcode or --url' do
+        it 'shows a properly rendered help page' do
           expect_any_instance_of(Status).to receive(:activated_base_product?).and_return(false)
           expect_any_instance_of(Client).not_to receive(:register!)
-          expect_any_instance_of(SUSE::Toolkit::Renderer).to receive(:render).with('default.text', { version: SUSE::Connect::VERSION })
+          expect_any_instance_of(described_class).to receive(:puts) do |option_parser|
+            expect(option_parser.instance_variable_get(:@opts).to_s.split("\n").map(&:length)).to all be <= 80
+          end
           expect { cli.execute! }.to raise_error(SystemExit)
         end
 

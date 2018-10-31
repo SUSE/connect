@@ -4,7 +4,7 @@ Feature: Testing error messages of product activation
   Scenario: System registration requires a regcode
     When I call SUSEConnect with '' arguments
     Then the exit status should be 1
-    And the output should contain "Try 'SUSEConnect -h' for more information and options."
+    And the output should contain "Usage: SUSEConnect [options]"
 
   Scenario: Client provides meaningful message in case of not yet active regcode
     When I call SUSEConnect with '--regcode NOTYETACTIVATED' arguments
