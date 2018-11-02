@@ -19,6 +19,7 @@ module SUSE
       attr_accessor :debug, :http, :auth, :language
 
       def initialize(endpoint, language: nil, insecure: false, debug: false, verify_callback: nil)
+        endpoint         = prefix_protocol(endpoint)
         uri              = URI.parse(endpoint)
         http             = Net::HTTP.new(uri.host, uri.port)
         if http.proxy?
@@ -54,6 +55,14 @@ module SUSE
       end
 
       private
+
+      def prefix_protocol(endpoint)
+        if endpoint[%r{^(http|https):\/\/}]
+          endpoint
+        else
+          "https://#{endpoint}"
+        end
+      end
 
       def json_request(method, path, params = {})
         request = VERB_TO_CLASS[method].new(path)

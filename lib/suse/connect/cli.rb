@@ -37,13 +37,13 @@ module SUSE
           end
         else
           if @config.instance_data_file && @config.url_default?
-            log.error 'Please use --instance-data only in combination with --url pointing to your SMT server'
+            log.error 'Please use --instance-data only in combination with --url pointing to your RMT or SMT server'
             exit(1)
           elsif @config.token && @config.instance_data_file
             log.error 'Please use either --regcode or --instance-data'
             exit(1)
           elsif @config.url_default? && !@config.token && !status.activated_base_product?
-            log.error 'Please register your system using the --regcode parameter, or provide the --url parameter to register against SMT.'
+            puts @opts
             exit(1)
           else
             Client.new(@config).register!

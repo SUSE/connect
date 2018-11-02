@@ -93,6 +93,28 @@ describe SUSE::Connect::Connection do
     end
   end
 
+  describe '?prefix_protocol' do
+    let(:connection) { subject.new('example.com') }
+
+    context 'with http prefixed' do
+      it 'returns unchanged string' do
+        expect(connection.send(:prefix_protocol, 'http://example.com')).to eq 'http://example.com'
+      end
+    end
+
+    context 'with https prefixed' do
+      it 'returns unchanged string' do
+        expect(connection.send(:prefix_protocol, 'https://example.com')).to eq 'https://example.com'
+      end
+    end
+
+    context 'without prefixed protocol' do
+      it 'returns unchanged string' do
+        expect(connection.send(:prefix_protocol, 'example.com')).to eq 'https://example.com'
+      end
+    end
+  end
+
   describe '?json_request' do
     let :connection do
       subject.new('https://leg')
@@ -155,20 +177,45 @@ describe SUSE::Connect::Connection do
   end
 
   describe '#post' do
+    let(:call) { 'example.com' }
+    let(:endpoint) { 'https://example.com' }
     let :connection do
-      subject.new('https://example.com')
+      subject.new(call)
     end
 
     before do
-      stub_request(:post, 'https://example.com/api/v1/test')
+      stub_request(:post, "#{endpoint}/api/v1/test")
         .with(body: '', headers: { 'Authorization' => 'Token token=zulu' })
         .to_return(status: 200, body: '{}', headers: {})
     end
 
-    it 'hits requested endpoint with parametrized request' do
-      result = connection.post('/api/v1/test', auth: 'Token token=zulu')
-      expect(result.body).to eq({})
-      expect(result.code).to eq 200
+    context 'without prefixed endpoint protocol' do
+      it 'hits requested endpoint with parametrized request' do
+        result = connection.post('/api/v1/test', auth: 'Token token=zulu')
+        expect(result.body).to eq({})
+        expect(result.code).to eq 200
+      end
+    end
+
+    context 'with endpoint protocol http' do
+      let(:call) { 'http://example.com' }
+      let(:endpoint) { 'http://example.com' }
+
+      it 'hits requested endpoint with parametrized request' do
+        result = connection.post('/api/v1/test', auth: 'Token token=zulu')
+        expect(result.body).to eq({})
+        expect(result.code).to eq 200
+      end
+    end
+
+    context 'with endpoint protocol https' do
+      let(:call) { 'https://example.com' }
+
+      it 'hits requested endpoint with parametrized request' do
+        result = connection.post('/api/v1/test', auth: 'Token token=zulu')
+        expect(result.body).to eq({})
+        expect(result.code).to eq 200
+      end
     end
 
     it 'sends Accept-Language header with specified language' do

@@ -118,11 +118,12 @@ describe SUSE::Connect::Cli do
       end
 
       context 'when the system has no activated base product' do
-        it 'requires --regcode or --url' do
+        it 'shows a properly rendered help page' do
           expect_any_instance_of(Status).to receive(:activated_base_product?).and_return(false)
           expect_any_instance_of(Client).not_to receive(:register!)
-          expect(string_logger).to receive(:error)
-            .with('Please register your system using the --regcode parameter, or provide the --url parameter to register against SMT.')
+          expect_any_instance_of(described_class).to receive(:puts) do |option_parser|
+            expect(option_parser.instance_variable_get(:@opts).to_s.split("\n").map(&:length)).to all be <= 80
+          end
           expect { cli.execute! }.to raise_error(SystemExit)
         end
 
@@ -155,7 +156,7 @@ describe SUSE::Connect::Cli do
       it '--instance-data requires --url' do
         cli = described_class.new(%w[--instance-data /tmp/test])
         expect(string_logger).to receive(:error)
-          .with('Please use --instance-data only in combination with --url pointing to your SMT server')
+          .with('Please use --instance-data only in combination with --url pointing to your RMT or SMT server')
         expect { cli.execute! }.to raise_error(SystemExit)
       end
 
