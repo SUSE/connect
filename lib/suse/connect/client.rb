@@ -31,15 +31,21 @@ module SUSE
         # Only register recommended packages for base products
         register_product_tree(show_product(product)) if product.isbase
 
-        log.info 'Successfully registered system.'
+        log.info "Successfully registered system.\n".green.bold
       end
 
       # Activate the product, add the service and install the release package
       def register_product(product, install_release_package = true)
+        puts '=========='
+        log.info "Activating #{product.identifier} #{product.version} #{product.arch} ..."
         service = activate_product(product, @config.email)
 
+        log.info '-> Adding service to system ...'
         System.add_service(service, !@config.no_zypper_refs)
-        Zypper.install_release_package(product.identifier) if install_release_package
+        if install_release_package
+          log.info '-> Installing release package ...'
+          Zypper.install_release_package(product.identifier)
+        end
 
         print_success_message(product)
       end
@@ -60,8 +66,9 @@ module SUSE
             deregister_product(product)
           end
           @api.deregister(system_auth)
+          log.info 'Cleaning up ...'
           System.cleanup!
-          log.info 'Successfully deregistered system.'
+          log.info "Successfully deregistered system.\n".red.bold
         end
       end
 
@@ -83,6 +90,7 @@ module SUSE
       #
       # @returns: [Array] login, password tuple. Those credentials are given by SCC/Registration Proxy
       def announce_system(distro_target = nil, instance_data_file = nil)
+        log.info "Announcing system to SCC/RMT/SMT...\n".bold
         instance_data = System.read_file(instance_data_file) if instance_data_file
         params = [token_auth(@config.token), distro_target, instance_data]
         params.push(@config.namespace) if @config.namespace
@@ -94,6 +102,7 @@ module SUSE
       # Re-send the system's hardware details on SCC
       #
       def update_system(distro_target = nil, instance_data_file = nil)
+        log.info 'Update system details on SCC/RMT ...\n'.bold
         instance_data = System.read_file(instance_data_file) if instance_data_file
         params = [system_auth, distro_target, instance_data]
         params.push(@config.namespace) if @config.namespace
@@ -213,8 +222,11 @@ module SUSE
 
       def deregister_product(product)
         raise BaseProductDeactivationError if product == Zypper.base_product
+        puts '=========='
+        log.info "Deactivating #{product.identifier} #{product.version} #{product.arch} ..."
         service = deactivate_product product
         remove_or_refresh_service(service)
+        log.info '-> Removing release package ...'
         Zypper.remove_release_package product.identifier
         print_success_message product, action: 'Deregistered'
       end
@@ -240,17 +252,20 @@ module SUSE
       # Refreshing the service instead to remove the repos of deregistered product.
       def remove_or_refresh_service(service)
         if service.name == 'SMT_DUMMY_NOREMOVE_SERVICE'
+          log.info '-> Refreshing service ...'
           Zypper.refresh_all_services
         else
+          log.info '-> Removing service from system ...'
           System.remove_service service
         end
       end
 
       def print_success_message(product, action: 'Registered')
-        log.info "#{action} #{product.identifier} #{product.version} #{product.arch}"
+        log.info "\n#{action} #{product.identifier} #{product.version} #{product.arch}".bold
         log.info "Rooted at: #{@config.filesystem_root}" if @config.filesystem_root
         log.info "To server: #{@config.url}" if @config.url
         log.info "Using E-Mail: #{@config.email}" if @config.email
+        puts "==========\n"
       end
     end
   end

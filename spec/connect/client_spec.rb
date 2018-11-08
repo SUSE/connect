@@ -323,7 +323,7 @@ describe SUSE::Connect::Client do
 
       it 'prints message on successful activation' do
         expect(subject).to receive(:register_product).exactly(4).times
-        expect(string_logger).to receive(:info).with('Successfully registered system.')
+        expect(string_logger).to receive(:info).with("\e[1m\e[1;32mSuccessfully registered system.\n\e[0m\e[22m")
         subject.register!
       end
     end
@@ -434,7 +434,10 @@ describe SUSE::Connect::Client do
       allow(System).to receive(:add_service)
       allow(Zypper).to receive(:install_release_package)
 
-      expect(string_logger).to receive(:info).with('Registered SLES 15 x86_64')
+      expect(string_logger).to receive(:info).with('Activating SLES 15 x86_64 ...')
+      expect(string_logger).to receive(:info).with('-> Adding service to system ...')
+      expect(string_logger).to receive(:info).with('-> Installing release package ...')
+      expect(string_logger).to receive(:info).with("\e[1m\nRegistered SLES 15 x86_64\e[22m")
       expect(string_logger).to receive(:info).with('To server: https://scc.suse.com')
       expect(string_logger).to receive(:info).with('Using E-Mail: email@email.org.what.ever')
       subject.register_product(product)
@@ -575,7 +578,8 @@ describe SUSE::Connect::Client do
         before { allow(System).to receive(:cleanup!).and_return(true) }
 
         it 'prints confirmation message' do
-          expect(string_logger).to receive(:info).with('Successfully deregistered system.')
+          expect(string_logger).to receive(:info).with('Cleaning up ...')
+          expect(string_logger).to receive(:info).with("\e[1m\e[1;31mSuccessfully deregistered system.\n\e[0m\e[22m")
           subject
         end
       end
@@ -619,15 +623,24 @@ describe SUSE::Connect::Client do
           subject
         end
 
+        # rubocop:disable RSpec/MultipleExpectations
         it 'prints confirmation message' do
-          expect(string_logger).to receive(:info).with('Deregistered 4-2-Extension 83 x86_64')
-          expect(string_logger).to receive(:info).with('Deregistered 4-Extension 1337 x86_64')
-          expect(string_logger).to receive(:info).with('Deregistered 2-2-Recommended 83 x86_64')
-          expect(string_logger).to receive(:info).with('Deregistered 2-Recommended 15 x86_64')
+          expect(string_logger).to receive(:info).with('Deactivating 4-2-Extension 83 x86_64 ...')
+          expect(string_logger).to receive(:info).with("\e[1m\nDeregistered 4-2-Extension 83 x86_64\e[22m")
+          expect(string_logger).to receive(:info).with('Deactivating 4-Extension 1337 x86_64 ...')
+          expect(string_logger).to receive(:info).with("\e[1m\nDeregistered 4-Extension 1337 x86_64\e[22m")
+          expect(string_logger).to receive(:info).with('Deactivating 2-2-Recommended 83 x86_64 ...')
+          expect(string_logger).to receive(:info).with("\e[1m\nDeregistered 2-2-Recommended 83 x86_64\e[22m")
+          expect(string_logger).to receive(:info).with('Deactivating 2-Recommended 15 x86_64 ...')
+          expect(string_logger).to receive(:info).with("\e[1m\nDeregistered 2-Recommended 15 x86_64\e[22m")
+          expect(string_logger).to receive(:info).with('-> Removing service from system ...').exactly(4).times
+          expect(string_logger).to receive(:info).with('-> Removing release package ...').exactly(4).times
           expect(string_logger).to receive(:info).with('To server: https://scc.suse.com').exactly(4).times
-          expect(string_logger).to receive(:info).with('Successfully deregistered system.')
+          expect(string_logger).to receive(:info).with('Cleaning up ...')
+          expect(string_logger).to receive(:info).with("\e[1m\e[1;31mSuccessfully deregistered system.\n\e[0m\e[22m")
           subject
         end
+        # rubocop:enable RSpec/MultipleExpectations
       end
 
       context 'for single product' do
@@ -659,7 +672,10 @@ describe SUSE::Connect::Client do
         it 'logs success' do
           allow(System).to receive :remove_service
           allow(Zypper).to receive :remove_release_package
-          expect(string_logger).to receive(:info).with('Deregistered SLES HA 12 x86_64')
+          expect(string_logger).to receive(:info).with('Deactivating SLES HA 12 x86_64 ...')
+          expect(string_logger).to receive(:info).with('-> Removing service from system ...')
+          expect(string_logger).to receive(:info).with('-> Removing release package ...')
+          expect(string_logger).to receive(:info).with("\e[1m\nDeregistered SLES HA 12 x86_64\e[22m")
           expect(string_logger).to receive(:info).with('To server: https://scc.suse.com')
           subject
         end
