@@ -454,7 +454,7 @@ describe SUSE::Connect::Client do
       expect(string_logger).to receive(:info).with('-> Adding service to system ...')
       expect(string_logger).to receive(:info).with('-> Installing release package ...')
       expect(string_logger).to receive(:info).with("\e[1m\nRegistered SLES 15 x86_64\e[22m")
-      expect(string_logger).to receive(:info).with('On server: https://scc.suse.com')
+      expect(string_logger).to receive(:info).with('To server: https://scc.suse.com')
       expect(string_logger).to receive(:info).with('Using E-Mail: email@email.org.what.ever')
       expect(string_logger).to receive(:info).with("==========\n")
       subject.register_product(product)
@@ -652,7 +652,7 @@ describe SUSE::Connect::Client do
           expect(string_logger).to receive(:info).with("\e[1m\nDeregistered 2-Recommended 15 x86_64\e[22m")
           expect(string_logger).to receive(:info).with('-> Removing service from system ...').exactly(4).times
           expect(string_logger).to receive(:info).with('-> Removing release package ...').exactly(4).times
-          expect(string_logger).to receive(:info).with('On server: https://scc.suse.com').exactly(4).times
+          expect(string_logger).to receive(:info).with('From server: https://scc.suse.com').exactly(4).times
           expect(string_logger).to receive(:info).with("==========\n").exactly(4).times
           expect(string_logger).to receive(:info).with('Cleaning up ...')
           expect(string_logger).to receive(:info).with("\e[1m\e[32mSuccessfully deregistered system.\n\e[0m\e[22m")
@@ -694,7 +694,7 @@ describe SUSE::Connect::Client do
           expect(string_logger).to receive(:info).with('-> Removing service from system ...')
           expect(string_logger).to receive(:info).with('-> Removing release package ...')
           expect(string_logger).to receive(:info).with("\e[1m\nDeregistered SLES HA 12 x86_64\e[22m")
-          expect(string_logger).to receive(:info).with('On server: https://scc.suse.com')
+          expect(string_logger).to receive(:info).with('From server: https://scc.suse.com')
           expect(string_logger).to receive(:info).with("==========\n")
           subject
         end

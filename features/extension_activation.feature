@@ -38,7 +38,7 @@ Feature: Test extension/module activation
     And the output should contain "-> Removing service from system ..."
     And the output should contain "-> Removing release package ..."
     And the output should contain "Deregistered"
-    And the output should contain "On server: https://scc.suse.com"
+    And the output should contain "From server: https://scc.suse.com"
     And the output should contain "=========="
     And the output should contain "Cleaning up ..."
     And the output should contain "Successfully deregistered system."
