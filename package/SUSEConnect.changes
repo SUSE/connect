@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Fri Nov  9 13:06:50 UTC 2018 - fschueller@suse.com
+
+- Output proper message when SUSEConnect is called without parameters
+- Default to https URI when no protocol prefix is provided for --url
+- Support transactional-update systems
+
+-------------------------------------------------------------------
 Tue Oct 23 15:52:51 UTC 2018 - hschmidt@suse.com
 
 - Changed "openssl" recommendation to "openssl(cli)"
