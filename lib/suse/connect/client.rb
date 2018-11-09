@@ -36,7 +36,6 @@ module SUSE
 
       # Activate the product, add the service and install the release package
       def register_product(product, install_release_package = true)
-        log.info '=========='
         log.info "Activating #{product.identifier} #{product.version} #{product.arch} ..."
         service = activate_product(product, @config.email)
 
@@ -222,7 +221,6 @@ module SUSE
 
       def deregister_product(product)
         raise BaseProductDeactivationError if product == Zypper.base_product
-        puts '=========='
         log.info "Deactivating #{product.identifier} #{product.version} #{product.arch} ..."
         service = deactivate_product product
         remove_or_refresh_service(service)
@@ -263,7 +261,7 @@ module SUSE
       def print_success_message(product, action: 'Registered')
         log.info "\n#{action} #{product.identifier} #{product.version} #{product.arch}".bold
         log.info "Rooted at: #{@config.filesystem_root}" if @config.filesystem_root
-        log.info "To server: #{@config.url}" if @config.url
+        log.info "On server: #{@config.url}" if @config.url
         log.info "Using E-Mail: #{@config.email}" if @config.email
         log.info "==========\n"
       end
