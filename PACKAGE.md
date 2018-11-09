@@ -71,7 +71,7 @@ osc build SLE_12_SP3 x86_64 --no-verify
 osc build SLE_15 x86_64 --no-verify
 ```
 
-Please consult the corresponding [IBS page](https://build.opensuse.org/package/show/systemsmanagement:SCC/SUSEConnect) for the full list of available targets.
+Please consult the corresponding [OBS page](https://build.opensuse.org/package/show/systemsmanagement:SCC/SUSEConnect) for the full list of available targets.
 
 ## Step 6. Committing the package
 
