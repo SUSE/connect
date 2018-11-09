@@ -1,9 +1,9 @@
 -------------------------------------------------------------------
 Fri Nov  9 13:06:50 UTC 2018 - fschueller@suse.com
 
-- Output proper message when SUSEConnect is called without parameters
+- Output proper message when SUSEConnect is called without parameters (bsc#959561)
 - Default to https URI when no protocol prefix is provided for --url
-- Support transactional-update systems
+- Support transactional-update systems (fate#326482)
 
 -------------------------------------------------------------------
 Tue Oct 23 15:52:51 UTC 2018 - hschmidt@suse.com
