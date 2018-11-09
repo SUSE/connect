@@ -36,7 +36,7 @@ module SUSE
 
       # Activate the product, add the service and install the release package
       def register_product(product, install_release_package = true)
-        puts '=========='
+        log.info '=========='
         log.info "Activating #{product.identifier} #{product.version} #{product.arch} ..."
         service = activate_product(product, @config.email)
 
@@ -90,7 +90,7 @@ module SUSE
       #
       # @returns: [Array] login, password tuple. Those credentials are given by SCC/Registration Proxy
       def announce_system(distro_target = nil, instance_data_file = nil)
-        log.info "Announcing system to SCC/RMT/SMT...\n".bold
+        log.info "Announcing system to SCC/RMT/SMT ...\n".bold
         instance_data = System.read_file(instance_data_file) if instance_data_file
         params = [token_auth(@config.token), distro_target, instance_data]
         params.push(@config.namespace) if @config.namespace
@@ -102,7 +102,7 @@ module SUSE
       # Re-send the system's hardware details on SCC
       #
       def update_system(distro_target = nil, instance_data_file = nil)
-        log.info 'Update system details on SCC/RMT ...\n'.bold
+        log.info "Update system details on SCC/RMT/SMT ...\n".bold
         instance_data = System.read_file(instance_data_file) if instance_data_file
         params = [system_auth, distro_target, instance_data]
         params.push(@config.namespace) if @config.namespace
@@ -265,7 +265,7 @@ module SUSE
         log.info "Rooted at: #{@config.filesystem_root}" if @config.filesystem_root
         log.info "To server: #{@config.url}" if @config.url
         log.info "Using E-Mail: #{@config.email}" if @config.email
-        puts "==========\n"
+        log.info "==========\n"
       end
     end
   end

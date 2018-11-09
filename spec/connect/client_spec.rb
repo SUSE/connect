@@ -80,10 +80,18 @@ describe SUSE::Connect::Client do
       end
 
       before do
+        SUSE::Connect::GlobalLogger.instance.log = string_logger
         api_response = double('api_response')
         allow(api_response).to receive_messages(body: { 'login' => 'lg', 'password' => 'pw' })
         allow_any_instance_of(Api).to receive_messages(announce_system: api_response)
         allow(subject).to receive_messages(token_auth: 'auth')
+      end
+
+      after { SUSE::Connect::GlobalLogger.instance.log = default_logger }
+
+      it 'reports about ongoing action' do
+        expect(string_logger).to receive(:info).with("\e[1mAnnouncing system to SCC/RMT/SMT ...\n\e[22m")
+        subject.announce_system
       end
 
       it 'calls underlying api' do
@@ -121,8 +129,16 @@ describe SUSE::Connect::Client do
         subject { SUSE::Connect::Client.new(config) }
 
         before do
+          SUSE::Connect::GlobalLogger.instance.log = string_logger
           allow(subject).to receive_messages(system_auth: 'auth')
           allow_any_instance_of(Api).to receive(:update_system)
+        end
+
+        after { SUSE::Connect::GlobalLogger.instance.log = default_logger }
+
+        it 'reports about ongoing action' do
+          expect(string_logger).to receive(:info).with("\e[1mUpdate system details on SCC/RMT/SMT ...\n\e[22m")
+          subject.update_system
         end
 
         it 'calls underlying api' do
@@ -434,12 +450,14 @@ describe SUSE::Connect::Client do
       allow(System).to receive(:add_service)
       allow(Zypper).to receive(:install_release_package)
 
+      expect(string_logger).to receive(:info).with('==========')
       expect(string_logger).to receive(:info).with('Activating SLES 15 x86_64 ...')
       expect(string_logger).to receive(:info).with('-> Adding service to system ...')
       expect(string_logger).to receive(:info).with('-> Installing release package ...')
       expect(string_logger).to receive(:info).with("\e[1m\nRegistered SLES 15 x86_64\e[22m")
       expect(string_logger).to receive(:info).with('To server: https://scc.suse.com')
       expect(string_logger).to receive(:info).with('Using E-Mail: email@email.org.what.ever')
+      expect(string_logger).to receive(:info).with("==========\n")
       subject.register_product(product)
     end
   end
@@ -636,6 +654,7 @@ describe SUSE::Connect::Client do
           expect(string_logger).to receive(:info).with('-> Removing service from system ...').exactly(4).times
           expect(string_logger).to receive(:info).with('-> Removing release package ...').exactly(4).times
           expect(string_logger).to receive(:info).with('To server: https://scc.suse.com').exactly(4).times
+          expect(string_logger).to receive(:info).with("==========\n").exactly(4).times
           expect(string_logger).to receive(:info).with('Cleaning up ...')
           expect(string_logger).to receive(:info).with("\e[1m\e[1;31mSuccessfully deregistered system.\n\e[0m\e[22m")
           subject
@@ -677,6 +696,7 @@ describe SUSE::Connect::Client do
           expect(string_logger).to receive(:info).with('-> Removing release package ...')
           expect(string_logger).to receive(:info).with("\e[1m\nDeregistered SLES HA 12 x86_64\e[22m")
           expect(string_logger).to receive(:info).with('To server: https://scc.suse.com')
+          expect(string_logger).to receive(:info).with("==========\n")
           subject
         end
       end

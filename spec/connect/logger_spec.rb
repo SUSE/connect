@@ -42,19 +42,31 @@ describe SUSE::Connect::Logger do
 end
 
 describe SUSE::Connect::DefaultLogger do
-  it 'by default does not log debug messages' do
-    stringio = StringIO.new
-    default_logger = SUSE::Connect::DefaultLogger.new(stringio)
+  let(:stringio) { StringIO.new }
+  let(:default_logger) { SUSE::Connect::DefaultLogger.new(stringio) }
 
+  it 'by default does not log debug messages' do
     default_logger.debug 'TEST'
     expect(stringio.string).to eq ''
   end
 
   it 'logs only the message without extra data or formatting' do
-    stringio = StringIO.new
-    default_logger = SUSE::Connect::DefaultLogger.new(stringio)
-
     default_logger.warn 'TEST'
     expect(stringio.string).to eq "TEST\n"
+  end
+
+  it 'logs in green font' do
+    default_logger.info 'TEST'.green
+    expect(stringio.string).to eq "\e[1;32mTEST\e[0m\n"
+  end
+
+  it 'logs in red font' do
+    default_logger.info 'TEST'.red
+    expect(stringio.string).to eq "\e[1;31mTEST\e[0m\n"
+  end
+
+  it 'logs in bold font' do
+    default_logger.info 'TEST'.bold
+    expect(stringio.string).to eq "\e[1mTEST\e[22m\n"
   end
 end
