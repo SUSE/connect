@@ -56,13 +56,13 @@ describe SUSE::Connect::DefaultLogger do
   end
 
   it 'logs in green font' do
-    default_logger.info 'TEST'.green
-    expect(stringio.string).to eq "\e[1;32mTEST\e[0m\n"
+    default_logger.info 'TEST'.log_green
+    expect(stringio.string).to eq "\e[32mTEST\e[0m\n"
   end
 
   it 'logs in red font' do
-    default_logger.info 'TEST'.red
-    expect(stringio.string).to eq "\e[1;31mTEST\e[0m\n"
+    default_logger.info 'TEST'.log_red
+    expect(stringio.string).to eq "\e[31mTEST\e[0m\n"
   end
 
   it 'logs in bold font' do

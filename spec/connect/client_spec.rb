@@ -339,7 +339,7 @@ describe SUSE::Connect::Client do
 
       it 'prints message on successful activation' do
         expect(subject).to receive(:register_product).exactly(4).times
-        expect(string_logger).to receive(:info).with("\e[1m\e[1;32mSuccessfully registered system.\n\e[0m\e[22m")
+        expect(string_logger).to receive(:info).with("\e[1m\e[32mSuccessfully registered system.\n\e[0m\e[22m")
         subject.register!
       end
     end
@@ -596,7 +596,7 @@ describe SUSE::Connect::Client do
 
         it 'prints confirmation message' do
           expect(string_logger).to receive(:info).with('Cleaning up ...')
-          expect(string_logger).to receive(:info).with("\e[1m\e[1;32mSuccessfully deregistered system.\n\e[0m\e[22m")
+          expect(string_logger).to receive(:info).with("\e[1m\e[32mSuccessfully deregistered system.\n\e[0m\e[22m")
           subject
         end
       end
@@ -655,7 +655,7 @@ describe SUSE::Connect::Client do
           expect(string_logger).to receive(:info).with('On server: https://scc.suse.com').exactly(4).times
           expect(string_logger).to receive(:info).with("==========\n").exactly(4).times
           expect(string_logger).to receive(:info).with('Cleaning up ...')
-          expect(string_logger).to receive(:info).with("\e[1m\e[1;32mSuccessfully deregistered system.\n\e[0m\e[22m")
+          expect(string_logger).to receive(:info).with("\e[1m\e[32mSuccessfully deregistered system.\n\e[0m\e[22m")
           subject
         end
         # rubocop:enable RSpec/MultipleExpectations

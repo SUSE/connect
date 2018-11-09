@@ -55,11 +55,11 @@ module SUSE
         base.extend self
       end
 
-      def green
+      def log_green
         "\e[32m#{self}\e[0m"
       end
 
-      def red
+      def log_red
         "\e[31m#{self}\e[0m"
       end
 

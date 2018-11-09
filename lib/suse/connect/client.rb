@@ -31,7 +31,7 @@ module SUSE
         # Only register recommended packages for base products
         register_product_tree(show_product(product)) if product.isbase
 
-        log.info "Successfully registered system.\n".green.bold
+        log.info "Successfully registered system.\n".log_green.bold
       end
 
       # Activate the product, add the service and install the release package
@@ -67,7 +67,7 @@ module SUSE
           @api.deregister(system_auth)
           log.info 'Cleaning up ...'
           System.cleanup!
-          log.info "Successfully deregistered system.\n".green.bold
+          log.info "Successfully deregistered system.\n".log_green.bold
         end
       end
 
