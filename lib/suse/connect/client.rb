@@ -68,7 +68,7 @@ module SUSE
           @api.deregister(system_auth)
           log.info 'Cleaning up ...'
           System.cleanup!
-          log.info "Successfully deregistered system.\n".red.bold
+          log.info "Successfully deregistered system.\n".green.bold
         end
       end
 
