@@ -137,7 +137,7 @@ describe SUSE::Connect::Client do
         after { SUSE::Connect::GlobalLogger.instance.log = default_logger }
 
         it 'reports about ongoing action' do
-          expect(string_logger).to receive(:info).with("\e[1mUpdate system details on SCC/Registration proxy ...\n\e[22m")
+          expect(string_logger).to receive(:info).with("\e[1mUpdating system details on SCC/Registration proxy ...\n\e[22m")
           subject.update_system
         end
 

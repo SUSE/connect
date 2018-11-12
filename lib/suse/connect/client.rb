@@ -46,7 +46,7 @@ module SUSE
           Zypper.install_release_package(product.identifier)
         end
 
-        print_success_message(product, action: 'register')
+        print_success_message(product, :register)
       end
 
       # Deregisters a whole system or a single product
@@ -226,7 +226,7 @@ module SUSE
         remove_or_refresh_service(service)
         log.info '-> Removing release package ...'
         Zypper.remove_release_package product.identifier
-        print_success_message product, action: 'deregister'
+        print_success_message product, :deregister
       end
 
       # Announces the system to the server, receiving and storing its credentials.
@@ -258,8 +258,8 @@ module SUSE
         end
       end
 
-      def print_success_message(product, params)
-        if params[:action] == 'register'
+      def print_success_message(product, action)
+        if action == :register
           log.info "\nRegistered #{product.identifier} #{product.version} #{product.arch}".bold
           log.info "To server: #{@config.url}" if @config.url
         else
