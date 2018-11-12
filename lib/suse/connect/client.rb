@@ -101,7 +101,7 @@ module SUSE
       # Re-send the system's hardware details on SCC
       #
       def update_system(distro_target = nil, instance_data_file = nil)
-        log.info "Update system details on SCC/Registration proxy ...\n".bold
+        log.info "Updating system details on SCC/Registration proxy ...\n".bold
         instance_data = System.read_file(instance_data_file) if instance_data_file
         params = [system_auth, distro_target, instance_data]
         params.push(@config.namespace) if @config.namespace
