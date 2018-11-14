@@ -6,7 +6,7 @@ Feature: Test product activation
     Given I have a system with activated base product
 
     Then the output should contain "Announcing system to SCC/Registration proxy ..."
-    And the output should contain "Activating SLES 12.3 x86_64 ..."
+    And the output should contain "Activating SLES 12"
     And the output should contain "-> Adding service to system ..."
     And the output should contain "Registered SLES 12"
     And the output should contain "To server: https://scc.suse.com"
