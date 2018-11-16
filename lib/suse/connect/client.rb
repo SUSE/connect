@@ -261,8 +261,8 @@ module SUSE
         server = (@config.url == 'https://scc.suse.com') ? 'SCC' : 'Registration proxy'
         if action == :register
           log.info "Registering system to #{server}.".bold if @config.url
-        else
-          log.info "Deregistering system from #{server}.".bold if @config.url
+        elsif @config.url
+          log.info "Deregistering system from #{server}.".bold
         end
         log.info "Rooted at: #{@config.filesystem_root}" if @config.filesystem_root
         log.info "Using E-Mail: #{@config.email}" if @config.email
