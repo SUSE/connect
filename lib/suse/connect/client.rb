@@ -23,6 +23,7 @@ module SUSE
 
       # Announces the system, activates the product on SCC and adds the service to the system
       def register!
+        print_information(:register)
         announce_or_update
         product = @config.product || Zypper.base_product
 
@@ -31,12 +32,12 @@ module SUSE
         # Only register recommended packages for base products
         register_product_tree(show_product(product)) if product.isbase
 
-        log.info "Successfully registered system.\n".log_green.bold
+        log.info "\nSuccessfully registered system.\n".log_green.bold
       end
 
       # Activate the product, add the service and install the release package
       def register_product(product, install_release_package = true)
-        log.info "Activating #{product.identifier} #{product.version} #{product.arch} ..."
+        log.info "\nActivating #{product.identifier} #{product.version} #{product.arch} ..."
         service = activate_product(product, @config.email)
 
         log.info '-> Adding service to system ...'
@@ -45,8 +46,6 @@ module SUSE
           log.info '-> Installing release package ...'
           Zypper.install_release_package(product.identifier)
         end
-
-        print_success_message(product, :register)
       end
 
       # Deregisters a whole system or a single product
@@ -54,6 +53,7 @@ module SUSE
       # @returns: Empty body and 204 status code
       def deregister!
         raise SystemNotRegisteredError unless registered?
+        print_information :deregister
         if @config.product
           deregister_product(@config.product)
         else
@@ -65,7 +65,7 @@ module SUSE
             deregister_product(product)
           end
           @api.deregister(system_auth)
-          log.info 'Cleaning up ...'
+          log.info "\nCleaning up ..."
           System.cleanup!
           log.info "Successfully deregistered system.\n".log_green.bold
         end
@@ -89,7 +89,7 @@ module SUSE
       #
       # @returns: [Array] login, password tuple. Those credentials are given by SCC/Registration Proxy
       def announce_system(distro_target = nil, instance_data_file = nil)
-        log.info "Announcing system to SCC/Registration proxy ...\n".bold
+        log.info "\nAnnouncing system to #{@config.url} ...".bold
         instance_data = System.read_file(instance_data_file) if instance_data_file
         params = [token_auth(@config.token), distro_target, instance_data]
         params.push(@config.namespace) if @config.namespace
@@ -101,7 +101,7 @@ module SUSE
       # Re-send the system's hardware details on SCC
       #
       def update_system(distro_target = nil, instance_data_file = nil)
-        log.info "Updating system details on SCC/Registration proxy ...\n".bold
+        log.info "\nUpdating system details on #{@config.url} ...".bold
         instance_data = System.read_file(instance_data_file) if instance_data_file
         params = [system_auth, distro_target, instance_data]
         params.push(@config.namespace) if @config.namespace
@@ -221,12 +221,11 @@ module SUSE
 
       def deregister_product(product)
         raise BaseProductDeactivationError if product == Zypper.base_product
-        log.info "Deactivating #{product.identifier} #{product.version} #{product.arch} ..."
+        log.info "\nDeactivating #{product.identifier} #{product.version} #{product.arch} ..."
         service = deactivate_product product
         remove_or_refresh_service(service)
         log.info '-> Removing release package ...'
         Zypper.remove_release_package product.identifier
-        print_success_message product, :deregister
       end
 
       # Announces the system to the server, receiving and storing its credentials.
@@ -258,17 +257,15 @@ module SUSE
         end
       end
 
-      def print_success_message(product, action)
+      def print_information(action)
+        server = (@config.url == 'https://scc.suse.com') ? 'SCC' : 'Registration proxy'
         if action == :register
-          log.info "\nRegistered #{product.identifier} #{product.version} #{product.arch}".bold
-          log.info "To server: #{@config.url}" if @config.url
+          log.info "Registering system to #{server}.".bold if @config.url
         else
-          log.info "\nDeregistered #{product.identifier} #{product.version} #{product.arch}".bold
-          log.info "From server: #{@config.url}" if @config.url
+          log.info "Deregistering system from #{server}.".bold if @config.url
         end
         log.info "Rooted at: #{@config.filesystem_root}" if @config.filesystem_root
         log.info "Using E-Mail: #{@config.email}" if @config.email
-        log.info "==========\n"
       end
     end
   end

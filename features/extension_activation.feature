@@ -34,12 +34,10 @@ Feature: Test extension/module activation
     When System has free extension
     And I run `SUSEConnect -d`
     Then the exit status should be 0
+    And the output should contain "Deregistering system from SCC"
     And the output should contain "Deactivating"
     And the output should contain "-> Removing service from system ..."
     And the output should contain "-> Removing release package ..."
-    And the output should contain "Deregistered"
-    And the output should contain "From server: https://scc.suse.com"
-    And the output should contain "=========="
     And the output should contain "Cleaning up ..."
     And the output should contain "Successfully deregistered system."
     And It deregisters free extension
