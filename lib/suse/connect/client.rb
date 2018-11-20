@@ -32,7 +32,7 @@ module SUSE
         # Only register recommended packages for base products
         register_product_tree(show_product(product)) if product.isbase
 
-        log.info "\nSuccessfully registered system.\n".log_green.bold
+        log.info "\nSuccessfully registered system\n".log_green.bold
       end
 
       # Activate the product, add the service and install the release package
@@ -67,7 +67,7 @@ module SUSE
           @api.deregister(system_auth)
           log.info "\nCleaning up ..."
           System.cleanup!
-          log.info "Successfully deregistered system.\n".log_green.bold
+          log.info "Successfully deregistered system\n".log_green.bold
         end
       end
 
@@ -260,9 +260,9 @@ module SUSE
       def print_information(action)
         server = (@config.url == 'https://scc.suse.com') ? 'SUSE Customer Center' : "registration proxy #{@config.url}"
         if action == :register
-          log.info "Registering system to #{server}.".bold if @config.url
+          log.info "Registering system to #{server}".bold if @config.url
         elsif @config.url
-          log.info "Deregistering system from #{server}.".bold
+          log.info "Deregistering system from #{server}".bold
         end
         log.info "Rooted at: #{@config.filesystem_root}" if @config.filesystem_root
         log.info "Using E-Mail: #{@config.email}" if @config.email

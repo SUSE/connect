@@ -5,7 +5,7 @@ Feature: Test product activation
   Scenario: System registration
     Given I have a system with activated base product
 
-    Then the output should contain "Registering system to SCC."
+    Then the output should contain "Registering system to SUSE Customer Center"
     And the output should contain "Announcing system to https://scc.suse.com ..."
     And the output should contain "Activating SLES 12"
     And the output should contain "-> Adding service to system ..."
@@ -16,7 +16,7 @@ Feature: Test product activation
   Scenario: System registration
     Given I have a system with activated base product
 
-    Then the output should contain "Registering system to SCC."
+    Then the output should contain "Registering system to SUSE Customer Center"
     And the output should contain "Announcing system to https://scc.suse.com ..."
 
     And zypper should contain a service for sle-module-basesystem
