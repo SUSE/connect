@@ -258,7 +258,7 @@ module SUSE
       end
 
       def print_information(action)
-        server = (@config.url == 'https://scc.suse.com') ? 'SCC' : 'Registration proxy'
+        server = (@config.url == 'https://scc.suse.com') ? 'SUSE Customer Center' : "registration proxy #{@config.url}"
         if action == :register
           log.info "Registering system to #{server}.".bold if @config.url
         elsif @config.url
