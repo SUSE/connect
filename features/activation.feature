@@ -9,7 +9,7 @@ Feature: Test product activation
     And the output should contain "Announcing system to https://scc.suse.com ..."
     And the output should contain "Activating SLES 12"
     And the output should contain "-> Adding service to system ..."
-    And the output should contain "Successfully registered system."
+    And the output should contain "Successfully registered system"
 
 
   @skip-sles-12
@@ -23,7 +23,7 @@ Feature: Test product activation
 
     And zypper should contain a service for sle-module-server-applications
 
-    And the output should contain "Successfully registered system."
+    And the output should contain "Successfully registered system"
 
   Scenario: Files are created as required
     Then a file named "/etc/zypp/credentials.d/SCCcredentials" should exist

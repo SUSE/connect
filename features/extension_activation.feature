@@ -39,5 +39,5 @@ Feature: Test extension/module activation
     And the output should contain "-> Removing service from system ..."
     And the output should contain "-> Removing release package ..."
     And the output should contain "Cleaning up ..."
-    And the output should contain "Successfully deregistered system."
+    And the output should contain "Successfully deregistered system"
     And It deregisters free extension
