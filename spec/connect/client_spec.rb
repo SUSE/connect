@@ -90,7 +90,7 @@ describe SUSE::Connect::Client do
       after { SUSE::Connect::GlobalLogger.instance.log = default_logger }
 
       it 'reports about ongoing action' do
-        expect(string_logger).to receive(:info).with("\e[1mAnnouncing system to SCC/Registration proxy ...\n\e[22m")
+        expect(string_logger).to receive(:info).with("\e[1m\nAnnouncing system to #{config.url} ...\e[22m")
         subject.announce_system
       end
 
@@ -137,7 +137,7 @@ describe SUSE::Connect::Client do
         after { SUSE::Connect::GlobalLogger.instance.log = default_logger }
 
         it 'reports about ongoing action' do
-          expect(string_logger).to receive(:info).with("\e[1mUpdating system details on SCC/Registration proxy ...\n\e[22m")
+          expect(string_logger).to receive(:info).with("\e[1m\nUpdating system details on #{config.url} ...\e[22m")
           subject.update_system
         end
 
@@ -337,10 +337,24 @@ describe SUSE::Connect::Client do
         subject.register!
       end
 
-      it 'prints message on successful activation' do
-        expect(subject).to receive(:register_product).exactly(4).times
-        expect(string_logger).to receive(:info).with("\e[1m\e[32mSuccessfully registered system.\n\e[0m\e[22m")
-        subject.register!
+      context 'with default config url' do
+        it 'prints message on successful activation' do
+          expect(subject).to receive(:register_product).exactly(4).times
+          expect(string_logger).to receive(:info).with("\e[1mRegistering system to SUSE Customer Center\e[22m")
+          expect(string_logger).to receive(:info).with("\e[1m\e[32m\nSuccessfully registered system\n\e[0m\e[22m")
+          subject.register!
+        end
+      end
+
+      context 'with registration proxy url' do
+        before { config.url = 'https://rmt.mydomain' }
+
+        it 'prints message on successful activation' do
+          expect(subject).to receive(:register_product).exactly(4).times
+          expect(string_logger).to receive(:info).with("\e[1mRegistering system to registration proxy #{config.url}\e[22m")
+          expect(string_logger).to receive(:info).with("\e[1m\e[32m\nSuccessfully registered system\n\e[0m\e[22m")
+          subject.register!
+        end
       end
     end
 
@@ -450,13 +464,9 @@ describe SUSE::Connect::Client do
       allow(System).to receive(:add_service)
       allow(Zypper).to receive(:install_release_package)
 
-      expect(string_logger).to receive(:info).with('Activating SLES 15 x86_64 ...')
+      expect(string_logger).to receive(:info).with("\nActivating SLES 15 x86_64 ...")
       expect(string_logger).to receive(:info).with('-> Adding service to system ...')
       expect(string_logger).to receive(:info).with('-> Installing release package ...')
-      expect(string_logger).to receive(:info).with("\e[1m\nRegistered SLES 15 x86_64\e[22m")
-      expect(string_logger).to receive(:info).with('To server: https://scc.suse.com')
-      expect(string_logger).to receive(:info).with('Using E-Mail: email@email.org.what.ever')
-      expect(string_logger).to receive(:info).with("==========\n")
       subject.register_product(product)
     end
   end
@@ -595,8 +605,9 @@ describe SUSE::Connect::Client do
         before { allow(System).to receive(:cleanup!).and_return(true) }
 
         it 'prints confirmation message' do
-          expect(string_logger).to receive(:info).with('Cleaning up ...')
-          expect(string_logger).to receive(:info).with("\e[1m\e[32mSuccessfully deregistered system.\n\e[0m\e[22m")
+          expect(string_logger).to receive(:info).with("\e[1mDeregistering system from SUSE Customer Center\e[22m")
+          expect(string_logger).to receive(:info).with("\nCleaning up ...")
+          expect(string_logger).to receive(:info).with("\e[1m\e[32mSuccessfully deregistered system\n\e[0m\e[22m")
           subject
         end
       end
@@ -641,21 +652,16 @@ describe SUSE::Connect::Client do
         end
 
         # rubocop:disable RSpec/MultipleExpectations
-        it 'prints confirmation message' do
-          expect(string_logger).to receive(:info).with('Deactivating 4-2-Extension 83 x86_64 ...')
-          expect(string_logger).to receive(:info).with("\e[1m\nDeregistered 4-2-Extension 83 x86_64\e[22m")
-          expect(string_logger).to receive(:info).with('Deactivating 4-Extension 1337 x86_64 ...')
-          expect(string_logger).to receive(:info).with("\e[1m\nDeregistered 4-Extension 1337 x86_64\e[22m")
-          expect(string_logger).to receive(:info).with('Deactivating 2-2-Recommended 83 x86_64 ...')
-          expect(string_logger).to receive(:info).with("\e[1m\nDeregistered 2-2-Recommended 83 x86_64\e[22m")
-          expect(string_logger).to receive(:info).with('Deactivating 2-Recommended 15 x86_64 ...')
-          expect(string_logger).to receive(:info).with("\e[1m\nDeregistered 2-Recommended 15 x86_64\e[22m")
+        it 'reports about ongoing action' do
+          expect(string_logger).to receive(:info).with("\e[1mDeregistering system from SUSE Customer Center\e[22m")
+          expect(string_logger).to receive(:info).with("\nDeactivating 4-2-Extension 83 x86_64 ...")
+          expect(string_logger).to receive(:info).with("\nDeactivating 4-Extension 1337 x86_64 ...")
+          expect(string_logger).to receive(:info).with("\nDeactivating 2-2-Recommended 83 x86_64 ...")
+          expect(string_logger).to receive(:info).with("\nDeactivating 2-Recommended 15 x86_64 ...")
           expect(string_logger).to receive(:info).with('-> Removing service from system ...').exactly(4).times
           expect(string_logger).to receive(:info).with('-> Removing release package ...').exactly(4).times
-          expect(string_logger).to receive(:info).with('From server: https://scc.suse.com').exactly(4).times
-          expect(string_logger).to receive(:info).with("==========\n").exactly(4).times
-          expect(string_logger).to receive(:info).with('Cleaning up ...')
-          expect(string_logger).to receive(:info).with("\e[1m\e[32mSuccessfully deregistered system.\n\e[0m\e[22m")
+          expect(string_logger).to receive(:info).with("\nCleaning up ...")
+          expect(string_logger).to receive(:info).with("\e[1m\e[32mSuccessfully deregistered system\n\e[0m\e[22m")
           subject
         end
         # rubocop:enable RSpec/MultipleExpectations
@@ -690,12 +696,10 @@ describe SUSE::Connect::Client do
         it 'logs success' do
           allow(System).to receive :remove_service
           allow(Zypper).to receive :remove_release_package
-          expect(string_logger).to receive(:info).with('Deactivating SLES HA 12 x86_64 ...')
+          expect(string_logger).to receive(:info).with("\e[1mDeregistering system from SUSE Customer Center\e[22m")
+          expect(string_logger).to receive(:info).with("\nDeactivating SLES HA 12 x86_64 ...")
           expect(string_logger).to receive(:info).with('-> Removing service from system ...')
           expect(string_logger).to receive(:info).with('-> Removing release package ...')
-          expect(string_logger).to receive(:info).with("\e[1m\nDeregistered SLES HA 12 x86_64\e[22m")
-          expect(string_logger).to receive(:info).with('From server: https://scc.suse.com')
-          expect(string_logger).to receive(:info).with("==========\n")
           subject
         end
       end

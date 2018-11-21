@@ -5,35 +5,25 @@ Feature: Test product activation
   Scenario: System registration
     Given I have a system with activated base product
 
-    Then the output should contain "Announcing system to SCC/Registration proxy ..."
+    Then the output should contain "Registering system to SUSE Customer Center"
+    And the output should contain "Announcing system to https://scc.suse.com ..."
     And the output should contain "Activating SLES 12"
     And the output should contain "-> Adding service to system ..."
-    And the output should contain "Registered SLES 12"
-    And the output should contain "To server: https://scc.suse.com"
-    And the output should contain "=========="
-    And the output should contain "Successfully registered system."
+    And the output should contain "Successfully registered system"
 
 
   @skip-sles-12
   Scenario: System registration
     Given I have a system with activated base product
 
-    Then the output should contain "Announcing system to SCC/Registration proxy ..."
-    And the output should contain "Registered SLES 15"
-    And the output should contain "To server: https://scc.suse.com"
-    And the output should contain "=========="
+    Then the output should contain "Registering system to SUSE Customer Center"
+    And the output should contain "Announcing system to https://scc.suse.com ..."
 
-    And the output should contain "Registered sle-module-basesystem 15"
-    And the output should contain "To server: https://scc.suse.com"
     And zypper should contain a service for sle-module-basesystem
-    And the output should contain "=========="
 
-    And the output should contain "Registered sle-module-server-applications 15"
-    And the output should contain "To server: https://scc.suse.com"
     And zypper should contain a service for sle-module-server-applications
-    And the output should contain "=========="
 
-    And the output should contain "Successfully registered system."
+    And the output should contain "Successfully registered system"
 
   Scenario: Files are created as required
     Then a file named "/etc/zypp/credentials.d/SCCcredentials" should exist
