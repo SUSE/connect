@@ -142,12 +142,12 @@ describe SUSE::Connect::Status do
       expect(&subject).to output(%r{sle-live-patching/12/ppc64le}).to_stdout
       expect(&subject).to output(/^        \e\[1mSUSE Linux Enterprise Unreal Module 12 ppc64le\e\[0m$/).to_stdout
       expect(&subject).to output(%r{sle-unreal/12/ppc64le}).to_stdout
-      expect(&subject).not_to output(/Unavailable/).to_stdout
+      expect(&subject).not_to output(/Unavailable Module 12 ppc64le \e\[31m(Not available)\e\[0m$/).to_stdout
     end
 
     context 'with installed module' do
       before { allow(Zypper).to receive(:installed_products).and_return [Zypper::Product.new(name: 'sle-sdk', version: '12', arch: 'ppc64le')] }
-      it { expect(&subject).to output(/^    \e\[1mSUSE Linux Enterprise Software Development Kit 12 ppc64le\e\[0m \e\[32m\(Installed\)\e\[0m$/).to_stdout }
+      it { expect(&subject).to output(/^    \e\[1mSUSE Linux Enterprise Software Development Kit 12 ppc64le\e\[0m$/).to_stdout }
     end
 
     context 'with activated module' do
@@ -177,6 +177,7 @@ describe SUSE::Connect::Status do
       allow(Zypper).to receive(:installed_products).and_return []
       allow(Zypper).to receive(:base_product).and_return Zypper::Product.new(name: 'SLES', version: '12', arch: 'x86_64')
       allow(client_double).to receive(:show_product).with(Zypper.base_product).and_return(Remote::Product.new(dummy_product_data))
+
       expect(subject.available_system_extensions).to match_array([
         {
           activation_code: 'sle-sdk/12/ppc64le',
@@ -184,6 +185,7 @@ describe SUSE::Connect::Status do
           free: true,
           installed: false,
           activated: false,
+          available: true,
           extensions: []
         },
         {
@@ -192,14 +194,25 @@ describe SUSE::Connect::Status do
           free: false,
           installed: false,
           activated: false,
+          available: true,
           extensions: [{
             activation_code: 'sle-unreal/12/ppc64le',
             name: 'SUSE Linux Enterprise Unreal Module 12 ppc64le',
             free: true,
             installed: false,
             activated: false,
+            available: true,
             extensions: []
           }]
+        },
+        {
+          available: false,
+          activation_code: 'Unavailable/12/ppc64le',
+          name: 'Unavailable Module 12 ppc64le',
+          free: true,
+          installed: false,
+          activated: false,
+          extensions: []
         }
       ])
     end

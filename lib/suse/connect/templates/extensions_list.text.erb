@@ -4,6 +4,12 @@
 <%  available_system_extensions.sort_by { |ext| ext[:name] }.each do |extension| -%>
 <%=   render 'extension.text', { extension: extension, any_installed: any_installed, level: 1 } -%>
 <% end -%>
+
+\e[1mREMARKS\e[0m
+
+\e[31m(Not available)\e[0m The module/extension is \e[1mnot\e[0m mirrored or enabled on your RMT/SMT
+\e[33m(Activated)\e[0m     The module/extension is activated on your system
+
 \e[1mMORE INFORMATION\e[0m
 
 You can find more information about available modules here:
