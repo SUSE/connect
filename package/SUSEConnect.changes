@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Dec  7 10:43:29 UTC 2018 - fschueller@suse.com
+
+- Update to 0.3.16
+  - Show non-enabled extensions with a remark about availability
+
+-------------------------------------------------------------------
 Fri Nov 16 14:04:19 UTC 2018 - fschueller@suse.com
 
 - Update to 0.3.15
