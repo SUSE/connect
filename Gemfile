@@ -14,7 +14,7 @@ group :development do
   gem 'ronn'
   gem 'rake'
   # gem 'gem2rpm', '~> 0.10.1' # TODO: let's link this to the repo that contains the --config fix from the suse package
-  gem 'bump'
+  gem 'bump', '~> 0.6' # later versions of bump require ruby 2.2 which is not on SLE12
 end
 
 group :test do
