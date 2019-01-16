@@ -1,7 +1,11 @@
 ---
 SLE_15:
   beta: true
-  online_migration_targets: []
+  online_migration_targets:
+  - "Basesystem-Module"
+  - "SLES15-SP1"
+  - "Server-Applications-Module"
+  next_version: SLES15-SP1
   base_product:
     repositories:
     - SUSE_Linux_Enterprise_Server_15_x86_64:SLE-Product-SLES15-Pool
