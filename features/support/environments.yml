@@ -28,6 +28,7 @@ SLE_12_SP3:
   beta: false
   online_migration_targets:
   - SLES12-SP4
+  - SLES12-SP5
   next_version: SLES12-SP4
   base_product:
     repositories:
@@ -51,6 +52,7 @@ SLE_12_SP2:
   - SLE-HPC-12-SP3
   - SLES12-SP3
   - SLES12-SP4
+  - SLES12-SP5
   base_product:
     repositories:
     - SUSE_Linux_Enterprise_Server_12_SP2_x86_64:SLES12-SP2-Pool
@@ -75,6 +77,7 @@ SLE_12_SP1:
   - SLES12-SP2
   - SLES12-SP3
   - SLES12-SP4
+  - SLES12-SP5
   base_product:
     repositories:
     - SUSE_Linux_Enterprise_Server_12_SP1_x86_64:SLES12-SP1-Pool
@@ -100,6 +103,7 @@ SLE_12:
   - SLES12-SP2
   - SLES12-SP3
   - SLES12-SP4
+  - SLES12-SP5
   base_product:
     repositories:
     - SUSE_Linux_Enterprise_Server_12_x86_64:SLES12-Pool
