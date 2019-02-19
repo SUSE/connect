@@ -64,10 +64,16 @@ Provides:       ruby2.1-rubygem-suse-connect = %{version}
 %define ruby_version ruby2.5
 %global gem_base /usr/share/gems
 %global debug_package %{nil}
+%if 0%{?fedora} < 30
+%define gem_install_options --bindir %{_bindir}
+%else
+%define gem_install_options --bindir %{buildroot}%{_bindir}
+%endif
 BuildRequires:  ruby
 BuildRequires:  rubygems
 %else
 %define ruby_version %{rb_default_ruby_suffix}
+%define gem_install_options %{nil}
 BuildRequires:  %{ruby_version}
 %endif
 
@@ -100,7 +106,7 @@ done
 %install
 mkdir -p %{buildroot}%{_sbindir}
 mkdir -p %{buildroot}%{_bindir}
-gem install --verbose --local --build-root=%{buildroot} --no-user-install --bindir %{_bindir} -f --no-ri --no-rdoc ./%{mod_full_name}.gem
+gem install --verbose --local --build-root=%{buildroot} --no-user-install -f --no-document %{gem_install_options} ./%{mod_full_name}.gem
 mv %{buildroot}%{_bindir}/%{name}* %{buildroot}%{_sbindir}/%{name}
 ln -s %{_sbindir}/%{name} %{buildroot}%{_bindir}/%{name}
 
