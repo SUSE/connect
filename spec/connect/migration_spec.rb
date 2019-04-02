@@ -118,21 +118,46 @@ describe SUSE::Connect::Migration do
   end
 
   describe '.add_service' do
-    it 'forwards to zypper add_service' do
-      service_url = 'http://bla.bla'
-      service_name = 'bla'
-      expect(SUSE::Connect::Zypper).to receive(:add_service).with(service_url, service_name)
+    context 'without zypper service plugin' do
+      it 'forwards to zypper add_service' do
+        service_url = 'http://bla.bla'
+        service_name = 'bla'
+        expect(SUSE::Connect::Zypper).to receive(:add_service).with(service_url, service_name)
 
-      described_class.add_service(service_url, service_name)
+        described_class.add_service(service_url, service_name)
+      end
+    end
+
+    context 'with zypper service plugin' do
+      it "doesn't forward to zypper add_service" do
+        service_url = 'http://bla.bla'
+        service_name = 'bla'
+        expect(File).to receive(:exist?).with("/usr/lib/zypp/plugins/services/#{service_name}").and_return(true)
+        expect(SUSE::Connect::Zypper).not_to receive(:add_service)
+
+        described_class.add_service(service_url, service_name)
+      end
     end
   end
 
   describe '.remove_service' do
-    it 'forwards to zypper remove_service' do
-      service_name = 'bla'
-      expect(SUSE::Connect::Zypper).to receive(:remove_service).with(service_name)
+    context 'without zypper service plugin' do
+      it 'forwards to zypper remove_service' do
+        service_name = 'bla'
+        expect(SUSE::Connect::Zypper).to receive(:remove_service).with(service_name)
 
-      described_class.remove_service(service_name)
+        described_class.remove_service(service_name)
+      end
+    end
+
+    context 'with zypper service plugin' do
+      it "doesn't forward to zypper remove_service" do
+        service_name = 'bla'
+        expect(File).to receive(:exist?).with("/usr/lib/zypp/plugins/services/#{service_name}").and_return(true)
+        expect(SUSE::Connect::Zypper).not_to receive(:remove_service)
+
+        described_class.remove_service(service_name)
+      end
     end
   end
 

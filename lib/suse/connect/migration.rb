@@ -74,13 +74,19 @@ module SUSE
         # @param [String] service_url the url from the service to add
         # @param [String] service_name the name of the service to add
         def add_service(service_url, service_name)
-          SUSE::Connect::Zypper.add_service(service_url, service_name)
+          # don't try to add the service if the plugin with the same name exists (bsc#1128969)
+          unless File.exist?("/usr/lib/zypp/plugins/services/#{service_name}")
+            SUSE::Connect::Zypper.add_service(service_url, service_name)
+          end
         end
 
         # Forwards the service names which should be removed with zypper
         # @param [String] service_name the name of the service to remove
         def remove_service(service_name)
-          SUSE::Connect::Zypper.remove_service(service_name)
+          # don't try to remove the service if the plugin with the same name exists (bsc#1128969)
+          unless File.exist?("/usr/lib/zypp/plugins/services/#{service_name}")
+            SUSE::Connect::Zypper.remove_service(service_name)
+          end
         end
 
         # Finds the solvable products available on the system
