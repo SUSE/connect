@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Tue Apr  2 12:33:41 UTC 2019 - Ivan Kapelyukhin <ikapelyukhin@suse.com>
+
+- Update to 0.3.17
+  - Don't try to remove a service during migration if a zypper service
+    plugin already exists (bsc#1128969)
+
+-------------------------------------------------------------------
 Tue Feb  5 07:12:31 UTC 2019 - Stephan Kulow <coolo@suse.com>
 
 - Replace --no-ri --no-rdoc with --no-document - these options
