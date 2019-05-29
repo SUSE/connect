@@ -590,7 +590,7 @@ describe SUSE::Connect::Client do
         allow(Zypper).to receive(:base_product).and_return(product)
         allow(Zypper).to receive(:installed_products).and_return(product_list)
         allow(client_instance).to receive(:show_product).and_return(product)
-        allow(client_instance).to receive(:activate_product).and_return base_product_service
+        allow(client_instance).to receive(:upgrade_product).and_return base_product_service
         allow(System).to receive(:remove_service).with(base_product_service)
       end
 
@@ -636,7 +636,7 @@ describe SUSE::Connect::Client do
           allow(Zypper).to receive :remove_release_package
           allow(Zypper).to receive(:installed_products).and_return installed_products
           allow(client_instance).to receive(:show_product).and_return product
-          allow(client_instance).to receive(:activate_product).and_return base_product_service
+          allow(client_instance).to receive(:upgrade_product).and_return base_product_service
         end
 
         it 'removes all extensions if no product was specified' do

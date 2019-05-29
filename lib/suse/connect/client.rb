@@ -58,7 +58,7 @@ module SUSE
           deregister_product(@config.product)
         else
           # obtain base product service information
-          base_product_service = activate_product(Zypper.base_product)
+          base_product_service = upgrade_product(Zypper.base_product)
 
           tree = show_product(Zypper.base_product)
           installed = Zypper.installed_products.map(&:identifier)
