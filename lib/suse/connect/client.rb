@@ -57,6 +57,9 @@ module SUSE
         if @config.product
           deregister_product(@config.product)
         else
+          # obtain base product service information
+          base_product_service = activate_product(Zypper.base_product)
+
           tree = show_product(Zypper.base_product)
           installed = Zypper.installed_products.map(&:identifier)
           dependencies = flatten_tree(tree).select { |e| installed.include? e[:identifier] }
@@ -65,6 +68,8 @@ module SUSE
             deregister_product(product)
           end
           @api.deregister(system_auth)
+
+          remove_or_refresh_service(base_product_service)
           log.info "\nCleaning up ..."
           System.cleanup!
           log.info "Successfully deregistered system\n".log_green.bold
