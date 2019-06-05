@@ -574,6 +574,7 @@ describe SUSE::Connect::Client do
   describe '#deregister!' do
     let(:stubbed_response) { OpenStruct.new(code: 204, body: nil, success: true) }
     let(:product_list) { [product] }
+    let(:base_product_service) { SUSE::Connect::Remote::Service.new({ 'name' => 'dummy_base_product', 'product' => {} }) }
 
     subject { client_instance.deregister! }
 
@@ -589,6 +590,8 @@ describe SUSE::Connect::Client do
         allow(Zypper).to receive(:base_product).and_return(product)
         allow(Zypper).to receive(:installed_products).and_return(product_list)
         allow(client_instance).to receive(:show_product).and_return(product)
+        allow(client_instance).to receive(:upgrade_product).and_return base_product_service
+        allow(System).to receive(:remove_service).with(base_product_service)
       end
 
       it 'calls underlying api and removes credentials file' do
@@ -606,6 +609,7 @@ describe SUSE::Connect::Client do
 
         it 'prints confirmation message' do
           expect(string_logger).to receive(:info).with("\e[1mDeregistering system from SUSE Customer Center\e[22m")
+          expect(string_logger).to receive(:info).with('-> Removing service from system ...')
           expect(string_logger).to receive(:info).with("\nCleaning up ...")
           expect(string_logger).to receive(:info).with("\e[1m\e[32mSuccessfully deregistered system\n\e[0m\e[22m")
           subject
@@ -632,6 +636,7 @@ describe SUSE::Connect::Client do
           allow(Zypper).to receive :remove_release_package
           allow(Zypper).to receive(:installed_products).and_return installed_products
           allow(client_instance).to receive(:show_product).and_return product
+          allow(client_instance).to receive(:upgrade_product).and_return base_product_service
         end
 
         it 'removes all extensions if no product was specified' do
@@ -643,6 +648,7 @@ describe SUSE::Connect::Client do
 
         it 'removes SCC service and release package for extension' do
           expect(client_instance).not_to receive(:deactivate_product).with(product)
+          expect(System).to receive(:remove_service).with(base_product_service)
           [extension_4_2, extension_4, recommended_2_2, recommended_2].each do |ext|
             expect(client_instance).to receive(:deactivate_product).with(ext).and_return product_service
             expect(System).to receive(:remove_service).with(product_service)
@@ -658,7 +664,7 @@ describe SUSE::Connect::Client do
           expect(string_logger).to receive(:info).with("\nDeactivating 4-Extension 1337 x86_64 ...")
           expect(string_logger).to receive(:info).with("\nDeactivating 2-2-Recommended 83 x86_64 ...")
           expect(string_logger).to receive(:info).with("\nDeactivating 2-Recommended 15 x86_64 ...")
-          expect(string_logger).to receive(:info).with('-> Removing service from system ...').exactly(4).times
+          expect(string_logger).to receive(:info).with('-> Removing service from system ...').exactly(5).times
           expect(string_logger).to receive(:info).with('-> Removing release package ...').exactly(4).times
           expect(string_logger).to receive(:info).with("\nCleaning up ...")
           expect(string_logger).to receive(:info).with("\e[1m\e[32mSuccessfully deregistered system\n\e[0m\e[22m")
