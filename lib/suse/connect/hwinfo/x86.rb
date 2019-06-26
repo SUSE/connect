@@ -22,7 +22,26 @@ class SUSE::Connect::HwInfo::X86 < SUSE::Connect::HwInfo::Base
     end
 
     def hypervisor
-      output['Hypervisor vendor']
+      clean_hypervisor_vendor(output['Hypervisor vendor'])
+    end
+
+    def clean_hypervisor_vendor(vendorstring)
+      case vendorstring
+      when 'Windows Subsystem for Linux'
+        'Microsoft (WSL 1)'
+      when 'Microsoft'
+        if !File.open('/proc/bus/pci/devices').grep(/14145353/).empty?
+          if File.exist?('/var/log/waagent.log')
+            'Microsoft (Azure)'
+          else
+            'Microsoft (Hyper-V)'
+          end
+        else
+          'Microsoft (WSL 2)'
+        end
+      else
+        vendorstring
+      end
     end
 
     def uuid
