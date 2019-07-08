@@ -109,7 +109,7 @@ Manage subscriptions at the SUSE Customer Center: https://scc.suse.com
   server using a RESTful JSON API over HTTP using TLS encryption.
 
 ## ENVIRONMENT
-  SUSEConnect uses Net::HTTP for its requests and respects the HTTP_PROXY environment variable.
+  SUSEConnect respects the HTTP_PROXY environment variable.
 
 ## FILES
   * `/etc/SUSEConnect`:
