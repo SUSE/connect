@@ -5,7 +5,7 @@ group :test, :development do
   gem 'yard'
   gem 'awesome_print'
   gem 'pry'
-  gem 'scc-codestyle', '~> 0.2.0'
+  gem 'scc-codestyle', '0.2.1' # lock to 0.2.1, because rubocop 0.53 needs ruby >=2.2, SLE12 has ruby 2.1
   gem 'ffi', '1.9.18'
 end
 
@@ -13,7 +13,6 @@ group :development do
   gem 'redcarpet'
   gem 'ronn'
   gem 'rake'
-  # gem 'gem2rpm', '~> 0.10.1' # TODO: let's link this to the repo that contains the --config fix from the suse package
   gem 'bump', '~> 0.6.1', '< 0.7' # later versions of bump require ruby 2.2 which is not on SLE12
 end
 

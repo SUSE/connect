@@ -19,7 +19,7 @@ option together with the product identifier of the extension or module.
 You can see a list of all available extensions and modules for your system by
 using the `--list-extensions` option.
 
-Manage subscriptions at [SUSE Customer Center][scc]
+Manage subscriptions at the SUSE Customer Center: https://scc.suse.com
 
 ## OPTIONS
 
@@ -99,18 +99,17 @@ Manage subscriptions at [SUSE Customer Center][scc]
 ### AFTER
   `SUSEConnect --url <registration-server-url> -r <regcode> >> <logfile>`
 
-## USE WITH SMT
+## USE WITH REGISTRATION PROXY
   SUSEConnect can also be used to register systems with a local SUSE
-  Subscription Management Tool instead of the SUSE Customer Center.
-  Use `SUSEConnect --url <smt-server-url>` to register systems with SMT and set
-  [proxies][ENVIRONMENT] as required.
+  registration proxy (RMT/SMT) instead of the SUSE Customer Center.
+  Use `SUSEConnect --url <registration-proxy-server-url>` to register systems with RMT/SMT.
 
 ## IMPLEMENTATION
-  SUSEConnect is implemented in Ruby 2.0.  It communicates with the registration
+  SUSEConnect is implemented in Ruby. It communicates with the registration
   server using a RESTful JSON API over HTTP using TLS encryption.
 
 ## ENVIRONMENT
-  SUSEConnect respects the HTTP_PROXY and HTTPS_PROXY environment variables.
+  SUSEConnect respects the HTTP_PROXY environment variable.
 
 ## FILES
   * `/etc/SUSEConnect`:
@@ -118,12 +117,12 @@ Manage subscriptions at [SUSE Customer Center][scc]
     registration.
 
 ## AUTHOR
-  SUSE Linux Products GmbH <scc-feedback@suse.de>
+  SUSE Linux Products GmbH (<scc-feedback@suse.de>)
 
 ## LINKS
-[SUSE Customer Center][scc]
+SUSE Customer Center: https://scc.suse.com
 
-[SUSEConnect on GitHub][scc-github]
+SUSEConnect on GitHub: https://github.com/SUSE/connect
 
 ## SEE ALSO
 
