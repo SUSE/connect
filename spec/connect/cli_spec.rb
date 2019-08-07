@@ -138,6 +138,12 @@ describe SUSE::Connect::Cli do
           expect_any_instance_of(SUSE::Connect::Config).to receive(:write!)
           cli.execute!
         end
+
+        it 'registers the system if using a configured proxy' do
+          allow_any_instance_of(SUSE::Connect::Config).to receive(:url_default?).and_return(false)
+          expect_any_instance_of(Client).to receive(:register!)
+          cli.execute!
+        end
       end
 
       it 'requires either --regcode or --url (regcode-less SMT registration) but respects config attributes' do
