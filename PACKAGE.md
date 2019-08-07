@@ -75,7 +75,7 @@ Please consult the corresponding [OBS page](https://build.opensuse.org/package/s
 
 ## Step 6. Committing the package
 
-To submit the package:
+After the PR is approved, to submit the package:
 ```bash
 cd package
 osc status

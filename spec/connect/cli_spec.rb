@@ -119,7 +119,6 @@ describe SUSE::Connect::Cli do
 
       context 'when the system has no activated base product' do
         it 'shows a properly rendered help page' do
-          expect_any_instance_of(Status).to receive(:activated_base_product?).and_return(false)
           expect_any_instance_of(Client).not_to receive(:register!)
           expect_any_instance_of(described_class).to receive(:puts) do |option_parser|
             expect(option_parser.instance_variable_get(:@opts).to_s.split("\n").map(&:length)).to all be <= 80
@@ -137,6 +136,12 @@ describe SUSE::Connect::Cli do
           cli = described_class.new(%w[--url http://somewhere.com])
           expect_any_instance_of(Client).to receive(:register!)
           expect_any_instance_of(SUSE::Connect::Config).to receive(:write!)
+          cli.execute!
+        end
+
+        it 'registers the system if using a configured proxy' do
+          allow_any_instance_of(SUSE::Connect::Config).to receive(:url_default?).and_return(false)
+          expect_any_instance_of(Client).to receive(:register!)
           cli.execute!
         end
       end
