@@ -42,7 +42,7 @@ module SUSE
           elsif @config.token && @config.instance_data_file
             log.error 'Please use either --regcode or --instance-data'
             exit(1)
-          elsif @config.url_default? && !@config.token && !status.activated_base_product?
+          elsif @config.url_default? && !@config.token && !@config.product
             puts @opts
             exit(1)
           else
