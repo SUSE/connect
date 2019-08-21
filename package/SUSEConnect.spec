@@ -31,7 +31,6 @@ Requires:       ca-certificates
 Requires:       ca-certificates-mozilla
 %endif
 Requires:       coreutils
-Requires:       hwinfo
 Requires:       net-tools
 Requires:       util-linux
 Requires:       zypper
