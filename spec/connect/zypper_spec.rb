@@ -406,13 +406,21 @@ describe SUSE::Connect::Zypper do
 
   describe '.install_release_package' do
     context 'when the release package is not yet installed' do
+      let(:status_106) { double('Process Status', exitstatus: Zypper::ExitCode::Info::REPOS_SKIPPED) }
       it 'calls zypper install' do
-        expect(Open3).to receive(:capture3).with(shared_env_hash, 'rpm -q opensuse-release')
-                           .and_return(['', '', 1])
+        expect(Open3).to receive(:capture3).with(shared_env_hash, 'rpm -q opensuse-release').and_return(['', '', 1])
 
         expect(Open3).to receive(:capture3).with(shared_env_hash, 'zypper --no-refresh --non-interactive install --no-recommends --auto-agree-with-product-licenses -t product opensuse') # rubocop:disable LineLength
                                            .and_return(['', '', status])
         subject.install_release_package('opensuse')
+      end
+
+      it 'accepts initial repo refresh issue for PackageHub' do
+        expect(Open3).to receive(:capture3).with(shared_env_hash, 'rpm -q PackageHub-release').and_return(['', '', 1])
+
+        expect(Open3).to receive(:capture3).with(shared_env_hash, 'zypper --no-refresh --non-interactive install --no-recommends --auto-agree-with-product-licenses -t product PackageHub') # rubocop:disable LineLength
+                                           .and_return(['', 'Error building the cache', status_106])
+        subject.install_release_package('PackageHub')
       end
     end
 

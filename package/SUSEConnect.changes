@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Sep 26 09:53:36 UTC 2019 - Thomas Schmidt <tschmidt@suse.com>
+
+- Update to 0.3.21
+  Fix error on first activation of packagehub extension (bsc#1124318)
+
+-------------------------------------------------------------------
 Wed Aug 8 16:02:30 UTC 2019 - Ivan Kapelyukhin <ikapelyukhin@suse.com>
 
 - Update to 0.3.20

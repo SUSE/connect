@@ -156,7 +156,13 @@ module SUSE
         def install_release_package(identifier)
           return unless identifier
           _, _, status = execute_raw("rpm -q #{identifier}-release")
-          call("--no-refresh --non-interactive install --no-recommends --auto-agree-with-product-licenses -t product #{identifier}") unless (status == 0)
+          valid_error_codes = [Zypper::ExitCode::OK]
+          # in case of packagehub we accept some repos to fail the initial refresh, because the signing key is not yet imported.
+          # it is part of the -release package, so the repos will be trusted after the release package is installed
+          valid_error_codes << Zypper::ExitCode::Info::REPOS_SKIPPED if (identifier == 'PackageHub')
+          unless (status == 0)
+            call("--no-refresh --non-interactive install --no-recommends --auto-agree-with-product-licenses -t product #{identifier}", false, valid_error_codes)
+          end
         end
 
         def remove_release_package(identifier)
