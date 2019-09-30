@@ -2,8 +2,8 @@
 Mon Sep 30 08:15:35 UTC 2019 - Thomas Schmidt <tschmidt@suse.com>
 
 - Update to 0.3.22
-  add patch to switch server cert path for SLE15.2+ to /etc (bsc#1130864)
- 
+  switch_server_cert_location_to_etc.patch: add patch to switch server cert path for SLE15.2+ to /etc (bsc#1130864)
+
 -------------------------------------------------------------------
 Thu Sep 26 09:53:36 UTC 2019 - Thomas Schmidt <tschmidt@suse.com>
 
