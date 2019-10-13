@@ -53,6 +53,8 @@ SLE_12_SP2:
   beta: false
   online_migration_targets:
   - SLE-HPC-12-SP3
+  - SLE-HPC-12-SP4
+  - SLE-HPC-12-SP5
   - SLES12-SP3
   - SLES12-SP4
   - SLES12-SP5
