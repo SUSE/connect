@@ -17,7 +17,7 @@
 
 
 Name:           SUSEConnect
-Version:        0.3.22
+Version:        0.3.23
 Release:        0
 %define mod_name suse-connect
 %define mod_full_name %{mod_name}-%{version}
@@ -114,8 +114,8 @@ mv %{buildroot}%{_bindir}/%{name}* %{buildroot}%{_sbindir}/%{name}
 ln -s %{_sbindir}/%{name} %{buildroot}%{_bindir}/%{name}
 
 # system certificate location changed to /etc/pki/trust/anchors/registration_server.pem, see bsc#1130864
-# sle_version >= 0152000 is matching SLES + Leap >= 15SP2, suse_version >= 01550 is Tumbleweed
-%if (0%{?sle_version} >= 0152000 || 0%{?suse_version} >= 01550)
+# sle_version >= 150200 is matching SLES + Leap >= 15SP2, suse_version >= 1550 is Tumbleweed
+%if (0%{?sle_version} >= 150200 || 0%{?suse_version} >= 1550)
 patch -d %{buildroot}%{gem_base}/gems/%{mod_full_name} -p1 < switch_server_cert_location_to_etc.patch
 %endif
 
