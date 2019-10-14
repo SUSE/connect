@@ -152,6 +152,9 @@ Using target project 'SUSE:Maintenance'
 
 ```
 
+For RES8 (SUSE Linux Enterprise Server with Expanded Support), package updates need to get done by EPAM (contact is: res-coord@suse.de).
+We agreed to only push critical security updates there.
+
 You can check the status of your requests [here](https://build.opensuse.org/package/requests/systemsmanagement:SCC/SUSEConnect) and [here](https://build.suse.de/package/requests/Devel:SCC:suseconnect/SUSEConnect).
 
 After your requests got accepted, they still have to pass maintenance testing before they get released to customers. You can check their progress at [maintenance.suse.de](https://maintenance.suse.de/search/?q=SUSEConnect). If you still need help, the maintenance team can be reached at [maint-coord@suse.de](maint-coord@suse.de) or #maintenance on irc.suse.de.
