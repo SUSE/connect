@@ -28,8 +28,6 @@ SLE_15:
 SLE_12_SP3:
   beta: false
   online_migration_targets:
-  - SLE-HPC-12-SP4
-  - SLE-HPC-12-SP5
   - SLES12-SP4
   - SLES12-SP5
   next_version: SLES12-SP4
@@ -52,9 +50,6 @@ SLE_12_SP3:
 SLE_12_SP2:
   beta: false
   online_migration_targets:
-  - SLE-HPC-12-SP3
-  - SLE-HPC-12-SP4
-  - SLE-HPC-12-SP5
   - SLES12-SP3
   - SLES12-SP4
   - SLES12-SP5
@@ -77,8 +72,6 @@ SLE_12_SP2:
 SLE_12_SP1:
   beta: false
   online_migration_targets:
-  - SLE-HPC-12-SP2
-  - SLE-HPC-12-SP3
   - SLES12-SP2
   - SLES12-SP3
   - SLES12-SP4
@@ -102,8 +95,6 @@ SLE_12_SP1:
 SLE_12:
   beta: false
   online_migration_targets:
-  - SLE-HPC-12-SP2
-  - SLE-HPC-12-SP3
   - SLES12-SP1
   - SLES12-SP2
   - SLES12-SP3
