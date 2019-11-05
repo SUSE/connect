@@ -656,8 +656,6 @@ describe SUSE::Connect::Client do
           end
           subject
         end
-
-        # rubocop:disable RSpec/MultipleExpectations
         it 'reports about ongoing action' do
           expect(string_logger).to receive(:info).with("\e[1mDeregistering system from SUSE Customer Center\e[22m")
           expect(string_logger).to receive(:info).with("\nDeactivating 4-2-Extension 83 x86_64 ...")
@@ -670,7 +668,6 @@ describe SUSE::Connect::Client do
           expect(string_logger).to receive(:info).with("\e[1m\e[32mSuccessfully deregistered system\n\e[0m\e[22m")
           subject
         end
-        # rubocop:enable RSpec/MultipleExpectations
       end
 
       context 'for single product' do
@@ -715,6 +712,16 @@ describe SUSE::Connect::Client do
       before { allow(::SUSE::Connect::System).to receive(:credentials).and_return(nil) }
 
       it { expect { subject }.to raise_error(::SUSE::Connect::SystemNotRegisteredError) }
+    end
+
+
+    context 'when running on on-demand instance' do
+      before do
+        allow(File).to receive(:exist?).and_call_original
+        allow(File).to receive(:exist?).with('/usr/sbin/registercloudguest').and_return(true)
+      end
+
+      it { expect { subject }.to raise_error(::SUSE::Connect::UnsupportedOperation) }
     end
   end
 

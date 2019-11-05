@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Nov  5 12:08:18 UTC 2019 - Ivan Kapelyukhin <ikapelyukhin@suse.com>
+
+- Update to 0.3.24
+- Forbid de-registration for on-demand Public Cloud instances (bsc#1155911)
+
+-------------------------------------------------------------------
 Mon Oct 14 13:16:03 UTC 2019 - Thomas Schmidt <tschmidt@suse.com>
 
 - 0.3.23
