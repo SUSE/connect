@@ -52,6 +52,10 @@ module SUSE
       #
       # @returns: Empty body and 204 status code
       def deregister!
+        if File.exist?('/usr/sbin/registercloudguest')
+          raise UnsupportedOperation,
+            'De-registration is disabled for on-demand instances. Use `registercloudguest --clean` instead.'
+        end
         raise SystemNotRegisteredError unless registered?
         print_information :deregister
         if @config.product
