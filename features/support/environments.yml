@@ -3,8 +3,12 @@ SLE_15:
   beta: true
   online_migration_targets:
   - "Basesystem-Module"
+  - "Basesystem-Module"
+  - "Python2-Module"
   - "Python2-Module"
   - "SLES15-SP1"
+  - "SLES15-SP2"
+  - "Server-Applications-Module"
   - "Server-Applications-Module"
   next_version: SLES15-SP1
   base_product:
