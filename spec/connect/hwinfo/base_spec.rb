@@ -39,17 +39,25 @@ describe SUSE::Connect::HwInfo::Base do
     end
 
     context 'on AWS hypervisors' do
-      let(:dmidecode_output) { File.read(File.join(fixtures_dir, 'dmidecode_aws.txt')) }
+      context 'on regular instances' do
+        let(:dmidecode_output) { File.read(File.join(fixtures_dir, 'dmidecode_aws.txt')) }
+        it 'detects the provider' do
+          expect(subject.cloud_provider).to eq('Amazon')
+        end
+      end
 
-      it 'detects it' do
-        expect(subject.cloud_provider).to eq('Amazon')
+      context 'on large instances' do
+        let(:dmidecode_output) { File.read(File.join(fixtures_dir, 'dmidecode_aws_large.txt')) }
+        it 'detects the provider' do
+          expect(subject.cloud_provider).to eq('Amazon')
+        end
       end
     end
 
     context 'on Google hypervisors' do
       let(:dmidecode_output) { File.read(File.join(fixtures_dir, 'dmidecode_google.txt')) }
 
-      it 'detects it' do
+      it 'detects the provider' do
         expect(subject.cloud_provider).to eq('Google')
       end
     end
@@ -57,7 +65,7 @@ describe SUSE::Connect::HwInfo::Base do
     context 'on Azure hypervisors' do
       let(:dmidecode_output) { File.read(File.join(fixtures_dir, 'dmidecode_azure.txt')) }
 
-      it 'detects it' do
+      it 'detects the provider' do
         expect(subject.cloud_provider).to eq('Microsoft')
       end
     end

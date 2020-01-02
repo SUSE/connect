@@ -44,10 +44,11 @@ module SUSE::Connect::HwInfo
       end
 
       def cloud_provider
-        regex = /(Version: .*(amazon)|Manufacturer: (Google)|Manufacturer: (Microsoft) Corporation)/
-        matches = execute('dmidecode -t system', false).match(regex).to_a[2..4].to_a.compact
+        regex = /(?:Version: .*(amazon)|Manufacturer: (Amazon)|Manufacturer: (Google)|Manufacturer: (Microsoft) Corporation)/
+
+        matches = execute('dmidecode -t system', false).match(regex).to_a[1..-1].to_a.compact.map(&:capitalize).uniq
         return nil unless matches.length == 1
-        matches[0].capitalize
+        matches[0]
       rescue SUSE::Connect::SystemCallError, Errno::ENOENT
         nil
       end
