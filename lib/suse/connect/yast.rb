@@ -225,6 +225,19 @@ module SUSE
           config = SUSE::Connect::Config.new.merge!(client_params)
           Status.new(config)
         end
+
+        # Provides access to the package search functionality
+        #
+        # @param query [String] package to search
+        # @param product [SUSE::Connect::Zypper::Product] product to base search on
+        # @param config_params [<Hash>] overwrites from the config file
+        #
+        # @return [Array< <Hash>>] Returns all matched packages or an empty array if no matches where found
+        #
+        # @see SUSE::Connect::PackageSearch.search
+        def search_package(query, product: Zypper.base_product, config_params: {})
+          SUSE::Connect::PackageSearch.search(query, product: product, config_params: config_params)
+        end
       end
     end
   end
