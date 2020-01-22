@@ -423,8 +423,8 @@ describe SUSE::Connect::YaST do
   end
 
   describe '.search_package' do
-    let(:base_product) { SUSE::Connect::Zypper::Product.new(name: "SLES", arch: "x86_64", version: "15.2") }
-    let(:results) { [{ name: "foobar"}] }
+    let(:base_product) { SUSE::Connect::Zypper::Product.new(name: 'SLES', arch: 'x86_64', version: '15.2') }
+    let(:results) { [{ name: 'foobar' }] }
 
     before do
       allow(SUSE::Connect::Zypper).to receive(:base_product).and_return(base_product)
@@ -438,7 +438,7 @@ describe SUSE::Connect::YaST do
     end
 
     context 'when a product is given' do
-      let(:product) { SUSE::Connect::Zypper::Product.new(name: "SLED", arch: "x86_64", version: "15.2") }
+      let(:product) { SUSE::Connect::Zypper::Product.new(name: 'SLED', arch: 'x86_64', version: '15.2') }
 
       it 'searches for a package in the given product' do
         expect(SUSE::Connect::PackageSearch).to receive(:search)
