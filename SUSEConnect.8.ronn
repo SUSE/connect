@@ -110,6 +110,8 @@ Manage subscriptions at the SUSE Customer Center: https://scc.suse.com
 
 ## ENVIRONMENT
   SUSEConnect respects the HTTP_PROXY environment variable.
+  See https://www.suse.com/support/kb/doc/?id=000017441 for more details
+  on how to manually configure proxy usage.
 
 ## FILES
   * `/etc/SUSEConnect`:
