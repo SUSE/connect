@@ -436,10 +436,20 @@ describe SUSE::Connect::Zypper do
   end
 
   describe '.remove_release_package' do
-    it 'calls the command' do
-      expect(Open3).to receive(:capture3).with(shared_env_hash, 'zypper --no-refresh --non-interactive remove -t product opensuse')
-                                         .and_return(['', '', status])
-      subject.remove_release_package('opensuse')
+    context 'when the release package is installed' do
+      it 'calls the command' do
+        expect(Open3).to receive(:capture3).with(shared_env_hash, 'zypper --no-refresh --non-interactive remove -t product opensuse')
+                                           .and_return(['', '', status])
+        subject.remove_release_package('opensuse')
+      end
+    end
+    context 'when the release package got removed manually before' do
+      let(:status_104) { double('Process Status', exitstatus: Zypper::ExitCode::Info::CAP_NOT_FOUND) }
+      it "doesn't throw an error" do
+        expect(Open3).to receive(:capture3).with(shared_env_hash, 'zypper --no-refresh --non-interactive remove -t product opensuse')
+                                           .and_return(['', 'No provider of \'opensuse\' found.', status_104])
+        subject.remove_release_package('opensuse')
+      end
     end
   end
 
