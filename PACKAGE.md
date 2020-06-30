@@ -19,7 +19,7 @@ The package is built in the OBS at: https://build.opensuse.org/package/show/syst
 
 If you've never connected to OBS from your package directory, you need to initialize it first:
 ```
-cd package/; rm SUSEConnect.changes SUSEConnect.example SUSEConnect.spec;
+cd package/; rm SUSEConnect.changes SUSEConnect.example SUSEConnect.spec *.patch *rpmlintrc;
 osc co systemsmanagement:SCC SUSEConnect -o .
 ```
 
