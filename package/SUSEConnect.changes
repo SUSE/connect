@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Jun 30 13:39:05 UTC 2020 - Thomas Schmidt <tschmidt@suse.com>
+
+- Don't fail de-activation when '-release' package already got removed
+
+-------------------------------------------------------------------
 Thu Jan  2 12:57:23 UTC 2020 - Ivan Kapelyukhin <ikapelyukhin@suse.com>
 
 - Update to 0.3.25
