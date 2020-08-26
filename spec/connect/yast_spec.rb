@@ -421,4 +421,34 @@ describe SUSE::Connect::YaST do
       expect(subject.list_installer_updates(product, client_params)).to eq []
     end
   end
+
+  describe '.search_package' do
+    let(:base_product) { SUSE::Connect::Zypper::Product.new(name: 'SLES', arch: 'x86_64', version: '15.2') }
+    let(:results) { [{ name: 'foobar' }] }
+
+    before do
+      allow(SUSE::Connect::Zypper).to receive(:base_product).and_return(base_product)
+      allow(SUSE::Connect::PackageSearch).to receive(:search).and_return(results)
+    end
+
+    it 'searches for a package in the base product' do
+      expect(SUSE::Connect::PackageSearch).to receive(:search)
+        .with('foobar', product: base_product, config_params: {})
+      subject.search_package('foobar')
+    end
+
+    context 'when a product is given' do
+      let(:product) { SUSE::Connect::Zypper::Product.new(name: 'SLED', arch: 'x86_64', version: '15.2') }
+
+      it 'searches for a package in the given product' do
+        expect(SUSE::Connect::PackageSearch).to receive(:search)
+          .with('foobar', product: product, config_params: {})
+        subject.search_package('foobar', product: product)
+      end
+    end
+
+    it 'returns an array with the results' do
+      expect(subject.search_package('foobar')).to eq(results)
+    end
+  end
 end

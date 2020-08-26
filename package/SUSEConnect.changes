@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+
+Wed Aug 26 14:37:17 UTC 2020 - Imobach Gonzalez Sosa <igonzalezsosa@suse.com>
+
+- Update to 0.3.26
+  - Extend the YaST API in order to access to the package search
+    functionality (jsc#SLE-9109)
+
+------------------------------------------------------------------
 Tue Jun 30 13:39:05 UTC 2020 - Thomas Schmidt <tschmidt@suse.com>
 
 - Don't fail de-activation when '-release' package already got removed
