@@ -20,7 +20,7 @@ module SUSE
         end
       rescue
         raise SUSE::Connect::CannotBuildBasicAuth,
-              "\nCannot read username and password from #{SUSE::Connect::Credentials.system_credentials_file}."
+              "\nCannot read username and password from #{SUSE::Connect::Credentials.system_credentials_file}. Please activate your system first."
       end
     end
   end
