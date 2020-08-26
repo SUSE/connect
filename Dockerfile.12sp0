@@ -8,8 +8,8 @@ RUN zypper ar http://download.suse.de/ibs/SUSE:/SLE-12:/GA/standard/ SLE-12-stan
     zypper ar -f http://download.suse.de/ibs/SUSE:/SLE-12:/Update/standard/ SLE-12-update-standard &&\
     zypper ar -f http://download.suse.de/ibs/SUSE/Updates/SLE-SERVER/12-LTSS/x86_64/update/ SLE-12-ltss &&\
     zypper --non-interactive --gpg-auto-import-keys ref &&\
-    zypper --non-interactive up zypper &&\
-    zypper --non-interactive install git-core ruby-devel make gcc gcc-c++ build wget dmidecode \
+    zypper --non-interactive up --replacefiles zypper &&\
+    zypper --non-interactive install --replacefiles git-core ruby-devel make gcc gcc-c++ build wget dmidecode \
       vim osc ruby2.1-rubygem-gem2rpm hwinfo libx86emu1 zypper-migration-plugin sudo curl && \
     zypper --non-interactive rr SLE-12-standard SLE-12-update-standard SLE-12-ltss
 

@@ -166,7 +166,8 @@ module SUSE
         end
 
         def remove_release_package(identifier)
-          call("--no-refresh --non-interactive remove -t product #{identifier}") if identifier
+          valid_error_codes = [Zypper::ExitCode::OK, Zypper::ExitCode::Info::CAP_NOT_FOUND]
+          call("--no-refresh --non-interactive remove -t product #{identifier}", true, valid_error_codes) if identifier
         end
 
         # rubocop:disable AccessorMethodName
