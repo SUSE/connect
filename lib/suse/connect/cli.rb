@@ -49,8 +49,6 @@ module SUSE
             Client.new(@config).register!
           end
         end
-
-        @config.write! if @config.write_config
       rescue Errno::ECONNREFUSED
         log.fatal "Error: Connection refused by server #{@config.url}"
         exit 64
@@ -84,6 +82,8 @@ module SUSE
       rescue BaseProductDeactivationError
         log.fatal 'Can not deregister base product. Use SUSEConnect -d to deactivate the whole system.'
         exit 70
+      ensure
+        @config.write! if @config.write_config
       end
 
       private

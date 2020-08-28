@@ -169,6 +169,7 @@ describe SUSE::Connect::Cli do
         cli = described_class.new(%w[-r 123 --instance-data /tmp/test --url test])
         expect(string_logger).to receive(:error)
           .with('Please use either --regcode or --instance-data')
+        expect_any_instance_of(SUSE::Connect::Config).to receive(:write!)
         expect { cli.execute! }.to raise_error(SystemExit)
       end
 
@@ -178,6 +179,18 @@ describe SUSE::Connect::Cli do
         allow_any_instance_of(SUSE::Connect::Client).to receive(:register!)
         expect_any_instance_of(SUSE::Connect::Config).to receive(:write!)
         cli.execute!
+      end
+
+      it 'writes config even when exceptions are raised' do
+        cli = described_class.new(%w[--url http://foo.test.com])
+        expect(cli.config.write_config).to eq true
+
+        response = double(code: 401, body: { 'localized_error' => 'Invalid foo' })
+        allow(System).to receive(:credentials?).and_return true
+        allow_any_instance_of(SUSE::Connect::Client).to receive(:register!).and_raise(ApiError.new(response))
+
+        expect_any_instance_of(SUSE::Connect::Config).to receive(:write!)
+        expect { cli.execute! }.to raise_error(SystemExit)
       end
     end
 
