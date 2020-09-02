@@ -1,5 +1,14 @@
--------------------------------------------------------------------
+------------------------------------------------------------------
+Mon Aug 31 14:10:15 UTC 2020 - Thomas Muntaner <tmuntaner@suse.com>
 
+- Update to 0.3.27
+- SUSEConnect now ensures that it writes its configuration when it
+  encounters errors. This helps in the situation where SUSEConnect
+  announces itself, but fails during a later step. Without the saved
+  configuration, a system could have credentials, but be unsure which
+  registration proxy they're valid for.
+
+-------------------------------------------------------------------
 Wed Aug 26 14:37:17 UTC 2020 - Imobach Gonzalez Sosa <igonzalezsosa@suse.com>
 
 - Update to 0.3.26

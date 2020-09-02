@@ -104,6 +104,7 @@ module SUSE
         params.push(@config.namespace) if @config.namespace
 
         response = @api.announce_system(*params)
+
         [response.body['login'], response.body['password']]
       end
 
