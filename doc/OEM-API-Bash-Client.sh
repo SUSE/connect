@@ -1,4 +1,3 @@
-```bash
 #!/bin/bash
 # Author: https://github.com/wstephenson
 # This script is to demonstrate the use of the SCC OEM partner order API
@@ -45,4 +44,3 @@ fi
 
 # Make the api call
 curl "$host$path" -H "$h_content_type" -H "$h_date" -H "$h_content_md5" -H "$h_authorization" $data_opt
-```
