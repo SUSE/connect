@@ -3,6 +3,11 @@ require 'etc'
 class SUSE::Toolkit::CurlrcDotfile
   CURLRC_LOCATION = '.curlrc'
 
+  # Yast is setting up the credentials in .curlrc in '--proxy-user "user:pwd"' style,
+  # but https://www.suse.com/support/kb/doc/?id=000017441 uses 'proxy-user = "john:n0v3ll"'.
+  # We should support both formats in SUSEConnect
+  CURLRC_CREDENTIALS_REGEXP = /-*proxy-user[ =]*"(.+):(.+)"/
+
   def initialize
     @file_location = File.join(Etc.getpwuid.dir, CURLRC_LOCATION)
   end
@@ -12,11 +17,11 @@ class SUSE::Toolkit::CurlrcDotfile
   end
 
   def username
-    line_with_credentials.match(/--proxy-user\s?"(.*):/)[1] rescue nil
+    line_with_credentials.match(CURLRC_CREDENTIALS_REGEXP)[1] rescue nil
   end
 
   def password
-    line_with_credentials.match(/--proxy-user\s?".*:(.*)"/)[1] rescue nil
+    line_with_credentials.match(CURLRC_CREDENTIALS_REGEXP)[2] rescue nil
   end
 
   private

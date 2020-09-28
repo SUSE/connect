@@ -4,9 +4,11 @@ require 'etc'
 describe SUSE::Toolkit::CurlrcDotfile do
   let(:curlrc_location) { File.join(Etc.getpwuid.dir, described_class::CURLRC_LOCATION) }
   let(:fixture_curlrc) { File.readlines('spec/fixtures/curlrc_example.dotfile') }
-  let(:proper_line_with_credentials) do
-    %(--proxy-user "meuser:mepassord"
-)
+  let(:proper_lines_with_credentials) do
+    ['--proxy-user "meuser1$:mepassord2%"',
+     '--proxy-user = "meuser1$:mepassord2%"',
+     'proxy-user = "meuser1$:mepassord2%"',
+     'proxy-user="meuser1$:mepassord2%"']
   end
   let(:garbled_line_with_credentials) do
     %(--proxy-user meusermepassord"
@@ -35,12 +37,11 @@ describe SUSE::Toolkit::CurlrcDotfile do
 
   describe '#password' do
     context 'string with credentials is matching' do
-      before do
-        allow(subject).to receive(:line_with_credentials).and_return(proper_line_with_credentials)
-      end
-
-      it 'extracts proper username' do
-        expect(subject.password).to eq 'mepassord'
+      it 'extracts proper password' do
+        proper_lines_with_credentials.each do |proper_line_with_credentials|
+          allow(subject).to receive(:line_with_credentials).and_return(proper_line_with_credentials)
+          expect(subject.password).to eq 'mepassord2%'
+        end
       end
     end
 
@@ -57,12 +58,11 @@ describe SUSE::Toolkit::CurlrcDotfile do
 
   describe '#username' do
     context 'string with credentials is matching' do
-      before do
-        allow(subject).to receive(:line_with_credentials).and_return(proper_line_with_credentials)
-      end
-
       it 'extracts proper username' do
-        expect(subject.username).to eq 'meuser'
+        proper_lines_with_credentials.each do |proper_line_with_credentials|
+          allow(subject).to receive(:line_with_credentials).and_return(proper_line_with_credentials)
+          expect(subject.username).to eq 'meuser1$'
+        end
       end
     end
 
@@ -85,7 +85,7 @@ describe SUSE::Toolkit::CurlrcDotfile do
       end
 
       it 'returns line matching pattern' do
-        expect(subject.send(:line_with_credentials)).to eq proper_line_with_credentials
+        expect(subject.send(:line_with_credentials)).to eq "--proxy-user \"meuser:mepassord\"\n"
       end
 
       it 'returns nil if no matchin line found' do
