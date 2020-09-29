@@ -1,11 +1,13 @@
 require 'etc'
-# implementing interface to ~/.curlrc which can hold proxy details
+
+# Yast is not adding proxy credentials to the 'http_proxy' env variable, but writing
+# them to ~/.curlrc. This class is parsing the credentials from there to be used in connection.rb
 class SUSE::Toolkit::CurlrcDotfile
   CURLRC_LOCATION = '.curlrc'
 
-  # Yast is setting up the credentials in .curlrc in '--proxy-user "user:pwd"' style,
+  # Yast is setting up the credentials in ~/.curlrc in '--proxy-user "user:pwd"' style,
   # but https://www.suse.com/support/kb/doc/?id=000017441 uses 'proxy-user = "john:n0v3ll"'.
-  # We should support both formats in SUSEConnect
+  # SUSEConnect should be capable of reading both formats
   CURLRC_CREDENTIALS_REGEXP = /-*proxy-user[ =]*"(.+):(.+)"/
 
   def initialize
