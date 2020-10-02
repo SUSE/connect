@@ -1,7 +1,12 @@
 require 'etc'
 
-# Yast is not adding proxy credentials to the 'http_proxy' env variable, but writing
-# them to ~/.curlrc. This class is parsing the credentials from there to be used in connection.rb
+# When configuring a proxy with "yast2 proxy", the proxy url and credentials
+# are written to ~/.curlrc and /etc/sysconfig/proxy
+# At login session init, the values get copied to the environment from /etc/sysconfig/proxy,
+# from where Net::Http is picking them up. Unfortunately the proxy credentials are
+# not prepended to the url, but stored seperately in a way that Net::Http isn't picking
+# them up. That's why we need to parse them from .curlrc
+
 class SUSE::Toolkit::CurlrcDotfile
   CURLRC_LOCATION = '.curlrc'
 
@@ -30,6 +35,6 @@ class SUSE::Toolkit::CurlrcDotfile
 
   def line_with_credentials
     return nil unless exist?
-    @line_with_credentials ||= File.readlines(@file_location).find { |l| l =~ /--proxy-user ".*:.*"/ }
+    @line_with_credentials ||= File.readlines(@file_location).find { |l| l =~ CURLRC_CREDENTIALS_REGEXP }
   end
 end
