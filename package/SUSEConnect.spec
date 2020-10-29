@@ -83,6 +83,7 @@ Source:         %{mod_full_name}.gem
 Source1:        %{name}.5
 Source2:        %{name}.8
 Source3:        %{name}.example
+Source4:        %{name}-rpmlintrc
 Patch0:         switch_server_cert_location_to_etc.patch
 
 Summary:        Utility to register a system with the SUSE Customer Center
