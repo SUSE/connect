@@ -152,6 +152,10 @@ Using target project 'SUSE:Maintenance'
 
 ```
 
+**Note:**
+
+* When asked whether or not to supersede a request, the answer is usually "no". Saying "yes" would overwrite the previous request made, cancelling the release process for its codestream.
+
 For RES8 (SUSE Linux Enterprise Server with Expanded Support), package updates need to get done by EPAM (contact is: res-coord@suse.de).
 We agreed to only push critical security updates there.
 
