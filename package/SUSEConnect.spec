@@ -128,6 +128,9 @@ touch %{buildroot}%_sysconfdir/SUSEConnect
 mkdir -p %{buildroot}%_sysconfdir/zypp/credentials.d/
 touch %{buildroot}%_sysconfdir/zypp/credentials.d/SCCcredentials
 
+# replace /usr/bin/env with native ruby path
+sed -i "1s/.*/#\!\/usr\/bin\/ruby\.%{ruby_version}/" %{buildroot}%{_sbindir}/%{name}
+
 %post
 if [ -s /etc/zypp/credentials.d/NCCcredentials ] && [ ! -e /etc/zypp/credentials.d/SCCcredentials ]; then
     echo "Imported NCC system credentials to /etc/zypp/credentials.d/SCCcredentials"
