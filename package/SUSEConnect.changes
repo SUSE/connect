@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Nov 17 09:36:24 UTC 2020 - Tamara Schmitz <tamara.schmitz@suse.com>
+
+- replace env ruby path with native ruby path during build phase
+
+-------------------------------------------------------------------
 Mon Sep 28 17:36:08 UTC 2020 - Thomas Schmidt <tschmidt@suse.com>
 
 - Recognize more formats when parsing .curlrc for proxy credentials (bsc#1155027)
