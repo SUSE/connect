@@ -1,6 +1,7 @@
 -------------------------------------------------------------------
 Tue Nov 17 09:36:24 UTC 2020 - Tamara Schmitz <tamara.schmitz@suse.com>
 
+- Update to 0.3.29
 - replace env ruby path with native ruby path during build phase
 
 -------------------------------------------------------------------
