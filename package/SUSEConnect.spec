@@ -130,6 +130,7 @@ touch %{buildroot}%_sysconfdir/zypp/credentials.d/SCCcredentials
 
 # replace /usr/bin/env with native ruby path
 sed -i "1s/.*/#\!\/usr\/bin\/ruby\.%{ruby_version}/" %{buildroot}%{_sbindir}/%{name}
+sed -i "1s/.*/#\!\/usr\/bin\/ruby\.%{ruby_version}/" %{buildroot}%{gem_base}/gems/%{mod_full_name}/bin/%{name}
 
 %post
 if [ -s /etc/zypp/credentials.d/NCCcredentials ] && [ ! -e /etc/zypp/credentials.d/SCCcredentials ]; then
