@@ -1,6 +1,9 @@
 require 'spec_helper'
 
 describe SUSE::Connect::Client do
+  before do
+    stub_const('SUSE::Connect::Config::DEFAULT_CONFIG_FILE', 'spec/fixtures/SUSEConnect')
+  end
   let(:config) { SUSE::Connect::Config.new }
   let(:default_logger) { SUSE::Connect::GlobalLogger.instance.log }
   let(:string_logger) { ::Logger.new(StringIO.new) }
@@ -17,6 +20,7 @@ describe SUSE::Connect::Client do
   let(:extension_4_2) { extension_4.extensions[1] }
 
   subject { client_instance }
+
 
   describe '.new' do
     context 'empty opts' do
