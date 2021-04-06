@@ -1,5 +1,17 @@
 The purpose of this document is to describe the way of communication between OEM partners and SUSE Customer Center API.
 
+A Swagger documentation is available in this repository. You just need to server it locally with the following commands:
+
+```sh
+cd api_docs/
+./http_server
+```
+
+The documentation will be available at [localhost:8080/swagger-ui](http://localhost:8080/swagger-ui).
+
+`http_server` is a Pyhton 3 script which uses standard Python libraries to run a
+HTTP server for the current directory.
+
 ## Authentication
 
 Authentication for this endpoint is performed using the SHA256 HMAC algorithm. It requires three mandatory headers:
