@@ -1,0 +1,28 @@
+post:
+  tags:
+    - partner_orders
+  parameters:
+    - $ref: '/swagger/swagger.yaml#/components/parameters/Date'
+    - $ref: '/swagger/swagger.yaml#/components/parameters/ContentMd5'
+    - $ref: '/swagger/swagger.yaml#/components/parameters/Authorization'
+  summary: Renew an OEM partner order
+  description: |-
+    The attribute `partner_order_items` should contain only items with SKUs
+    related to subscriptions created on the previous order (with the same OEM
+    token). It means the endpoint can not be used to create new subscriptions,
+    only to extend the lifespan of active subscriptions and/or change the system
+    limits.
+  requestBody:
+    description: Partner order object
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '/swagger/swagger.yaml#/components/requestBodies/PartnerOrderPayload'
+  responses:
+    '200':
+      description: Partner order created successfully.
+      content:
+        application/json:
+          schema:
+            $ref: '/swagger/swagger.yaml#/components/schemas/PartnerOrder'

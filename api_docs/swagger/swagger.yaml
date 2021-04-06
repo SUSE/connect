@@ -62,6 +62,10 @@ tags:
 paths:
   /partner_orders:
     $ref: "/swagger/paths/partner_orders.yaml"
+  /partner_orders/pre_activation:
+    $ref: "/swagger/paths/partner_orders/pre_activation.yaml"
+  /partner_orders/renewal:
+    $ref: "/swagger/paths/partner_orders/renewal.yaml"
 
 components:
   requestBodies:
@@ -69,6 +73,10 @@ components:
       $ref: "/swagger/components/requestBodies/partner_order_payload.yaml"
     PartnerOrderItemPayload:
       $ref: "/swagger/components/requestBodies/partner_order_item_payload.yaml"
+    PreActivationPartnerOrderPayload:
+      $ref: "/swagger/components/requestBodies/pre_activation/partner_order_payload.yaml"
+    PreActivationPartnerOrderItemPayload:
+      $ref: "/swagger/components/requestBodies/pre_activation/partner_order_item_payload.yaml"
   schemas:
     PartnerOrder:
       $ref: "/swagger/components/schemas/partner_order.yaml"

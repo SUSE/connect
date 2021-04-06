@@ -1,0 +1,22 @@
+post:
+  tags:
+    - partner_orders
+  parameters:
+    - $ref: '/swagger/swagger.yaml#/components/parameters/Date'
+    - $ref: '/swagger/swagger.yaml#/components/parameters/ContentMd5'
+    - $ref: '/swagger/swagger.yaml#/components/parameters/Authorization'
+  summary: Place a pre-activated OEM partner order
+  requestBody:
+    description: Partner order object
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '/swagger/swagger.yaml#/components/requestBodies/PreActivationPartnerOrderPayload'
+  responses:
+    '200':
+      description: Partner order created successfully.
+      content:
+        application/json:
+          schema:
+            $ref: '/swagger/swagger.yaml#/components/schemas/PartnerOrder'
