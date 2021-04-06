@@ -1,0 +1,24 @@
+type: object
+properties:
+  partner_order:
+    type: object
+    required: true
+    properties:
+      oem_token:
+        required: true
+        type: string
+        example: 987654
+      purchased_at:
+        required: true
+        type: string
+        format: date-time
+        example: "2016-07-06T08:48:22.000Z"
+      email:
+        type: string
+        format: email
+        example: john.doe@example.com
+      partner_order_items:
+        required: true
+        type: array
+        items:
+          $ref: '/swagger/swagger.yaml#/components/requestBodies/PartnerOrderItemPayload'

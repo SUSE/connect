@@ -1,0 +1,12 @@
+type: object
+properties:
+  sku:
+    type: string
+    required: true
+    example: 345-67890
+  system_limit:
+    type: integer
+    format: int32
+    minimum: 0
+    required: true
+    example: 2

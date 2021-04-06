@@ -1,0 +1,40 @@
+get:
+  tags:
+    - partner_orders
+  summary: Get all OEM partner orders.
+  parameters:
+    - $ref: '/swagger/swagger.yaml#/components/parameters/Date'
+    - $ref: '/swagger/swagger.yaml#/components/parameters/ContentMd5'
+    - $ref: '/swagger/swagger.yaml#/components/parameters/Authorization'
+  responses:
+    '200':
+      description: A list of all OEM partner orders.
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '/swagger/swagger.yaml#/components/schemas/PartnerOrder'
+
+post:
+  tags:
+    - partner_orders
+  parameters:
+    - $ref: '/swagger/swagger.yaml#/components/parameters/Date'
+    - $ref: '/swagger/swagger.yaml#/components/parameters/ContentMd5'
+    - $ref: '/swagger/swagger.yaml#/components/parameters/Authorization'
+  summary: Place an OEM partner order
+  requestBody:
+    description: Partner order object
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '/swagger/swagger.yaml#/components/requestBodies/PartnerOrderPayload'
+  responses:
+    '200':
+      description: Partner order created successfully.
+      content:
+        application/json:
+          schema:
+            $ref: '/swagger/swagger.yaml#/components/schemas/PartnerOrder'

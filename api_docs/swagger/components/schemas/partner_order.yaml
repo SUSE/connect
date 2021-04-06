@@ -1,0 +1,28 @@
+type: object
+properties:
+  id:
+    type: integer
+    format: int32
+    example: 1
+  purchased_at:
+    type: string
+    format: date-time
+    example: "2016-07-06T08:48:22.000Z"
+  created_at:
+    type: string
+    format: date-time
+    example: "2016-07-06T08:59:29.568Z"
+  oem_token:
+    type: string
+    example: "987654"
+  email:
+    oneOf:
+      - type: string
+        format: email
+        example: john.doe@example.com
+      - type: null
+        example: null
+  partner_order_items:
+    type: array
+    items:
+      $ref: '/swagger/swagger.yaml#/components/schemas/PartnerOrderItem'
