@@ -45,15 +45,13 @@ info:
 
     `APIAuth-HMAC-SHA256 112233:wvSi7Ach641iUvDTVE5AEVQCwXdH0uSfUQecJTlLSIolxVmqmk7gESkUIi+65R4x6OcDNy6ytVNBbQ5hlLzBpH0V3QolvYFHRgwQqcGhcbSDrUX7nQyVREilfVJ4FYaIirBnfXWYwi9K43bXHcEWj/mBQ1A8c7vpViWpalCdf8M=`
 
+
+    A shell script for making a request with proper headers is available on the repository `SUSE/connect`,
+    [OEM-API-Bash-Client.sh](https://github.com/SUSE/connect/blob/new-partners-api/doc/OEM-API-Bash-Client.sh)
+
 servers:
-  - url: "{protocol}://scc.suse.com/api/oem"
+  - url: "https://scc.suse.com/api/oem"
     description: Main (production)
-    variables:
-      protocol:
-        enum:
-          - https
-        default: https
-    basePath: /api/oem
 
 tags:
   - name: partner_orders
