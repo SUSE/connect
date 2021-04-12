@@ -1,0 +1,62 @@
+# Common fields of the 'partner_order' object
+
+oem_token:
+  required: true
+  type: string
+  example: 987654
+  minLength: 1
+  maxLength: 255
+  description: >-
+    OEM token used to identify an OEM partner order.
+
+purchased_at:
+  required: true
+  type: string
+  format: date-time
+  example: "2016-07-06T08:48:22.000Z"
+  description: >-
+    Date and time of an OEM partner  order.
+    Format: ISO8601.
+
+email:
+  type: string
+  format: email
+  example: john.doe@example.com
+  description: >-
+    [Optional] E-mail adress of the OEM partner's customer, who will be notified
+    once the subscription is activated.
+
+## Fields specific to pre-activation orders ('partner_order' object)
+
+end_user_account_number:
+  required: true
+  type: string
+  example: A123123
+  description: Either the end user's UC site ID or the end user's SF account number.
+
+# Common fields of objects in 'partner_order_items' array
+
+sku:
+  type: string
+  required: true
+  example: 345-67890
+  description: SUSE SKU number of purchased item.
+
+system_limit:
+  type: integer
+  format: int32
+  minimum: 1
+  required: true
+  example: 2
+  description: >-
+    Maximum number (quantity) of systems which can use the given SKU.
+
+## Specific to pre-activation orders ('partner_order_items' array)
+
+starts_at:
+  type: string
+  format: date-time
+  example: "2016-07-06T08:48:22.000Z"
+  description: >-
+    Date and time when the SKU lifetime starts; subscription start date.
+    Format: ISO8601.

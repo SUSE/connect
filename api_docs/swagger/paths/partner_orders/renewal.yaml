@@ -13,12 +13,7 @@ post:
     only to extend the lifespan of active subscriptions and/or change the system
     limits.
   requestBody:
-    description: Partner order object
-    required: true
-    content:
-      application/json:
-        schema:
-          $ref: '/swagger/swagger.yaml#/components/requestBodies/PartnerOrderPayload'
+    $ref: '/swagger/swagger.yaml#/components/requestBodies/PartnerOrderPayload'
   responses:
     '200':
       description: Partner order created successfully.

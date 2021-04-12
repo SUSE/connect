@@ -7,12 +7,7 @@ post:
     - $ref: '/swagger/swagger.yaml#/components/parameters/Authorization'
   summary: Place a pre-activated OEM partner order
   requestBody:
-    description: Partner order object
-    required: true
-    content:
-      application/json:
-        schema:
-          $ref: '/swagger/swagger.yaml#/components/requestBodies/PreActivationPartnerOrderPayload'
+    $ref: '/swagger/swagger.yaml#/components/requestBodies/PreActivationPartnerOrderPayload'
   responses:
     '200':
       description: Partner order created successfully.

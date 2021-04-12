@@ -1,28 +1,26 @@
-type: object
-properties:
-  partner_order:
-    type: object
-    required: true
-    properties:
-      oem_token:
-        required: true
-        type: string
-        example: 987654
-      end_user_account_number:
-        required: true
-        type: string
-        example: A123123
-      purchased_at:
-        required: true
-        type: string
-        format: date-time
-        example: "2016-07-06T08:48:22.000Z"
-      email:
-        type: string
-        format: email
-        example: john.doe@example.com
-      partner_order_items:
-        required: true
-        type: array
-        items:
-          $ref: '/swagger/swagger.yaml#/components/requestBodies/PreActivationPartnerOrderItemPayload'
+description: Partner order object
+required: true
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        partner_order:
+          type: object
+          required: true
+          description: Main object containing all required data to create an order.
+          properties:
+            oem_token:
+              $ref: '/swagger/components/requestBodies/fields.yaml#/oem_token'
+            end_user_account_number:
+              $ref: '/swagger/components/requestBodies/fields.yaml#/end_user_account_number'
+            purchased_at:
+              $ref: '/swagger/components/requestBodies/fields.yaml#/purchased_at'
+            email:
+              $ref: '/swagger/components/requestBodies/fields.yaml#/email'
+            partner_order_items:
+              required: true
+              type: array
+              description: List of all order items.
+              items:
+                $ref: '/swagger/components/requestBodies/pre_activation/partner_order_item_payload.yaml'

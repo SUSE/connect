@@ -1,17 +1,8 @@
 type: object
 properties:
   sku:
-    type: string
-    required: true
-    example: 345-67890
+    $ref: '/swagger/components/requestBodies/fields.yaml#/sku'
   system_limit:
-    type: integer
-    format: int32
-    minimum: 0
-    required: true
-    example: 2
+    $ref: '/swagger/components/requestBodies/fields.yaml#/system_limit'
   starts_at:
-    type: string
-    format: date-time
-    example: "2016-07-06T08:48:22.000Z"
-
+    $ref: '/swagger/components/requestBodies/fields.yaml#/starts_at'

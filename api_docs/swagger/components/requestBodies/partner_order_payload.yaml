@@ -1,24 +1,24 @@
-type: object
-properties:
-  partner_order:
-    type: object
-    required: true
-    properties:
-      oem_token:
-        required: true
-        type: string
-        example: 987654
-      purchased_at:
-        required: true
-        type: string
-        format: date-time
-        example: "2016-07-06T08:48:22.000Z"
-      email:
-        type: string
-        format: email
-        example: john.doe@example.com
-      partner_order_items:
-        required: true
-        type: array
-        items:
-          $ref: '/swagger/swagger.yaml#/components/requestBodies/PartnerOrderItemPayload'
+description: Payload to create an OEM partner order on SCC API.
+required: true
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        partner_order:
+          required: true
+          type: object
+          description: Main object containing all required data to create an order.
+          properties:
+            oem_token:
+              $ref: '/swagger/components/requestBodies/fields.yaml#/oem_token'
+            purchased_at:
+              $ref: '/swagger/components/requestBodies/fields.yaml#/purchased_at'
+            email:
+              $ref: '/swagger/components/requestBodies/fields.yaml#/email'
+            partner_order_items:
+              required: true
+              type: array
+              description: List of all order items.
+              items:
+                $ref: '/swagger/components/requestBodies/partner_order_item_payload.yaml'

@@ -25,12 +25,7 @@ post:
     - $ref: '/swagger/swagger.yaml#/components/parameters/Authorization'
   summary: Place an OEM partner order
   requestBody:
-    description: Partner order object
-    required: true
-    content:
-      application/json:
-        schema:
-          $ref: '/swagger/swagger.yaml#/components/requestBodies/PartnerOrderPayload'
+    $ref: '/swagger/swagger.yaml#/components/requestBodies/PartnerOrderPayload'
   responses:
     '200':
       description: Partner order created successfully.
