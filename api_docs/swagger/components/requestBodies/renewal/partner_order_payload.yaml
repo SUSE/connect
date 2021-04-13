@@ -7,7 +7,7 @@ content:
         partner_order:
           required: true
           type: object
-          description: Object which represents the order to be placed.
+          description: Object which represents the order to be renewed.
           properties:
             oem_token:
               $ref: '/swagger/components/requestBodies/fields.yaml#/oem_token'
@@ -18,11 +18,11 @@ content:
             partner_order_items:
               required: true
               type: array
-              description: List of all order items.
+              description: List of order items to be changed.
               items:
                 $ref: '/swagger/components/requestBodies/partner_order_item_payload.yaml'
 description: |-
-  Payload to create an OEM partner order on SCC API.
+  Payload to renew an existing OEM partner order on SCC API.
 
   The request's payload *must* contain a JSON object that *should* correspond to
   a single order.
@@ -34,8 +34,9 @@ description: |-
     - `"oem_token"`: string, **required**
 
       Value *must* be a string, with a maximum length of 255 characters.
-      It *should not* be empty, and must be unique per OEM partner at the moment
-      of placing a new order. It is generated and kept by the OEM partner.
+      It *should not* be empty. The informed token *should* match one of an
+      existing order placed by the OEM partner. This means that renewals
+      *should* only be applied to existing orders whose subscriptions are active.
 
     - `"purchased_at"`: string, **required**
 
@@ -53,13 +54,26 @@ description: |-
     - `"partner_order_items"`: array of JSON objects, **required**
 
       Value *must* be an array of JSON objects representing the order items.
-      Those objects *should* contain the following keys:
+      It *may* be empty if there are no items to be changed. Those objects
+      *should* contain the following keys:
 
         - `"sku"`: string, **required**
 
-          Value *must* be a string and *must* match a valid SUSE SKU.
+          Value *must* be a string and *must* match a valid SUSE SKU. Renewal
+          orders *should* only contain SKUs that match active subscriptions from
+          the initial order.
+
+          E.g., suppose an initial order which contains exactly the order items
+          **SUSE-SKU-PRODUCT-A-1Y** and **SUSE-SKU-PRODUCT-B-1Y*,* both 1-year
+          subscriptions. A renewal order *may* contain the same SKUs or SKUs
+          which related to the same products, like **SUSE-SKU-PRODUCT-A-3Y**
+          (3 years) or **SUSE-SKU-PRODUCT-B-5Y** (5 years), but not a SKU for a
+          new subscription, like **SKU-PRODUCT-C-1Y** for product C, which is
+          not included in the initial order.
 
         - `"system_limit"`: integer, **required**
 
           Value *must* be an integer greater than one. It represents the maximum
-          number of systems which can use the given SKU simultaneously.
+          number of systems which can use the given SKU simultaneously. It *may*
+          be different from values of a previous order, meaning the system limit
+          for a given SKU *may* be updated.

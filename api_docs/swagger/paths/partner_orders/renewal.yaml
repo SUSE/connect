@@ -13,7 +13,7 @@ post:
     only to extend the lifespan of active subscriptions and/or change the system
     limits.
   requestBody:
-    $ref: '/swagger/swagger.yaml#/components/requestBodies/PartnerOrderPayload'
+    $ref: '/swagger/swagger.yaml#/components/requestBodies/RenewalPartnerOrderPayload'
   responses:
     '200':
       description: Partner order created successfully.

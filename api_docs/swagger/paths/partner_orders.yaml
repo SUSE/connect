@@ -27,8 +27,8 @@ post:
   requestBody:
     $ref: '/swagger/swagger.yaml#/components/requestBodies/PartnerOrderPayload'
   responses:
-    '200':
-      description: Partner order created successfully.
+    '201':
+      description: Created
       content:
         application/json:
           schema:

@@ -71,6 +71,8 @@ components:
       $ref: "/swagger/components/requestBodies/partner_order_payload.yaml"
     PreActivationPartnerOrderPayload:
       $ref: "/swagger/components/requestBodies/pre_activation/partner_order_payload.yaml"
+    RenewalPartnerOrderPayload:
+      $ref: "/swagger/components/requestBodies/renewal/partner_order_payload.yaml"
   schemas:
     PartnerOrder:
       $ref: "/swagger/components/schemas/partner_order.yaml"
