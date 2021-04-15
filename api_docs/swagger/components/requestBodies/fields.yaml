@@ -15,8 +15,7 @@ purchased_at:
   format: date-time
   example: "2016-07-06T08:48:22.000Z"
   description: >-
-    Date and time of an OEM partner  order.
-    Format: ISO8601.
+    Date and time of an OEM partner  order.  Format: ISO8601.
 
 email:
   type: string

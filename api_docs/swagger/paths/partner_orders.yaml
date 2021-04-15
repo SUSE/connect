@@ -2,13 +2,19 @@ get:
   tags:
     - partner_orders
   summary: Get all OEM partner orders.
+  description: |-
+    This operation returns a list of all orders from a given OEM partner. The
+    OEM partner identity is checked through the `Authorization` header.
+
+    No query parameters are available and it's not possible to filter orders
+    by their attributes through the API.
   parameters:
     - $ref: '/swagger/swagger.yaml#/components/parameters/Date'
     - $ref: '/swagger/swagger.yaml#/components/parameters/ContentMd5'
     - $ref: '/swagger/swagger.yaml#/components/parameters/Authorization'
   responses:
     '200':
-      description: A list of all OEM partner orders.
+      description: "`OK`"
       content:
         application/json:
           schema:
@@ -19,16 +25,26 @@ get:
 post:
   tags:
     - partner_orders
+  summary: Place an OEM partner order
+  description: |-
+    This operation creates (places) an OEM partner order to SCC.
+
+    - Once an order is successfully created, the OEM partner is responsible for
+      informing the OEM token to the end user (customer);
+    - The end user is responsible for manually activating her/his subscriptions
+      through SCC using the provided OEM token.
+
+    Until the end user perform that manual step, the OEM partner order is
+    considered "*not redeemed*" within the SCC domain.
   parameters:
     - $ref: '/swagger/swagger.yaml#/components/parameters/Date'
     - $ref: '/swagger/swagger.yaml#/components/parameters/ContentMd5'
     - $ref: '/swagger/swagger.yaml#/components/parameters/Authorization'
-  summary: Place an OEM partner order
   requestBody:
     $ref: '/swagger/swagger.yaml#/components/requestBodies/PartnerOrderPayload'
   responses:
     '201':
-      description: Created
+      description: "`Created`"
       content:
         application/json:
           schema:

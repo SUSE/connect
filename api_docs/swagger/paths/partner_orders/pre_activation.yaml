@@ -1,16 +1,32 @@
 post:
   tags:
     - partner_orders
+  summary: Place a pre-activated OEM partner order
+  description: |-
+    This operation creates (place) an OEM partner order to SCC and request it to
+    be pre-activated by the OEM partner order on behalf of the end user
+    (customer).
+
+    - Once an order is successfully created, SCC will asynchronously activates
+      each item in the OEM partner order, and associates generated subscriptions
+      to the end user account ("end_user_account_number"` in the request's
+      payload);
+    - Once subscriptions are successfully created, the end user will be notified,
+      through email (`"email"` in the request's payload);
+    - At this point, the OEM partner order is considerered "*redeemed*" within
+      the SCC domain.
+
+    By performing this operation, the end user *should not* perform any manual
+    steps to benefit from her/his subscriptions and products.
   parameters:
     - $ref: '/swagger/swagger.yaml#/components/parameters/Date'
     - $ref: '/swagger/swagger.yaml#/components/parameters/ContentMd5'
     - $ref: '/swagger/swagger.yaml#/components/parameters/Authorization'
-  summary: Place a pre-activated OEM partner order
   requestBody:
     $ref: '/swagger/swagger.yaml#/components/requestBodies/PreActivationPartnerOrderPayload'
   responses:
-    '200':
-      description: Partner order created successfully.
+    '201':
+      description: "`Created`"
       content:
         application/json:
           schema:
