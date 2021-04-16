@@ -5,9 +5,11 @@ ENV BUILT_AT "Wed Feb 21 15:32 CET 2018"
 RUN useradd --no-log-init --create-home scc
 
 # Remember to drop docker caches if any of these change
-RUN zypper ar http://download.suse.de/ibs/SUSE:/SLE-15:/GA/standard/ sles-pool &&\
-    zypper ar http://download.suse.de/ibs/SUSE:/SLE-15:/Update/standard/ sles-updates &&\
-    zypper --non-interactive --gpg-auto-import-keys ref &&\
+RUN zypper ar http://download.suse.de/ibs/SUSE/Products/SLE-Module-Basesystem/15/x86_64/product base &&\
+    zypper ar http://download.suse.de/ibs/SUSE/Updates/SLE-Module-Basesystem/15/x86_64/update base-updates &&\
+    zypper ar http://download.suse.de/ibs/SUSE/Products/SLE-Module-Legacy/15/x86_64/product legacy &&\
+    zypper ar http://download.suse.de/ibs/SUSE/Updates/SLE-Module-Development-Tools/15/x86_64/update devtools &&\
+    zypper --non-interactive ref &&\
     zypper --non-interactive up &&\
     zypper --non-interactive install git-core ruby-devel make gcc gcc-c++ build wget dmidecode \
       vim osc hwinfo libx86emu1 zypper-migration-plugin sudo awk curl
