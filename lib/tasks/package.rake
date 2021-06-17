@@ -15,8 +15,8 @@ end
 
 namespace :package do
   package_dir = 'package/'
-  package_name = 'SUSEConnect'
-  obs_project = 'systemsmanagement:SCC'
+  package_name = 'test_connect'
+  obs_project = 'home:ngetahun'
   local_spec_file = "#{package_name}.spec"
   root_path = File.join(File.dirname(__FILE__), '../..')
 
