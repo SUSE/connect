@@ -56,6 +56,12 @@ module SUSE
 
       private
 
+      def path_with_params(path, params)
+        return path if params.empty?
+        encoded_params = URI.encode_www_form(params)
+        [path, encoded_params].join('?')
+      end
+
       def prefix_protocol(endpoint)
         if endpoint[%r{^(http|https):\/\/}]
           endpoint
@@ -65,10 +71,16 @@ module SUSE
       end
 
       def json_request(method, path, params = {})
-        request = VERB_TO_CLASS[method].new(path)
+        # for :get requests, the params need to go to the url, for other requests into the body
+        if method == :get
+          # byebug
+          request = VERB_TO_CLASS[method].new(path_with_params(path, params))
+        else
+          request = VERB_TO_CLASS[method].new(path)
+          request.body = params.to_json unless params.empty?
+        end
         add_headers(request)
 
-        request.body  = params.to_json unless params.empty?
         response      = @http.request(request)
         response_body = JSON.parse(response.body) unless response.body.to_s.empty?
 
