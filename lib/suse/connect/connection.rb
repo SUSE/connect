@@ -73,7 +73,6 @@ module SUSE
       def json_request(method, path, params = {})
         # for :get requests, the params need to go to the url, for other requests into the body
         if method == :get
-          # byebug
           request = VERB_TO_CLASS[method].new(path_with_params(path, params))
         else
           request = VERB_TO_CLASS[method].new(path)
