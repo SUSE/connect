@@ -52,7 +52,7 @@ end
 def stub_show_product_call
   headers = { 'Content-Type' => 'application/json' }
   response_body = JSON.parse(File.read('spec/fixtures/show_product_response.json')).to_json
-  stub_request(:get, 'https://example.com/connect/systems/products')
+  stub_request(:get, 'https://example.com/connect/systems/products?arch=z42&identifier=rodent&release_type=foo&version=good')
     .with(headers: headers)
     .to_return(status: 200, body: response_body, headers: {})
 end
@@ -144,13 +144,7 @@ end
 def stub_list_installer_updates_call
   response_body = JSON.parse(File.read('spec/fixtures/list_installer_updates_response.json')).to_json
   headers = { 'Accept' => api_header_version }
-  request_body = {
-    identifier: 'SLES',
-    version: '12.2',
-    arch: 'x86_64',
-    release_type: nil
-  }
-  stub_request(:get, 'https://example.com/connect/repositories/installer')
-    .with(headers: headers, body: request_body.to_json)
+  stub_request(:get, 'https://example.com/connect/repositories/installer?arch=x86_64&identifier=SLES&release_type&version=12.2')
+    .with(headers: headers)
     .to_return(status: 200, body: response_body, headers: {})
 end
