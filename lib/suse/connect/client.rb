@@ -4,6 +4,7 @@ require 'suse/toolkit/utilities'
 module SUSE
   module Connect
     # Client to interact with API
+    # rubocop:disable Metrics/ClassLength
     class Client
       include SUSE::Toolkit::Utilities
       include Logger
@@ -23,6 +24,12 @@ module SUSE
 
       # Announces the system, activates the product on SCC and adds the service to the system
       def register!
+        file = '/etc/sysconfig/rhn/systemid'
+        if File.exist?(file)
+          log.fatal "\e[1mthis system is managed by SUSE Manager / Uyuni, do not use SUSEconnect\e[22m"
+
+          return
+        end
         print_information(:register)
         announce_or_update
         product = @config.product || Zypper.base_product
@@ -278,5 +285,6 @@ module SUSE
         log.info "Using E-Mail: #{@config.email}" if @config.email
       end
     end
+    # rubocop:enable Metrics/ClassLength
   end
 end
