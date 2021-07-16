@@ -23,7 +23,7 @@ namespace :package do
   desc 'Check local checkout for uncommitted changes'
   task :check_git do
     modified = `git ls-files -m -o --exclude-standard .`
-    raise 'Unable to build file list with git' unless $?.success?
+    raise 'Unable to build file list with git' unless $CHILD_STATUS.success?
     if modified.empty?
       puts 'No uncommitted changes detected.'
     else

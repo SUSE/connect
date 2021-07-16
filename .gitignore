@@ -21,3 +21,4 @@ Vagrantfile
 .oscrc
 .regcode
 .byebug_history
+prophet/options-local.yml
