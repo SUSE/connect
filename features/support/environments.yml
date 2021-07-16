@@ -1,4 +1,38 @@
 ---
+SLE_15_SP3:
+  beta: true
+  online_migration_targets:
+  - "Basesystem-Module"
+  - "Basesystem-Module"
+  - "Basesystem-Module"
+  - "Python2-Module"
+  - "Python2-Module"
+  - "Python2-Module"
+  - "SLES15-SP1"
+  - "SLES15-SP2"
+  - "SLES15-SP3"
+  - "Server-Applications-Module"
+  - "Server-Applications-Module"
+  - "Server-Applications-Module"
+  next_version: SLES15-SP4
+  base_product:
+    repositories:
+    - SUSE_Linux_Enterprise_Server_15_x86_64:SLE-Product-SLES15-Pool
+    - SUSE_Linux_Enterprise_Server_15_x86_64:SLE-Product-SLES15-Updates
+  paid_extension:
+    identifier: sle-ha/15/x86_64
+  free_extension:
+    identifier: sle-module-basesystem/15.3/x86_64
+    credentials_file: /etc/zypp/credentials.d/Basesystem_Module_15_x86_64
+    service: Basesystem_Module_15_x86_64
+    release_package: sle-module-basesystem-release
+    repositories:
+    - Basesystem_Module_15_x86_64:SLE-Module-Basesystem15-Debuginfo-Pool
+    - Basesystem_Module_15_x86_64:SLE-Module-Basesystem15-Debuginfo-Updates
+    - Basesystem_Module_15_x86_64:SLE-Module-Basesystem15-Pool
+    - Basesystem_Module_15_x86_64:SLE-Module-Basesystem15-Source-Pool
+    - Basesystem_Module_15_x86_64:SLE-Module-Basesystem15-Updates
+
 SLE_15:
   beta: true
   online_migration_targets:
