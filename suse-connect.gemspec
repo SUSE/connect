@@ -13,7 +13,7 @@ Gem::Specification.new do |gem|
   gem.license     = 'LGPL-2.1'
   gem.email       = 'happy-customer@suse.de'
   gem.homepage    = 'https://github.com/SUSE/connect'
-  gem.files       = Dir['{bin,lib}/**/*', 'README*', 'LICENSE*', 'LGPL*'] & `git ls-files`.split($INPUT_RECORD_SEPARATOR)
+  gem.files       = Dir['{bin,lib}/**/*', 'README*', 'LICENSE*', 'LGPL*']
   gem.executables << 'SUSEConnect'
   gem.required_ruby_version = '>= 2.0'
 end
