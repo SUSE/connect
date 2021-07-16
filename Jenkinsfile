@@ -51,6 +51,14 @@ pipeline {
             sh 'docker run -v /space/oscbuild:/oscbuild --privileged --rm -t connect.15sp0 ./docker/integration.sh'
           }
         }
+
+        stage('SLE15 SP3') {
+          steps {
+            sh 'docker build -t connect.15sp3 -f Dockerfile.15sp3 .'
+            sh 'docker run --rm -t connect.15sp3 rspec'
+            sh 'docker run -v /space/oscbuild:/oscbuild --privileged --rm -t connect.15sp3 ./docker/integration.sh'
+          }
+        }
       }
     }
   }
