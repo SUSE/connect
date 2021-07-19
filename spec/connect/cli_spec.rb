@@ -56,16 +56,14 @@ describe SUSE::Connect::Cli do
         end
       end
 
-			context 'when the system is managed by SUMA/Uyunit' do
-				let (:file_double) { double(File) }
+			context 'when the system is managed by SUMA/Uyuni' do
 				before do
-					# allow(file_double).to receive(:exist?).with('/etc/sysconfig/rhn/systemid').and_call_original
-					# file_double.should
-					file_double.should_receive(:exist?).with('/etc/sysconfig/rhn/systemid').and_return(true)
+					allow(File).to receive(:exist?).and_call_original
+					allow(File).to receive(:exist?).with('/etc/sysconfig/rhn/systemid').and_return(true)
 				end
 
 				it 'will fail with an error message' do
-					expect(string_logger).to receive(:fatal).with("This system is managed by SUSE Manager / Uyuni, do not use SUSEconnect.")
+					expect(string_logger).to receive(:error).with("This system is managed by SUSE Manager / Uyuni, do not use SUSEconnect.")
 					expect { cli.execute! }.to exit_with_code(1)
 				end
 			end
