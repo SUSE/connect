@@ -56,17 +56,17 @@ describe SUSE::Connect::Cli do
         end
       end
 
-			context 'when the system is managed by SUMA/Uyuni' do
-				before do
-					allow(File).to receive(:exist?).and_call_original
-					allow(File).to receive(:exist?).with('/etc/sysconfig/rhn/systemid').and_return(true)
-				end
+      context 'when the system is managed by SUMA/Uyuni' do
+        before do
+          allow(File).to receive(:exist?).and_call_original
+          allow(File).to receive(:exist?).with('/etc/sysconfig/rhn/systemid').and_return(true)
+        end
 
-				it 'will fail with an error message' do
-					expect(string_logger).to receive(:error).with("This system is managed by SUSE Manager / Uyuni, do not use SUSEconnect.")
-					expect { cli.execute! }.to exit_with_code(1)
-				end
-			end
+        it 'will fail with an error message' do
+          expect(string_logger).to receive(:error).with('This system is managed by SUSE Manager / Uyuni, do not use SUSEconnect.')
+          expect { cli.execute! }.to exit_with_code(1)
+        end
+      end
 
       context 'while calling the obsolete RegistrationProxy' do
         it 'should suggest updating the Registration Proxy server' do
