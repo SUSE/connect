@@ -6,7 +6,7 @@ module SUSE
     # Command line interface for interacting with SUSEConnect
     class Cli # rubocop:disable ClassLength
       include Logger
-
+			SUMA_SYSTEM_ID = '/etc/sysconfig/rhn/systemid'
       attr_reader :config, :options
 
       def initialize(argv)
@@ -45,6 +45,9 @@ module SUSE
           elsif @config.url_default? && !@config.token && !@config.product
             puts @opts
             exit(1)
+					elsif File.exist?(SUMA_SYSTEM_ID)
+							log.error "This system is managed by SUSE Manager / Uyuni, do not use SUSEconnect."
+							exit(1)
           else
             Client.new(@config).register!
           end
