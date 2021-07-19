@@ -315,17 +315,6 @@ describe SUSE::Connect::Client do
       SUSE::Connect::GlobalLogger.instance.log = default_logger
     end
 
-    context 'when the system is managed by SUMA/Uyunit' do
-      before do
-        allow(File).to receive(:exist?).with('/etc/sysconfig/rhn/systemid').and_return true
-      end
-
-      it 'will fail with an error message' do
-        expect(string_logger).to receive(:fatal).with("\e[1mthis system is managed by SUSE Manager / Uyuni, do not use SUSEconnect\e[22m")
-        subject.register!
-      end
-    end
-
     context 'when the system is not registered' do
       it 'announces the system' do
         expect(subject).to receive(:announce_system)
