@@ -4,7 +4,6 @@ require 'suse/toolkit/utilities'
 module SUSE
   module Connect
     # Client to interact with API
-    # rubocop:disable Metrics/ClassLength
     class Client
       include SUSE::Toolkit::Utilities
       include Logger
@@ -279,6 +278,5 @@ module SUSE
         log.info "Using E-Mail: #{@config.email}" if @config.email
       end
     end
-    # rubocop:enable Metrics/ClassLength
   end
 end
