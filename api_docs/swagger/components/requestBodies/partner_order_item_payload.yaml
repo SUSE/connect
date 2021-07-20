@@ -1,0 +1,6 @@
+type: object
+properties:
+  sku:
+    $ref: '/swagger/components/requestBodies/fields.yaml#/sku'
+  system_limit:
+    $ref: '/swagger/components/requestBodies/fields.yaml#/system_limit'

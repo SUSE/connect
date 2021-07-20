@@ -1,0 +1,13 @@
+type: object
+properties:
+  id:
+    type: integer
+    format: int32
+    example: 1
+  system_limit:
+    type: integer
+    format: int32
+    example: 2
+  sku:
+    type: string
+    example: 345-67890

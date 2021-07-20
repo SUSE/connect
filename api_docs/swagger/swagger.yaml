@@ -1,0 +1,87 @@
+openapi: 3.0.0
+info:
+  title: OEM Partner API
+  version: 1
+  description: >-
+    API for creating and listing OEM Partners orders
+
+    ### Authorization header
+
+    The structure of this header is:
+
+
+    `ENCRYPTION_ALGORITHM COMPANY_ID:HMAC_SIGNATURE`
+
+
+    Each element is described in detail below
+
+    1. `ENCRYPTION_ALGORITHM`: tells the server which algorithm to use.
+       The only accepted value is `APIAuth-HMAC-SHA256`, other algorithms are
+       not accepted.
+
+    2. `COMPANY_ID`: your company's ID provided by SUSE. You can consider it as
+       a login.
+
+    3. `HMAC_SIGNATURE`: Base64-encoded SHA256-encrypted HMAC signature of the
+       following strings, joined by commas:
+
+       * HTTP verb
+
+       * `Content-Type` header
+
+       * `Content-MD5` header
+
+       * URL path
+
+       * `Date` header
+
+       E.g., `POST,application/json,xdcO0PyZn5SIAsIAI2pl7A==,/api/oem/partner_orders,Tue, 06 Jul 2016 04:39:43 GMT`
+
+       This string is then encrypted by the SHA256 HMAC using the key provided to you with the ID.
+
+    Given the example string above and an hypothetical company's ID `112233`,
+    the resulting `Authorization` header would be:
+
+
+    `APIAuth-HMAC-SHA256 112233:wvSi7Ach641iUvDTVE5AEVQCwXdH0uSfUQecJTlLSIolxVmqmk7gESkUIi+65R4x6OcDNy6ytVNBbQ5hlLzBpH0V3QolvYFHRgwQqcGhcbSDrUX7nQyVREilfVJ4FYaIirBnfXWYwi9K43bXHcEWj/mBQ1A8c7vpViWpalCdf8M=`
+
+
+    A shell script for making a request with proper headers is available on the repository `SUSE/connect`,
+    [OEM-API-Bash-Client.sh](https://github.com/SUSE/connect/blob/new-partners-api/doc/OEM-API-Bash-Client.sh)
+
+servers:
+  - url: "https://scc.suse.com/api/oem"
+    description: Main (production)
+
+tags:
+  - name: partner_orders
+    description: API for creating and listing OEM Partners orders
+
+paths:
+  /partner_orders:
+    $ref: "/swagger/paths/partner_orders.yaml"
+  /partner_orders/pre_activation:
+    $ref: "/swagger/paths/partner_orders/pre_activation.yaml"
+  /partner_orders/renewal:
+    $ref: "/swagger/paths/partner_orders/renewal.yaml"
+
+components:
+  requestBodies:
+    PartnerOrderPayload:
+      $ref: "/swagger/components/requestBodies/partner_order_payload.yaml"
+    PreActivationPartnerOrderPayload:
+      $ref: "/swagger/components/requestBodies/pre_activation/partner_order_payload.yaml"
+    RenewalPartnerOrderPayload:
+      $ref: "/swagger/components/requestBodies/renewal/partner_order_payload.yaml"
+  schemas:
+    PartnerOrder:
+      $ref: "/swagger/components/schemas/partner_order.yaml"
+    PartnerOrderItem:
+      $ref: "/swagger/components/schemas/partner_order_item.yaml"
+  parameters:
+    Date:
+      $ref: "/swagger/components/parameters.yaml#/Date"
+    ContentMd5:
+      $ref: "/swagger/components/parameters.yaml#/ContentMd5"
+    Authorization:
+      $ref: "/swagger/components/parameters.yaml#/Authorization"
