@@ -59,7 +59,7 @@ describe SUSE::Connect::Cli do
       context 'when the system is managed by SUMA/Uyuni' do
         before do
           allow(File).to receive(:exist?).and_call_original
-          allow(File).to receive(:exist?).with('/etc/sysconfig/rhn/systemid').and_return(true)
+          allow(File).to receive(:exist?).with(Cli::SUMA_SYSTEM_ID).and_return(true)
         end
 
         it 'will fail with an error message' do
