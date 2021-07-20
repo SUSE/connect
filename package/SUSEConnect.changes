@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Sun Jul 21 10:00:00 UTC 2021 - Natnael Getahun <ngetahun@suse.com>
+
+- Update to 0.3.31
+- Disallow registering via SUSEConnect if SUMA is present.
+
+-------------------------------------------------------------------
 Sun Jun 20 13:07:06 UTC 2021 - Thomas Schmidt <tschmidt@suse.com>
 
 - Update to 0.3.30
