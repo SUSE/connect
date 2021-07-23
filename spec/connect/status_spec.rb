@@ -8,6 +8,7 @@ describe SUSE::Connect::Status do
   subject { status_instance }
 
   before do
+    allow(System).to receive(:credentials?).and_return false
     allow(Client).to receive(:new).and_return(client_double)
   end
 
