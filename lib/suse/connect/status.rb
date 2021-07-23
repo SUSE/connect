@@ -103,6 +103,7 @@ module SUSE
           unless product_status.remote_product && product_status.remote_product.free
             if product_status.related_activation
               activation = product_status.related_activation
+              status[:name] = activation.name
               status[:regcode] = activation.regcode
               status[:starts_at] = activation.starts_at ? Time.parse(activation.starts_at) : nil
               status[:expires_at] = activation.expires_at ? Time.parse(activation.expires_at) : nil
