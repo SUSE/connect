@@ -10,6 +10,7 @@ Installed Products:
 
     Subscription:
     <% activation = product_status.related_activation %>
+    Name: <%= activation.name %>
     Regcode: <%= activation.regcode %>
     Starts at: <%= activation.starts_at ? Time.parse(activation.starts_at) : nil %>
     Expires at: <%= activation.expires_at ? Time.parse(activation.expires_at) : nil %>

@@ -3,6 +3,7 @@ Sun Jul 21 10:00:00 UTC 2021 - Natnael Getahun <ngetahun@suse.com>
 
 - Update to 0.3.31
 - Disallow registering via SUSEConnect if the system is managed by SUSE Manager.
+- Add subscription name to output of 'SUSEConnect --status'
 
 -------------------------------------------------------------------
 Sun Jun 20 13:07:06 UTC 2021 - Thomas Schmidt <tschmidt@suse.com>
