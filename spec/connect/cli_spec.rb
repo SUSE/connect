@@ -9,6 +9,7 @@ describe SUSE::Connect::Cli do
   let(:config_file) { File.expand_path File.join(File.dirname(__FILE__), '../fixtures/SUSEConnect') }
 
   before do
+    allow_any_instance_of(SUSE::Connect::Config).to receive(:read).and_return({})
     allow(Zypper).to receive_messages(base_product: {})
     allow_any_instance_of(described_class).to receive_messages(puts: true)
     SUSE::Connect::GlobalLogger.instance.log = string_logger
