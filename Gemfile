@@ -25,3 +25,5 @@ group :test do
   gem 'aruba', '~> 0.14.4'
   gem 'cucumber', '3.0.1' # Last cucumber version to support Ruby 2.1
 end
+
+gem 'contracts', '> 0.16', '< 0.17'

@@ -1,0 +1,49 @@
+name: CI for Connect - Ubuntu
+
+on: [pull_request]
+
+jobs:
+  lint:
+    # For github hosted runners, this can be found at
+    # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Setup ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.5.0
+          bundler-cache: true
+          bundler: 1.17
+      - name: Cache gems
+        uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+      - name: Run Lint
+        run: |
+          bundle exec rubocop -D
+  test:
+    runs-on: ubuntu-latest
+    env:
+      RUBY_VERSION: 2.5.0
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Setup ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ env.RUBY_VERSION }}
+          bundler-cache: true
+          bundler: 1.17
+      - name: Cache gems
+        uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+      - name: Run tests
+        run: |
+          bundle exec rspec spec
