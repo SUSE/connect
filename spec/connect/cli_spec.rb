@@ -178,14 +178,6 @@ describe SUSE::Connect::Cli do
         expect { cli.execute! }.to raise_error(SystemExit)
       end
 
-      it '--instance-data is mutually exclusive with --regcode' do
-        cli = described_class.new(%w[-r 123 --instance-data /tmp/test --url test])
-        expect(string_logger).to receive(:error)
-          .with('Please use either --regcode or --instance-data')
-        expect_any_instance_of(SUSE::Connect::Config).to receive(:write!)
-        expect { cli.execute! }.to raise_error(SystemExit)
-      end
-
       it '--url implies --write-config' do
         cli = described_class.new(%w[-r 123 --url http://foo.test.com])
         expect(cli.config.write_config).to eq true
