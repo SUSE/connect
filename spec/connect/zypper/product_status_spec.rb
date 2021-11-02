@@ -70,4 +70,42 @@ describe SUSE::Connect::Zypper::ProductStatus do
       expect(subject.remote_product).to eq remote_product
     end
   end
+
+  describe '#has_subscription_associated?' do
+    let(:installed_product) { Zypper::Product.new(name: :foo, version: 42, arch: :wax) }
+    let(:remote_product) { Remote::Product.new(identifier: :foo, version: 42, arch: :wax) }
+
+    subject { described_class.new(installed_product, status) }
+
+    context 'without activation' do
+      it 'returns false' do
+        expect(subject).to receive(:related_activation).and_return nil
+        expect(subject.has_subscription_associated?).to be(false)
+      end
+    end
+
+    context 'with activation' do
+      let(:activation) { double('activation') }
+      let(:regcode) { nil }
+
+      before do
+        allow(activation).to receive(:[]).with(:regcode).and_return regcode
+        allow(subject).to receive(:related_activation).twice.and_return activation
+      end
+
+      context 'without subscription associated' do
+        it 'returns false' do
+          expect(subject.has_subscription_associated?).to be(false)
+        end
+      end
+
+      context 'with subscription associated' do
+        let(:regcode) { 'some-regcode' }
+
+        it 'returns true' do
+          expect(subject.has_subscription_associated?).to be(true)
+        end
+      end
+    end
+  end
 end
