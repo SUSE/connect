@@ -30,4 +30,13 @@ class SUSE::Connect::Zypper::ProductStatus
       installed_product == remote_product
     end
   end
+
+  # There can be the case that SCC/Proxies send empty values for subscription
+  # information in an activation. Do not handle them as activation with subscription
+  # associated.
+  def has_subscription_associated?
+    return false unless related_activation
+
+    related_activation[:regcode] != nil
+  end
 end

@@ -105,12 +105,17 @@ describe SUSE::Connect::Status do
     end
 
     context 'json format' do
+      let(:activation) do
+        SUSE::Connect::Remote::Activation.new({
+          'service' => { 'product' => {} },
+          'regcode' => 'some-regcode'
+        })
+      end
+
       it 'outputs the system status in json format' do
         status = Zypper::ProductStatus.new(Zypper::Product.new({}), subject)
         allow(status).to receive(:registration_status).and_return('test')
         allow(status).to receive(:remote_product).and_return(true)
-        expect(status).to receive_message_chain(:remote_product, :free).and_return(false)
-        activation = SUSE::Connect::Remote::Activation.new('service' => { 'product' => {} })
         allow(status).to receive(:related_activation).and_return(activation)
 
         expect(subject).to receive(:product_statuses).and_return [status]
