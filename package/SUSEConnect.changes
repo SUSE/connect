@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Nov 16 14:52:50 UTC 2021 - Thomas Muntaner <tmuntaner@suse.com>
+
+- Update to 0.3.33
+- Install systemd dependency on aarch64 systems.
+
+-------------------------------------------------------------------
 Wed Oct 27 13:26:23 UTC 2021 - Thomas Schmidt <tschmidt@suse.com>
 
 - Update to 0.3.32

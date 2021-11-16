@@ -17,7 +17,7 @@
 
 
 Name:           SUSEConnect
-Version:        0.3.32
+Version:        0.3.33
 Release:        0
 %define mod_name suse-connect
 %define mod_full_name %{mod_name}-%{version}
@@ -49,6 +49,9 @@ Recommends:     curl
 Requires:       zypper(auto-agree-with-product-licenses)
 %ifarch x86_64 aarch64
 Requires:       dmidecode
+%endif
+%ifarch aarch64
+Requires:       systemd
 %endif
 Conflicts:      suseRegister, yast2-registration < 3.1.129.7
 
