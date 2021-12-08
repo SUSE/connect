@@ -725,7 +725,17 @@ describe SUSE::Connect::Client do
         allow(File).to receive(:exist?).with('/usr/sbin/registercloudguest').and_return(true)
       end
 
-      it { expect { subject }.to raise_error(::SUSE::Connect::UnsupportedOperation) }
+      context 'with no product' do
+        before { allow_any_instance_of(Config).to receive(:product).and_return(false) }
+
+        it { expect { subject }.to raise_error(::SUSE::Connect::UnsupportedOperation) }
+      end
+
+      context 'with product' do
+        before { allow_any_instance_of(Config).to receive(:product).and_return(true) }
+
+        it { expect { subject }.not_to raise_error(::SUSE::Connect::UnsupportedOperation) }
+      end
     end
   end
 
