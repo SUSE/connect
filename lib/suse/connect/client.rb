@@ -52,7 +52,10 @@ module SUSE
       #
       # @returns: Empty body and 204 status code
       def deregister!
-        if File.exist?('/usr/sbin/registercloudguest')
+        if File.exist?('/usr/sbin/registercloudguest') && !@config.product
+          # exclude the product as de-registering a product
+          # through SUSEConnect while having registercloudguest set is
+          # allowed for SCC as proxy cases
           raise UnsupportedOperation,
             'De-registration is disabled for on-demand instances. Use `registercloudguest --clean` instead.'
         end
