@@ -136,6 +136,11 @@ module SUSE
           @options[:deregister] = true
         end
 
+        @opts.on('--keepalive',
+                 'Sends data to SCC to update the system information.') do |_opt|
+          @options[:keepalive] = true
+        end
+
         @opts.on('--instance-data  [path to file]', 'Path to the XML file holding the public key and',
                  'instance data for cloud registration with SMT.') do |opt|
           check_if_param(opt, 'Please provide the path to your instance data file')

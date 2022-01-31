@@ -354,11 +354,11 @@ describe SUSE::Connect::Cli do
       expect { described_class.new(argv) }.to exit_with_code(0)
     end
 
-    xit 'sets keepalive option' do
+    it 'sets keepalive option' do
       argv = %w[--keepalive]
       cli = described_class.new(argv)
-      expect(cli.option).to have_key :keepalive
-      expect(cli.option[:keepalive]).to exit_with_code(0)
+      expect(cli.options).to have_key :keepalive
+      expect(cli.options[:keepalive]).to be_truthy
     end
 
     it 'outputs help on help flag with no line longer than 80 characters' do
