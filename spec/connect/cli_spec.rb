@@ -233,6 +233,25 @@ describe SUSE::Connect::Cli do
       end
     end
 
+    describe 'keepalive command' do
+      let(:opts) { %w[--keepalive] }
+
+      it '--keepalive calls keepalive! method' do
+        expect_any_instance_of(Client).to receive(:keepalive!)
+        subject
+      end
+
+      xcontext 'on unregistered system' do
+        before { allow(SUSE::Connect::System).to receive(:credentials).and_return(nil) }
+
+        it 'dies with error' do
+          expect(string_logger).to receive(:fatal).with(//)
+          expect { subject }.to exit_with_code(69)
+        end
+      end
+    end
+
+
     context 'cleanup command' do
       it '--cleanup calls Systems cleanup! method' do
         cli = described_class.new(%w[--cleanup])

@@ -24,6 +24,8 @@ module SUSE
           status.print_product_statuses(:text)
         elsif @config.deregister
           Client.new(@config).deregister!
+        elsif @config.keepalive
+          Client.new(@config).keepalive!
         elsif @config.cleanup
           System.cleanup!
         elsif @config.rollback
