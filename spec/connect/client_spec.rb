@@ -739,6 +739,46 @@ describe SUSE::Connect::Client do
     end
   end
 
+  describe '#keepalive!' do
+    let(:stubbed_response) { OpenStruct.new(code: 204, body: nil, success: true) }
+
+    subject { client_instance.keepalive! }
+
+    before { SUSE::Connect::GlobalLogger.instance.log = string_logger }
+    after { SUSE::Connect::GlobalLogger.instance.log = default_logger }
+
+    context 'when system is registered' do
+      before do
+        allow(client_instance).to receive_messages(system_auth: 'Basic: encodedstring')
+        allow(client_instance).to receive(:registered?).and_return true
+        allow(client_instance.api).to receive(:update_system).with('Basic: encodedstring').and_return stubbed_response
+      end
+
+      it 'calls underlying api and sends data to SCC' do
+        expect(client_instance.api).to receive(:update_system).with('Basic: encodedstring').and_return stubbed_response
+        subject
+      end
+    end
+
+    context 'when system is not registered' do
+      before { allow(::SUSE::Connect::System).to receive(:credentials).and_return(nil) }
+
+      it { expect { subject }.to raise_error(::SUSE::Connect::UnsupportedOperation) }
+    end
+
+
+    context 'when running on on-demand instance' do
+      before do
+        allow(File).to receive(:exist?).and_call_original
+        allow(File).to receive(:exist?).with('/usr/sbin/registercloudguest').and_return(true)
+      end
+
+      it 'raises an error' do
+        expect { subject }.to raise_error(::SUSE::Connect::UnsupportedOperation)
+      end
+    end
+  end
+
   describe '#flatten_tree' do
     let(:identifiers) do
       [

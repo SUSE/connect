@@ -4,6 +4,7 @@ require 'suse/toolkit/utilities'
 module SUSE
   module Connect
     # Client to interact with API
+    # rubocop:disable Metrics/ClassLength
     class Client
       include SUSE::Toolkit::Utilities
       include Logger
@@ -81,6 +82,25 @@ module SUSE
           System.cleanup!
           log.info "Successfully deregistered system\n".log_green.bold
         end
+      end
+
+      # Send a system update to SCC
+      #
+      # @returns: Empty body and 204 status code
+      def keepalive!
+        if File.exist?('/usr/sbin/registercloudguest')
+          raise UnsupportedOperation,
+            'Keepalive is disabled for on-demand instances.'
+        end
+        unless registered?
+          raise UnsupportedOperation,
+          'System is not registered. Use the --regcode parameter to register it.'
+        end
+
+
+        log.info "\nSending data to SCC ..."
+        @api.update_system(system_auth)
+        log.info "Successfully update system\n".log_green.bold
       end
 
       # Flatten a product tree into an array
@@ -281,5 +301,6 @@ module SUSE
         log.info "Using E-Mail: #{@config.email}" if @config.email
       end
     end
+    # rubocop:enable  Metrics/ClassLength
   end
 end
