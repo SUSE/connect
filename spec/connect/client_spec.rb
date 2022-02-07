@@ -765,18 +765,6 @@ describe SUSE::Connect::Client do
 
       it { expect { subject }.to raise_error(::SUSE::Connect::PingNotAllowed) }
     end
-
-
-    context 'when running on on-demand instance' do
-      before do
-        allow(File).to receive(:exist?).and_call_original
-        allow(File).to receive(:exist?).with('/usr/sbin/registercloudguest').and_return(true)
-      end
-
-      it 'raises an error' do
-        expect { subject }.to raise_error(::SUSE::Connect::PingNotAllowed)
-      end
-    end
   end
 
   describe '#flatten_tree' do

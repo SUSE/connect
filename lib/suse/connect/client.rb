@@ -88,10 +88,6 @@ module SUSE
       #
       # @returns: Empty body and 204 status code
       def keepalive!
-        if File.exist?('/usr/sbin/registercloudguest')
-          raise PingNotAllowed,
-            'Keepalive is disabled for on-demand instances.'
-        end
         unless registered?
           raise PingNotAllowed,
           'System is not registered. Use the --regcode parameter to register it.'
