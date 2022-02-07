@@ -84,6 +84,9 @@ module SUSE
       rescue BaseProductDeactivationError
         log.fatal 'Can not deregister base product. Use SUSEConnect -d to deactivate the whole system.'
         exit 70
+      rescue PingNotAllowed => e
+        log.fatal "Error sending keepalive: #{e.message}"
+        exit 71
       ensure
         @config.write! if @config.write_config
       end

@@ -241,12 +241,12 @@ describe SUSE::Connect::Cli do
         subject
       end
 
-      xcontext 'on unregistered system' do
+      context 'on unregistered system' do
         before { allow(SUSE::Connect::System).to receive(:credentials).and_return(nil) }
 
         it 'dies with error' do
-          expect(string_logger).to receive(:fatal).with(//)
-          expect { subject }.to exit_with_code(69)
+          expect(string_logger).to receive(:fatal).with(/Error sending keepalive: */)
+          expect { subject }.to exit_with_code(71)
         end
       end
     end
