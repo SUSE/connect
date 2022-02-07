@@ -763,7 +763,7 @@ describe SUSE::Connect::Client do
     context 'when system is not registered' do
       before { allow(::SUSE::Connect::System).to receive(:credentials).and_return(nil) }
 
-      it { expect { subject }.to raise_error(::SUSE::Connect::UnsupportedOperation) }
+      it { expect { subject }.to raise_error(::SUSE::Connect::PingNotAllowed) }
     end
 
 
@@ -774,7 +774,7 @@ describe SUSE::Connect::Client do
       end
 
       it 'raises an error' do
-        expect { subject }.to raise_error(::SUSE::Connect::UnsupportedOperation)
+        expect { subject }.to raise_error(::SUSE::Connect::PingNotAllowed)
       end
     end
   end
