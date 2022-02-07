@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Feb 7 11:03:00 UTC 2022 - Natnael GEtahun <ngetahun@suse.com>
+
+- Add --keepalive command to send pings to SCC.
+
+-------------------------------------------------------------------
 Wed Oct 27 13:26:23 UTC 2021 - Thomas Schmidt <tschmidt@suse.com>
 
 - Update to 0.3.32
