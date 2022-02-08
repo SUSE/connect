@@ -735,7 +735,7 @@ describe SUSE::Connect::Client do
       context 'with product' do
         before do
           allow(client_instance).to receive(:deregister_product)
-          allow_any_instance_of(Config).to receive(:product).and_return(true)
+          allow(client_instance.config).to receive(:product).and_return(true)
         end
 
         it { expect { subject }.not_to raise_error }
