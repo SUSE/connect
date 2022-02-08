@@ -96,7 +96,7 @@ module SUSE
 
         log.info "\nSending data to SCC ..."
         @api.update_system(system_auth)
-        log.info "Successfully update system\n".log_green.bold
+        log.info "Successfully updated the system\n".log_green.bold
       end
 
       # Flatten a product tree into an array
