@@ -233,6 +233,25 @@ describe SUSE::Connect::Cli do
       end
     end
 
+    describe 'keepalive command' do
+      let(:opts) { %w[--keepalive] }
+
+      it '--keepalive calls keepalive! method' do
+        expect_any_instance_of(Client).to receive(:keepalive!)
+        subject
+      end
+
+      context 'on unregistered system' do
+        before { allow(SUSE::Connect::System).to receive(:credentials).and_return(nil) }
+
+        it 'dies with error' do
+          expect(string_logger).to receive(:fatal).with(/Error sending keepalive: */)
+          expect { subject }.to exit_with_code(71)
+        end
+      end
+    end
+
+
     context 'cleanup command' do
       it '--cleanup calls Systems cleanup! method' do
         cli = described_class.new(%w[--cleanup])
@@ -352,6 +371,13 @@ describe SUSE::Connect::Cli do
       argv = %w[--version]
       expect_any_instance_of(described_class).to receive(:puts).with(VERSION)
       expect { described_class.new(argv) }.to exit_with_code(0)
+    end
+
+    it 'sets keepalive option' do
+      argv = %w[--keepalive]
+      cli = described_class.new(argv)
+      expect(cli.options).to have_key :keepalive
+      expect(cli.options[:keepalive]).to be_truthy
     end
 
     it 'outputs help on help flag with no line longer than 80 characters' do
