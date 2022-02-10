@@ -91,7 +91,6 @@ module SUSE
         template.result(binding)
       end
 
-      # rubocop:disable MethodLength
       def json_product_status
         statuses = product_statuses.map do |product_status|
           status = {}
@@ -100,15 +99,14 @@ module SUSE
           status[:arch] = product_status.installed_product.arch
           status[:status] = product_status.registration_status
 
-          unless product_status.remote_product && product_status.remote_product.free
-            if product_status.related_activation
-              activation = product_status.related_activation
-              status[:regcode] = activation.regcode
-              status[:starts_at] = activation.starts_at ? Time.parse(activation.starts_at) : nil
-              status[:expires_at] = activation.expires_at ? Time.parse(activation.expires_at) : nil
-              status[:subscription_status] = activation.status
-              status[:type] = activation.type
-            end
+          if product_status.has_subscription_associated?
+            activation = product_status.related_activation
+            status[:name] = activation.name
+            status[:regcode] = activation.regcode
+            status[:starts_at] = activation.starts_at ? Time.parse(activation.starts_at) : nil
+            status[:expires_at] = activation.expires_at ? Time.parse(activation.expires_at) : nil
+            status[:subscription_status] = activation.status
+            status[:type] = activation.type
           end
           status
         end

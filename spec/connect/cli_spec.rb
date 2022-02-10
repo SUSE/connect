@@ -9,6 +9,7 @@ describe SUSE::Connect::Cli do
   let(:config_file) { File.expand_path File.join(File.dirname(__FILE__), '../fixtures/SUSEConnect') }
 
   before do
+    allow_any_instance_of(SUSE::Connect::Config).to receive(:read).and_return({})
     allow(Zypper).to receive_messages(base_product: {})
     allow_any_instance_of(described_class).to receive_messages(puts: true)
     SUSE::Connect::GlobalLogger.instance.log = string_logger
@@ -53,6 +54,18 @@ describe SUSE::Connect::Cli do
           error_message = "Error: Registration server returned 'Invalid registration code' (401)"
           expect(string_logger).to receive(:fatal).with(error_message)
           expect { cli.execute! }.to exit_with_code(67)
+        end
+      end
+
+      context 'when the system is managed by SUMA/Uyuni' do
+        before do
+          allow(File).to receive(:exist?).and_call_original
+          allow(File).to receive(:exist?).with(Cli::SUMA_SYSTEM_ID).and_return(true)
+        end
+
+        it 'will fail with an error message' do
+          expect(string_logger).to receive(:error).with('This system is managed by SUSE Manager / Uyuni, do not use SUSEconnect.')
+          expect { cli.execute! }.to exit_with_code(1)
         end
       end
 
@@ -165,14 +178,6 @@ describe SUSE::Connect::Cli do
         expect { cli.execute! }.to raise_error(SystemExit)
       end
 
-      it '--instance-data is mutually exclusive with --regcode' do
-        cli = described_class.new(%w[-r 123 --instance-data /tmp/test --url test])
-        expect(string_logger).to receive(:error)
-          .with('Please use either --regcode or --instance-data')
-        expect_any_instance_of(SUSE::Connect::Config).to receive(:write!)
-        expect { cli.execute! }.to raise_error(SystemExit)
-      end
-
       it '--url implies --write-config' do
         cli = described_class.new(%w[-r 123 --url http://foo.test.com])
         expect(cli.config.write_config).to eq true
@@ -227,6 +232,25 @@ describe SUSE::Connect::Cli do
         end
       end
     end
+
+    describe 'keepalive command' do
+      let(:opts) { %w[--keepalive] }
+
+      it '--keepalive calls keepalive! method' do
+        expect_any_instance_of(Client).to receive(:keepalive!)
+        subject
+      end
+
+      context 'on unregistered system' do
+        before { allow(SUSE::Connect::System).to receive(:credentials).and_return(nil) }
+
+        it 'dies with error' do
+          expect(string_logger).to receive(:fatal).with(/Error sending keepalive: */)
+          expect { subject }.to exit_with_code(71)
+        end
+      end
+    end
+
 
     context 'cleanup command' do
       it '--cleanup calls Systems cleanup! method' do
@@ -347,6 +371,13 @@ describe SUSE::Connect::Cli do
       argv = %w[--version]
       expect_any_instance_of(described_class).to receive(:puts).with(VERSION)
       expect { described_class.new(argv) }.to exit_with_code(0)
+    end
+
+    it 'sets keepalive option' do
+      argv = %w[--keepalive]
+      cli = described_class.new(argv)
+      expect(cli.options).to have_key :keepalive
+      expect(cli.options[:keepalive]).to be_truthy
     end
 
     it 'outputs help on help flag with no line longer than 80 characters' do

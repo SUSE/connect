@@ -13,6 +13,7 @@ module SUSE
     class SystemNotRegisteredError < StandardError; end
     class BaseProductDeactivationError < StandardError; end
     class UnsupportedOperation < StandardError; end
+    class PingNotAllowed < StandardError; end
 
     # Basic error for API interactions. Collects HTTP response (which includes
     # status code and response body) for future showing to user via {Cli}

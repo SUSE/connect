@@ -11,20 +11,20 @@ Example:
 
 `---`
 
-`regcode: <regcode>`
-
 `url: https://scc.suse.com`
 
 `language: en`
 
 `insecure: false`
 
+`debug: false`
+
 Each line of the file specifies a single parameter.  The fields are as follows:
 
-  * regcode: (mandatory) Registration code to use for the base product on the system
   * url: (optional) URL of the registration server.  Corresponds to the --url argument to SUSEConnect. Defaults to https://scc.suse.com
   * language: (optional) Language code to use for error messages
   * insecure: (optional) Do not verify SSL certificates when using https (default: false)
+  * debug: (optional) Enable additional debugging output (default: false)
 
 
 ## AUTHOR

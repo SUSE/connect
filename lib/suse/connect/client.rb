@@ -4,6 +4,7 @@ require 'suse/toolkit/utilities'
 module SUSE
   module Connect
     # Client to interact with API
+    # rubocop:disable Metrics/ClassLength
     class Client
       include SUSE::Toolkit::Utilities
       include Logger
@@ -52,7 +53,10 @@ module SUSE
       #
       # @returns: Empty body and 204 status code
       def deregister!
-        if File.exist?('/usr/sbin/registercloudguest')
+        if File.exist?('/usr/sbin/registercloudguest') && !@config.product
+          # exclude the product as de-registering a product
+          # through SUSEConnect while having registercloudguest set is
+          # allowed for SCC as proxy cases
           raise UnsupportedOperation,
             'De-registration is disabled for on-demand instances. Use `registercloudguest --clean` instead.'
         end
@@ -78,6 +82,21 @@ module SUSE
           System.cleanup!
           log.info "Successfully deregistered system\n".log_green.bold
         end
+      end
+
+      # Send a system update to SCC
+      #
+      # @returns: Empty body and 204 status code
+      def keepalive!
+        unless registered?
+          raise PingNotAllowed,
+          'System is not registered. Use the --regcode parameter to register it.'
+        end
+
+
+        log.info "\nSending data to SCC ..."
+        @api.update_system(system_auth)
+        log.info "Successfully updated the system\n".log_green.bold
       end
 
       # Flatten a product tree into an array
@@ -278,5 +297,6 @@ module SUSE
         log.info "Using E-Mail: #{@config.email}" if @config.email
       end
     end
+    # rubocop:enable  Metrics/ClassLength
   end
 end

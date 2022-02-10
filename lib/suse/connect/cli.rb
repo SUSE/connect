@@ -6,7 +6,7 @@ module SUSE
     # Command line interface for interacting with SUSEConnect
     class Cli # rubocop:disable ClassLength
       include Logger
-
+      SUMA_SYSTEM_ID = '/etc/sysconfig/rhn/systemid'.freeze
       attr_reader :config, :options
 
       def initialize(argv)
@@ -24,6 +24,8 @@ module SUSE
           status.print_product_statuses(:text)
         elsif @config.deregister
           Client.new(@config).deregister!
+        elsif @config.keepalive
+          Client.new(@config).keepalive!
         elsif @config.cleanup
           System.cleanup!
         elsif @config.rollback
@@ -39,11 +41,11 @@ module SUSE
           if @config.instance_data_file && @config.url_default?
             log.error 'Please use --instance-data only in combination with --url pointing to your RMT or SMT server'
             exit(1)
-          elsif @config.token && @config.instance_data_file
-            log.error 'Please use either --regcode or --instance-data'
-            exit(1)
           elsif @config.url_default? && !@config.token && !@config.product
             puts @opts
+            exit(1)
+          elsif File.exist?(SUMA_SYSTEM_ID)
+            log.error 'This system is managed by SUSE Manager / Uyuni, do not use SUSEconnect.'
             exit(1)
           else
             Client.new(@config).register!
@@ -82,6 +84,9 @@ module SUSE
       rescue BaseProductDeactivationError
         log.fatal 'Can not deregister base product. Use SUSEConnect -d to deactivate the whole system.'
         exit 70
+      rescue PingNotAllowed => e
+        log.fatal "Error sending keepalive: #{e.message}"
+        exit 71
       ensure
         @config.write! if @config.write_config
       end
@@ -134,6 +139,11 @@ module SUSE
                  'After de-registration the system no longer consumes',
                  'a subscription slot in SCC.') do |_opt|
           @options[:deregister] = true
+        end
+
+        @opts.on('--keepalive',
+                 'Sends data to SCC to update the system information.') do |_opt|
+          @options[:keepalive] = true
         end
 
         @opts.on('--instance-data  [path to file]', 'Path to the XML file holding the public key and',

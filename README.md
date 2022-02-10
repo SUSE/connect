@@ -18,7 +18,6 @@ SUSEConnect communicates with SCC over this [REST API](https://github.com/SUSE/c
 # Rake tasks
 
 ```
-rake bump     # increase version of a gem
 rake console  # Run console loaded with gem
 rake rubocop  # Run Rubocop
 rake spec     # Run RSpec
