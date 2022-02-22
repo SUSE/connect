@@ -1,0 +1,10 @@
+[Unit]
+Description=Run SUSEConnect --keepalive
+Wants=suseconnect-keepalive.timer
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/SUSEConnect --keepalive
+
+[Install]
+WantedBy=multi-user.target
