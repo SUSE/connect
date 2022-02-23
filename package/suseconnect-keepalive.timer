@@ -3,7 +3,7 @@ Description=Schedule daily SUSEConnect --keepalive calls
 After=network-online.target
 
 [Timer]
-# Run this timer every day at 3am UTC at a randomized 4h delay.
+# Run this timer every day at a randomized 24h delay.
 OnCalendar=daily
 RandomizedDelaySec=24h
 

@@ -85,6 +85,9 @@ module SUSE
         log.fatal 'Can not deregister base product. Use SUSEConnect -d to deactivate the whole system.'
         exit 70
       rescue PingNotAllowed => e
+        # Note that this exit code is then catched by the systemd service that
+        # runs `SUSEConnect --keepalive`. See the `SuccessExitStatus` entry on
+        # `package/suseconnect-keepalive.service`.
         log.fatal "Error sending keepalive: #{e.message}"
         exit 71
       ensure
