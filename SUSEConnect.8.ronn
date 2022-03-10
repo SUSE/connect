@@ -62,6 +62,10 @@ Manage subscriptions at the SUSE Customer Center: https://scc.suse.com
   * `--status-text`:
     Get current system registration status in text format.
 
+  * `--keepalive`:
+    Send a keepalive call to the registration server, so it can
+    detect which systems are still running.
+
   * `--write-config`:
     Write options to config file at /etc/SUSEConnect.
 
