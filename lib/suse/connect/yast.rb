@@ -108,7 +108,7 @@ module SUSE
         #
         # @return [Integer] number of written bytes
         def create_credentials_file(login, password, credentials_file = GLOBAL_CREDENTIALS_FILE)
-          Credentials.new(login, password, credentials_file).write
+          Credentials.new(login, password, nil, credentials_file).write
         end
 
         # Lists all available products for a system.

@@ -470,7 +470,7 @@ describe SUSE::Connect::Zypper do
     end
 
     it 'should call write_base_credentials_file' do
-      expect(Credentials).to receive(:new).with('dummy', 'tummy', Credentials::GLOBAL_CREDENTIALS_FILE).and_call_original
+      expect(Credentials).to receive(:new).with('dummy', 'tummy', nil, Credentials::GLOBAL_CREDENTIALS_FILE).and_call_original
       subject.write_base_credentials('dummy', 'tummy')
     end
   end
@@ -488,7 +488,7 @@ describe SUSE::Connect::Zypper do
     end
 
     it 'creates a file with source name' do
-      expect(Credentials).to receive(:new).with('dummy', 'tummy', 'turbo').and_call_original
+      expect(Credentials).to receive(:new).with('dummy', 'tummy', nil, 'turbo').and_call_original
       subject.write_service_credentials('turbo')
     end
   end

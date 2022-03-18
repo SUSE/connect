@@ -23,6 +23,13 @@ describe SUSE::Connect::Api do
     end
   end
 
+  before do
+    # If the credentials file exists on the system it might try to read it
+    # after a request in order to update the `system_token` attribute. Skip
+    # this on the following tests.
+    allow(::SUSE::Connect::System).to receive(:credentials?).and_return(false)
+  end
+
   describe '#announce_system' do
     let(:payload) do
       [

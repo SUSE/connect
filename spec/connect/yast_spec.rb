@@ -144,7 +144,7 @@ describe SUSE::Connect::YaST do
   describe '.credentials' do
     let(:login) { 'login' }
     let(:password) { 'password' }
-    let(:system_credentials) { Credentials.new(login, password, subject::GLOBAL_CREDENTIALS_FILE) }
+    let(:system_credentials) { Credentials.new(login, password, nil, subject::GLOBAL_CREDENTIALS_FILE) }
 
     context 'with no arguments' do
       it 'reads system credentials file' do
@@ -169,12 +169,12 @@ describe SUSE::Connect::YaST do
   describe '.create_credentials_file' do
     let(:login) { 'login' }
     let(:password) { 'password' }
-    let(:credentials) { Credentials.new(login, password, subject::GLOBAL_CREDENTIALS_FILE) }
+    let(:credentials) { Credentials.new(login, password, nil, subject::GLOBAL_CREDENTIALS_FILE) }
 
     it 'creates credentials file with default parameter' do
-      credentials = Credentials.new(login, password, subject::GLOBAL_CREDENTIALS_FILE)
+      credentials = Credentials.new(login, password, nil, subject::GLOBAL_CREDENTIALS_FILE)
 
-      expect(Credentials).to receive(:new).with(login, password, subject::GLOBAL_CREDENTIALS_FILE).and_return credentials
+      expect(Credentials).to receive(:new).with(login, password, nil, subject::GLOBAL_CREDENTIALS_FILE).and_return credentials
       expect(credentials).to receive(:write)
 
       subject.create_credentials_file(login, password)
@@ -182,9 +182,9 @@ describe SUSE::Connect::YaST do
 
     it 'creates credentials file with passed parameter' do
       credentials_file = '/tmp/Credentials'
-      credentials = Credentials.new(login, password, credentials_file)
+      credentials = Credentials.new(login, password, nil, credentials_file)
 
-      expect(Credentials).to receive(:new).with(login, password, credentials_file).and_return credentials
+      expect(Credentials).to receive(:new).with(login, password, nil, credentials_file).and_return credentials
       expect(credentials).to receive(:write)
 
       subject.create_credentials_file(login, password, credentials_file)

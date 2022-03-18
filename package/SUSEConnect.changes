@@ -1,4 +1,13 @@
 -------------------------------------------------------------------
+Fri Mar 18 09:28:21 UTC 2022 - Miquel Sabate Sola <msabate@suse.com>
+
+- Update to 0.3.34
+- Manage the `System-Token` header. The `System-Token` header as delivered by
+  SCC will be stored inside of the credentials file for later use on API calls.
+  This way we add system clone detection for systems using this version of SUSE
+  Connect.
+
+-------------------------------------------------------------------
 Thu Feb 17 10:04:31 UTC 2022 - Miquel Sabate Sola <msabate@suse.com>
 
 - Update to 0.3.33
