@@ -94,7 +94,7 @@ module SUSE
         end
 
 
-        log.info "\nSending data to SCC ..."
+        log.info "\nSending data to registration host #{@config.url} ..."
         @api.update_system(system_auth)
         log.info "Successfully updated the system\n".log_green.bold
       end
