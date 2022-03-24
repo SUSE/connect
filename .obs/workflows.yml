@@ -1,5 +1,6 @@
 workflow:
   steps:
     - branch_package:
-        source_project: home:ngetahun
-        source_package: test_connect
+        source_project: systemsmanagment:SCC
+        target_project: home:ngetahun
+        source_package: SUSEConnect
