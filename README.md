@@ -9,7 +9,7 @@ SUSEConnect is a command line tool for connecting a client system to the SUSE Cu
 It will connect the system to your product subscriptions and enable the product repositories/services locally.
 
 SUSEConnect is distributed as RPM for all SUSE distributions and gets built in
-the [openSUSE build service](https://build.opensuse.org/package/show/systemsmanagement:SCC/SUSEConnect).
+the [openSUSE build service](https://build.opensuse.org/package/show/home:ngetahun/SUSEConnect).
 
 Please visit https://scc.suse.com to see and manage your subscriptions.
 
