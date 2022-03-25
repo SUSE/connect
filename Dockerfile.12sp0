@@ -4,6 +4,10 @@ ENV BUILT_AT "Mon May 8 16:53 CET 2017"
 
 RUN useradd --no-log-init --create-home scc
 
+ARG REGCODE
+ARG OBS_USER
+ARG OBS_PASSWORD
+
 RUN zypper ar http://download.suse.de/ibs/SUSE:/SLE-12:/GA/standard/ SLE-12-standard &&\
     zypper ar -f http://download.suse.de/ibs/SUSE:/SLE-12:/Update/standard/ SLE-12-update-standard &&\
     zypper ar -f http://download.suse.de/ibs/SUSE/Updates/SLE-SERVER/12-LTSS/x86_64/update/ SLE-12-ltss &&\
@@ -13,13 +17,14 @@ RUN zypper ar http://download.suse.de/ibs/SUSE:/SLE-12:/GA/standard/ SLE-12-stan
       vim osc ruby2.1-rubygem-gem2rpm hwinfo libx86emu1 zypper-migration-plugin sudo curl && \
     zypper --non-interactive rr SLE-12-standard SLE-12-update-standard SLE-12-ltss
 
-RUN wget http://username:password@gaffer.suse.de:9999/files/.regcode -O ~/.regcode
-RUN wget http://username:password@gaffer.suse.de:9999/files/.oscrc -O ~/.oscrc
+RUN printf "$REGCODE" >> ~/.regcode
+ADD integration/create-oscrc.sh /tmp/connect/integration/create-oscrc.sh
+RUN sh /tmp/connect/integration/create-oscrc.sh
 
 RUN echo 'gem: --no-ri --no-rdoc' > /etc/gemrc && \
     gem install bundler --version '~> 1.17' --no-document
 
-RUN mkdir /tmp/connect && mkdir -p /tmp/connect/lib/suse/connect
+RUN mkdir -p /tmp/connect/lib/suse/connect
 WORKDIR /tmp/connect
 
 ADD Gemfile .

@@ -4,6 +4,10 @@ ENV BUILT_AT "Wed Feb 21 15:32 CET 2018"
 
 RUN useradd --no-log-init --create-home scc
 
+ARG REGCODE
+ARG OBS_USER
+ARG OBS_PASSWORD
+
 # Remember to drop docker caches if any of these change
 RUN zypper ar http://download.suse.de/ibs/SUSE/Products/SLE-Module-Basesystem/15/x86_64/product base &&\
     zypper ar http://download.suse.de/ibs/SUSE/Updates/SLE-Module-Basesystem/15/x86_64/update base-updates &&\
@@ -14,13 +18,14 @@ RUN zypper ar http://download.suse.de/ibs/SUSE/Products/SLE-Module-Basesystem/15
     zypper --non-interactive install git-core ruby-devel make gcc gcc-c++ build wget dmidecode \
       vim osc hwinfo libx86emu1 zypper-migration-plugin sudo awk curl
 
-RUN wget http://username:password@gaffer.suse.de:9999/files/.regcode -O ~/.regcode
-RUN wget http://username:password@gaffer.suse.de:9999/files/.oscrc -O ~/.oscrc
+RUN printf "$REGCODE" >> ~/.regcode
+ADD integration/create-oscrc.sh /tmp/connect/integration/create-oscrc.sh
+RUN sh /tmp/connect/integration/create-oscrc.sh
 
 RUN echo 'gem: --no-ri --no-rdoc' > /etc/gemrc && \
     gem install bundler --no-document
 
-RUN mkdir /tmp/connect && mkdir -p /tmp/connect/lib/suse/connect
+RUN mkdir -p /tmp/connect/lib/suse/connect
 WORKDIR /tmp/connect
 
 ADD Gemfile .
