@@ -13,7 +13,7 @@ def mock_dry_file
     allow(File).to receive(:open).and_return source_cred_file
     allow_any_instance_of(File).to receive(:puts).and_return true
     allow(Dir).to receive(:mkdir).and_return true
-    allow(SUSE::Connect::System).to receive(:credentials).and_return Credentials.new('dummy', 'tummy')
+    allow(SUSE::Connect::System).to receive(:credentials).and_return Credentials.new('dummy', 'tummy', 'yummy')
   end
 end
 

@@ -4,6 +4,10 @@ module SUSE
     module Utilities
       include ::Net::HTTPHeader
 
+      # Response header that might be set as a response for a given request.
+      # This should, in turn, be saved into the credentials file.
+      SYSTEM_TOKEN_HEADER = 'System-Token'.freeze
+
       def token_auth(token)
         "Token token=#{token}"
       end
@@ -14,7 +18,7 @@ module SUSE
         password = system_credentials.password
 
         if username && password
-          basic_encode(username, password)
+          { encoded: basic_encode(username, password), token: system_credentials.system_token }
         else
           raise
         end

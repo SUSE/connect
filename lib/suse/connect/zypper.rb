@@ -178,7 +178,7 @@ module SUSE
         def write_service_credentials(service_name)
           login = System.credentials.username
           password = System.credentials.password
-          credentials = Credentials.new(login, password, service_name)
+          credentials = Credentials.new(login, password, nil, service_name)
           credentials.write
         end
 
@@ -192,7 +192,7 @@ module SUSE
         end
 
         def write_base_credentials(login, password)
-          credentials = Credentials.new(login, password, Credentials.system_credentials_file)
+          credentials = Credentials.new(login, password, nil, Credentials.system_credentials_file)
           credentials.write
         end
 

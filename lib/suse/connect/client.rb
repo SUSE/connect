@@ -94,7 +94,7 @@ module SUSE
         end
 
 
-        log.info "\nSending data to SCC ..."
+        log.info "\nSending data to registration host #{@config.url} ..."
         @api.update_system(system_auth)
         log.info "Successfully updated the system\n".log_green.bold
       end
@@ -264,9 +264,8 @@ module SUSE
           update_system
         else
           distro_target = @config.product ? @config.product.distro_target : nil
-          login, password = announce_system(distro_target,
-                                            @config.instance_data_file)
-          Credentials.new(login, password, Credentials.system_credentials_file).write
+          login, password = announce_system(distro_target, @config.instance_data_file)
+          Credentials.new(login, password, nil, Credentials.system_credentials_file).write
         end
       end
 

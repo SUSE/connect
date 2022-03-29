@@ -4,6 +4,7 @@ describe SUSE::Connect::Client do
   before do
     stub_const('SUSE::Connect::Config::DEFAULT_CONFIG_FILE', 'spec/fixtures/SUSEConnect')
   end
+
   let(:config) { SUSE::Connect::Config.new }
   let(:default_logger) { SUSE::Connect::GlobalLogger.instance.log }
   let(:string_logger) { ::Logger.new(StringIO.new) }
@@ -201,7 +202,15 @@ describe SUSE::Connect::Client do
       stub_request(:post, 'https://scc.suse.com/connect/systems/products')
         .to_return status: 200, body: '{"name":"kinkat","url":"kinkaturl","product":{}}'
     end
-    before { allow(client_instance).to receive_messages system_auth: 'secretsecret' }
+
+    before do
+      allow(client_instance).to receive_messages system_auth: 'secretsecret'
+
+      # If the credentials file exists on the system it might try to read it
+      # after a request in order to update the `system_token` attribute. Skip
+      # this on the following tests.
+      allow(::SUSE::Connect::System).to receive(:credentials?).and_return(false)
+    end
 
     subject { client_instance.activate_product product }
 
@@ -230,7 +239,15 @@ describe SUSE::Connect::Client do
       stub_request(:delete, 'https://scc.suse.com/connect/systems/products')
         .to_return status: 200, body: '{"name":"kinkat","url":"kinkaturl","product":{}}'
     end
-    before { allow(client_instance).to receive_messages system_auth: 'secretsecret' }
+
+    before do
+      allow(client_instance).to receive_messages system_auth: 'secretsecret'
+
+      # If the credentials file exists on the system it might try to read it
+      # after a request in order to update the `system_token` attribute. Skip
+      # this on the following tests.
+      allow(::SUSE::Connect::System).to receive(:credentials?).and_return(false)
+    end
 
     subject { client_instance.deactivate_product product }
 
@@ -324,7 +341,7 @@ describe SUSE::Connect::Client do
       it 'writes credentials file' do
         allow(System).to receive_messages(credentials?: false)
         allow(subject).to receive_messages(announce_system: %w[lg pw])
-        expect(Credentials).to receive(:new).with('lg', 'pw', Credentials::GLOBAL_CREDENTIALS_FILE)
+        expect(Credentials).to receive(:new).with('lg', 'pw', nil, Credentials::GLOBAL_CREDENTIALS_FILE)
           .and_return(double(write: true))
         subject.register!
       end
@@ -641,6 +658,11 @@ describe SUSE::Connect::Client do
           allow(Zypper).to receive(:installed_products).and_return installed_products
           allow(client_instance).to receive(:show_product).and_return product
           allow(client_instance).to receive(:upgrade_product).and_return base_product_service
+
+          # If the credentials file exists on the system it might try to read it
+          # after a request in order to update the `system_token` attribute. Skip
+          # this on the following tests.
+          allow(::SUSE::Connect::System).to receive(:credentials?).and_return(false)
         end
 
         it 'removes all extensions if no product was specified' do
@@ -660,6 +682,7 @@ describe SUSE::Connect::Client do
           end
           subject
         end
+
         it 'reports about ongoing action' do
           expect(string_logger).to receive(:info).with("\e[1mDeregistering system from SUSE Customer Center\e[22m")
           expect(string_logger).to receive(:info).with("\nDeactivating 4-2-Extension 83 x86_64 ...")
@@ -680,6 +703,11 @@ describe SUSE::Connect::Client do
           config.product = extension
           allow(Zypper).to receive(:base_product).and_return(product)
           stub_request(:delete, 'https://scc.suse.com/connect/systems/products').to_return(body: '{"product":{}}')
+
+          # If the credentials file exists on the system it might try to read it
+          # after a request in order to update the `system_token` attribute. Skip
+          # this on the following tests.
+          allow(::SUSE::Connect::System).to receive(:credentials?).and_return(false)
         end
 
         it 'removes SCC service and release package' do

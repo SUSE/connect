@@ -66,7 +66,7 @@ describe SUSE::Connect::System do
     end
 
     it 'returns true if credentials exist' do
-      allow(subject).to receive_messages(credentials: Credentials.new('123456789', 'ABCDEF'))
+      allow(subject).to receive_messages(credentials: Credentials.new('123456789', 'ABCDEF', 'suchtokensuchwow'))
       expect(subject.credentials?).to be true
     end
   end

@@ -18,11 +18,12 @@ module SUSE
       GLOBAL_CREDENTIALS_FILE = File.join(DEFAULT_CREDENTIALS_DIR, 'SCCcredentials')
 
       attr_reader :username, :password
-      attr_accessor :file
+      attr_accessor :system_token, :file
 
-      def initialize(user, password, file = nil)
+      def initialize(user, password, system_token = nil, file = nil)
         @username = user
         @password = password
+        @system_token = system_token
         @file = file
       end
 
@@ -33,10 +34,10 @@ module SUSE
       def self.read(file)
         raise MissingSccCredentialsFile unless File.exist?(file)
         content = File.read(file)
-        user, passwd = parse(content)
+        user, passwd, token = parse(content)
         log.debug("Reading credentials from #{file}")
-        credentials = Credentials.new(user, passwd, file)
-        log.debug("Read credentials: #{credentials.username} : #{credentials.password}")
+        credentials = Credentials.new(user, passwd, token, file)
+        log.debug("Read credentials: #{credentials.username} : #{credentials.password} : #{credentials.system_token}")
         credentials
       end
 
@@ -58,17 +59,18 @@ module SUSE
       # security - override to_s to avoid writing the password to log
       def to_s
         contents = {}
-        contents[:class]    = self.class
-        contents[:id]       = format('%0#16x', object_id)
-        contents[:username] = username.inspect
-        contents[:password] = '[FILTERED]'.inspect
-        contents[:file]     = file.inspect
-        format('#<%{class}:%{id} @username=%{username}, @password=%{password}, @file=%{file}>', contents)
+        contents[:class]        = self.class
+        contents[:id]           = format('%0#16x', object_id)
+        contents[:username]     = username.inspect
+        contents[:password]     = '[FILTERED]'.inspect
+        contents[:system_token] = system_token.inspect
+        contents[:file]         = file.inspect
+        format('#<%{class}:%{id} @username=%{username}, @password=%{password}, @system_token=%{system_token}, @file=%{file}>', contents)
       end
 
       # Returns a hash representation of the object
       def to_h
-        { username: username, password: password, file: file }
+        { username: username, password: password, system_token: system_token, file: file }
       end
 
       private
@@ -87,12 +89,15 @@ module SUSE
           raise MalformedSccCredentialsFile, 'Cannot parse credentials file'
         end
 
-        [user, passwd]
+        # It's fine to have an empty system_token.
+        token = Regexp.last_match(1) if input.match(/^\s*system_token\s*=\s*(\S+)\s*$/)
+
+        [user, passwd, token]
       end
 
       # serialize the credentials for writing to a file
       def serialize
-        "username=#{username}\npassword=#{password}\n"
+        "username=#{username}\npassword=#{password}\nsystem_token=#{system_token}\n"
       end
     end
   end

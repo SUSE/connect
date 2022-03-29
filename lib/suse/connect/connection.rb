@@ -2,6 +2,7 @@ require 'openssl'
 require 'net/http'
 require 'ostruct'
 require 'json'
+require 'suse/toolkit/utilities'
 
 module SUSE
   module Connect
@@ -57,7 +58,7 @@ module SUSE
       private
 
       def path_with_params(path, params)
-        return path if params.empty?
+        return path if params.nil? || params.empty?
         encoded_params = URI.encode_www_form(params)
         [path, encoded_params].join('?')
       end
@@ -76,12 +77,14 @@ module SUSE
           request = VERB_TO_CLASS[method].new(path_with_params(path, params))
         else
           request = VERB_TO_CLASS[method].new(path)
-          request.body = params.to_json unless params.empty?
+          request.body = params.to_json unless params.nil? || params.empty?
         end
         add_headers(request)
 
         response      = @http.request(request)
         response_body = JSON.parse(response.body) unless response.body.to_s.empty?
+
+        update_system_token!(response)
 
         OpenStruct.new(
           code: response.code.to_i,
@@ -94,8 +97,33 @@ module SUSE
         raise SUSE::Connect::NetworkError, 'Check your network connection and try again. If it keeps failing, report a bug.'
       end
 
+      # Given an HTTP response, try to update the credentials file with the
+      # given 'System-Token' header.
+      def update_system_token!(response)
+        return unless System.credentials?
+
+        token = response.to_hash[SUSE::Toolkit::Utilities::SYSTEM_TOKEN_HEADER.downcase]&.first&.strip
+        return if token.nil? || token.empty?
+
+        creds = System.credentials
+        creds.system_token = token
+        creds.write
+      end
+
       def add_headers(request)
-        request['Authorization']   = auth
+        # The authorization might be a hash, which means that both an encoded
+        # authorization and a system token are given.
+        if auth.is_a?(Hash)
+          request['Authorization'] = auth[:encoded]
+          # Note that `Net/HTTP` ignore headers with an empty value (i.e. nil or
+          # ''). Thus, if there is no system token yet for this system, assign a
+          # string with at least one space character, so it's not ignored but
+          # perceived as empty by the server.
+          request[SUSE::Toolkit::Utilities::SYSTEM_TOKEN_HEADER] = auth[:token] || ' '
+        else
+          request['Authorization'] = auth
+        end
+
         request['Content-Type']    = 'application/json'
         request['Accept']          = "application/json,application/vnd.scc.suse.com.#{SUSE::Connect::Api::VERSION}+json"
         request['Accept-Language'] = language

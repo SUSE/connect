@@ -120,11 +120,49 @@ describe SUSE::Connect::Connection do
       subject.new('https://leg')
     end
 
-    before do
-      allow(connection.http).to receive(:request).and_return(OpenStruct.new(body: '{ "test": "body" }'))
+    context 'system_token' do
+      it 'stores the given system_token' do
+        os = OpenStruct.new(
+          to_hash: { 'system-token' => ["token"] },
+          body:    '{ "test": "body" }'
+        )
+        allow(connection.http).to receive(:request).and_return(os)
+
+        Dir.mktmpdir do |dir|
+          file = File.join(dir, 'Creds')
+          File.write(file, "username=user\npassword=password\n")
+          allow(Credentials).to receive(:system_credentials_file).and_return(file)
+
+          expect(Net::HTTP::Get).to receive(:new).and_call_original
+          connection.send(:json_request, :get, '/api/v1/megusta')
+
+          expect(System.credentials.system_token).to eq "token"
+        end
+      end
+
+      it "does nothing on an empty response" do
+        os = OpenStruct.new(to_hash: {}, body: '{ "test": "body" }')
+        allow(connection.http).to receive(:request).and_return(os)
+
+        Dir.mktmpdir do |dir|
+          file = File.join(dir, 'Creds')
+          File.write(file, "username=user\npassword=password\n")
+          allow(Credentials).to receive(:system_credentials_file).and_return(file)
+
+          expect(Net::HTTP::Get).to receive(:new).and_call_original
+          connection.send(:json_request, :get, '/api/v1/megusta')
+
+          expect(System.credentials.system_token).to be_nil
+        end
+      end
     end
 
     context 'with a get request' do
+      before do
+        allow(connection.http).to receive(:request).and_return(OpenStruct.new(body: '{ "test": "body" }'))
+        allow(::SUSE::Connect::System).to receive(:credentials?).and_return(false)
+      end
+
       it 'takes Net::HTTP::Get class to build request' do
         expect(Net::HTTP::Get).to receive(:new).and_call_original
         connection.send(:json_request, :get, '/api/v1/megusta')
@@ -132,6 +170,11 @@ describe SUSE::Connect::Connection do
     end
 
     context 'with a post request' do
+      before do
+        allow(connection.http).to receive(:request).and_return(OpenStruct.new(body: '{ "test": "body" }'))
+        allow(::SUSE::Connect::System).to receive(:credentials?).and_return(false)
+      end
+
       it 'takes Net::HTTP::Post class to build request' do
         expect(Net::HTTP::Post).to receive(:new).and_call_original
         connection.send(:json_request, :post, '/api/v1/megusta')
@@ -139,6 +182,11 @@ describe SUSE::Connect::Connection do
     end
 
     context 'with a put request' do
+      before do
+        allow(connection.http).to receive(:request).and_return(OpenStruct.new(body: '{ "test": "body" }'))
+        allow(::SUSE::Connect::System).to receive(:credentials?).and_return(false)
+      end
+
       it 'takes Net::HTTP::Put class to build request' do
         expect(Net::HTTP::Put).to receive(:new).and_call_original
         connection.send(:json_request, :put, '/api/v1/megusta')
@@ -146,6 +194,11 @@ describe SUSE::Connect::Connection do
     end
 
     context 'with a delete request' do
+      before do
+        allow(connection.http).to receive(:request).and_return(OpenStruct.new(body: '{ "test": "body" }'))
+        allow(::SUSE::Connect::System).to receive(:credentials?).and_return(false)
+      end
+
       it 'takes Net::HTTP::Delete class to build request' do
         expect(Net::HTTP::Delete).to receive(:new).and_call_original
         connection.send(:json_request, :delete, '/api/v1/megusta')
@@ -155,6 +208,7 @@ describe SUSE::Connect::Connection do
     context 'with an empty body response' do
       before do
         allow(connection.http).to receive(:request).and_return(OpenStruct.new(body: ''))
+        allow(::SUSE::Connect::System).to receive(:credentials?).and_return(false)
       end
 
       it 'does not fail to parse the body' do
@@ -187,6 +241,11 @@ describe SUSE::Connect::Connection do
       stub_request(:post, "#{endpoint}/api/v1/test")
         .with(body: '', headers: { 'Authorization' => 'Token token=zulu' })
         .to_return(status: 200, body: '{}', headers: {})
+
+      # If the credentials file exists on the system it might try to read it
+      # after a request in order to update the `system_token` attribute. Skip
+      # this on the following tests.
+      allow(::SUSE::Connect::System).to receive(:credentials?).and_return(false)
     end
 
     context 'without prefixed endpoint protocol' do
@@ -339,6 +398,23 @@ describe SUSE::Connect::Connection do
         expect(error.code).to eq 422
         expect(error.response.body).to eq('error' => 'These are not the droids you were looking for')
       end
+    end
+
+    it 'sets the authorization and the system-token headers accordingly' do
+      obj = subject.new('https://example.com')
+      obj.auth = 'token'
+      hsh = {}
+
+      obj.send(:add_headers, hsh)
+      expect(hsh[SUSE::Toolkit::Utilities::SYSTEM_TOKEN_HEADER]).to be_nil
+      expect(hsh['Authorization']).to eq 'token'
+
+      obj.auth = { encoded: 'token', token: 'system-token' }
+      hsh = {}
+
+      obj.send(:add_headers, hsh)
+      expect(hsh[SUSE::Toolkit::Utilities::SYSTEM_TOKEN_HEADER]).to eq 'system-token'
+      expect(hsh['Authorization']).to eq 'token'
     end
   end
 end
