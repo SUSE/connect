@@ -102,7 +102,8 @@ module SUSE
       def update_system_token!(response)
         return unless System.credentials?
 
-        token = response.to_hash[SUSE::Toolkit::Utilities::SYSTEM_TOKEN_HEADER.downcase]&.first&.strip
+        value = response.to_hash[SUSE::Toolkit::Utilities::SYSTEM_TOKEN_HEADER.downcase]
+        token = value.first.strip unless value.nil? || value.first.nil?
         return if token.nil? || token.empty?
 
         creds = System.credentials
