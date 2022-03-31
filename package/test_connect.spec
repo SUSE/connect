@@ -16,10 +16,10 @@
 #
 
 
-Name:           SUSEConnect
+Name:           TestConnect
 Version:        0.3.32
 Release:        0
-%define mod_name suse-connect
+%define mod_name test_connect
 %define mod_full_name %{mod_name}-%{version}
 
 # Does not build for i586 and s390 and is not supported on those architectures
