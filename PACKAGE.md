@@ -87,7 +87,7 @@ It should typically be enough to run `osc ar` to add new and delete removed file
 ```bash
 osc commit
 ```
-## Step 7. Submit Requests to openSUSE Factory and SLES
+## Step 7. Submit Requests to SLES
 
 To get a maintenance request accepted, each changelog entry needs to have at
 least one reference to a bug or feature request like `bsc#123` or `fate#123`.
@@ -95,14 +95,6 @@ least one reference to a bug or feature request like `bsc#123` or `fate#123`.
 Note: If you want to disable automatic changes made by osc (e.g. License string)
       use the `--no-cleanup` switch. Can be used for commands like `osc mr`, `osc sr`
       and `osc ci`.
-
-### Factory First
-
-To submit a request to openSUSE Factory, issue this commands in the console:
-
-```bash
-osc sr systemsmanagement:SCC SUSEConnect openSUSE:Factory
-```
 
 ### Submit maintenance updates for SLES to the Internal Build Service
 
@@ -132,23 +124,16 @@ Example:
 
 ```bash
 $ osc -A https://api.suse.de maintained SUSEConnect
-SUSE:SLE-12-SP1:Update/SUSEConnect
-SUSE:SLE-12-SP2:Update/SUSEConnect
 SUSE:SLE-12-SP3:Update/SUSEConnect
-SUSE:SLE-12:Update/SUSEConnect
+SUSE:SLE-12-SP4:Update/SUSEConnect
+SUSE:SLE-12-SP5:Update/SUSEConnect
 SUSE:SLE-15:Update/SUSEConnect
+SUSE:SLE-15-SP1:Update/SUSEConnect
+SUSE:SLE-15-SP2:Update/SUSEConnect
 
-$ osc -A https://api.suse.de mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-15:Update
+$ osc -A https://api.suse.de mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-15-SP2:Update
 Using target project 'SUSE:Maintenance'
 1736456
-
-$ osc -A https://api.suse.de mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP2:Update
-Using target project 'SUSE:Maintenance'
-164309
-
-$ osc -A https://api.suse.de mr Devel:SCC:suseconnect SUSEConnect SUSE:SLE-12-SP3:Update
-Using target project 'SUSE:Maintenance'
-347506
 
 ```
 
