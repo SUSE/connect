@@ -168,7 +168,7 @@ RMT, and SUSE Manager to provide a clearer picture of your system landscape:
 - SUSE Manager v4.1+ now sends system information to SCC.
 - SCC now captures which products are activated on systems that sit behind RMT
   or SMT.
-- SUSEConnect v0.3.33 will soon enable systems to "ping" SCC/RMT daily to
+- This update will enable your system to "ping" SCC/RMT daily to
   confirm the system’s active status. This will help you identify or filter out
   systems in SCC that are no longer running or decommissioned. As always, the
   choice is yours, you can disable the daily ping by disabling the
