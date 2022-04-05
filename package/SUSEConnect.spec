@@ -145,6 +145,50 @@ ln -sf service %{buildroot}%{_sbindir}/rcsuseconnect-keepalive
 %pre
 %service_add_pre suseconnect-keepalive.service suseconnect-keepalive.timer
 
+# Only run this part if SUSEConnect is being updated.
+# $1 holds the number of packages installed in this environment
+# see: https://docs.fedoraproject.org/en-US/packaging-guidelines/Scriptlets/
+if [ $1 -gt 1 ]; then
+  # in pre blocks the old version is still installed. This way we can determine
+  # the old version running.
+  version=$(SUSEConnect --version)
+  timer_release="0.3.33"
+
+  if printf "$version\n$timer_release" | sort -C -V ; then
+    cat << EOF
+Improving system visibility in the SUSE Customer Center 
+
+Getting a clear picture of how many systems are running SUSE products and
+consuming your subscriptions has not been an easy task. You might have physical
+and virtual systems running on-prem and others in the cloud, some systems are
+connected directly to SCC, while others sit behind RMT or are managed by SUSE
+Manager.
+
+The information shown in SCC is often incomplete or outdated, so it’s
+inconvenient to rely on it for renewal or compliance purposes.
+
+To help you overcome some of these challenges, we’ve been working on several
+improvements to our products, including SCC. For example, SUSE Manager (v4.1+)
+now sends system information to SCC, so that you can have a full picture of
+your system landscape. Additionally, SCC now captures which products are
+activated on systems that sit behind RMT or SMT.
+
+Another problem has been that the systems tracked in SCC are often not actually
+running anymore or have been decommissioned. To address this and to make it
+easier for you to spot those systems, this update will enable your system
+to “ping” SCC on a daily basis. You will then be able to easily filter
+out inactive systems and remove them from the SCC listing if necessary.
+
+(You can disable the daily ping if you don’t consider it necessary, by
+disabling the suseconnect-keepalive systemd timer).
+
+We will continue improving our products to make it easier for you to manage
+your systems and watch your subscription consumption. As always, we’d love to
+hear your feedback about these improvements and any ideas you might have.
+EOF
+  fi
+fi
+
 %post
 if [ -s /etc/zypp/credentials.d/NCCcredentials ] && [ ! -e /etc/zypp/credentials.d/SCCcredentials ]; then
     echo "Imported NCC system credentials to /etc/zypp/credentials.d/SCCcredentials"
