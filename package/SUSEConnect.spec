@@ -202,6 +202,15 @@ if update-alternatives --config SUSEConnect  &> /dev/null ; then
   ln -fs ../sbin/%{name} %{_bindir}/%{name}
 fi
 
+# Randomize shedule times for SLES12. SLES12 systemd does not support
+# RandomizedDelaySec=24h.
+%if (0%{?sle_version} > 0 && 0%{?sle_version} < 150000)
+    TIMER_HOUR=$(( RANDOM % 24 ))
+    TIMER_MINUTE=$(( RANDOM % 60 ))
+
+    sed -i '/RandomizedDelaySec*/d' %{_unitdir}/suseconnect-keepalive.timer
+    sed -i "s/OnCalendar=daily/OnCalendar=*-*-* $TIMER_HOUR:$TIMER_MINUTE:00/" %{_unitdir}/suseconnect-keepalive.timer
+%endif
 %service_add_post suseconnect-keepalive.service suseconnect-keepalive.timer
 
 %preun
