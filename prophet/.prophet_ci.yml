@@ -1,6 +1,6 @@
 projects:
   connect:
-    docker-build-image-sle12sp3: cd ..; docker build --build-arg REGCODE=$REGCODE --build-arg OBS_USER=$OBS_USER --build-arg OBS_PASSWORD=$OBS_PASSWORD -t connect.12sp3 -f Dockerfile.12sp3 .
-    docker-build-image-sle15sp0: cd ..; docker build --build-arg REGCODE=$REGCODE --build-arg OBS_USER=$OBS_USER --build-arg OBS_PASSWORD=$OBS_PASSWORD -t connect.15sp0 -f Dockerfile.15sp0 .
+    docker-build-image-sle12sp3: cd ..; docker build --build-arg VALID_REGCODE=$VALID_REGCODE  --build-arg EXPIRED_REGCODE=$EXPIRED_REGCODE  --build-arg NOT_ACTIVATED_REGCODE=$NOT_ACTIVATED_REGCODE --build-arg OBS_USER=$OBS_USER --build-arg OBS_PASSWORD=$OBS_PASSWORD -t connect.12sp3 -f Dockerfile.12sp3 .
+    docker-build-image-sle15sp0: cd ..; docker build --build-arg VALID_REGCODE=$VALID_REGCODE  --build-arg EXPIRED_REGCODE=$EXPIRED_REGCODE  --build-arg NOT_ACTIVATED_REGCODE=$NOT_ACTIVATED_REGCODE --build-arg OBS_USER=$OBS_USER --build-arg OBS_PASSWORD=$OBS_PASSWORD -t connect.15sp0 -f Dockerfile.15sp0 .
     docker-run-tests-sle12sp3: cd ..; docker run --privileged --rm -t connect.12sp3 ./docker/prophet_tests.sh
     docker-run-tests-sle15sp0: cd ..; docker run --privileged --rm -t connect.15sp0 ./docker/prophet_tests.sh

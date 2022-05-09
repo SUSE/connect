@@ -4,7 +4,9 @@ ENV BUILT_AT "Tue May 9 14:46 CET 2017"
 
 RUN useradd --no-log-init --create-home scc
 
-ARG REGCODE
+ARG VALID_REGCODE
+ARG EXPIRED_REGCODE
+ARG NOT_ACTIVATED_REGCODE
 ARG OBS_USER
 ARG OBS_PASSWORD
 
@@ -20,7 +22,9 @@ RUN zypper --non-interactive --no-refresh rm container-suseconnect &&\
       vim osc ruby2.1-rubygem-gem2rpm hwinfo libx86emu1 zypper-migration-plugin sudo curl && \
     zypper --non-interactive rr SLE-12-SP1-standard SLE-12-SP1-updates sle12sp1sdk sle12sp1sdk-updates
 
-RUN printf "$REGCODE" >> ~/.regcode
+ADD integration/create_regcode.sh /tmp/connect/integration/create_regcode.sh
+RUN sh /tmp/connect/integration/create_regcode.sh
+
 ADD integration/create-oscrc.sh /tmp/connect/integration/create-oscrc.sh
 RUN sh /tmp/connect/integration/create-oscrc.sh
 

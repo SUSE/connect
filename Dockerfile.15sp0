@@ -4,7 +4,9 @@ ENV BUILT_AT "Wed Feb 21 15:32 CET 2018"
 
 RUN useradd --no-log-init --create-home scc
 
-ARG REGCODE
+ARG VALID_REGCODE
+ARG EXPIRED_REGCODE
+ARG NOT_ACTIVATED_REGCODE
 ARG OBS_USER
 ARG OBS_PASSWORD
 
@@ -18,7 +20,9 @@ RUN zypper ar http://download.suse.de/ibs/SUSE/Products/SLE-Module-Basesystem/15
     zypper --non-interactive install git-core ruby-devel make gcc gcc-c++ build wget dmidecode \
       vim osc hwinfo libx86emu1 zypper-migration-plugin sudo awk curl
 
-RUN printf "$REGCODE" >> ~/.regcode
+ADD integration/create_regcode.sh /tmp/connect/integration/create_regcode.sh
+RUN sh /tmp/connect/integration/create_regcode.sh
+
 ADD integration/create-oscrc.sh /tmp/connect/integration/create-oscrc.sh
 RUN sh /tmp/connect/integration/create-oscrc.sh
 
