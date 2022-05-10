@@ -29,27 +29,18 @@ def version_to_dot_notation(sp_notation)
   sp_notation.gsub(/_SP|-SP/, '.')
 end
 
-# This is ugly logic, but it is this way for compatibility with the existing code
-# If the TODOs are resolved, it can become simpler.
 def regcode_for_test(regcode_kind)
-  # Special case 1; shortcircuit all invalid
+  # Special case: shortcircuit all invalid
   return 'INVALID_REGCODE' if regcode_kind == 'INVALID' || regcode_kind.nil?
-
-  # Special case 2; regcode in environment for valid
-  return ENV['REGCODE'] if ENV['REGCODE'] && regcode_kind == 'VALID'
-
-  test_regcodes = YAML.load_file('/root/.regcode')
 
   regcode_key = case regcode_kind
                 when 'VALID'
-                  'code'
+                  'VALID_REGCODE'
                 when 'EXPIRED'
-                  'expired_code'
+                  'EXPIRED_REGCODE'
                 when 'NOTYETACTIVATED'
-                  'notyetactivated_code'
+                  'NOT_ACTIVATED_REGCODE'
                 end
 
-  regcode_key.prepend('beta_') if OPTIONS['beta']
-
-  test_regcodes[regcode_key] || "regcode file does not contain '#{regcode_key}'!!"
+  ENV.fetch(regcode_key)
 end
