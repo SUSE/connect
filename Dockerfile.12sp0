@@ -16,7 +16,7 @@ RUN zypper ar http://download.suse.de/ibs/SUSE:/SLE-12:/GA/standard/ SLE-12-stan
       vim osc ruby2.1-rubygem-gem2rpm hwinfo libx86emu1 zypper-migration-plugin sudo curl && \
     zypper --non-interactive rr SLE-12-standard SLE-12-update-standard SLE-12-ltss
 
-ADD integration/create-oscrc.sh /tmp/connect/integration/create-oscrc.sh
+COPY integration/create-oscrc.sh /tmp/connect/integration/create-oscrc.sh
 RUN sh /tmp/connect/integration/create-oscrc.sh
 
 RUN echo 'gem: --no-ri --no-rdoc' > /etc/gemrc && \
@@ -25,10 +25,10 @@ RUN echo 'gem: --no-ri --no-rdoc' > /etc/gemrc && \
 RUN mkdir -p /tmp/connect/lib/suse/connect
 WORKDIR /tmp/connect
 
-ADD Gemfile .
-ADD suse-connect.gemspec .
-ADD lib/suse/connect/version.rb ./lib/suse/connect/
+COPY Gemfile .
+COPY suse-connect.gemspec .
+COPY lib/suse/connect/version.rb ./lib/suse/connect/
 RUN bundle config jobs $(nproc) && \
     bundle install
-ADD . /tmp/connect
+COPY . /tmp/connect
 RUN chown -R scc /tmp/connect
