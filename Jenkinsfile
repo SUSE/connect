@@ -16,31 +16,31 @@ pipeline {
       parallel {
         stage('SLE12 SP2') {
           steps {
-            sh 'docker build -t connect.12sp2 -f Dockerfile.12sp2 .'
-            sh 'docker run -v /space/oscbuild:/oscbuild --privileged --rm -t connect.12sp2 ./docker/integration.sh'
+            sh 'docker build --build-arg OBS_USER=$OBS_USER --build-arg OBS_PASSWORD=$OBS_PASSWORD -t connect.12sp2 -f Dockerfile.12sp2 .'
+            sh 'docker run -e VALID_REGCODE=$VALID_REGCODE -e EXPIRED_REGCODE=$EXPIRED_REGCODE -e NOT_ACTIVATED_REGCODE=$NOT_ACTIVATED_REGCODE -v /space/oscbuild:/oscbuild --privileged --rm -t connect.12sp2 ./docker/integration.sh'
           }
         }
 
         stage('SLE12 SP3') {
           steps {
-            sh 'docker build -t connect.12sp3 -f Dockerfile.12sp3 .'
-            sh 'docker run -v /space/oscbuild:/oscbuild --privileged --rm -t connect.12sp3 ./docker/integration.sh'
+            sh 'docker build --build-arg OBS_USER=$OBS_USER --build-arg OBS_PASSWORD=$OBS_PASSWORD -t connect.12sp3 -f Dockerfile.12sp3 .'
+            sh 'docker run -e VALID_REGCODE=$VALID_REGCODE -e EXPIRED_REGCODE=$EXPIRED_REGCODE -e NOT_ACTIVATED_REGCODE=$NOT_ACTIVATED_REGCODE -v /space/oscbuild:/oscbuild --privileged --rm -t connect.12sp3 ./docker/integration.sh'
           }
         }
 
         stage('SLE15 SP0') {
           steps {
-            sh 'docker build -t connect.15sp0 -f Dockerfile.15sp0 .'
+            sh 'docker build --build-arg OBS_USER=$OBS_USER --build-arg OBS_PASSWORD=$OBS_PASSWORD -t connect.15sp0 -f Dockerfile.15sp0 .'
             sh 'docker run --rm -t connect.15sp0 rspec'
-            sh 'docker run -v /space/oscbuild:/oscbuild --privileged --rm -t connect.15sp0 ./docker/integration.sh'
+            sh 'docker run -e VALID_REGCODE=$VALID_REGCODE -e EXPIRED_REGCODE=$EXPIRED_REGCODE -e NOT_ACTIVATED_REGCODE=$NOT_ACTIVATED_REGCODE -v /space/oscbuild:/oscbuild --privileged --rm -t connect.15sp0 ./docker/integration.sh'
           }
         }
 
         stage('SLE15 SP3') {
           steps {
-            sh 'docker build -t connect.15sp3 -f Dockerfile.15sp3 .'
+            sh 'docker build --build-arg OBS_USER=$OBS_USER --build-arg OBS_PASSWORD=$OBS_PASSWORD -t connect.15sp3 -f Dockerfile.15sp3 .'
             sh 'docker run --rm -t connect.15sp3 rspec'
-            sh 'docker run -v /space/oscbuild:/oscbuild --privileged --rm -t connect.15sp3 ./docker/integration.sh'
+            sh 'docker run -e VALID_REGCODE=$VALID_REGCODE -e EXPIRED_REGCODE=$EXPIRED_REGCODE -e NOT_ACTIVATED_REGCODE=$NOT_ACTIVATED_REGCODE -v /space/oscbuild:/oscbuild --privileged --rm -t connect.15sp3 ./docker/integration.sh'
           }
         }
       }
