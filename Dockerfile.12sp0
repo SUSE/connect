@@ -2,8 +2,6 @@ FROM registry.scc.suse.de/sles12_base
 ENV PRODUCT SLE_12
 ENV BUILT_AT "Mon May 8 16:53 CET 2017"
 
-RUN useradd --no-log-init --create-home scc
-
 ARG OBS_USER
 ARG OBS_PASSWORD
 
@@ -31,4 +29,3 @@ COPY lib/suse/connect/version.rb ./lib/suse/connect/
 RUN bundle config jobs $(nproc) && \
     bundle install
 COPY . /tmp/connect
-RUN chown -R scc /tmp/connect
