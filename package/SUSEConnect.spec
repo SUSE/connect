@@ -219,15 +219,6 @@ fi
 %postun
 %service_del_postun suseconnect-keepalive.service suseconnect-keepalive.timer
 
-%posttrans
-# Force the enablement and the restart of the SUSEConnect --keepalive timer.
-if [ -x "$(command -v systemctl)" ]; then
-    if [ "$(/usr/bin/systemctl is-enabled suseconnect-keepalive.timer)" != "enabled" ]; then
-        /usr/bin/systemctl enable suseconnect-keepalive.timer
-    fi
-    /usr/bin/systemctl restart suseconnect-keepalive.timer
-fi
-
 %files
 %defattr(-,root,root,-)
 %{_sbindir}/SUSEConnect
