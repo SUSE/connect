@@ -17,7 +17,7 @@
 
 
 Name:           SUSEConnect
-Version:        0.3.34
+Version:        0.3.35
 Release:        0
 %define mod_name suse-connect
 %define mod_full_name %{mod_name}-%{version}
@@ -218,15 +218,6 @@ fi
 
 %postun
 %service_del_postun suseconnect-keepalive.service suseconnect-keepalive.timer
-
-%posttrans
-# Force the enablement and the restart of the SUSEConnect --keepalive timer.
-if [ -x "$(command -v systemctl)" ]; then
-    if [ "$(/usr/bin/systemctl is-enabled suseconnect-keepalive.timer)" != "enabled" ]; then
-        /usr/bin/systemctl enable suseconnect-keepalive.timer
-    fi
-    /usr/bin/systemctl restart suseconnect-keepalive.timer
-fi
 
 %files
 %defattr(-,root,root,-)

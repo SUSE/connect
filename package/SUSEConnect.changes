@@ -1,4 +1,11 @@
--------------------------------------------------------------------
+--------------------------------------------------------------------
+Mon Jul 4 10:00:00 UTC 2022 - Natnael Getahun <ngetahun@suse.com>
+
+- Update to 0.3.35
+- Rely on system-wide defaults for enabling the keepalive timer by systemd-presets-branding-SLE. (bsc#1200641)
+
+
+------------------------------------------------------------------
 Fri Mar 18 09:28:21 UTC 2022 - Miquel Sabate Sola <msabate@suse.com>
 
 - Update to 0.3.34
