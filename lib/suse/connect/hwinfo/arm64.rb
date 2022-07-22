@@ -24,6 +24,8 @@ class SUSE::Connect::HwInfo::ARM64 < SUSE::Connect::HwInfo::Base
     def hypervisor
       vendor = execute('systemd-detect-virt -v', false, [0, 1])
       vendor == 'none' ? nil : vendor
+    rescue SUSE::Connect::SystemCallError, Errno::ENOENT
+      nil
     end
 
     def uuid

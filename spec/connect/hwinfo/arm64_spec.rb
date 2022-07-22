@@ -48,16 +48,6 @@ describe SUSE::Connect::HwInfo::ARM64 do
     expect(subject.sockets).to eql 1
   end
 
-  it 'returns nil for hypervisor for non-virtual systems' do
-    expect(Open3).to receive(:capture3).with(shared_env_hash, 'systemd-detect-virt -v').and_return(['none', '', success])
-    expect(subject.hypervisor).to eql nil
-  end
-
-  it 'returns hypervisor vendor for virtual systems' do
-    expect(Open3).to receive(:capture3).with(shared_env_hash, 'systemd-detect-virt -v').and_return(['kvm', '', success])
-    expect(subject.hypervisor).to eql 'kvm'
-  end
-
   describe '.uuid' do
     context :arm64_arch do
       before :each do
@@ -99,6 +89,31 @@ describe SUSE::Connect::HwInfo::ARM64 do
           expect(File).to receive(:read).with(uuid_file).and_return(mock_uuid)
           expect(subject.uuid).to eq '4C4C4544-0059-4810-8034-C2C04F335931'
         end
+      end
+    end
+  end
+
+  describe '.hypervisor' do
+    before do
+      allow(subject).to receive(:arch).and_return('aarch64')
+    end
+
+    context 'systemd is installed' do
+      it 'returns nil for hypervisor for non-virtual systems' do
+        expect(Open3).to receive(:capture3).with(shared_env_hash, 'systemd-detect-virt -v').and_return(['none', '', success])
+        expect(subject.hypervisor).to eql nil
+      end
+
+      it 'returns hypervisor vendor for virtual systems' do
+        expect(Open3).to receive(:capture3).with(shared_env_hash, 'systemd-detect-virt -v').and_return(['kvm', '', success])
+        expect(subject.hypervisor).to eql 'kvm'
+      end
+    end
+
+    context 'systemd is missing' do
+      it 'returns nil when systemd-detect-virt is not found' do
+        expect(Open3).to receive(:capture3).with(shared_env_hash, 'systemd-detect-virt -v').and_raise(Errno::ENOENT)
+        expect(subject.hypervisor).to eql nil
       end
     end
   end
