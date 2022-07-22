@@ -42,6 +42,15 @@ module SUSE
         service = activate_product(product, @config.email)
 
         log.info '-> Adding service to system ...'
+
+        if @config.insecure
+          uri = URI.parse(service.url)
+          params = URI.decode_www_form(uri.query || '') + [[:ssl_verify, 'no']]
+          uri.query = URI.encode_www_form(params)
+
+          service.url = uri.to_s
+        end
+
         System.add_service(service, !@config.no_zypper_refs)
         if install_release_package
           log.info '-> Installing release package ...'
