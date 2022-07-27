@@ -5,6 +5,7 @@ Wants=suseconnect-keepalive.timer
 [Service]
 Type=oneshot
 ExecStart=/usr/bin/SUSEConnect --keepalive
+EnvironmentFile=-/etc/sysconfig/proxy
 
 # Filter out this special exit code, since it will be raised by `SUSEConnect
 # --keepalive` whenever a system is not registered, which is a pretty typical

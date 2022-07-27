@@ -1,3 +1,9 @@
+-------------------------------------------------------------------
+Wed Jul 27 14:08:54 UTC 2022 - Miquel Sabate Sola <msabate@suse.com>
+
+- Update to 0.4
+- Allow suseconnect-keepalive.service to recognize a configured proxy. (bsc#1200994)
+
 --------------------------------------------------------------------
 Mon Jul 4 10:00:00 UTC 2022 - Natnael Getahun <ngetahun@suse.com>
 
