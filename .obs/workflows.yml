@@ -4,21 +4,5 @@ workflow:
         source_project: home:ngetahun
         source_package: test_connect
         target_project: home:ngetahun:scm_runs
-    - configure_repositories:
-        project: home:ngetahun
-        repositories:
-          - name: openSUSE_Tumbleweed
-            paths:
-              - target_project: openSUSE:Factory
-                target_repository: snapshot
-              - target_project: openSUSE:Tumbleweed
-                target_repository: standard
-            architectures:
-              - x86_64
-              - i586
-          - name: openSUSE_Leap_15.2
-            paths:
-              - target_project: openSUSE:Leap:15.2
-                target_repository: standard
-            architectures:
-              - x86_64
+  filters:
+    event: pull_request
