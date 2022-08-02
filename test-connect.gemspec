@@ -2,7 +2,7 @@ require File.expand_path('../lib/suse/connect/version', __FILE__)
 require 'date'
 
 Gem::Specification.new do |gem|
-  gem.name        = 'suse-connect'
+  gem.name        = 'test_connect'
   gem.version     = SUSE::Connect::VERSION
   gem.date        = Date.today.to_s
   gem.summary     = 'SUSE Connect utility to register a system with the SUSE Customer Center'
