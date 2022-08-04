@@ -28,6 +28,7 @@ module SUSE
           proxy_port = http.proxy_uri.port
           proxy_user = SUSE::Toolkit::CurlrcDotfile.new.username
           proxy_pass = SUSE::Toolkit::CurlrcDotfile.new.password
+          log.debug("Using proxy: #{http.proxy_uri}")
           http = Net::HTTP.new(uri.host, uri.port, proxy_address, proxy_port, proxy_user, proxy_pass)
         end
         http.use_ssl     = uri.is_a? URI::HTTPS
