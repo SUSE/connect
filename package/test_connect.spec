@@ -1,5 +1,5 @@
 #
-# spec file for package SUSEConnect
+# spec file for package test_connect
 #
 # Copyright (c) 2018 SUSE LINUX GmbH, Nuernberg, Germany.
 #
@@ -33,12 +33,13 @@ Requires:       ca-certificates-mozilla
 Requires:       coreutils
 Requires:       net-tools
 Requires:       util-linux
+Requires:       obs-service-renderspec
 Requires:       zypper
 # Required by the rmt-client-setup script:
 Recommends:     gawk
 Recommends:     gpg2
 Recommends:     grep
-# Allows for installing openssl 1.0 without needing to remove SUSEConnect. See bsc#1101470.
+# Allows for installing openssl 1.0 without needing to remove test_connect. See bsc#1101470.
 %if 0%{?sle_version} < 120200
 Recommends:     openssl
 %else
@@ -126,11 +127,11 @@ ln -s %{_sbindir}/%{name} %{buildroot}%{_bindir}/%{name}
 patch -d %{buildroot}%{gem_base}/gems/%{mod_full_name} -p1 < switch_server_cert_location_to_etc.patch
 %endif
 
-install -D -m 644 %_sourcedir/SUSEConnect.5 %{buildroot}%_mandir/man5/SUSEConnect.5
-install -D -m 644 %_sourcedir/SUSEConnect.8 %{buildroot}%_mandir/man8/SUSEConnect.8
-install -D -m 644 %_sourcedir/SUSEConnect.example %{buildroot}%_sysconfdir/SUSEConnect.example
+install -D -m 644 %_sourcedir/test_connect.5 %{buildroot}%_mandir/man5/test_connect.5
+install -D -m 644 %_sourcedir/test_connect.8 %{buildroot}%_mandir/man8/test_connect.8
+install -D -m 644 %_sourcedir/test_connect.example %{buildroot}%_sysconfdir/test_connect.example
 
-touch %{buildroot}%_sysconfdir/SUSEConnect
+touch %{buildroot}%_sysconfdir/test_connect
 mkdir -p %{buildroot}%_sysconfdir/zypp/credentials.d/
 touch %{buildroot}%_sysconfdir/zypp/credentials.d/SCCcredentials
 
@@ -149,31 +150,31 @@ fi
 if [ -s /etc/suseRegister.conf ]; then
     reg_server=$(sed -n "s/^[[:space:]]*url[[:space:]]*=[[:space:]]*\(https\?:\/\/[^\/]*\).*/\1/p" /etc/suseRegister.conf)
     # if we have a custom regserver and no SCC config yet, write it
-    if [ -n "$reg_server" ] && [ "$reg_server" != "https://secure-www.novell.com" ] && [ ! -e /etc/SUSEConnect ]; then
-        echo "Imported /etc/suseRegister.conf registration server url to /etc/SUSEConnect"
-        echo "url: $reg_server" > /etc/SUSEConnect
+    if [ -n "$reg_server" ] && [ "$reg_server" != "https://secure-www.novell.com" ] && [ ! -e /etc/test_connect ]; then
+        echo "Imported /etc/suseRegister.conf registration server url to /etc/test_connect"
+        echo "url: $reg_server" > /etc/test_connect
     fi
 fi
 
-# remove stale update-alternatives config left by previous split, versioned packaging of SUSEConnect
-if update-alternatives --config SUSEConnect  &> /dev/null ; then
-  update-alternatives --force --quiet --remove-all SUSEConnect
+# remove stale update-alternatives config left by previous split, versioned packaging of test_connect
+if update-alternatives --config test_connect  &> /dev/null ; then
+  update-alternatives --force --quiet --remove-all test_connect
   ln -fs ../sbin/%{name} %{_bindir}/%{name}
 fi
 
 %files
 %defattr(-,root,root,-)
-%{_sbindir}/SUSEConnect
-%{_bindir}/SUSEConnect
+%{_sbindir}/test_connect
+%{_bindir}/test_connect
 %{gem_base}/gems/%{mod_full_name}/
 %{gem_base}/cache/%{mod_full_name}.gem
 %{gem_base}/specifications/%{mod_full_name}.gemspec
 
-%doc %{_mandir}/man5/SUSEConnect.5.*
-%doc %{_mandir}/man8/SUSEConnect.8.*
+%doc %{_mandir}/man5/test_connect.5.*
+%doc %{_mandir}/man8/test_connect.8.*
 
-%config(noreplace) %ghost %{_sysconfdir}/SUSEConnect
-%config %{_sysconfdir}/SUSEConnect.example
+%config(noreplace) %ghost %{_sysconfdir}/test_connect
+%config %{_sysconfdir}/test_connect.example
 %config %dir %{_sysconfdir}/zypp/
 %config %dir %{_sysconfdir}/zypp/credentials.d/
 %config(noreplace) %ghost %{_sysconfdir}/zypp/credentials.d/SCCcredentials
