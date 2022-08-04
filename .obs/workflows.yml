@@ -1,8 +1,40 @@
-workflow:
+pr_rebuild:
+  steps:
+    - set_flags:
+        flags:
+          - type: useforbuild
+            status: enable
+            project: home:ngetahun:scm_runs
+            package: test_connect
+            env_mode: development
+    - link_package:
+        source_project: home:ngetahun:scm_runs
+        source_package: test_connect
+        target_project: home:ngetahun
+  rebuild:
+    steps:
+      - trigger_services:
+          project: home:ngetahun:scm_runs
+          package: test_connect
+      - rebuild_package:
+          project: home:ngetahun:scm_runs
+          package: test_connect
+
+  filters:
+    event: pull_request
+
+main_build:
   steps:
     - branch_package:
         source_project: home:ngetahun
         source_package: test_connect
-        target_project: home:ngetahun:scm_runs
+        target_project: home:ngetahun:stable
+    - link_package:
+        source_project: home:ngetahun:stable
+        source_package: test_connect
+        target_project: home:ngetahun
   filters:
-    event: pull_request
+    event: push
+    branches:
+      only:
+        - master
