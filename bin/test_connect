@@ -2,6 +2,7 @@
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 require 'suse/connect/cli'
+# rubocop:disable Style/MixinUsage
 include SUSE::Connect::Logger
 
 abort 'Root privileges are required to register products and change software repositories' unless Process.uid == 0
@@ -12,8 +13,9 @@ begin
 rescue OptionParser::InvalidOption => e
   log.fatal "Error: #{e.message}"
   exit(1)
-rescue => e
+rescue StandardError => e
   log.fatal "SUSEConnect error: #{e.class}: #{e.message}"
   cli.log.debug e.backtrace.join("\n")
   exit(1)
 end
+# rubocop:enable Style/MixinUsage

@@ -11,7 +11,7 @@
 # Include: **/*.gemspec
 Gemspec/RequiredRubyVersion:
   Exclude:
-    - 'suse-connect.gemspec'
+    - 'test_connect.gemspec'
 
 # Offense count: 1
 Lint/CircularArgumentReference:
@@ -307,7 +307,7 @@ Style/EachWithObject:
 Style/ExpandPathArguments:
   Exclude:
     - 'spec/support/credentials_mocks.rb'
-    - 'suse-connect.gemspec'
+    - 'test_connect.gemspec'
 
 # Offense count: 5
 # Configuration parameters: .
