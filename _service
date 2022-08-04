@@ -1,11 +1,5 @@
 <services>
   <!-- The copy of this file in the OBS package needs to be manually updated from the one in git repo. -->
-  <service name="renderspec" mode="serveronly">
-    <param name="input-template">test_connect.spec.j2</param>
-    <param name="output-name">test_connect.spec.test</param>
-    <param name="spec-style">suse</param>
-    <param name="changelog-provider">main</param>
-  </service>
   <service name="set_version" mode="manual">
     <param name="file">suseconnect-ng.spec</param>
   </service>
