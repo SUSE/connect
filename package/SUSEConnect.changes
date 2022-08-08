@@ -1,3 +1,11 @@
+-------------------------------------------------------------------
+Wed Jul 27 14:08:54 UTC 2022 - Miquel Sabate Sola <msabate@suse.com>
+
+- Update to 0.4
+- Allow suseconnect-keepalive.service to recognize a configured proxy. (bsc#1200994)
+- Remove the `WantedBy` statement from suseconnect-keepalive.service since it's only to be triggered by a systemd timer.
+- SUSEConnect will now ensure that the `PROXY_ENABLED` environment variable is honored.
+
 --------------------------------------------------------------------
 Mon Jul 4 10:00:00 UTC 2022 - Natnael Getahun <ngetahun@suse.com>
 

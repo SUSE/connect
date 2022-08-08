@@ -23,6 +23,8 @@ describe SUSE::Connect::Connection do
         allow(ENV).to receive(:[]).with('no_proxy').and_return(nil)
         allow(ENV).to receive(:[]).with('NO_PROXY').and_return(nil)
         allow(ENV).to receive(:[]).with('HOME').and_call_original
+        allow(ENV).to receive(:[]).with('proxy_enabled').and_return(nil)
+        allow(ENV).to receive(:[]).with('PROXY_ENABLED').and_return(nil)
         allow_any_instance_of(SUSE::Toolkit::CurlrcDotfile).to receive(:username).and_return('robot')
         allow_any_instance_of(SUSE::Toolkit::CurlrcDotfile).to receive(:password).and_return('gobot')
       end
@@ -89,6 +91,42 @@ describe SUSE::Connect::Connection do
 
       it 'sets the provided verify_callback' do
         expect(secure_connection.http.verify_callback).to be callback
+      end
+    end
+  end
+
+  describe '?proxy_system_enabled?' do
+    let(:connection) { subject.new('example.com') }
+
+    before do
+      allow(ENV).to receive(:[]).with('http_proxy').and_return('http://myproxy')
+      allow(ENV).to receive(:[]).with('no_proxy').and_return(nil)
+      allow(ENV).to receive(:[]).with('NO_PROXY').and_return(nil)
+      allow(ENV).to receive(:[]).with('HOME').and_call_original
+    end
+
+    it 'returns true if the proxy_enabled environment variable was not specified' do
+      allow(ENV).to receive(:[]).with('proxy_enabled').and_return(nil)
+      allow(ENV).to receive(:[]).with('PROXY_ENABLED').and_return(nil)
+
+      expect(connection.send(:proxy_system_enabled?)).to be_truthy
+    end
+
+    it 'returns true if the proxy_enabled environment variable is set to true' do
+      %w[t true y yes].each do |value|
+        allow(ENV).to receive(:[]).with('proxy_enabled').and_return(value)
+        allow(ENV).to receive(:[]).with('PROXY_ENABLED').and_return(value)
+
+        expect(connection.send(:proxy_system_enabled?)).to be_truthy
+      end
+    end
+
+    it 'returns true if the proxy_enabled environment variable is set to false' do
+      %w[f false nil no n whatever].each do |value|
+        allow(ENV).to receive(:[]).with('proxy_enabled').and_return(value)
+        allow(ENV).to receive(:[]).with('PROXY_ENABLED').and_return(value)
+
+        expect(connection.send(:proxy_system_enabled?)).to be_falsey
       end
     end
   end
