@@ -23,14 +23,20 @@ module SUSE
         endpoint         = prefix_protocol(endpoint)
         uri              = URI.parse(endpoint)
         http             = Net::HTTP.new(uri.host, uri.port)
-        if http.proxy?
+
+        if http.proxy? && proxy_system_enabled?
           proxy_address = http.proxy_uri.hostname
           proxy_port = http.proxy_uri.port
           proxy_user = SUSE::Toolkit::CurlrcDotfile.new.username
           proxy_pass = SUSE::Toolkit::CurlrcDotfile.new.password
           log.debug("Using proxy: #{http.proxy_uri}")
           http = Net::HTTP.new(uri.host, uri.port, proxy_address, proxy_port, proxy_user, proxy_pass)
+        else
+          # With the third parameter set to nil, we completely disable http
+          # proxy detection so to avoid problems on this down the road.
+          http = Net::HTTP.new(uri.host, uri.port, nil)
         end
+
         http.use_ssl     = uri.is_a? URI::HTTPS
         http.verify_mode = insecure ? OpenSSL::SSL::VERIFY_NONE : OpenSSL::SSL::VERIFY_PEER
         http.read_timeout = 60
@@ -57,6 +63,28 @@ module SUSE
       end
 
       private
+
+      # Returns true if a specific configuration on the system allows or not to
+      # use a configured proxy.
+      #
+      # This is usually already handled by the NET::HTTP library, but it only
+      # checks for some very specific environment variables (see
+      # `URI::HTTP#find_proxy`). In some environments (e.g. SUSE systems using
+      # the `/etc/sysconfig/proxy` configuration file) there might be the
+      # environment variable `PROXY_ENABLED`, which allows sysadmins to switch
+      # on/off the proxy setup.
+      def proxy_system_enabled?
+        value = ENV['proxy_enabled'] || ENV['PROXY_ENABLED']
+
+        # If this environment variable is not set, then we will return true so
+        # to not interfere with the detection from `net/http`. That is, since
+        # this is not enforced at the system level, then net/http should decide
+        # as usual.
+        return true if value.nil? || value == ''
+
+        value = value.strip.downcase
+        value == 'y' || value == 'yes' || value == 't' || value == 'true'
+      end
 
       def path_with_params(path, params)
         return path if params.nil? || params.empty?
