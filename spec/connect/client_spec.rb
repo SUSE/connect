@@ -412,7 +412,7 @@ describe SUSE::Connect::Client do
   end
 
   describe '#register_product' do
-    let(:service_stub) { 'service_stub' }
+    let(:service_stub) { OpenStruct.new(url: 'http://service.local/') }
     let(:fake_email) { 'email@email.org.what.ever' }
 
     before do
@@ -476,6 +476,28 @@ describe SUSE::Connect::Client do
           expect(Zypper).not_to receive(:install_release_package)
 
           subject.register_product(product, false)
+        end
+      end
+    end
+
+    context 'handling insecure' do
+      let(:config) do
+        SUSE::Connect::Config.new.merge!({ 'insecure' => true })
+      end
+
+      before do
+        allow(SUSE::Connect::Config).to receive(:new).and_return(config)
+      end
+
+      context 'when insecure true' do
+        it 'adds ssl_verify=no to the service url' do
+          expect(subject).to receive(:activate_product).with(product, fake_email).and_return service_stub
+          expect(System).to receive(:add_service).with(service_stub, true)
+
+          expect(Zypper).to receive(:install_release_package).with(product.identifier)
+
+          subject.register_product(product)
+          expect(service_stub.url).to include('ssl_verify=no')
         end
       end
     end
