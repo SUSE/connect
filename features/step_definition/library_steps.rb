@@ -4,7 +4,7 @@ end
 
 When(/^I should receive the next Service Packs as online migration targets$/) do
   products = SUSE::Connect::Status.new(@client.config).system_products.map(&:to_openstruct)
-  migration_targets = @client.system_migrations(products, kind: :online).flatten.uniq.map(&:shortname)
+  migration_targets = @client.system_migrations(products, kind: :online).flatten.map(&:shortname).uniq
   expect(migration_targets).to match_array(OPTIONS['online_migration_targets'])
 end
 
