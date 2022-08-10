@@ -3,7 +3,10 @@ SLE_15_SP3:
   beta: true
   online_migration_targets:
   - "Basesystem-Module"
+  - "Basesystem-Module"
   - "SLES15-SP4"
+  - "SLES15-SP5"
+  - "Server-Applications-Module"
   - "Server-Applications-Module"
   next_version: SLES15-SP4
   base_product:
