@@ -63,7 +63,7 @@ Provides:       ruby2.1-rubygem-suse-connect = %{version}
 %define ruby_version ruby2.5
 %global gem_base /usr/share/gems
 %global debug_package %{nil}
-%if 0%{?fedora} < 30
+%if 0%{?fedora}
 %define gem_install_options --bindir %{_bindir}
 %else
 %define gem_install_options --bindir %{buildroot}%{_bindir}
