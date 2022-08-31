@@ -106,7 +106,9 @@ To checkout in which codestreams the package is currently maintaned, run:
 osc -A https://api.suse.de maintained SUSEConnect
 ```
 
-For a more detailed view which target codestreams are in which state, check out: [Codestream overview](https://maintenance.suse.de/maintained/?package=SUSEConnect)
+For a more detailed view which target codestreams are in which state, find the
+`SUSEConnect` package on
+[maintenance.suse.de](https://maintenance.suse.de/maintained/?q=SUSEConnect)
 
 #### Submit updates
 
@@ -146,4 +148,9 @@ We agreed to only push critical security updates there.
 
 You can check the status of your requests [here](https://build.opensuse.org/package/requests/systemsmanagement:SCC/SUSEConnect) and [here](https://build.suse.de/package/requests/Devel:SCC:suseconnect/SUSEConnect).
 
-After your requests got accepted, they still have to pass maintenance testing before they get released to customers. You can check their progress at [maintenance.suse.de](https://maintenance.suse.de/search/?q=SUSEConnect). If you still need help, the maintenance team can be reached at [maint-coord@suse.de](maint-coord@suse.de) or #maintenance on irc.suse.de.
+Whenever your requests get accepted, they still have to pass maintenance testing
+before they get released to customers. You can check their progress by searching
+for the package on
+[maintenance.suse.de](https://maintenance.suse.de/maintained/?q=SUSEConnect). If
+you still need help, the maintenance team can be reached at
+[maint-coord@suse.de](maint-coord@suse.de) or `#discuss-maintenance` on Slack.
