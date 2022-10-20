@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Oct 20 13:46:00 UTC 2022 - Miquel Sabate Sola <msabate@suse.com>
+
+- Update to 0.4, which contains the latest fixes and features from SUSEConnect (bsc#1204545)
+
+-------------------------------------------------------------------
 Wed Jul 27 14:08:54 UTC 2022 - Miquel Sabate Sola <msabate@suse.com>
 
 - Update to 0.3.36

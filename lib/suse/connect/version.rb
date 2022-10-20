@@ -1,5 +1,5 @@
 module SUSE
   module Connect
-    VERSION = '0.3.36'
+    VERSION = '0.4'
   end
 end
