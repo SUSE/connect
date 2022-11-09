@@ -96,8 +96,12 @@ module SUSE
       end
 
       # serialize the credentials for writing to a file
+      # don't serialize the token when it is nil, because it's an unknown
+      # attribute for zypp in the service credentials
       def serialize
-        "username=#{username}\npassword=#{password}\nsystem_token=#{system_token}\n"
+        content = "username=#{username}\npassword=#{password}\n"
+        content += "system_token=#{system_token}\n" if system_token
+        content
       end
     end
   end
