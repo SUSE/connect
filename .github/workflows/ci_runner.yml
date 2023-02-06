@@ -1,4 +1,4 @@
-name: CI for Connect - Ubuntu
+name: CI for Connect
 
 on: [pull_request]
 
