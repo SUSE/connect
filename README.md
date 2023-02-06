@@ -1,5 +1,4 @@
-[![Build Status](https://secure.travis-ci.org/SUSE/connect.png?branch=master)](https://travis-ci.org/SUSE/connect)
-[![Dependency Status](https://gemnasium.com/SUSE/connect.svg)](https://gemnasium.com/SUSE/connect)
+[![Build Status](https://github.com/SUSE/connect/actions/workflows/ci_runner.yml/badge.svg)]()
 [![Code Climate](https://codeclimate.com/github/SUSE/connect.png)](https://codeclimate.com/github/SUSE/connect)
 [![Coverage Status](https://coveralls.io/repos/SUSE/connect/badge.png?branch=master)](https://coveralls.io/r/SUSE/connect)
 
