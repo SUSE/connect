@@ -5,6 +5,7 @@ SLE_15_SP3:
   - "Basesystem-Module"
   - "SLES15-SP4"
   - "SLES15-SP5"
+  - "SLES15-SP6"
   - "Server-Applications-Module"
   next_version: SLES15-SP4
   base_product:
