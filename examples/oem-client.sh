@@ -17,7 +17,7 @@ http_verb="GET"
 # leave empty for GET
 # data JSON schema is given in API documentation
 # oem_token MUST be unique
-data='{"partner_order":{"oem_token":"some_unique_foo3","purchased_at":"2016-07-15","partner_order_items_attributes":[{"sku":"877-008014-I","system_limit":2},{"sku":"874-007161","system_limit":4}]}}'
+data='{"partner_order":{"oem_token":"some_unique_foo3","purchased_at":"2016-07-15","partner_order_items_attributes":[{"sku":"874-007077","system_limit":2},{"sku":"874-007161","system_limit":4}]}}'
 
 # Don't change anything below this line.
 ## RFC 7321, because it is used in the HTTP Date: header
