@@ -26,25 +26,32 @@ rake spec     # Run RSpec
 
 ## Build an image (and everytime you change code)
 
+Get $OBS_USER and $OBS_PASSWORD from the CI config.
+
+
 For SLES12SP0
 
-* `docker build -t connect.12sp0 -f Dockerfile.12sp0 .`
+* `docker build --build-arg OBS_USER=$OBS_USER --build-arg OBS_PASSWORD=$OBS_PASSWORD -t connect.12sp0 -f Dockerfile.12sp0 .`
 
 For SLES12SP1
 
-* `docker build -t connect.12sp1 -f Dockerfile.12sp1 .`
+* `docker build --build-arg OBS_USER=$OBS_USER --build-arg OBS_PASSWORD=$OBS_PASSWORD -t connect.12sp1 -f Dockerfile.12sp1 .`
 
 For SLES12SP2
 
-* `docker build -t connect.12sp2 -f Dockerfile.12sp2 .`
+* `docker build --build-arg OBS_USER=$OBS_USER --build-arg OBS_PASSWORD=$OBS_PASSWORD -t connect.12sp2 -f Dockerfile.12sp2 .`
 
 For SLES12SP3
 
-* `docker build -t connect.12sp3 -f Dockerfile.12sp3 .`
+* `docker build --build-arg OBS_USER=$OBS_USER --build-arg OBS_PASSWORD=$OBS_PASSWORD -t connect.12sp3 -f Dockerfile.12sp3 .`
 
 For SLES15SP0
 
-* `docker build -t connect.15sp0 -f Dockerfile.15sp0 .`
+* `docker build --build-arg OBS_USER=$OBS_USER --build-arg OBS_PASSWORD=$OBS_PASSWORD -t connect.15sp0 -f Dockerfile.15sp0 .`
+
+For SLES15SP3
+
+* `docker build --build-arg OBS_USER=$OBS_USER --build-arg OBS_PASSWORD=$OBS_PASSWORD -t connect.15sp3 -f Dockerfile.15sp3 .`
 
 ## Run commands
 
@@ -68,4 +75,6 @@ Run Rubocop
 
 Run integration tests & cucumber
 
-* `docker run --privileged --rm -t connect.12sp0 sh docker/integration.sh`
+* `docker run -e VALID_REGCODE=$VALID_REGCODE -e EXPIRED_REGCODE=$EXPIRED_REGCODE -e NOT_ACTIVATED_REGCODE=$NOT_ACTIVATED_REGCODE --rm -t connect.15sp3 docker/integration.sh`
+
+
