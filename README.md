@@ -55,23 +55,23 @@ For SLES15SP3
 
 ## Run commands
 
-Note: Substitute `connect.12sp0` with the respective image you've built above.
+Note: Substitute `connect.15sp3` with the respective image you've built above.
 
 Open a console
 
-* `docker run --privileged --rm -ti connect.12sp0 /bin/bash`
+* `docker run --privileged --rm -ti connect.15sp3 /bin/bash`
 
 Run RSpec
 
-* `docker run --privileged --rm -t connect.12sp0 rspec`
+* `docker run --privileged --rm -t connect.15sp3 rspec`
 
 Run Cucumber
 
-* `docker run --privileged --rm -t connect.12sp0 cucumber`
+* `docker run --privileged --rm -t connect.15sp3 cucumber`
 
 Run Rubocop
 
-* `docker run --privileged --rm -t connect.12sp0 rubocop`
+* `docker run --privileged --rm -t connect.15sp3 rubocop`
 
 Run integration tests & cucumber
 

@@ -21,7 +21,7 @@ COPY integration/create-oscrc.sh /tmp/connect/integration/create-oscrc.sh
 RUN sh /tmp/connect/integration/create-oscrc.sh
 
 RUN echo 'gem: --no-ri --no-rdoc' > /etc/gemrc && \
-    gem install bundler --no-document
+    gem install bundler --no-document -v 2.3.27
 
 RUN mkdir -p /tmp/connect/lib/suse/connect
 WORKDIR /tmp/connect
