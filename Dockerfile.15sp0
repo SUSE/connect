@@ -2,8 +2,6 @@ FROM registry.scc.suse.de/suse/sles15:ga
 ENV PRODUCT SLE_15
 ENV BUILT_AT "Wed Feb 21 15:32 CET 2018"
 
-RUN useradd --no-log-init --create-home scc
-
 ARG OBS_USER
 ARG OBS_PASSWORD
 
@@ -32,4 +30,3 @@ COPY lib/suse/connect/version.rb ./lib/suse/connect/
 RUN bundle config jobs $(nproc) && \
     bundle install
 COPY . /tmp/connect
-RUN chown -R scc /tmp/connect
