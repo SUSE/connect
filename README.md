@@ -26,46 +26,55 @@ rake spec     # Run RSpec
 
 ## Build an image (and everytime you change code)
 
+Get $OBS_USER and $OBS_PASSWORD from the CI config.
+
+
 For SLES12SP0
 
-* `docker build -t connect.12sp0 -f Dockerfile.12sp0 .`
+* `docker build --build-arg OBS_USER=$OBS_USER --build-arg OBS_PASSWORD=$OBS_PASSWORD -t connect.12sp0 -f Dockerfile.12sp0 .`
 
 For SLES12SP1
 
-* `docker build -t connect.12sp1 -f Dockerfile.12sp1 .`
+* `docker build --build-arg OBS_USER=$OBS_USER --build-arg OBS_PASSWORD=$OBS_PASSWORD -t connect.12sp1 -f Dockerfile.12sp1 .`
 
 For SLES12SP2
 
-* `docker build -t connect.12sp2 -f Dockerfile.12sp2 .`
+* `docker build --build-arg OBS_USER=$OBS_USER --build-arg OBS_PASSWORD=$OBS_PASSWORD -t connect.12sp2 -f Dockerfile.12sp2 .`
 
 For SLES12SP3
 
-* `docker build -t connect.12sp3 -f Dockerfile.12sp3 .`
+* `docker build --build-arg OBS_USER=$OBS_USER --build-arg OBS_PASSWORD=$OBS_PASSWORD -t connect.12sp3 -f Dockerfile.12sp3 .`
 
 For SLES15SP0
 
-* `docker build -t connect.15sp0 -f Dockerfile.15sp0 .`
+* `docker build --build-arg OBS_USER=$OBS_USER --build-arg OBS_PASSWORD=$OBS_PASSWORD -t connect.15sp0 -f Dockerfile.15sp0 .`
+
+For SLES15SP3
+
+* `docker build --build-arg OBS_USER=$OBS_USER --build-arg OBS_PASSWORD=$OBS_PASSWORD -t connect.15sp3 -f Dockerfile.15sp3 .`
 
 ## Run commands
 
-Note: Substitute `connect.12sp0` with the respective image you've built above.
+Note: Substitute `connect.15sp3` with the respective image you've built above.
 
 Open a console
 
-* `docker run --privileged --rm -ti connect.12sp0 /bin/bash`
+* `docker run --privileged --rm -ti connect.15sp3 /bin/bash`
 
 Run RSpec
 
-* `docker run --privileged --rm -t connect.12sp0 rspec`
+* `docker run --privileged --rm -t connect.15sp3 rspec`
 
 Run Cucumber
 
-* `docker run --privileged --rm -t connect.12sp0 cucumber`
+* `docker run --privileged --rm -t connect.15sp3 cucumber`
 
 Run Rubocop
 
-* `docker run --privileged --rm -t connect.12sp0 rubocop`
+* `docker run --privileged --rm -t connect.15sp3 rubocop`
 
 Run integration tests & cucumber
 
-* `docker run --privileged --rm -t connect.12sp0 sh docker/integration.sh`
+* `docker run -e VALID_REGCODE=$VALID_REGCODE -e EXPIRED_REGCODE=$EXPIRED_REGCODE -e NOT_ACTIVATED_REGCODE=$NOT_ACTIVATED_REGCODE --rm -t connect.15sp3 docker/integration.sh`
+
+
