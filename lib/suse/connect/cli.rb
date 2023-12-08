@@ -25,6 +25,7 @@ module SUSE
         elsif @config.deregister
           Client.new(@config).deregister!
         elsif @config.keepalive
+          exit(0) if suma_managed?
           Client.new(@config).keepalive!
         elsif @config.cleanup
           System.cleanup!
@@ -44,7 +45,7 @@ module SUSE
           elsif @config.url_default? && !@config.token && !@config.product
             puts @opts
             exit(1)
-          elsif File.exist?(SUMA_SYSTEM_ID)
+          elsif suma_managed?
             log.error 'This system is managed by SUSE Manager / Uyuni, do not use SUSEconnect.'
             exit(1)
           else
@@ -245,6 +246,10 @@ module SUSE
 
       def status
         @status ||= Status.new(@config)
+      end
+
+      def suma_managed?
+        return File.exist?(SUMA_SYSTEM_ID)
       end
     end
   end
