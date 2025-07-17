@@ -2,6 +2,16 @@
 [![Code Climate](https://codeclimate.com/github/SUSE/connect.png)](https://codeclimate.com/github/SUSE/connect)
 [![Coverage Status](https://coveralls.io/repos/SUSE/connect/badge.png?branch=master)](https://coveralls.io/r/SUSE/connect)
 
+# Announcement
+
+connect-ng is the official successor to the connect software!
+
+It's a powerful Golang command-line tool that connects your system to the SUSE Customer Center, enabling product subscriptions and local repositories. connect-ng significantly reduces runtime dependencies compared to its Ruby-based predecessor (connect) and is distributed as an RPM for all SUSE distributions.
+
+Please migrate to the new repository for the latest updates and support: https://github.com/SUSE/connect-ng
+
+Manage your subscriptions at: https://scc.suse.com
+
 # SUSEConnect
 
 SUSEConnect is a command line tool for connecting a client system to the SUSE Customer Center.
