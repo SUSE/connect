@@ -4,17 +4,18 @@
 
 # Announcement
 
-connect-ng is the official successor to the connect software!
+## **SUSEConnect (`connect`) is deprecated** , and SUSEConnect-ng (`connect-ng`) is the official successor.
 
-It's a powerful Golang command-line tool that connects your system to the SUSE Customer Center, enabling product subscriptions and local repositories. connect-ng significantly reduces runtime dependencies compared to its Ruby-based predecessor (connect) and is distributed as an RPM for all SUSE distributions.
 
 Please migrate to the new repository for the latest updates and support: https://github.com/SUSE/connect-ng
 
-Manage your subscriptions at: https://scc.suse.com
+Manage your subscriptions and systems at: https://scc.suse.com
 
-# SUSEConnect
 
-SUSEConnect is a command line tool for connecting a client system to the SUSE Customer Center.
+
+# SUSEConnect 
+
+SUSEConnect (deprecated) is a command line tool for connecting a client system to the SUSE Customer Center.
 It will connect the system to your product subscriptions and enable the product repositories/services locally.
 
 SUSEConnect is distributed as RPM for all SUSE distributions and gets built in
